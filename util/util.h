@@ -8,6 +8,12 @@
 extern "C" {
 #endif
 
+#ifdef __APPLE__
+
+#define CLOCK_MONOTONIC 1
+
+#endif
+
 extern uint64_t clock_gettime_us(clock_t clock_id);
 extern void clock_settime_us(clock_t clock_id, uint64_t t_us);
 extern const char *clock_tostr_r(uint64_t t_us, char *buf);
