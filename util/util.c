@@ -4,6 +4,13 @@
 #include <stdio.h>
 #include "util.h"
 
+#ifdef __APPLE__
+
+#include <mach/clock.h>
+#include <mach/mach.h>
+
+#endif
+
 /* Get current wall-clock time and return it in microseconds since the Unix
  * epoch.
  *
@@ -12,8 +19,17 @@
  */
 uint64_t clock_gettime_us(clock_t clock_id)
 {
+#ifdef __APPLE__
+    clock_serv_t cclock;
+    mach_timespec_t ts;
+
+    host_get_clock_service(mach_host_self(), SYSTEM_CLOCK, &cclock);
+    clock_get_time(cclock, &ts);
+    mach_port_deallocate(mach_task_self(), cclock);
+#else
     struct timespec ts;
     clock_gettime(clock_id, &ts);
+#endif
     return (uint64_t)ts.tv_sec * 1000000ULL + (ts.tv_nsec + 500) / 1000;
 }
 
@@ -22,10 +38,21 @@ uint64_t clock_gettime_us(clock_t clock_id)
  */
 void clock_settime_us(clock_t clock_id, uint64_t t_us)
 {
+#ifdef __APPLE__
+    mach_timespec_t ts;
+#else
     struct timespec ts;
+#endif
     ts.tv_sec = t_us / 1000000;
     ts.tv_nsec = (t_us % 1000000) * 1000;
+#ifdef __APPLE__
+    clock_serv_t cclock;
+    host_get_clock_service(mach_host_self(), SYSTEM_CLOCK, &cclock);
+    clock_set_time(cclock, ts);
+    mach_port_deallocate(mach_task_self(), cclock);
+#else
     clock_settime(clock_id, &ts);
+#endif
 }
 
 /* buf must be at least 24 characters */
