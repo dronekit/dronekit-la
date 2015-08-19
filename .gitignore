@@ -1,3 +1,4 @@
 .vagrant
 *.o
 dataflash_logger
+*.tlog
