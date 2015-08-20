@@ -7,5 +7,6 @@ Vagrant.configure(2) do |config|
    config.vm.provision "shell", inline: <<-SHELL
      sudo apt-get update -y
      sudo apt-get install -y build-essential
+     sudo apt-get install -y libjsoncpp-dev libjsoncpp0
    SHELL
 end
