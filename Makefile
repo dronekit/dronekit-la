@@ -35,6 +35,7 @@ SRCS_CPP += analyzer_good_ekf.cpp
 SRCS_CPP += analyzer_battery.cpp
 SRCS_CPP += analyzer_brownout.cpp
 SRCS_CPP += analyzer_crashed.cpp
+SRCS_CPP += la-log.cpp
 SRCS_C = util.c ini.c
 
 OBJS = $(SRCS_CPP:.cpp=.o) $(SRCS_C:.c=.o)
