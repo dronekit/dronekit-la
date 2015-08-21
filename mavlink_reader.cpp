@@ -1,6 +1,8 @@
 #include "mavlink_reader.h"
+
 #include "dataflash_logger.h"
 #include "heart.h"
+#include "analyze.h"
 
 #include <errno.h>
 #include <stdio.h> // for perror
@@ -15,6 +17,13 @@
 #include <arpa/inet.h>
 
 #include <signal.h>
+#include <fcntl.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+#include <dirent.h>
 
 static bool sighup_received = false;
 void sighup_handler(int signal)
@@ -77,10 +86,10 @@ int MAVLink_Reader::create_and_bind()
 } /* create_and_bind */
 
 
-void MAVLink_Reader::pack_telem_forwarder_sockaddr(INIReader config)
+void MAVLink_Reader::pack_telem_forwarder_sockaddr(INIReader *config)
 {
-    uint16_t tf_port = config.GetInteger("solo", "telem_forward_port", 14560);
-    std::string ip = config.Get("solo", "soloIp", "10.1.1.10");
+    uint16_t tf_port = config->GetInteger("solo", "telem_forward_port", 14560);
+    std::string ip = config->Get("solo", "soloIp", "10.1.1.10");
 
     memset(&sa_tf, 0, sizeof(sa_tf));
     sa_tf.sin_family = AF_INET;
@@ -89,34 +98,52 @@ void MAVLink_Reader::pack_telem_forwarder_sockaddr(INIReader config)
     sa_tf.sin_port = htons(tf_port);
 }
 
-void MAVLink_Reader::instantiate_message_handlers(INIReader config)
+void MAVLink_Reader::configure_message_handler(INIReader *config,
+                                               MAVLink_Message_Handler *handler,
+                                               const char *handler_name)
+{
+    if (handler->configure(config)) {
+        message_handler[next_message_handler++] = handler;
+    } else {
+        syslog(LOG_INFO, "Failed to configure (%s)", handler_name);
+    }
+}
+
+void MAVLink_Reader::instantiate_message_handlers(INIReader *config)
 {
     if (MAX_MESSAGE_HANDLERS - next_message_handler < 2) {
-	syslog(LOG_INFO, "Insufficient message handler slots?!");
+	syslog(LOG_INFO, "Insufficient message handler slots (MAX=%d) (next=%d)?!", MAX_MESSAGE_HANDLERS, next_message_handler);
 	exit(1);
     }
 
-    DataFlash_Logger *dataflash_logger = new DataFlash_Logger(fd_telem_forwarder, sa_tf);
-    if (dataflash_logger != NULL) {
-	if (dataflash_logger->configure(config)) {
-	    message_handler[next_message_handler++] = dataflash_logger;
-	} else {
-	    syslog(LOG_INFO, "Failed to configure dataflash logger");
-	}
-    } else {
-	syslog(LOG_INFO, "Failed to create dataflash logger");
+    if (use_telem_forwarder) {
+        DataFlash_Logger *dataflash_logger = new DataFlash_Logger(fd_telem_forwarder, sa_tf);
+        if (dataflash_logger != NULL) {
+            configure_message_handler(config, dataflash_logger, "DataFlash_Logger");
+        } else {
+            syslog(LOG_INFO, "Failed to create dataflash logger");
+        }
+
+        Heart *heart= new Heart(fd_telem_forwarder, sa_tf);
+        if (heart != NULL) {
+            configure_message_handler(config, heart, "Heart");
+        } else {
+            syslog(LOG_INFO, "Failed to create heart");
+        }
     }
 
-    Heart *heart= new Heart(fd_telem_forwarder, sa_tf);
-    if (heart != NULL) {
-	if (heart->configure(config)) {
-	    message_handler[next_message_handler++] = heart;
-	} else {
-	    syslog(LOG_INFO, "Failed to configure heart");
-	}
+    Analyze *analyze = new Analyze(fd_telem_forwarder, sa_tf);
+    if (analyze != NULL) {
+        analyze->instantiate_analyzers(config);
+        configure_message_handler(config, analyze, "Analyze");
     } else {
-	syslog(LOG_INFO, "Failed to create heart");
+        syslog(LOG_INFO, "Failed to create analyze");
     }
+}
+
+void MAVLink_Reader::clear_message_handlers()
+{
+    next_message_handler = 0;
 }
 
 bool MAVLink_Reader::sane_telem_forwarder_packet(uint8_t *pkt, uint16_t pktlen)
@@ -152,6 +179,67 @@ bool MAVLink_Reader::sane_telem_forwarder_packet(uint8_t *pkt, uint16_t pktlen)
     return true;
 }
 
+void MAVLink_Reader::handle_message_received(uint64_t timestamp, mavlink_message_t msg)
+{
+    switch(msg.msgid) {
+    case MAVLINK_MSG_ID_AHRS2: {
+        mavlink_ahrs2_t decoded;
+        mavlink_msg_ahrs2_decode(&msg, &decoded);
+        handle_decoded_message_received(timestamp, decoded); // template in .h
+        break;
+    }
+    case MAVLINK_MSG_ID_ATTITUDE: {
+        mavlink_attitude_t decoded;
+        mavlink_msg_attitude_decode(&msg, &decoded);
+        handle_decoded_message_received(timestamp, decoded); // template in .h
+        break;
+    }
+    case MAVLINK_MSG_ID_HEARTBEAT: {
+        mavlink_heartbeat_t decoded;
+        mavlink_msg_heartbeat_decode(&msg, &decoded);
+        handle_decoded_message_received(timestamp, decoded); // template in .h
+        break;
+    }
+    case MAVLINK_MSG_ID_PARAM_VALUE: {
+        mavlink_param_value_t decoded;
+        mavlink_msg_param_value_decode(&msg, &decoded);
+        handle_decoded_message_received(timestamp, decoded); // template in .h
+        break;
+    }
+    case MAVLINK_MSG_ID_SERVO_OUTPUT_RAW: {
+        mavlink_servo_output_raw_t decoded;
+        mavlink_msg_servo_output_raw_decode(&msg, &decoded);
+        handle_decoded_message_received(timestamp, decoded); // template in .h
+        break;
+    }
+    case MAVLINK_MSG_ID_EKF_STATUS_REPORT: {
+        mavlink_ekf_status_report_t decoded;
+        mavlink_msg_ekf_status_report_decode(&msg, &decoded);
+        handle_decoded_message_received(timestamp, decoded); // template in .h
+        break;
+    }
+    case MAVLINK_MSG_ID_SYS_STATUS: {
+        mavlink_sys_status_t decoded;
+        mavlink_msg_sys_status_decode(&msg, &decoded);
+        handle_decoded_message_received(timestamp, decoded); // template in .h
+        break;
+    }
+    case MAVLINK_MSG_ID_VFR_HUD: {
+        mavlink_vfr_hud_t decoded;
+        mavlink_msg_vfr_hud_decode(&msg, &decoded);
+        handle_decoded_message_received(timestamp, decoded); // template in .h
+        break;
+    }
+    }
+}
+
+void MAVLink_Reader::handle_packet_received(uint8_t *pkt, uint16_t size)
+{
+    // for(int i=0; i<next_message_handler; i++) {
+    //     message_handler[i]->handle_packet(pkt, res);
+    // }
+}
+
 void MAVLink_Reader::handle_telem_forwarder_recv()
 {
     // ::printf("Receiving packet\n");
@@ -167,9 +255,7 @@ void MAVLink_Reader::handle_telem_forwarder_recv()
     }
 
     /* packet is from solo and passes sanity checks */
-    for(int i=0; i<next_message_handler; i++) {
-	message_handler[i]->handle_packet(pkt, res);
-    }
+    handle_packet_received(pkt, res);
 }
 
 void MAVLink_Reader::do_idle_callbacks() {
@@ -200,6 +286,37 @@ void MAVLink_Reader::do_idle_callbacks() {
     }
 }
 
+void MAVLink_Reader::usage()
+{
+    ::printf("Usage:\n");
+    ::printf("1. Read code\n2. Rerun with correct parameters\n"); //FIXME(!)
+    ::printf("You could try: ./dataflash_logger -c /dev/null $TLOG\n"); //FIXME(!)
+    exit(0);
+}
+
+void MAVLink_Reader::parse_arguments(int argc, char *argv[])
+{
+    int opt;
+
+    while ((opt = getopt(argc, argv, "hc:t")) != -1) {
+        switch(opt) {
+        case 'h':
+            usage();
+            break;
+        case 'c':
+            config_filename = optarg;
+            break;
+        case 't':
+            use_telem_forwarder = true;
+            break;
+        }
+    }
+    if (optind < argc) {
+        _pathname = argv[optind++];
+    }
+}
+
+
 void MAVLink_Reader::run()
 {
     openlog("dl", LOG_NDELAY, LOG_LOCAL1);
@@ -207,21 +324,36 @@ void MAVLink_Reader::run()
     syslog(LOG_INFO, "dataflash_logger starting: built " __DATE__ " " __TIME__);
     signal(SIGHUP, sighup_handler);
 
-    INIReader config("/etc/sololink.conf");
-    if (config.ParseError() < 0) {
-        syslog(LOG_CRIT, "can't parse /etc/sololink.conf");
+    config = new INIReader(config_filename);
+    if (config->ParseError() < 0) {
+        syslog(LOG_CRIT, "can't parse (%s)", config_filename);
+        usage(); // FIXME!
         exit(1);
     }
 
-    /* prepare sockaddr used to contact telem_forwarder */
-    pack_telem_forwarder_sockaddr(config);
+    if (use_telem_forwarder) {
+        /* prepare sockaddr used to contact telem_forwarder */
+        pack_telem_forwarder_sockaddr(config);
 
-    /* Prepare a port to receive and send data to/from telem_forwarder */
-    /* does not return on failure */
-    fd_telem_forwarder = create_and_bind();
+        /* Prepare a port to receive and send data to/from telem_forwarder */
+        /* does not return on failure */
+        fd_telem_forwarder = create_and_bind();
+    }
 
-    instantiate_message_handlers(config);
 
+    if (use_telem_forwarder) {
+        instantiate_message_handlers(config);
+        return telem_forwarder_loop();
+    }
+    if (_pathname != NULL) {
+        parse_path(_pathname);
+        return;
+    }
+    usage();
+}
+
+void MAVLink_Reader::telem_forwarder_loop()
+{
     while (1) {
 	if (sighup_received) {
 	    for(int i=0; i<next_message_handler; i++) {
@@ -280,8 +412,125 @@ void MAVLink_Reader::run()
 
 	do_idle_callbacks();
     } /* while (1) */
+}
 
-} /* main */
+const char *examining_filename; // REMOVE ME!
+
+void MAVLink_Reader::parse_path(const char *path)
+{
+    if (!strcmp(path, "-")) {
+        instantiate_message_handlers(config);
+        parse_fd(fileno(stdin));
+        clear_message_handlers();
+        return;
+    }
+    
+    struct stat buf;
+    if (stat(path, &buf) == -1) {
+        fprintf(stderr, "Failed to stat (%s): %s\n", path, strerror(errno));
+        exit(1);
+    }
+
+    switch (buf.st_mode & S_IFMT) {
+    case S_IFREG:
+        instantiate_message_handlers(config);
+        parse_filepath(path);
+        clear_message_handlers();
+        return;
+    case S_IFDIR:
+        return parse_directory_full_of_files(path);
+    default:
+        fprintf(stderr, "Not a file or directory\n");
+        exit(1);
+    }
+}
+
+#define streq(a, b) (!strcmp(a, b))
+
+void MAVLink_Reader::parse_directory_full_of_files(const char *dirpath)
+{
+    DIR *dh = opendir(dirpath);
+    if (dh == NULL) {
+        fprintf(stderr, "Failed to open (%s): %s", dirpath, strerror(errno));
+        exit(1);
+    }
+    struct dirent *ent;
+    for(ent = readdir(dh); ent != NULL; ent = readdir(dh)) {
+        if (streq(ent->d_name, ".") || streq(ent->d_name, "..")) {
+            continue;
+        }
+        // FIXME:
+        std::string tmp = dirpath;
+        tmp += "/";
+        tmp += ent->d_name;
+
+        instantiate_message_handlers(config);
+        ::printf("**************** Analyzing (%s)\n", ent->d_name);
+        parse_filepath(tmp.c_str());
+        ::printf("**************** End analysis (%s)\n\n", ent->d_name);
+        clear_message_handlers();
+    }
+}
+
+void MAVLink_Reader::parse_filepath(const char *filepath)
+{
+    int fd = open(filepath, O_RDONLY);
+    if (fd == -1) {
+        fprintf(stderr, "Failed to open (%s): %s\n", filepath, strerror(errno));
+        exit(1);
+    }
+
+    examining_filename = filepath;
+    return parse_fd(fd);
+}
+
+void MAVLink_Reader::parse_fd(int fd)
+{
+    mavlink_message_t mav_msg;
+    mavlink_status_t mav_status;
+    char buf[1<<16];
+    uint32_t packet_count = 0;
+    uint8_t timestamp_offset = 0;
+    bool done_timestamp = false;
+    uint64_t timestamp = 0;
+    while (true) {
+        ssize_t bytes_read = read(fd, buf, sizeof(buf));
+        if (bytes_read == -1) { 
+            fprintf(stderr, "Read failed: %s\n", strerror(errno));
+            exit(1);
+        }
+        if (bytes_read == 0) {
+            break;
+        }
+
+        for (uint32_t i=0; i<bytes_read; i++) {
+            // ::printf("Read (%d)\n", i);
+            if (!done_timestamp) {
+                timestamp <<= 8;
+                timestamp |= (uint8_t)(buf[i]);
+                if (timestamp_offset++ == 7) {
+                    done_timestamp = true;
+                    // ::printf("timestamp (%lu)\n", timestamp);
+                    timestamp_offset = 0;
+                }
+            } else {
+                if (mavlink_parse_char(MAVLINK_COMM_0, buf[i], &mav_msg, &mav_status)) {
+                    // printf("Packet received at %d\n", i);
+                    handle_message_received(timestamp, mav_msg);
+                    packet_count++;
+                    done_timestamp = false;
+                    timestamp = 0;
+                }
+            }
+        }
+    }
+
+    for(int i=0; i<next_message_handler; i++) {
+        message_handler[i]->end_of_log();
+    }
+
+    ::fprintf(stderr, "Packet count: %d\n", packet_count);
+}
 
 
 /*
@@ -290,5 +539,6 @@ void MAVLink_Reader::run()
 int main(int argc, char* argv[])
 {
     MAVLink_Reader reader;
+    reader.parse_arguments(argc, argv);
     reader.run();
 }

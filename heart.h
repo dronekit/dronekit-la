@@ -20,7 +20,7 @@ public:
     { }
 
     void idle_10Hz();
-    bool configure(INIReader &config);
+    bool configure(INIReader *config);
 
 private:
     uint64_t last_heartbeat_time;

@@ -71,20 +71,20 @@ void DataFlash_Logger::push_response_queue()
     }
 }
 
-bool DataFlash_Logger::configure(INIReader &config)
+bool DataFlash_Logger::configure(INIReader *config)
 {
     if (!MAVLink_Message_Handler::configure(config)) {
         return false;
     }
 
-    std::string path = config.Get("dflogger", "log_dirpath", "/log/dataflash");
+    std::string path = config->Get("dflogger", "log_dirpath", "/log/dataflash");
     _log_directory_path = strdup(path.c_str());
     if (_log_directory_path == NULL) {
 	return false;
     }
 
-    target_system_id = config.GetInteger("dflogger", "target_system_id", 0);
-    target_component_id = config.GetInteger("dflogger", "target_component_id", 0);
+    target_system_id = config->GetInteger("dflogger", "target_system_id", 0);
+    target_component_id = config->GetInteger("dflogger", "target_component_id", 0);
 
     return true;
 }
