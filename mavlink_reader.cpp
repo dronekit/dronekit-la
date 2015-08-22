@@ -2,7 +2,6 @@
 
 #include "dataflash_logger.h"
 #include "heart.h"
-#include "analyze.h"
 
 #include <errno.h>
 #include <stdio.h> // for perror
@@ -24,6 +23,8 @@
 #include <unistd.h>
 
 #include <dirent.h>
+
+#define streq(a, b) (!strcmp(a, b))
 
 static bool sighup_received = false;
 void sighup_handler(int signal)
@@ -134,6 +135,7 @@ void MAVLink_Reader::instantiate_message_handlers(INIReader *config)
 
     Analyze *analyze = new Analyze(fd_telem_forwarder, sa_tf);
     if (analyze != NULL) {
+        analyze->set_output_style(output_style);
         analyze->instantiate_analyzers(config);
         configure_message_handler(config, analyze, "Analyze");
     } else {
@@ -289,8 +291,11 @@ void MAVLink_Reader::do_idle_callbacks() {
 void MAVLink_Reader::usage()
 {
     ::printf("Usage:\n");
-    ::printf("1. Read code\n2. Rerun with correct parameters\n"); //FIXME(!)
-    ::printf("You could try: ./dataflash_logger -c /dev/null $TLOG\n"); //FIXME(!)
+    ::printf("%s [OPTION] [FILE]\n", "x");
+    ::printf(" -c filepath      use config file filepath\n");
+    ::printf(" -t               connect to telem forwarder to receive data\n");
+    ::printf(" -s style         use output style (plain-text|json)\n");
+    ::printf(" -h               display usage information\n");
     exit(0);
 }
 
@@ -298,7 +303,7 @@ void MAVLink_Reader::parse_arguments(int argc, char *argv[])
 {
     int opt;
 
-    while ((opt = getopt(argc, argv, "hc:t")) != -1) {
+    while ((opt = getopt(argc, argv, "hc:ts:")) != -1) {
         switch(opt) {
         case 'h':
             usage();
@@ -309,6 +314,9 @@ void MAVLink_Reader::parse_arguments(int argc, char *argv[])
         case 't':
             use_telem_forwarder = true;
             break;
+        case 's':
+            output_style_string = optarg;
+            break;
         }
     }
     if (optind < argc) {
@@ -316,13 +324,23 @@ void MAVLink_Reader::parse_arguments(int argc, char *argv[])
     }
 }
 
-
 void MAVLink_Reader::run()
 {
     openlog("dl", LOG_NDELAY, LOG_LOCAL1);
 
     syslog(LOG_INFO, "dataflash_logger starting: built " __DATE__ " " __TIME__);
     signal(SIGHUP, sighup_handler);
+
+    if (output_style_string != NULL) {
+        if (streq(output_style_string, "json")) {
+            output_style = Analyze::OUTPUT_JSON;
+        } else if(streq(output_style_string, "plain-text")) {
+            output_style = Analyze::OUTPUT_PLAINTEXT;
+        } else {
+            usage();
+            exit(1);
+        }
+    }
 
     config = new INIReader(config_filename);
     if (config->ParseError() < 0) {
@@ -444,8 +462,6 @@ void MAVLink_Reader::parse_path(const char *path)
         exit(1);
     }
 }
-
-#define streq(a, b) (!strcmp(a, b))
 
 void MAVLink_Reader::parse_directory_full_of_files(const char *dirpath)
 {

@@ -8,6 +8,7 @@
 #include "util.h"
 
 #include "mavlink_message_handler.h"
+#include "analyze.h" // for output_style_option
 
 /* A mavlink packet should be limited to 6+255+2 = 263 bytes
    6 byte header, 255 max bytes in payload, 2 byte crc */
@@ -17,6 +18,7 @@ class MAVLink_Reader {
 public:
     MAVLink_Reader() :
         config_filename("/etc/sololink.conf"),
+        output_style_string(NULL),
         use_telem_forwarder(false),
         _pathname(NULL),
         log_interval_us(10 * 1000000),
@@ -39,7 +41,6 @@ public:
 
 private:
     INIReader *config;
-
     bool sane_telem_forwarder_packet(uint8_t *pkt, uint16_t pktlen);
     void handle_telem_forwarder_recv();
     void pack_telem_forwarder_sockaddr(INIReader *config);
@@ -49,6 +50,9 @@ private:
     void usage();
 
     const char * config_filename;
+    const char * output_style_string;
+    Analyze::output_style_option output_style;
+    
     bool use_telem_forwarder;
     char *_pathname;
 

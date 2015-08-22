@@ -9,6 +9,7 @@ class Analyze : public MAVLink_Message_Handler {
 public:
     Analyze(int fd, struct sockaddr_in &sa) :
 	MAVLink_Message_Handler(fd, sa),
+        _output_style(OUTPUT_JSON),
         next_analyzer(0)
         {
         }
@@ -16,8 +17,15 @@ public:
 
     void end_of_log();
 
-private:
+    enum output_style_option {
+        OUTPUT_JSON = 17,
+        OUTPUT_PLAINTEXT,
+    };
 
+    void set_output_style(output_style_option option) { _output_style = option;}
+
+private:
+    output_style_option _output_style;
 #define MAX_ANALYZERS 10
     uint8_t next_analyzer;
     Analyzer *analyzer[MAX_ANALYZERS];

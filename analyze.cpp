@@ -234,13 +234,7 @@ void Analyze::end_of_log() {
 
     results_json(root);
 
-    enum output_style_option {
-        OUTPUT_JSON = 17,
-        OUTPUT_PLAINTEXT,
-    };
-    // output_style_option output_style = OUTPUT_JSON;
-    output_style_option output_style = OUTPUT_PLAINTEXT;
-    switch(output_style) {
+    switch(_output_style) {
     case OUTPUT_JSON: {
         Json::StyledWriter writer;
         fprintf(stdout, "%s", writer.write(root).c_str());
