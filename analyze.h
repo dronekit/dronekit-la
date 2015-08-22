@@ -39,7 +39,9 @@ private:
     virtual void handle_decoded_message(uint64_t T, mavlink_sys_status_t &msg);
     virtual void handle_decoded_message(uint64_t T, mavlink_vfr_hud_t &msg);
 
-    uint32_t results_json(char *buf, const uint32_t buflen);
+    void results_json(Json::Value &root);
+
+    void output_plaintext(Json::Value &root);
 };
 
 #endif
