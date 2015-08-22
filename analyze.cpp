@@ -219,10 +219,117 @@ namespace Json {
     }
 }
 
-void Analyze::output_plaintext(Json::Value &root)
-{
-    Json::PlainTextWriter writer;
-    fprintf(stdout, "%s", writer.write(root).c_str());
+
+namespace Json {
+    class HTMLWriter : public Json::Writer {
+    public:
+        HTMLWriter() :
+            depth(0)
+            { }
+        std::string write( const Value &root );
+        void writeValue(std::string &document, const Value &value);
+    private:
+        uint16_t depth;
+        void writeIndent(std::string &document);
+    };
+
+    std::string HTMLWriter::write( const Value &root )
+    {
+        std::string document = "";
+        depth = 0;
+        writeValue(document, root);
+        return document;
+    }
+    void HTMLWriter::writeIndent(std::string &document)
+    {
+        // FIXME, surely!
+        for (uint8_t i=0; i< depth; i++) {
+            document += "    ";
+        }
+    }
+
+    void HTMLWriter::writeValue(std::string &document, const Value &value)
+    {
+        switch(value.type()) {
+        case nullValue:
+            break;
+        case intValue:
+            document += valueToString(value.asLargestInt());
+            break;
+        case uintValue:
+            document += valueToString(value.asLargestUInt());
+            break;
+        case realValue:
+            document += valueToString(value.asDouble());
+            break;
+        case stringValue:
+            document += valueToQuotedString(value.asString().c_str());
+            break;
+        case booleanValue:
+            document += value.asBool();
+            break;
+        case arrayValue: {
+            document += "<ol>";
+            for (uint8_t index = 0; index < value.size(); index++) {
+                switch(value[index].type()) {
+                case nullValue:
+                case intValue:
+                case uintValue:
+                case realValue:
+                case stringValue:
+                case booleanValue:
+                    writeIndent(document);
+                    document += "<li>";
+                    writeValue(document, value[index]);
+                    document += "</li>";
+                    document += "\n";
+                    break;
+                case arrayValue:
+                case objectValue:
+                    depth++;
+                    document += "<li>";
+                    writeValue(document, value[index]);
+                    depth--;
+                    document += "</li>";
+                    break;
+                }
+            }
+            break;
+        }
+        case objectValue: {
+            Value::Members members(value.getMemberNames());
+            document += "<dl>";
+            for (Value::Members::iterator it = members.begin();
+                 it != members.end(); ++it) {
+                const std::string &name = *it;
+                writeIndent(document);
+                document += "<dt>";
+                document += name;
+                document += "</dt>\n";
+                writeIndent(document);
+                document += "<dd>";
+                switch(value[name].type()) {
+                case nullValue:
+                case intValue:
+                case uintValue:
+                case realValue:
+                case stringValue:
+                case booleanValue:
+                    writeValue(document, value[name]);
+                    break;
+                case arrayValue:
+                case objectValue:
+                    depth++;
+                    writeValue(document, value[name]);
+                    depth--;
+                }
+                document += "</dd>\n";
+            }
+            document += "</dl>\n";
+            break;
+        }
+        }
+    }
 }
 
 void Analyze::end_of_log() {
@@ -234,16 +341,20 @@ void Analyze::end_of_log() {
 
     results_json(root);
 
+    Json::Writer *writer;
     switch(_output_style) {
     case OUTPUT_JSON: {
-        Json::StyledWriter writer;
-        fprintf(stdout, "%s", writer.write(root).c_str());
+        writer = new Json::StyledWriter();
         break;
     }
     case OUTPUT_PLAINTEXT:
-        output_plaintext(root);
+        writer = new Json::PlainTextWriter();
+        break;
+    case OUTPUT_HTML:
+        writer = new Json::HTMLWriter();
         break;
     }
+    fprintf(stdout, "%s", writer->write(root).c_str());
 }
 
 void Analyze::handle_decoded_message(uint64_t T, mavlink_ahrs2_t &msg) {

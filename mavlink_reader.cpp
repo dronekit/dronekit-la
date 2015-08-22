@@ -336,6 +336,8 @@ void MAVLink_Reader::run()
             output_style = Analyze::OUTPUT_JSON;
         } else if(streq(output_style_string, "plain-text")) {
             output_style = Analyze::OUTPUT_PLAINTEXT;
+        } else if(streq(output_style_string, "html")) {
+            output_style = Analyze::OUTPUT_HTML;
         } else {
             usage();
             exit(1);
