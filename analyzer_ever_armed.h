@@ -21,7 +21,6 @@ public:
 
     bool configure(INIReader *config);
     void handle_decoded_message(uint64_t T, mavlink_heartbeat_t &hearbeat) override;
-    void end_of_log();
 
     void results_json_results(Json::Value &root);
 private:

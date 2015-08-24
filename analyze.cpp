@@ -336,14 +336,16 @@ namespace Json {
     }
 }
 
-void Analyze::end_of_log() {
+void Analyze::end_of_log(uint32_t packet_count) {
     for(int i=0; i<next_analyzer; i++) {
-        analyzer[i]->end_of_log();
+        analyzer[i]->end_of_log(packet_count);
     }
 
     Json::Value root;
 
     results_json(root);
+
+    root["packet_count"] = packet_count;
 
     Json::Writer *writer;
     switch(_output_style) {

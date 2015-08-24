@@ -7,7 +7,7 @@
 #include <stdio.h> // for perror
 #include <stdlib.h> // for abort
 #include <sys/mman.h> // for MCL_ macros and mlockall
-#include <syslog.h>
+#include "la-log.h"
 
 #include <unistd.h> // for usleep
 
@@ -106,14 +106,14 @@ void MAVLink_Reader::configure_message_handler(INIReader *config,
     if (handler->configure(config)) {
         message_handler[next_message_handler++] = handler;
     } else {
-        syslog(LOG_INFO, "Failed to configure (%s)", handler_name);
+        la_log(LOG_INFO, "Failed to configure (%s)", handler_name);
     }
 }
 
 void MAVLink_Reader::instantiate_message_handlers(INIReader *config)
 {
     if (MAX_MESSAGE_HANDLERS - next_message_handler < 2) {
-	syslog(LOG_INFO, "Insufficient message handler slots (MAX=%d) (next=%d)?!", MAX_MESSAGE_HANDLERS, next_message_handler);
+	la_log(LOG_INFO, "Insufficient message handler slots (MAX=%d) (next=%d)?!", MAX_MESSAGE_HANDLERS, next_message_handler);
 	exit(1);
     }
 
@@ -122,14 +122,14 @@ void MAVLink_Reader::instantiate_message_handlers(INIReader *config)
         if (dataflash_logger != NULL) {
             configure_message_handler(config, dataflash_logger, "DataFlash_Logger");
         } else {
-            syslog(LOG_INFO, "Failed to create dataflash logger");
+            la_log(LOG_INFO, "Failed to create dataflash logger");
         }
 
         Heart *heart= new Heart(fd_telem_forwarder, sa_tf);
         if (heart != NULL) {
             configure_message_handler(config, heart, "Heart");
         } else {
-            syslog(LOG_INFO, "Failed to create heart");
+            la_log(LOG_INFO, "Failed to create heart");
         }
     }
 
@@ -139,7 +139,7 @@ void MAVLink_Reader::instantiate_message_handlers(INIReader *config)
         analyze->instantiate_analyzers(config);
         configure_message_handler(config, analyze, "Analyze");
     } else {
-        syslog(LOG_INFO, "Failed to create analyze");
+        la_log(LOG_INFO, "Failed to create analyze");
     }
 }
 
@@ -153,28 +153,28 @@ bool MAVLink_Reader::sane_telem_forwarder_packet(uint8_t *pkt, uint16_t pktlen)
     if (sa.sin_addr.s_addr != sa_tf.sin_addr.s_addr) {
 	unsigned skipped;
 	if ((skipped = can_log_error()) >= 0)
-	    syslog(LOG_ERR, "[%u] received packet not from solo (0x%08x)",
+	    la_log(LOG_ERR, "[%u] received packet not from solo (0x%08x)",
 		   skipped, sa.sin_addr.s_addr);
 	return false;
     }
     if (pktlen < 8) { 
 	unsigned skipped;
 	if ((skipped = can_log_error()) >= 0)
-	    syslog(LOG_ERR, "[%u] received runt packet (%d bytes)",
+	    la_log(LOG_ERR, "[%u] received runt packet (%d bytes)",
 		   skipped, pktlen);
 	return false;
     }
     if (pkt[0] != 254) {
 	unsigned skipped;
 	if ((skipped = can_log_error()) >= 0)
-	    syslog(LOG_ERR, "[%u] received bad magic (0x%02x)",
+	    la_log(LOG_ERR, "[%u] received bad magic (0x%02x)",
 		   skipped, pkt[0]);
 	return false;
     }
     if (pkt[1] != (pktlen - 8)) {
 	unsigned skipped;
 	if ((skipped = can_log_error()) >= 0)
-	    syslog(LOG_ERR, "[%u] inconsistent length (%u, %u)",
+	    la_log(LOG_ERR, "[%u] inconsistent length (%u, %u)",
 		   skipped, pkt[1], pktlen);
 	return false;
     }
@@ -328,11 +328,10 @@ void MAVLink_Reader::parse_arguments(int argc, char *argv[])
 
 void MAVLink_Reader::run()
 {
-    openlog("dl", LOG_NDELAY, LOG_LOCAL1);
-
-    syslog(LOG_INFO, "dataflash_logger starting: built " __DATE__ " " __TIME__);
+    la_log(LOG_INFO, "dataflash_logger starting: built " __DATE__ " " __TIME__);
     signal(SIGHUP, sighup_handler);
 
+    output_style = Analyze::OUTPUT_JSON;
     if (output_style_string != NULL) {
         output_style = Analyze::OUTPUT_JSON;
         if (streq(output_style_string, "json")) {
@@ -347,11 +346,20 @@ void MAVLink_Reader::run()
         }
     }
 
-    config = new INIReader(config_filename);
-    if (config->ParseError() < 0) {
-        syslog(LOG_CRIT, "can't parse (%s)", config_filename);
-        usage(); // FIXME!
-        exit(1);
+    struct stat buf;
+    if (stat(config_filename, &buf) == -1) {
+        if (errno == ENOENT) {
+            if (! streq(default_config_filename, config_filename)) {
+                la_log(LOG_CRIT, "Config file (%s) does not exist", config_filename);
+                exit(1);
+            }
+        } else {
+            la_log(LOG_CRIT, "Failed to stat (%s): %s\n", config_filename, strerror(errno));
+            exit(1);
+        }
+    }
+    if (config == NULL) {
+        config = new INIReader("/dev/null");
     }
 
     if (use_telem_forwarder) {
@@ -409,7 +417,7 @@ void MAVLink_Reader::telem_forwarder_loop()
         if (res < 0) {
             unsigned skipped;
             if ((skipped = can_log_error()) >= 0)
-                syslog(LOG_ERR, "[%u] select: %s", skipped, strerror(errno));
+                la_log(LOG_ERR, "[%u] select: %s", skipped, strerror(errno));
             /* this sleep is to avoid soaking the CPU if select starts
                returning immediately for some reason */
 	    /* previous code was not checking errfds; we are now, so
@@ -426,7 +434,7 @@ void MAVLink_Reader::telem_forwarder_loop()
         if (FD_ISSET(fd_telem_forwarder, &fds_err)) {
             unsigned skipped;
             if ((skipped = can_log_error()) >= 0)
-                syslog(LOG_ERR, "[%u] select(fd_telem_forwarder): %s", skipped, strerror(errno));
+                la_log(LOG_ERR, "[%u] select(fd_telem_forwarder): %s", skipped, strerror(errno));
 	}
 
         if (FD_ISSET(fd_telem_forwarder, &fds)) {
@@ -547,10 +555,10 @@ void MAVLink_Reader::parse_fd(int fd)
     }
 
     for(int i=0; i<next_message_handler; i++) {
-        message_handler[i]->end_of_log();
+        message_handler[i]->end_of_log(packet_count);
     }
 
-    ::fprintf(stderr, "Packet count: %d\n", packet_count);
+    // ::fprintf(stderr, "Packet count: %d\n", packet_count);
 }
 
 
