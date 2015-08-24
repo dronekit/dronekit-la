@@ -50,4 +50,7 @@ $(MAIN): $(OBJS)
 clean:
 	$(RM) *.o *~ $(MAIN)
 
+test: clean all
+	cd test; ./test.sh
+
 .PHONY: clean
