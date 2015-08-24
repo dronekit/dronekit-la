@@ -17,6 +17,8 @@
 class MAVLink_Reader {
 public:
     MAVLink_Reader() :
+        _argc(0),
+        _argv(NULL),
         config(NULL),
         config_filename(default_config_filename),
         output_style_string(NULL),
@@ -42,6 +44,10 @@ public:
 
 private:
     const char *default_config_filename = "/etc/sololink.conf";
+
+    long _argc;
+    char **_argv;
+    const char *program_name();
 
     INIReader *config;
     bool sane_telem_forwarder_packet(uint8_t *pkt, uint16_t pktlen);

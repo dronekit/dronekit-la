@@ -288,10 +288,18 @@ void MAVLink_Reader::do_idle_callbacks() {
     }
 }
 
+const char *MAVLink_Reader::program_name()
+{
+    if (_argv == NULL) {
+        return "[Unknown]";
+    }
+    return _argv[0];
+}
+
 void MAVLink_Reader::usage()
 {
     ::printf("Usage:\n");
-    ::printf("%s [OPTION] [FILE]\n", "x");
+    ::printf("%s [OPTION] [FILE]\n", program_name());
     ::printf(" -c filepath      use config file filepath\n");
     ::printf(" -t               connect to telem forwarder to receive data\n");
     ::printf(" -s style         use output style (plain-text|json)\n");
@@ -304,6 +312,8 @@ void MAVLink_Reader::usage()
 void MAVLink_Reader::parse_arguments(int argc, char *argv[])
 {
     int opt;
+    _argc = argc;
+    _argv = argv;
 
     while ((opt = getopt(argc, argv, "hc:ts:")) != -1) {
         switch(opt) {
