@@ -14,7 +14,7 @@ void Heart::idle_10Hz()
     }
 }
 
-bool Heart::configure(INIReader &config) {
+bool Heart::configure(INIReader *config) {
     if (!MAVLink_Message_Handler::configure(config)) {
 	return false;
     }

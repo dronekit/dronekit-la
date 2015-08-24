@@ -28,7 +28,7 @@ public:
 
     // this may change to handle_message(mavlink_message_t):
     void handle_packet(uint8_t *pkt, uint16_t pktlen);
-    bool configure(INIReader &config);
+    bool configure(INIReader *config);
 
     void sighup_received();
 
