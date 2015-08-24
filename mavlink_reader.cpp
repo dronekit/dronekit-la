@@ -331,6 +331,7 @@ void MAVLink_Reader::run()
     syslog(LOG_INFO, "dataflash_logger starting: built " __DATE__ " " __TIME__);
     signal(SIGHUP, sighup_handler);
 
+    output_style = Analyze::OUTPUT_JSON;
     if (output_style_string != NULL) {
         if (streq(output_style_string, "json")) {
             output_style = Analyze::OUTPUT_JSON;
