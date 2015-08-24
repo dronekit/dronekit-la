@@ -296,6 +296,8 @@ void MAVLink_Reader::usage()
     ::printf(" -t               connect to telem forwarder to receive data\n");
     ::printf(" -s style         use output style (plain-text|json)\n");
     ::printf(" -h               display usage information\n");
+    ::printf("\n");
+    ::printf("Example: ./dataflash_logger -c /dev/null -s json 1.solo.tlog\n");
     exit(0);
 }
 
