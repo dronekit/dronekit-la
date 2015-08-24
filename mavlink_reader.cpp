@@ -345,11 +345,20 @@ void MAVLink_Reader::run()
         }
     }
 
-    config = new INIReader(config_filename);
-    if (config->ParseError() < 0) {
-        la_log(LOG_CRIT, "can't parse (%s)", config_filename);
-        usage(); // FIXME!
-        exit(1);
+    struct stat buf;
+    if (stat(config_filename, &buf) == -1) {
+        if (errno == ENOENT) {
+            if (! streq(default_config_filename, config_filename)) {
+                la_log(LOG_CRIT, "Config file (%s) does not exist", config_filename);
+                exit(1);
+            }
+        } else {
+            la_log(LOG_CRIT, "Failed to stat (%s): %s\n", config_filename, strerror(errno));
+            exit(1);
+        }
+    }
+    if (config == NULL) {
+        config = new INIReader("/dev/null");
     }
 
     if (use_telem_forwarder) {
