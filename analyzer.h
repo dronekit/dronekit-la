@@ -17,7 +17,7 @@ public:
     virtual const char *name() = 0;
     virtual const char *description() = 0;
     virtual void results_json_results(Json::Value &root) = 0;
-    virtual void end_of_log() { }
+    virtual void end_of_log(uint32_t packet_count) { }
 
     void add_evilness(uint8_t sin_points) {
         evilness += sin_points;

@@ -554,10 +554,10 @@ void MAVLink_Reader::parse_fd(int fd)
     }
 
     for(int i=0; i<next_message_handler; i++) {
-        message_handler[i]->end_of_log();
+        message_handler[i]->end_of_log(packet_count);
     }
 
-    ::fprintf(stderr, "Packet count: %d\n", packet_count);
+    // ::fprintf(stderr, "Packet count: %d\n", packet_count);
 }
 
 

@@ -15,7 +15,7 @@ public:
         }
     void instantiate_analyzers(INIReader *config);
 
-    void end_of_log();
+    void end_of_log(uint32_t packet_count);
 
     enum output_style_option {
         OUTPUT_JSON = 17,

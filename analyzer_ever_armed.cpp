@@ -21,14 +21,6 @@ void Analyzer_Ever_Armed::handle_decoded_message(uint64_t T, mavlink_heartbeat_t
     }
 }
 
-void Analyzer_Ever_Armed::end_of_log() {
-    // if (! ever_armed) {
-    //     ::printf("FAIL: vehicle was never armed\n");
-    // } else {
-    //     ::printf("PASS: vehicle was armed\n");
-    // }
-}
-
 const char *Analyzer_Ever_Armed::description()
 {
     return "The vehicle armed";

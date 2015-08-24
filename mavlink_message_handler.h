@@ -53,7 +53,7 @@ public:
     virtual void handle_decoded_message(uint64_t T, mavlink_ekf_status_report_t &msg) { }
     virtual void handle_decoded_message(uint64_t T, mavlink_vfr_hud_t &msg) { }
 
-    virtual void end_of_log() { }
+    virtual void end_of_log(uint32_t packet_count) { }
 
 protected:
     void send_message_to_telem_forwarder(mavlink_message_t &msg);
