@@ -298,7 +298,11 @@ namespace Json {
         }
         case objectValue: {
             Value::Members members(value.getMemberNames());
-            document += "<dl>";
+            if (depth == 0) {
+                document += "<dl class='la_results'>";
+            } else {
+                document += "<dl>";
+            }
             for (Value::Members::iterator it = members.begin();
                  it != members.end(); ++it) {
                 const std::string &name = *it;

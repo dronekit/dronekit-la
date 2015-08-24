@@ -44,21 +44,21 @@ void Analyzer_Good_EKF::handle_decoded_message(uint64_t T, mavlink_ekf_status_re
 
 extern char *examining_filename;
 
-void show_graph(const char *series)
-{
-    return;
-    if (fork()) { // parent
-        return;
-    }
-    const char *args[4];
-    args[0] = "mavgraph.py";
-    args[1] = examining_filename;
-    args[2] = series;
-    args[3] = NULL;
-    execvp(args[0], args);
-    ::fprintf(stderr, "exec of (%s) failed: %s\n", args[0], strerror(errno));
-    exit(1);
-}
+// void show_graph(const char *series)
+// {
+//     return;
+//     if (fork()) { // parent
+//         return;
+//     }
+//     const char *args[4];
+//     args[0] = "mavgraph.py";
+//     args[1] = examining_filename;
+//     args[2] = series;
+//     args[3] = NULL;
+//     execvp(args[0], args);
+//     ::fprintf(stderr, "exec of (%s) failed: %s\n", args[0], strerror(errno));
+//     exit(1);
+// }
 
 void Analyzer_Good_EKF::results_json_results_do_variance(Json::Value &root, const struct ekf_variance variance, const struct ekf_variance_result variance_result)
 {
@@ -80,7 +80,7 @@ void Analyzer_Good_EKF::results_json_results_do_variance(Json::Value &root, cons
         result["evilness"] = this_sin_score;
         result["timestamp"] = (Json::UInt64)variance_result.T;
         root.append(result);
-        show_graph(tmp.c_str());
+        // show_graph(tmp.c_str());
         add_evilness(this_sin_score);
     } else if (max > threshold_warn) {
         uint8_t this_sin_score = 4;
@@ -91,7 +91,7 @@ void Analyzer_Good_EKF::results_json_results_do_variance(Json::Value &root, cons
         result["status"] = "WARN";
         result["timestamp"] = (Json::UInt64)variance_result.T;
         root.append(result);
-        show_graph(tmp.c_str());
+        // show_graph(tmp.c_str());
         add_evilness(this_sin_score);
     } else {
         reason.append(string_format("%s within threshold (%f <= %f)",
