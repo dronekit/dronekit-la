@@ -332,6 +332,7 @@ void MAVLink_Reader::run()
     signal(SIGHUP, sighup_handler);
 
     if (output_style_string != NULL) {
+        output_style = Analyze::OUTPUT_JSON;
         if (streq(output_style_string, "json")) {
             output_style = Analyze::OUTPUT_JSON;
         } else if(streq(output_style_string, "plain-text")) {
