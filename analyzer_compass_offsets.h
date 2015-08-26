@@ -11,8 +11,8 @@
 class Analyzer_Compass_Offsets : public Analyzer {
 
 public:
-    Analyzer_Compass_Offsets(int fd, struct sockaddr_in &sa) :
-	Analyzer(fd, sa),
+    Analyzer_Compass_Offsets(int fd, struct sockaddr_in &sa, AnalyzerVehicle::Base *&vehicle) :
+	Analyzer(fd, sa, vehicle),
         warn_offset(100),
         fail_offset(200),
         compass_offset_results_offset(0)

@@ -1,3 +1,6 @@
+#ifndef _ANALYZER_UTIL
+#define _ANALYZER_UTIL
+
 // from: http://stackoverflow.com/questions/2342162/stdstring-formatting-like-sprintf
 #include <memory>
 template<typename ... Args>
@@ -10,3 +13,17 @@ std::string string_format( const char* format, Args ... args )
 }
 
 #define streq(x,y) (!strcmp(x,y))
+
+// inline float deg_to_rad(const float deg) {
+//     return deg/M_PI * 180;
+// }
+
+// inline float rad_to_deg(const float rad) {
+//     return rad*180/M_PI;
+// }
+
+#define deg_to_rad(x) (x/M_PI * 180)
+#define rad_to_deg(x) (x/180 * M_PI)
+
+
+#endif

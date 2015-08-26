@@ -6,12 +6,15 @@
 #include <jsoncpp/json/json.h> // libjsoncpp0 and libjsoncpp-dev on debian
 #include <jsoncpp/json/writer.h> // libjsoncpp0 and libjsoncpp-dev on debian
 
+#include "analyzervehicle.h"
+
 class Analyzer : public MAVLink_Message_Handler {
 
 public:
-    Analyzer(int fd, struct sockaddr_in &sa) :
+    Analyzer(int fd, struct sockaddr_in &sa, AnalyzerVehicle::Base *&vehicle) :
 	MAVLink_Message_Handler(fd, sa),
-        evilness(0)
+        evilness(0),
+        _vehicle(vehicle)
         { }
 
     virtual const char *name() = 0;
@@ -27,9 +30,15 @@ public:
 protected:
     std::string to_string(double x);
     uint16_t evilness;
+    AnalyzerVehicle::Base *&_vehicle;
 
 private:
 };
 
 #endif
     
+
+
+// - two fundamental types of test
+//  - is the software working correctly (EKF issues)
+//  - is the vehicle doing sensible things (attitude etc)

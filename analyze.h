@@ -3,6 +3,7 @@
 
 #include "mavlink_message_handler.h"
 #include "analyzer.h"
+#include "analyzervehicle_copter.h"
 
 class Analyze : public MAVLink_Message_Handler {
 
@@ -26,6 +27,8 @@ public:
     void set_output_style(output_style_option option) { _output_style = option;}
 
 private:
+    AnalyzerVehicle::Base *vehicle;
+
     output_style_option _output_style;
 #define MAX_ANALYZERS 10
     uint8_t next_analyzer;
@@ -45,6 +48,7 @@ private:
     virtual void handle_decoded_message(uint64_t T, mavlink_heartbeat_t &msg);
     virtual void handle_decoded_message(uint64_t T, mavlink_param_value_t &msg);    
     virtual void handle_decoded_message(uint64_t T, mavlink_servo_output_raw_t &msg);
+    virtual void handle_decoded_message(uint64_t T, mavlink_statustext_t &msg);
     virtual void handle_decoded_message(uint64_t T, mavlink_sys_status_t &msg);
     virtual void handle_decoded_message(uint64_t T, mavlink_vfr_hud_t &msg);
 

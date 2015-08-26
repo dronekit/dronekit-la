@@ -7,11 +7,12 @@
  */
 
 #include "analyzer.h"
+#include "analyzervehicle_copter.h"
 
 class Analyzer_Ever_Flew : public Analyzer {
 public:
-    Analyzer_Ever_Flew(int fd, struct sockaddr_in &sa) :
-	Analyzer(fd, sa),
+    Analyzer_Ever_Flew(int fd, struct sockaddr_in &sa, AnalyzerVehicle::Base *&vehicle) :
+	Analyzer(fd, sa, vehicle),
         ever_armed(false),
         servos_past_threshold(false),
         pass_timestamp(0)
@@ -20,7 +21,6 @@ public:
     const char *name() { return "Ever Flew"; }
 const char *description() { return "The vehicle flew, as defined by having ever armed and having the motor outputs pass a threshold value"; }
 
-    bool configure(INIReader *config);
     void handle_decoded_message(uint64_t T, mavlink_heartbeat_t &hearbeat) override;
     void handle_decoded_message(uint64_t T, mavlink_servo_output_raw_t &servos) override;
 
@@ -30,7 +30,7 @@ private:
     bool servos_past_threshold;
     uint64_t pass_timestamp;
 
-    bool has_passed();
+    void evaluate(uint64_t T);
 };
 
 #endif

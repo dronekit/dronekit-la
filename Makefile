@@ -17,7 +17,7 @@ INCS = -I./util -I./ini -I./ini/cpp
 
 STD=-std=c++11
 CFLAGS += -Wall $(INCS) -DGIT_VERSION=\"$(GIT_VERSION)\"
-CXXFLAGS += -Wall $(INCS) $(STD) -g -fpermissive -DGIT_VERSION=\"$(GIT_VERSION)\"
+CXXFLAGS += -Wall $(INCS) $(STD) -g -DGIT_VERSION=\"$(GIT_VERSION)\"
 
 DLIBS += -ljsoncpp
 
@@ -35,6 +35,8 @@ SRCS_CPP += analyzer_good_ekf.cpp
 SRCS_CPP += analyzer_battery.cpp
 SRCS_CPP += analyzer_brownout.cpp
 SRCS_CPP += analyzer_crashed.cpp
+SRCS_CPP += analyzervehicle_copter.cpp
+SRCS_CPP += analyzervehicle.cpp
 SRCS_CPP += la-log.cpp
 SRCS_C = util.c ini.c
 

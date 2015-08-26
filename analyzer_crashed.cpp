@@ -6,72 +6,41 @@
 #include "util.h"
 
 #include "analyzer_util.h"
+#include "analyzervehicle_copter.h"
 
-bool Analyzer_Crashed::configure(INIReader *config) {
-    if (!MAVLink_Message_Handler::configure(config)) {
-	return false;
-    }
-    return true;
-}
 
 void Analyzer_Crashed::handle_decoded_message(uint64_t T, mavlink_param_value_t &param)
 {
-    const char *name = param.param_id;
-    float value = param.param_value/100; // centi-degrees to degrees
-    if (streq(name, "ANGLE_MAX")) {
-        // convert to radians
-        angle_max = value/180 * M_PI;
-    }
+    evaluate(T);
 }
-
-bool Analyzer_Crashed::has_crashed()
+void Analyzer_Crashed::handle_decoded_message(uint64_t T, mavlink_attitude_t &msg)
 {
-    if (!exceeded_angle_max) {
-        return false;
-    }
-
-    if (last_servo_output[1] < servo_output_threshold &&
-        last_servo_output[2] < servo_output_threshold &&
-        last_servo_output[3] < servo_output_threshold &&
-        last_servo_output[4] < servo_output_threshold) {
-        return false;
-    }
-
-    return true;
-}
-
-void Analyzer_Crashed::evaluate_crashed(uint64_t T)
-{
-    if (has_crashed()) {
-        crashed = true;
-        crashed_timestamp = T;
-    }
-}
-
-void Analyzer_Crashed::handle_decoded_message(uint64_t T, mavlink_attitude_t &att)
-{
-    if (att.roll > angle_max || att.pitch > angle_max) {
-        exceeded_angle_max = true;
-        if (angle_max > angle_max_achieved) {
-            angle_max_achieved = angle_max;
-            exceeded_angle_max_timestamp = T;
-        }
-    }
-
-    evaluate_crashed(T);
+    Analyzer::handle_decoded_message(T, msg);
+    evaluate(T);
     seen_packets_attitude = true;
 }
-
 void Analyzer_Crashed::handle_decoded_message(uint64_t T, mavlink_servo_output_raw_t &servos)
 {
-    last_servo_output[1] = servos.servo1_raw;
-    last_servo_output[2] = servos.servo2_raw;
-    last_servo_output[3] = servos.servo3_raw;
-    last_servo_output[4] = servos.servo4_raw;
-
-    evaluate_crashed(T);
+    Analyzer::handle_decoded_message(T, servos);
+    evaluate(T);
 }
 
+
+
+void Analyzer_Crashed::evaluate(uint64_t T)
+{
+    AnalyzerVehicle::Copter *v = (AnalyzerVehicle::Copter*&)_vehicle;
+
+    if (v->exceeding_angle_max() &&
+        v->any_motor_running_fast()) {
+        crashed = true;
+        crashed_timestamp = T;
+        crashed_angle = (v->att().roll() > v->att().pitch()) ? v->att().roll() : v->att().pitch();
+        for (uint8_t i=1; i<=v->_num_motors; i++) {
+            crash_servo_output[i] = v->_servo_output[i];
+        }
+    }
+}
 
 void Analyzer_Crashed::results_json_results(Json::Value &root)
 {
@@ -79,13 +48,14 @@ void Analyzer_Crashed::results_json_results(Json::Value &root)
     
     Json::Value reason(Json::arrayValue);
     uint8_t this_sin_score = 0;
+    AnalyzerVehicle::Copter *v = (AnalyzerVehicle::Copter*&)_vehicle;
     if (crashed) {
         reason.append("Crashed");
-        reason.append(string_format("ANGLE_MAX (%f > %f)", angle_max_achieved*180/M_PI, angle_max*180/M_PI)); // FIXME
-        for (uint8_t i=1; i<=4; i++) {
-            if (last_servo_output[i] > servo_output_threshold) {
+        reason.append(string_format("ANGLE_MAX (%f > %f)", rad_to_deg(crashed_angle), v->params["ANGLE_MAX"]/100)); // FIXME
+        for (uint8_t i=1; i<=v->_num_motors; i++) {
+            if (v->_servo_output[i] > v->is_flying_motor_threshold) {
                 reason.append(string_format("SERVO_OUTPUT_RAW.servo%d_raw=%f",
-                                            i, last_servo_output[i]));
+                                            i, crash_servo_output[i]));
             }
         }
         this_sin_score = 10;
