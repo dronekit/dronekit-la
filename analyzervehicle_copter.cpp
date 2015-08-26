@@ -35,14 +35,13 @@ void Copter::handle_decoded_message(uint64_t T, mavlink_statustext_t &msg) {
 
 bool Copter::exceeding_angle_max()
 {
-    if (!seen_parameter("ANGLE_MAX")) {
+    if (!param_seen("ANGLE_MAX")) {
         return false;
     }
 
-    float angle_max = params["ANGLE_MAX"] / 100; // convert from centidegrees
+    float angle_max = param("ANGLE_MAX") / 100; // convert from centidegrees
     float angle_max_radians = angle_max/180.0 * M_PI;
 
-    ::printf("att.roll=%f\n", att().roll());
     if (att().roll() > angle_max_radians) {
         return true;
     }

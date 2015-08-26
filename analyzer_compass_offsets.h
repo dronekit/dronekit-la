@@ -13,14 +13,11 @@ class Analyzer_Compass_Offsets : public Analyzer {
 public:
     Analyzer_Compass_Offsets(int fd, struct sockaddr_in &sa, AnalyzerVehicle::Base *&vehicle) :
 	Analyzer(fd, sa, vehicle),
+        modtime_compass_ofs{ },
         warn_offset(100),
         fail_offset(200),
         compass_offset_results_offset(0)
-    {
-        have_compass_ofs[0] = false;
-        have_compass_ofs[1] = false;
-        have_compass_ofs[2] = false;
-    }
+    { }
 
     const char *name() { return "Compass Offsets"; }
     const char *description() {
@@ -30,10 +27,11 @@ public:
     bool configure(INIReader *config);
     void handle_decoded_message(uint64_t T, mavlink_param_value_t &param) override;
     bool is_zero(double x) { return x < 0.00001; } // FIXME
+    void evaluate(uint64_t T);
 
 private:
-    double compass_ofs[3];
-    bool have_compass_ofs[3];
+    uint64_t modtime_compass_ofs[3];
+
     const uint16_t warn_offset;
     const uint16_t fail_offset;
 
@@ -48,6 +46,8 @@ private:
         double len;
         compass_offset_status status;
     };
+    bool new_compass_results();
+
     void do_add_evilness(struct compass_offset_result result);
 
     #define MAX_COMPASS_OFFSET_RESULTS 100

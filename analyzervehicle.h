@@ -66,7 +66,9 @@ namespace AnalyzerVehicle {
     class PacketHistory {
     public:
         PacketHistory() :
-            next(0) { }
+            next(0),
+            count(0)
+            { }
         void packet(packettype &packet) {
             memcpy(&packets[next++], &packet, sizeof(packet));
             if (next >= size) {
@@ -85,14 +87,19 @@ namespace AnalyzerVehicle {
     
 class Base {
 public:
-    bool _armed;
-    std::map<std::string, float> params;
+    Base() :
+        _armed(false),
+        _att{ },  // not convinced we should be zeroing these -pb2150827
+        _pos{ }
+        { }
 
     virtual bool is_flying() = 0;
     virtual bool is_armed() { return _armed; };
-    void exceeding_angle_max();
+    void exceeding_angle_max() const;
 
-    bool seen_parameter(const char *name);
+    float param(const char *name) { return _param[name]; };
+    bool param_seen(const char *name) const;
+    uint64_t param_modtime(const char *name) { return _param_modtime[name]; }
 
     virtual void handle_decoded_message(uint64_t T, mavlink_attitude_t&);
     virtual void handle_decoded_message(uint64_t T, mavlink_heartbeat_t&);
@@ -103,6 +110,10 @@ public:
     AV_Position& pos() { return _pos; };
     
 protected:
+    bool _armed;
+
+    std::map<const std::string, float> _param;
+    std::map<const std::string, float> _param_modtime;
     AV_Attitude _att;
     AV_Position _pos;
 

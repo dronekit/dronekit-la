@@ -10,6 +10,7 @@ class Analyze : public MAVLink_Message_Handler {
 public:
     Analyze(int fd, struct sockaddr_in &sa) :
 	MAVLink_Message_Handler(fd, sa),
+        vehicle(NULL),
         _output_style(OUTPUT_JSON),
         next_analyzer(0)
         {
