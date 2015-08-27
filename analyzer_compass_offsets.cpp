@@ -1,9 +1,9 @@
 #include "analyzer_compass_offsets.h"
 
-#include <syslog.h>
 #include <stdio.h>
 
 #include "util.h"
+#include "analyzer_util.h"
 
 bool Analyzer_Compass_Offsets::configure(INIReader *config) {
     if (!MAVLink_Message_Handler::configure(config)) {

@@ -7,6 +7,7 @@
 #include "analyzer_ever_armed.h"
 #include "analyzer_ever_flew.h"
 #include "analyzer_good_ekf.h"
+#include "analyzer_attitude_control.h"
 #include "analyzer_battery.h"
 #include "analyzer_brownout.h"
 #include "analyzer_crashed.h"
@@ -45,6 +46,13 @@ void Analyze::instantiate_analyzers(INIReader *config)
         configure_analyzer(config, analyzer_good_ekf, "Analyzer_Good_EKF");
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_good_ekf");
+    }
+
+    Analyzer_Attitude_Control *analyzer_attitude_control = new Analyzer_Attitude_Control(_fd_telem_forwarder, _sa_telemetry_forwarder, vehicle);
+    if (analyzer_attitude_control != NULL) {
+        configure_analyzer(config, analyzer_attitude_control, "Analyzer_Attitude_Control");
+    } else {
+        syslog(LOG_INFO, "Failed to create analyzer_attitude_control");
     }
 
     Analyzer_Battery *analyzer_battery = new Analyzer_Battery(_fd_telem_forwarder, _sa_telemetry_forwarder, vehicle);
@@ -381,6 +389,15 @@ void Analyze::handle_decoded_message(uint64_t T, mavlink_attitude_t &msg) {
     }
 }
 void Analyze::handle_decoded_message(uint64_t T, mavlink_heartbeat_t &msg) {
+    if (!vehicle) {
+        return;
+    }
+    vehicle->handle_decoded_message(T, msg);
+    for(int i=0; i<next_analyzer; i++) {
+        analyzer[i]->handle_decoded_message(T, msg);
+    }
+}
+void Analyze::handle_decoded_message(uint64_t T, mavlink_nav_controller_output_t &msg) {
     if (!vehicle) {
         return;
     }

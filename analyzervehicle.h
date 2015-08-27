@@ -14,30 +14,41 @@ namespace AnalyzerVehicle {
     // example
     class AV_Attitude {
     public:
-        float roll() { return _roll; };
-        float pitch() { return _pitch; };
-        float yaw() { return _yaw; };
+        float roll() const { return _att[0]; };
+        float pitch() const { return _att[1]; };
+        float yaw() const { return _att[2]; };
+        uint64_t roll_modtime() const {
+            return get_att_modtime(0);
+        }
+        uint64_t pitch_modtime() const {
+            return get_att_modtime(1);
+        }
+        uint64_t yaw_modtime() const {
+            return get_att_modtime(2);
+        }
         void set_roll(uint64_t T, float roll) {
-            _roll = roll;
-            _roll_modtime = T;
+            _set_att_attrib(0, T, roll);
         }
         void set_pitch(uint64_t T, float pitch) {
-            _pitch = pitch;
-            _pitch_modtime = T;
+            _set_att_attrib(1, T, pitch);
         }
         void set_yaw(uint64_t T, float yaw) {
-            _yaw = yaw;
-            _yaw_modtime = T;
+            _set_att_attrib(2, T, yaw);
         }
 
     private:
-        float _roll;
-        float _pitch;
-        float _yaw;
-        uint64_t _roll_modtime;
-        uint64_t _pitch_modtime;
-        uint64_t _yaw_modtime;
-    };
+        // all in degrees:
+        float _att[3];
+        uint64_t _att_modtime[3];
+
+        void _set_att_attrib(uint8_t offset, uint64_t T, float value) {
+            _att[offset] = value;
+            _att_modtime[offset] = T;
+        }
+        uint64_t get_att_modtime(uint8_t offset) const {
+            return _att_modtime[offset];
+        }
+};
 
     class AV_Position {
     public:
@@ -61,6 +72,32 @@ namespace AnalyzerVehicle {
         uint16_t E;
         uint16_t D;
     };
+
+    class AV_Nav {
+    public:
+        void set_desroll(uint64_t T, float roll) {
+            _des[0] = roll;
+            _modtimes[0] = T;
+        }
+        float desroll() { return _des[0]; }
+
+        void set_despitch(uint64_t T, float pitch) {
+            _des[1] = pitch;
+            _modtimes[1] = T;
+        }
+        float despitch() { return _des[1]; }
+
+        void set_desyaw(uint64_t T, float yaw) {
+            _des[1] = yaw;
+            _modtimes[2] = T;
+        }
+        float desyaw() { return _des[2]; }
+
+    private:
+        float _des[3];
+        uint64_t _modtimes[3];
+    };
+
 
     template <typename packettype>
     class PacketHistory {
@@ -103,11 +140,13 @@ public:
 
     virtual void handle_decoded_message(uint64_t T, mavlink_attitude_t&);
     virtual void handle_decoded_message(uint64_t T, mavlink_heartbeat_t&);
+    virtual void handle_decoded_message(uint64_t T, mavlink_nav_controller_output_t &msg);
     virtual void handle_decoded_message(uint64_t T, mavlink_param_value_t &msg);
     virtual void handle_decoded_message(uint64_t T, mavlink_statustext_t&);
     virtual void handle_decoded_message(uint64_t T, mavlink_servo_output_raw_t &);
     AV_Attitude& att() { return _att; };
     AV_Position& pos() { return _pos; };
+    AV_Nav& nav() { return _nav; };
     
 protected:
     bool _armed;
@@ -116,10 +155,12 @@ protected:
     std::map<const std::string, float> _param_modtime;
     AV_Attitude _att;
     AV_Position _pos;
+    AV_Nav _nav;
 
 private:
 
     PacketHistory<mavlink_heartbeat_t> history_heartbeat;
+    PacketHistory<mavlink_nav_controller_output_t> history_nav_controller_output;
     PacketHistory<mavlink_servo_output_raw_t> history_servo_output_raw;
     PacketHistory<mavlink_statustext_t> history_statustext;
 

@@ -1,8 +1,5 @@
 #include "analyzer_brownout.h"
 
-#include <syslog.h>
-#include <stdio.h>
-#include <unistd.h> // for fork()
 #include "util.h"
 #include "analyzer_util.h"
 
@@ -15,6 +12,9 @@ bool Analyzer_Brownout::configure(INIReader *config) {
 
 void Analyzer_Brownout::results_json_results(Json::Value &root)
 {
+    if (!_vehicle) {
+        return;
+    }
     if (_vehicle->pos().alt_modtime() > 0) {
         Json::Value result(Json::objectValue);
         result["timestamp"] = 0;

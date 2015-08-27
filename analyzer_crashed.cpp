@@ -1,8 +1,5 @@
 #include "analyzer_crashed.h"
 
-#include <syslog.h>
-#include <stdio.h>
-
 #include "util.h"
 
 #include "analyzer_util.h"
@@ -51,7 +48,7 @@ void Analyzer_Crashed::results_json_results(Json::Value &root)
     AnalyzerVehicle::Copter *v = (AnalyzerVehicle::Copter*&)_vehicle;
     if (crashed) {
         reason.append("Crashed");
-        reason.append(string_format("ANGLE_MAX (%f > %f)", rad_to_deg(crashed_angle), v->param("ANGLE_MAX")/100)); // FIXME
+        reason.append(string_format("ANGLE_MAX (%f > %f)", crashed_angle, v->param("ANGLE_MAX")/100));
         for (uint8_t i=1; i<=v->_num_motors; i++) {
             if (v->_servo_output[i] > v->is_flying_motor_threshold) {
                 reason.append(string_format("SERVO_OUTPUT_RAW.servo%d_raw=%f",

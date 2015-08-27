@@ -32,8 +32,6 @@ public:
     void handle_decoded_message(uint64_t T, mavlink_attitude_t &att);
     void handle_decoded_message(uint64_t T, mavlink_servo_output_raw_t &servos);
     
-    bool is_zero(double x) { return x < 0.00001; } // FIXME
-
 private:
     bool has_crashed();
     void evaluate(uint64_t T);

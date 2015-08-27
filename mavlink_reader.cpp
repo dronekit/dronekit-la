@@ -208,6 +208,12 @@ void MAVLink_Reader::handle_message_received(uint64_t timestamp, mavlink_message
         handle_decoded_message_received(timestamp, decoded); // template in .h
         break;
     }
+    case MAVLINK_MSG_ID_NAV_CONTROLLER_OUTPUT: {
+        mavlink_nav_controller_output_t decoded;
+        mavlink_msg_nav_controller_output_decode(&msg, &decoded);
+        handle_decoded_message_received(timestamp, decoded); // template in .h
+        break;
+    }
     case MAVLINK_MSG_ID_PARAM_VALUE: {
         mavlink_param_value_t decoded;
         mavlink_msg_param_value_decode(&msg, &decoded);

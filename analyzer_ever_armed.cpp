@@ -1,8 +1,5 @@
 #include "analyzer_ever_armed.h"
 
-#include <syslog.h>
-#include <stdio.h>
-
 #include "util.h"
 
 void Analyzer_Ever_Armed::handle_decoded_message(uint64_t T, mavlink_heartbeat_t &heartbeat)

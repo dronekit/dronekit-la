@@ -40,12 +40,11 @@ bool Copter::exceeding_angle_max()
     }
 
     float angle_max = param("ANGLE_MAX") / 100; // convert from centidegrees
-    float angle_max_radians = angle_max/180.0 * M_PI;
 
-    if (att().roll() > angle_max_radians) {
+    if (att().roll() > angle_max) {
         return true;
     }
-    if (att().pitch() > angle_max_radians) {
+    if (att().pitch() > angle_max) {
         return true;
     }
     return false;

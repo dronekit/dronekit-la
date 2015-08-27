@@ -23,6 +23,7 @@ DLIBS += -ljsoncpp
 
 SRCS_CPP = dataflash_logger.cpp
 SRCS_CPP += INIReader.cpp
+SRCS_CPP += analyzer_util.cpp
 SRCS_CPP += mavlink_message_handler.cpp
 SRCS_CPP += mavlink_reader.cpp
 SRCS_CPP += analyze.cpp
@@ -35,6 +36,7 @@ SRCS_CPP += analyzer_good_ekf.cpp
 SRCS_CPP += analyzer_battery.cpp
 SRCS_CPP += analyzer_brownout.cpp
 SRCS_CPP += analyzer_crashed.cpp
+SRCS_CPP += analyzer_attitude_control.cpp
 SRCS_CPP += analyzervehicle_copter.cpp
 SRCS_CPP += analyzervehicle.cpp
 SRCS_CPP += la-log.cpp

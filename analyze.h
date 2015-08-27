@@ -47,6 +47,7 @@ private:
     virtual void handle_decoded_message(uint64_t T, mavlink_attitude_t &msg);
     virtual void handle_decoded_message(uint64_t T, mavlink_ekf_status_report_t &msg);
     virtual void handle_decoded_message(uint64_t T, mavlink_heartbeat_t &msg);
+    virtual void handle_decoded_message(uint64_t T, mavlink_nav_controller_output_t &msg);
     virtual void handle_decoded_message(uint64_t T, mavlink_param_value_t &msg);    
     virtual void handle_decoded_message(uint64_t T, mavlink_servo_output_raw_t &msg);
     virtual void handle_decoded_message(uint64_t T, mavlink_statustext_t &msg);

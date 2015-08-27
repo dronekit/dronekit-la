@@ -1,8 +1,5 @@
 #include "analyzer_ever_flew.h"
 
-#include <syslog.h>
-#include <stdio.h>
-
 #include "util.h"
 
 void Analyzer_Ever_Flew::evaluate(uint64_t T)

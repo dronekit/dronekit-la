@@ -26,7 +26,6 @@ public:
 
     bool configure(INIReader *config);
     void handle_decoded_message(uint64_t T, mavlink_param_value_t &param) override;
-    bool is_zero(double x) { return x < 0.00001; } // FIXME
     void evaluate(uint64_t T);
 
 private:
