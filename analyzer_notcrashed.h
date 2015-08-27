@@ -1,8 +1,8 @@
-#ifndef ANALYZE_CRASHED_H
-#define ANALYZE_CRASHED_H
+#ifndef ANALYZE_NOTCRASHED_H
+#define ANALYZE_NOTCRASHED_H
 
 /*
- * analyze_crashed
+ * analyze_notcrashed
  *
  */
 
@@ -10,44 +10,51 @@
 
 #define angle_max_default_degrees 20
 
-class Analyzer_Crashed : public Analyzer {
+class Analyzer_NotCrashed : public Analyzer {
 
 public:
-    Analyzer_Crashed(int fd, struct sockaddr_in &sa, AnalyzerVehicle::Base *&vehicle) :
+    Analyzer_NotCrashed(int fd, struct sockaddr_in &sa, AnalyzerVehicle::Base *&vehicle) :
 	Analyzer(fd, sa, vehicle),
         seen_packets_attitude(false),
-        crashed(false),
-        // angle_max(angle_max_default_degrees/180 * M_PI),
-        crash_servo_output{ 0 }
+        notcrashed_results_offset(0)
     { }
 
     const uint16_t servo_output_threshold = 1250;
     
     const char *name() { return "Crash Test"; }
     const char *description() {
-        return "The vehicle crashed";
+        return "The Vehicle Did Not Crash";
     }
+
+    void end_of_log(const uint32_t packet_count);
 
     void handle_decoded_message(uint64_t T, mavlink_param_value_t &param) override;
     void handle_decoded_message(uint64_t T, mavlink_attitude_t &att);
     void handle_decoded_message(uint64_t T, mavlink_servo_output_raw_t &servos);
     
+    class notcrashed_result : public analyzer_result {
+    public:
+        uint64_t timestamp_start;
+        uint64_t timestamp_stop;
+        float angle;
+        float angle_max;
+        double servo_output[17]; // FIXME take 17 from somewhere...
+        uint64_t duration() { return (timestamp_stop - timestamp_start); }
+    };
+    #define MAX_NOTCRASHED_RESULTS 100
+    uint8_t notcrashed_results_offset;
+    notcrashed_result notcrashed_results[MAX_NOTCRASHED_RESULTS];
+    bool notcrashed_results_overrun;
+
 private:
-    bool has_crashed();
     void evaluate(uint64_t T);
 
+    void add_series(Json::Value &root);
+        
     bool seen_packets_attitude;
-    bool crashed;
-    float crashed_angle;
-
-    bool exceeded_angle_max;
-    uint64_t crashed_timestamp;
-    uint64_t exceeded_angle_max_timestamp;
 
     // const double angle_max_default_degrees = 20.0f;
     
-    double crash_servo_output[17]; // FIXME take 17 from somewhere...
-
     void results_json_results(Json::Value &root);
 };
 

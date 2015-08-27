@@ -10,7 +10,7 @@
 #include "analyzer_attitude_control.h"
 #include "analyzer_battery.h"
 #include "analyzer_brownout.h"
-#include "analyzer_crashed.h"
+#include "analyzer_notcrashed.h"
 
 void Analyze::instantiate_analyzers(INIReader *config)
 {
@@ -70,11 +70,11 @@ void Analyze::instantiate_analyzers(INIReader *config)
     }
 
 
-    Analyzer_Crashed *analyzer_crashed = new Analyzer_Crashed(_fd_telem_forwarder, _sa_telemetry_forwarder, vehicle);
-    if (analyzer_crashed != NULL) {
-        configure_analyzer(config, analyzer_crashed, "Analyzer_Crashed");
+    Analyzer_NotCrashed *analyzer_notcrashed = new Analyzer_NotCrashed(_fd_telem_forwarder, _sa_telemetry_forwarder, vehicle);
+    if (analyzer_notcrashed != NULL) {
+        configure_analyzer(config, analyzer_notcrashed, "Analyzer_NotCrashed");
     } else {
-        syslog(LOG_INFO, "Failed to create analyzer_crashed");
+        syslog(LOG_INFO, "Failed to create analyzer_not_crashed");
     }
 }
 

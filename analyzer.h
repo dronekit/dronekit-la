@@ -8,15 +8,35 @@
 
 #include "analyzervehicle.h"
 
+enum analyzer_status {
+    analyzer_status_warn = 17,
+    analyzer_status_fail,
+    analyzer_status_ok,
+};
+
+class analyzer_result {
+public:
+    analyzer_status status;
+    const char *status_as_string() const {
+        switch(status) {
+        case analyzer_status_fail:
+            return "FAIL";
+        case analyzer_status_warn:
+            return "WARN";
+        case analyzer_status_ok:
+            return "OK";
+        }
+        return "STRANGE";
+    }
+    // std::string reason_as_string() const {
+    //     return string_format("Desired attitude not achieved");
+    // }
+};
+
+
 class Analyzer : public MAVLink_Message_Handler {
 
 public:
-    enum analyzer_status {
-        analyzer_status_warn = 17,
-        analyzer_status_fail,
-        analyzer_status_ok,
-    };
-
     Analyzer(int fd, struct sockaddr_in &sa, AnalyzerVehicle::Base *&vehicle) :
 	MAVLink_Message_Handler(fd, sa),
         evilness(0),

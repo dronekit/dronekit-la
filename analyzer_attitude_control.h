@@ -37,25 +37,6 @@ private:
     const float offset_warn;
     const float offset_fail;
 
-    class analyzer_result {
-    public:
-        analyzer_status status;
-        const char *status_as_string() const {
-            switch(status) {
-            case analyzer_status_fail:
-                return "FAIL";
-            case analyzer_status_warn:
-                return "WARN";
-            case analyzer_status_ok:
-                return "OK";
-            }
-            return "STRANGE";
-        }
-        // std::string reason_as_string() const {
-        //     return string_format("Desired attitude not achieved");
-        // }
-    };
-
     class attitude_control_result : public analyzer_result {
     public:
         uint64_t timestamp_start;

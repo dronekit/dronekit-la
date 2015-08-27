@@ -61,6 +61,7 @@ void Analyzer_Attitude_Control::evaluate(uint64_t T)
             attitude_control_result &result = attitude_control_results[attitude_control_results_offset];
             result.status = status();
             result.timestamp_start = T;
+            result.timestamp_stop = 0;
             result.deltamax = delta;
             result.roll_at_deltamax = roll;
             result.desroll_at_deltamax = desroll;
@@ -112,6 +113,16 @@ void Analyzer_Attitude_Control::results_json_results(Json::Value &root)
                 result["timestamp_stop"] = (Json::UInt64)x.timestamp_stop;
             }
 
+            // current structure makes this stuff awfully magical:
+            // tomorrow this should change because we'll be updated from
+            // df logs....
+            Json::Value series(Json::arrayValue);
+            series.append("NAV_CONTROLLER_OUTPUT.nav_roll");
+            series.append("NAV_CONTROLLER_OUTPUT.nav_pitch");
+            series.append("ATTITUDE.roll");
+            series.append("ATTITUDE.pitch");
+            result["series"] = series;
+
             root.append(result);
         }
     } else {
@@ -125,11 +136,8 @@ void Analyzer_Attitude_Control::results_json_results(Json::Value &root)
         add_evilness(this_sin_score);
         result["reason"] = reason;
         Json::Value series(Json::arrayValue);
-        series.append("VFR_HUD.alt");
-        series.append("SERVO_OUTPUT_RAW.servo1_raw");
-        series.append("SERVO_OUTPUT_RAW.servo2_raw");
-        series.append("SERVO_OUTPUT_RAW.servo3_raw");
-        series.append("SERVO_OUTPUT_RAW.servo4_raw");
+        series.append("ATTITUDE.roll");
+        series.append("ATTITUDE.pitch");
         result["series"] = series;
         root.append(result);
     }
