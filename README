@@ -1,9 +1,0 @@
-Adding new tests (FIXME)
----------------
-Duplicate a test, change the obvious stuff
-Ensure the paket types you are interested in are being handled in:
- - mavlink_message_handler.h
- - ensure mavlink_reader.cpp mentions your packet type in handle_message_received
- - ensure analyze.h mentions the appropriately-signaured functions
-
-
