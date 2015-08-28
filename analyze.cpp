@@ -350,6 +350,9 @@ void Analyze::end_of_log(uint32_t packet_count) {
     }
 
     Json::Value root;
+    root["format-version"] = "0.1";
+    root["timestamp"] = (Json::UInt64)start_time;
+    root["duration"] = (Json::UInt64)(now() - start_time);
 
     results_json(root);
 

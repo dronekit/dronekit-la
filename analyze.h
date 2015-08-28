@@ -5,6 +5,8 @@
 #include "analyzer.h"
 #include "analyzervehicle_copter.h"
 
+#include "analyzer_util.h"
+
 class Analyze : public MAVLink_Message_Handler {
 
 public:
@@ -14,6 +16,7 @@ public:
         _output_style(OUTPUT_JSON),
         next_analyzer(0)
         {
+            start_time = now();
         }
     void instantiate_analyzers(INIReader *config);
 
@@ -28,6 +31,8 @@ public:
     void set_output_style(output_style_option option) { _output_style = option;}
 
 private:
+    uint64_t start_time;
+
     AnalyzerVehicle::Base *vehicle;
 
     output_style_option _output_style;

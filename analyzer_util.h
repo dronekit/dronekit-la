@@ -31,4 +31,6 @@ std::string string_format( const char* format, Args ... args )
 
 void format_timestamp(char *buf, uint8_t buflen, uint64_t T);
 
+uint64_t now();
+
 #endif

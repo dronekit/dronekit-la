@@ -28,7 +28,6 @@ public:
     void handle_decoded_message(uint64_t T, mavlink_nav_controller_output_t &param);
     void handle_decoded_message(uint64_t T, mavlink_attitude_t &msg);
 
-    bool is_zero(double x) { return x < 0.00001; } // FIXME
     void evaluate(uint64_t T);
 
 private:

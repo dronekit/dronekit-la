@@ -15,8 +15,8 @@ class Analyzer_NotCrashed : public Analyzer {
 public:
     Analyzer_NotCrashed(int fd, struct sockaddr_in &sa, AnalyzerVehicle::Base *&vehicle) :
 	Analyzer(fd, sa, vehicle),
-        seen_packets_attitude(false),
-        notcrashed_results_offset(0)
+        notcrashed_results_offset(0),
+        seen_packets_attitude(false)
     { }
 
     const uint16_t servo_output_threshold = 1250;

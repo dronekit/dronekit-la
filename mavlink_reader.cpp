@@ -24,8 +24,6 @@
 
 #include <dirent.h>
 
-#define streq(a, b) (!strcmp(a, b))
-
 static bool sighup_received = false;
 void sighup_handler(int signal)
 {
