@@ -13,7 +13,7 @@
 class Analyzer_NotCrashed : public Analyzer {
 
 public:
-    Analyzer_NotCrashed(int fd, struct sockaddr_in &sa, AnalyzerVehicle::Base *&vehicle) :
+    Analyzer_NotCrashed(int fd, struct sockaddr_in *sa, AnalyzerVehicle::Base *&vehicle) :
 	Analyzer(fd, sa, vehicle),
         notcrashed_results_offset(0),
         seen_packets_attitude(false)

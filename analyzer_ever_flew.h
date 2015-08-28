@@ -11,7 +11,7 @@
 
 class Analyzer_Ever_Flew : public Analyzer {
 public:
-    Analyzer_Ever_Flew(int fd, struct sockaddr_in &sa, AnalyzerVehicle::Base *&vehicle) :
+    Analyzer_Ever_Flew(int fd, struct sockaddr_in *sa, AnalyzerVehicle::Base *&vehicle) :
 	Analyzer(fd, sa, vehicle),
         ever_armed(false),
         servos_past_threshold(false),

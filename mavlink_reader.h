@@ -16,14 +16,10 @@
 
 class MAVLink_Reader {
 public:
-    MAVLink_Reader() :
-        _argc(0),
-        _argv(NULL),
-        config(NULL),
-        config_filename(default_config_filename),
-        output_style_string(NULL),
-        use_telem_forwarder(false),
-        _pathname(NULL),
+    MAVLink_Reader(INIReader *config) :
+        fd_telem_forwarder(-1),
+        _config(config),
+        sighup_received(false),
         log_interval_us(10 * 1000000),
 	next_message_handler(0),
 	err_skipped(0),
@@ -37,43 +33,32 @@ public:
 	next_100hz_time = now_us;
     }
     void run();
-    void instantiate_message_handlers(INIReader *config);
     void clear_message_handlers();
 
-    void parse_arguments(int argc, char *argv[]);
+    void sighup_handler(int signal);
+
+    bool add_message_handler(MAVLink_Message_Handler *handler,
+                             const char *handler_name);
+    void pack_telem_forwarder_sockaddr(INIReader *config);
+    void create_and_bind();
+
+    // public temporarily:
+    int fd_telem_forwarder;
+    struct sockaddr_in sa;
+    struct sockaddr_in sa_tf; /* solo's address */
+    void telem_forwarder_loop();
+
+    void parse_fd(int fd);
 
 private:
-    const char *default_config_filename = "/etc/sololink.conf";
 
-    long _argc;
-    char **_argv;
-    const char *program_name();
-
-    INIReader *config;
+    INIReader *_config;
     bool sane_telem_forwarder_packet(uint8_t *pkt, uint16_t pktlen);
     void handle_telem_forwarder_recv();
-    void pack_telem_forwarder_sockaddr(INIReader *config);
     int can_log_error();
-    int create_and_bind();
 
-    void usage();
-
-    const char * config_filename;
-    const char * output_style_string;
     Analyze::output_style_option output_style;
     
-    bool use_telem_forwarder;
-    char *_pathname;
-
-    void configure_message_handler(INIReader *config,
-                                   MAVLink_Message_Handler *handler,
-                                   const char *handler_name);
-    void telem_forwarder_loop();
-    void parse_path(const char *path);
-    void parse_filepath(const char *filepath);
-    void parse_fd(int fd);
-    void parse_directory_full_of_files(const char *dirpath);
-
     void handle_message_received(uint64_t timestamp, mavlink_message_t msg);
 
     template <typename msgtype>
@@ -89,10 +74,7 @@ private:
     uint64_t next_10hz_time;
     uint64_t next_100hz_time;
 
-    struct sockaddr_in sa_tf; /* solo's address */
-
-    int fd_telem_forwarder;
-    struct sockaddr_in sa;
+    bool sighup_received;
 
     uint64_t log_interval_us; /* log stats this often */
 

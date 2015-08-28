@@ -11,7 +11,7 @@
 class Analyzer_Good_EKF : public Analyzer {
 
 public:
-    Analyzer_Good_EKF(int fd, struct sockaddr_in &sa, AnalyzerVehicle::Base *&vehicle) :
+    Analyzer_Good_EKF(int fd, struct sockaddr_in *sa, AnalyzerVehicle::Base *&vehicle) :
 	Analyzer(fd, sa, vehicle),
         seen_ekf_packets(false),
         

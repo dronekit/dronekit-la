@@ -13,7 +13,7 @@
 class Heart : public MAVLink_Message_Handler {
 
 public:
-    Heart(int fd, struct sockaddr_in &sa) :
+    Heart(int fd, struct sockaddr_in *sa) :
 	MAVLink_Message_Handler(fd, sa),
 	last_heartbeat_time(0),
 	heartbeat_interval(5000000) // microseconds

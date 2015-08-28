@@ -1,8 +1,5 @@
 #include "mavlink_reader.h"
 
-#include "dataflash_logger.h"
-#include "heart.h"
-
 #include <errno.h>
 #include <stdio.h> // for perror
 #include <stdlib.h> // for abort
@@ -21,14 +18,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-
-#include <dirent.h>
-
-static bool sighup_received = false;
-void sighup_handler(int signal)
-{
-    sighup_received = true;
-}
 
 /* This is used to prevent swamping the log with error messages if
    something unexpected happens.
@@ -60,7 +49,7 @@ int MAVLink_Reader::can_log_error()
 *
 * Returns fd on success, -1 on error.
 */
-int MAVLink_Reader::create_and_bind()
+void MAVLink_Reader::create_and_bind()
 {
     int fd;
     struct sockaddr_in sa;
@@ -81,7 +70,7 @@ int MAVLink_Reader::create_and_bind()
         abort();
     }
 
-    return fd;
+    fd_telem_forwarder = fd;
 } /* create_and_bind */
 
 
@@ -97,49 +86,23 @@ void MAVLink_Reader::pack_telem_forwarder_sockaddr(INIReader *config)
     sa_tf.sin_port = htons(tf_port);
 }
 
-void MAVLink_Reader::configure_message_handler(INIReader *config,
-                                               MAVLink_Message_Handler *handler,
-                                               const char *handler_name)
-{
-    if (handler->configure(config)) {
-        message_handler[next_message_handler++] = handler;
-    } else {
-        la_log(LOG_INFO, "Failed to configure (%s)", handler_name);
-    }
-}
-
-void MAVLink_Reader::instantiate_message_handlers(INIReader *config)
+bool MAVLink_Reader::add_message_handler(MAVLink_Message_Handler *handler,
+                                         const char *handler_name)
 {
     if (MAX_MESSAGE_HANDLERS - next_message_handler < 2) {
 	la_log(LOG_INFO, "Insufficient message handler slots (MAX=%d) (next=%d)?!", MAX_MESSAGE_HANDLERS, next_message_handler);
-	exit(1);
+	return false;
     }
 
-    if (use_telem_forwarder) {
-        DataFlash_Logger *dataflash_logger = new DataFlash_Logger(fd_telem_forwarder, sa_tf);
-        if (dataflash_logger != NULL) {
-            configure_message_handler(config, dataflash_logger, "DataFlash_Logger");
-        } else {
-            la_log(LOG_INFO, "Failed to create dataflash logger");
-        }
-
-        Heart *heart= new Heart(fd_telem_forwarder, sa_tf);
-        if (heart != NULL) {
-            configure_message_handler(config, heart, "Heart");
-        } else {
-            la_log(LOG_INFO, "Failed to create heart");
-        }
+    if (!handler->configure(_config)) {
+        la_log(LOG_INFO, "Failed to configure (%s)", handler_name);
+        return false;
     }
 
-    Analyze *analyze = new Analyze(fd_telem_forwarder, sa_tf);
-    if (analyze != NULL) {
-        analyze->set_output_style(output_style);
-        analyze->instantiate_analyzers(config);
-        configure_message_handler(config, analyze, "Analyze");
-    } else {
-        la_log(LOG_INFO, "Failed to create analyze");
-    }
+    message_handler[next_message_handler++] = handler;
+    return true;
 }
+
 
 void MAVLink_Reader::clear_message_handlers()
 {
@@ -298,109 +261,9 @@ void MAVLink_Reader::do_idle_callbacks() {
     }
 }
 
-const char *MAVLink_Reader::program_name()
+void MAVLink_Reader::sighup_handler(int signal)
 {
-    if (_argv == NULL) {
-        return "[Unknown]";
-    }
-    return _argv[0];
-}
-
-void MAVLink_Reader::usage()
-{
-    ::printf("Usage:\n");
-    ::printf("%s [OPTION] [FILE]\n", program_name());
-    ::printf(" -c filepath      use config file filepath\n");
-    ::printf(" -t               connect to telem forwarder to receive data\n");
-    ::printf(" -s style         use output style (plain-text|json)\n");
-    ::printf(" -h               display usage information\n");
-    ::printf("\n");
-    ::printf("Example: ./dataflash_logger -c /dev/null -s json 1.solo.tlog\n");
-    exit(0);
-}
-
-void MAVLink_Reader::parse_arguments(int argc, char *argv[])
-{
-    int opt;
-    _argc = argc;
-    _argv = argv;
-
-    while ((opt = getopt(argc, argv, "hc:ts:")) != -1) {
-        switch(opt) {
-        case 'h':
-            usage();
-            break;
-        case 'c':
-            config_filename = optarg;
-            break;
-        case 't':
-            use_telem_forwarder = true;
-            break;
-        case 's':
-            output_style_string = optarg;
-            break;
-        }
-    }
-    if (optind < argc) {
-        _pathname = argv[optind++];
-    }
-}
-
-void MAVLink_Reader::run()
-{
-    la_log(LOG_INFO, "dataflash_logger starting: built " __DATE__ " " __TIME__);
-    signal(SIGHUP, sighup_handler);
-
-    output_style = Analyze::OUTPUT_JSON;
-    if (output_style_string != NULL) {
-        output_style = Analyze::OUTPUT_JSON;
-        if (streq(output_style_string, "json")) {
-            output_style = Analyze::OUTPUT_JSON;
-        } else if(streq(output_style_string, "plain-text")) {
-            output_style = Analyze::OUTPUT_PLAINTEXT;
-        } else if(streq(output_style_string, "html")) {
-            output_style = Analyze::OUTPUT_HTML;
-        } else {
-            usage();
-            exit(1);
-        }
-    }
-
-    struct stat buf;
-    if (stat(config_filename, &buf) == -1) {
-        if (errno == ENOENT) {
-            if (! streq(default_config_filename, config_filename)) {
-                la_log(LOG_CRIT, "Config file (%s) does not exist", config_filename);
-                exit(1);
-            }
-        } else {
-            la_log(LOG_CRIT, "Failed to stat (%s): %s\n", config_filename, strerror(errno));
-            exit(1);
-        }
-    }
-    if (config == NULL) {
-        config = new INIReader("/dev/null");
-    }
-
-    if (use_telem_forwarder) {
-        /* prepare sockaddr used to contact telem_forwarder */
-        pack_telem_forwarder_sockaddr(config);
-
-        /* Prepare a port to receive and send data to/from telem_forwarder */
-        /* does not return on failure */
-        fd_telem_forwarder = create_and_bind();
-    }
-
-
-    if (use_telem_forwarder) {
-        instantiate_message_handlers(config);
-        return telem_forwarder_loop();
-    }
-    if (_pathname != NULL) {
-        parse_path(_pathname);
-        return;
-    }
-    usage();
+    sighup_received = true;
 }
 
 void MAVLink_Reader::telem_forwarder_loop()
@@ -465,74 +328,6 @@ void MAVLink_Reader::telem_forwarder_loop()
     } /* while (1) */
 }
 
-const char *examining_filename; // REMOVE ME!
-
-void MAVLink_Reader::parse_path(const char *path)
-{
-    if (!strcmp(path, "-")) {
-        instantiate_message_handlers(config);
-        parse_fd(fileno(stdin));
-        clear_message_handlers();
-        return;
-    }
-    
-    struct stat buf;
-    if (stat(path, &buf) == -1) {
-        fprintf(stderr, "Failed to stat (%s): %s\n", path, strerror(errno));
-        exit(1);
-    }
-
-    switch (buf.st_mode & S_IFMT) {
-    case S_IFREG:
-        instantiate_message_handlers(config);
-        parse_filepath(path);
-        clear_message_handlers();
-        return;
-    case S_IFDIR:
-        return parse_directory_full_of_files(path);
-    default:
-        fprintf(stderr, "Not a file or directory\n");
-        exit(1);
-    }
-}
-
-void MAVLink_Reader::parse_directory_full_of_files(const char *dirpath)
-{
-    DIR *dh = opendir(dirpath);
-    if (dh == NULL) {
-        fprintf(stderr, "Failed to open (%s): %s", dirpath, strerror(errno));
-        exit(1);
-    }
-    struct dirent *ent;
-    for(ent = readdir(dh); ent != NULL; ent = readdir(dh)) {
-        if (streq(ent->d_name, ".") || streq(ent->d_name, "..")) {
-            continue;
-        }
-        // FIXME:
-        std::string tmp = dirpath;
-        tmp += "/";
-        tmp += ent->d_name;
-
-        instantiate_message_handlers(config);
-        ::printf("**************** Analyzing (%s)\n", ent->d_name);
-        parse_filepath(tmp.c_str());
-        ::printf("**************** End analysis (%s)\n\n", ent->d_name);
-        clear_message_handlers();
-    }
-}
-
-void MAVLink_Reader::parse_filepath(const char *filepath)
-{
-    int fd = open(filepath, O_RDONLY);
-    if (fd == -1) {
-        fprintf(stderr, "Failed to open (%s): %s\n", filepath, strerror(errno));
-        exit(1);
-    }
-
-    examining_filename = filepath;
-    return parse_fd(fd);
-}
-
 void MAVLink_Reader::parse_fd(int fd)
 {
     mavlink_message_t mav_msg;
@@ -579,15 +374,4 @@ void MAVLink_Reader::parse_fd(int fd)
     }
 
     // ::fprintf(stderr, "Packet count: %d\n", packet_count);
-}
-
-
-/*
-* main - entry point
-*/
-int main(int argc, char* argv[])
-{
-    MAVLink_Reader reader;
-    reader.parse_arguments(argc, argv);
-    reader.run();
 }

@@ -37,7 +37,7 @@ public:
 class Analyzer : public MAVLink_Message_Handler {
 
 public:
-    Analyzer(int fd, struct sockaddr_in &sa, AnalyzerVehicle::Base *&vehicle) :
+    Analyzer(int fd, struct sockaddr_in *sa, AnalyzerVehicle::Base *&vehicle) :
 	MAVLink_Message_Handler(fd, sa),
         evilness(0),
         _vehicle(vehicle),

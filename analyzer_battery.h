@@ -11,7 +11,7 @@
 class Analyzer_Battery : public Analyzer {
 
 public:
-    Analyzer_Battery(int fd, struct sockaddr_in &sa, AnalyzerVehicle::Base *&vehicle) :
+    Analyzer_Battery(int fd, struct sockaddr_in *sa, AnalyzerVehicle::Base *&vehicle) :
 	Analyzer(fd, sa, vehicle),
         seen_sys_status_packets(false),
         lowest_battery_remaining_seen(999999999.0f)

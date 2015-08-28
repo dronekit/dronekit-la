@@ -21,7 +21,7 @@ CXXFLAGS += -Wall $(INCS) $(STD) -g -DGIT_VERSION=\"$(GIT_VERSION)\"
 
 DLIBS += -ljsoncpp
 
-SRCS_CPP = dataflash_logger.cpp
+# SRCS_CPP = dataflash_logger.cpp
 SRCS_CPP += INIReader.cpp
 SRCS_CPP += analyzer_util.cpp
 SRCS_CPP += mavlink_message_handler.cpp
@@ -40,19 +40,25 @@ SRCS_CPP += analyzer_attitude_control.cpp
 SRCS_CPP += analyzervehicle_copter.cpp
 SRCS_CPP += analyzervehicle.cpp
 SRCS_CPP += la-log.cpp
+SRCS_CPP += common_tool.cpp
 SRCS_C = util.c ini.c
 
 OBJS = $(SRCS_CPP:.cpp=.o) $(SRCS_C:.c=.o)
 
-MAIN = dataflash_logger # actually, the main is in mavlink_reader...
+DATAFLASH_LOGGER = dataflash_logger
 
-all: $(MAIN)
+LOG_ANALYZER = loganalyzer
 
-$(MAIN): $(OBJS)
-	$(LINK.cpp) -o $(MAIN) $(OBJS) $(LIBS) $(DLIBS)
+all: $(DATAFLASH_LOGGER) $(LOG_ANALYZER)
+
+$(DATAFLASH_LOGGER): $(OBJS) dataflash_logger.cpp
+	$(LINK.cpp) -o $(DATAFLASH_LOGGER) dataflash_logger.cpp $(OBJS) $(LIBS) $(DLIBS)
+
+$(LOG_ANALYZER): $(OBJS) loganalyzer.cpp
+	$(LINK.cpp) -o $(LOG_ANALYZER) loganalyzer.cpp $(OBJS) $(LIBS) $(DLIBS)
 
 clean:
-	$(RM) *.o *~ $(MAIN)
+	$(RM) *.o *~ $(DATAFLASH_LOGGER) $(LOG_ANALYZER)
 
 test: clean all
 	cd test; ./test.sh

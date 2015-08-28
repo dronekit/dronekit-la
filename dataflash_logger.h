@@ -16,7 +16,7 @@
 class DataFlash_Logger : public MAVLink_Message_Handler {
 
 public:
-    DataFlash_Logger(int fd, struct sockaddr_in &sa) :
+    DataFlash_Logger(int fd, struct sockaddr_in *sa) :
 	MAVLink_Message_Handler(fd, sa),
 	sender_system_id(0),
 	sender_component_id(0),

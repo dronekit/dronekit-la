@@ -12,7 +12,7 @@ class Analyzer_Attitude_Control : public Analyzer {
 
 public:
 
-    Analyzer_Attitude_Control(int fd, struct sockaddr_in &sa, AnalyzerVehicle::Base *&vehicle) :
+    Analyzer_Attitude_Control(int fd, struct sockaddr_in *sa, AnalyzerVehicle::Base *&vehicle) :
 	Analyzer(fd, sa, vehicle),
         offset_warn(5.0), // degrees
         offset_fail(7.5), // degrees

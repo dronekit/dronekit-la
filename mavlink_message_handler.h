@@ -21,7 +21,7 @@
 
 class MAVLink_Message_Handler {
 public:
-    MAVLink_Message_Handler(int fd, struct sockaddr_in &sa) :
+    MAVLink_Message_Handler(int fd, struct sockaddr_in *sa) :
 	_fd_telem_forwarder(fd),
 	_sa_telemetry_forwarder(sa)
     { }
@@ -63,7 +63,7 @@ protected:
     uint8_t component_id;
 
     int _fd_telem_forwarder;
-    struct sockaddr_in &_sa_telemetry_forwarder;
+    struct sockaddr_in *_sa_telemetry_forwarder;
 private:
 };
 

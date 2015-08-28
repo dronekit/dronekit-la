@@ -11,7 +11,7 @@
 class Analyzer_Ever_Armed : public Analyzer {
 
 public:
-    Analyzer_Ever_Armed(int fd, struct sockaddr_in &sa, AnalyzerVehicle::Base *&vehicle) :
+    Analyzer_Ever_Armed(int fd, struct sockaddr_in *sa, AnalyzerVehicle::Base *&vehicle) :
 	Analyzer(fd, sa, vehicle),
         ever_armed(false)        
     { }

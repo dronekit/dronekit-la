@@ -2,6 +2,7 @@
 #define _ANALYZER_UTIL
 
 #include <string>
+#include <string.h>
 
 // from: http://stackoverflow.com/questions/2342162/stdstring-formatting-like-sprintf
 #include <memory>
