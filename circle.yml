@@ -1,8 +1,8 @@
 dependencies:
   pre:
-    - apt-get update -y
-    - apt-get install -y build-essentials
-    - apt-get install -y libjsoncpp-dev libjsoncpp0
+    - sudo apt-get update -y
+    - sudo apt-get install -y build-essentials
+    - sudo apt-get install -y libjsoncpp-dev libjsoncpp0
 test:
-  - make clean
-  - make
+  override:
+    - make
