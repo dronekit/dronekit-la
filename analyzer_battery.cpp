@@ -1,8 +1,5 @@
 #include "analyzer_battery.h"
 
-#include <syslog.h>
-#include <stdio.h>
-#include <unistd.h> // for fork()
 #include "util.h"
 #include "analyzer_util.h"
 
@@ -17,7 +14,6 @@ bool Analyzer_Battery::has_failed() {
     return (lowest_battery_remaining_seen < low_battery_threshold);
 }
 
-// swiped from AnalyzerTest_Compass in experimental ArduPilot tree:
 void Analyzer_Battery::handle_decoded_message(uint64_t T, mavlink_sys_status_t &sys_status)
 {
     if (sys_status.battery_remaining < lowest_battery_remaining_seen) {

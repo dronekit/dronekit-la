@@ -1,9 +1,9 @@
 #include "analyzer_compass_offsets.h"
 
-#include <syslog.h>
 #include <stdio.h>
 
 #include "util.h"
+#include "analyzer_util.h"
 
 bool Analyzer_Compass_Offsets::configure(INIReader *config) {
     if (!MAVLink_Message_Handler::configure(config)) {
@@ -12,73 +12,79 @@ bool Analyzer_Compass_Offsets::configure(INIReader *config) {
     return true;
 }
 
-// void Analyzer_Compass_Offsets::handle_decoded_message(mavlink_param_value_t &param)
-// {
-//     ::printf("Param found\n");
-// }
-
 double vec_len(double vec[3]) {
     return sqrt(vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2]);
 }
 
-// swiped from AnalyzeTest_Compass in experimental ArduPilot tree:
-void Analyzer_Compass_Offsets::handle_decoded_message(uint64_t T, mavlink_param_value_t &param)
+// true if we have all elements of vector and we haven't processed
+// this vector before
+bool Analyzer_Compass_Offsets::new_compass_results()
 {
-    int8_t ofs = -1;
-    const char *name = param.param_id;
-    const uint8_t namelen = MAVLINK_MSG_PARAM_VALUE_FIELD_PARAM_ID_LEN;
-    float value = param.param_value;
+    if (!_vehicle->param_seen("COMPASS_OFS_X") ||
+        !_vehicle->param_seen("COMPASS_OFS_Y") ||
+        !_vehicle->param_seen("COMPASS_OFS_Z")) {
+        // we haven't seen the entire vector yet
+        return false;
+    }
+
+    if (_vehicle->param_modtime("COMPASS_OFS_X") == modtime_compass_ofs[0] &&
+        _vehicle->param_modtime("COMPASS_OFS_Y") == modtime_compass_ofs[1] &&
+        _vehicle->param_modtime("COMPASS_OFS_Z") == modtime_compass_ofs[2]) {
+        // nothing has changed; at time of writing we get called for
+        // every parameter which is set (low-bandwidth, so *shrug*)
+        return false;
+    }
+
+    modtime_compass_ofs[0] = _vehicle->param_modtime("COMPASS_OFS_X");
+    modtime_compass_ofs[1] = _vehicle->param_modtime("COMPASS_OFS_Y");
+    modtime_compass_ofs[2] = _vehicle->param_modtime("COMPASS_OFS_Z");
+
+    return true;
+}
+
+void Analyzer_Compass_Offsets::evaluate(uint64_t T)
+{
 
     if (compass_offset_results_offset == MAX_COMPASS_OFFSET_RESULTS) {
         compass_offset_results_overrun = true;
         return;
     }
-    // watch the following; name is not null-terminated when 16-bytes long ;-)
-    // ::printf("Param: %s = %f\n", name, value);
 
-    if (!strncmp(name, "COMPASS_OFS_X", namelen)) {
-        ofs = 0;
-    } else if (!strncmp(name, "COMPASS_OFS_Y", namelen)) {
-        ofs = 1;
-    } else if (!strncmp(name, "COMPASS_OFS_Z", namelen)) {
-        ofs = 2;
+    if (! new_compass_results()) {
+        return;
     }
-    if (ofs != -1) {
-        if (have_compass_ofs[ofs] &&
-            compass_ofs[ofs] == value) {
-            // skip duplicate values
-            return;
-        }
-        compass_ofs[ofs] = value;
-        have_compass_ofs[ofs] = true;
-        if (have_compass_ofs[0] &&
-            have_compass_ofs[1] &&
-            have_compass_ofs[2]) {
-            double len = vec_len(compass_ofs);
-            compass_offset_status status;
-            if (len >= fail_offset) {
-                status = compass_offset_fail;
-                // ::printf("FAIL: COMPASS_OFS %f>%d\n", len, fail_offset);
-            } else if (len >= warn_offset) {
-                // ::printf("WARNING: COMPASS_OFS %f>%d\n", len, warn_offset);
-                status = compass_offset_warn;
-            } else if (is_zero(len)) {
-                // ::printf("WARNING: Zero COMPASS_OFS - that's probably bad\n");
-                status = compass_offset_zero;
-            } else {
-                // ::printf("OK: COMPASS_OFS %f looks good\n", len);
-                status = compass_offset_ok;
-            }
 
-            compass_offset_results[compass_offset_results_offset].len = len;
-            compass_offset_results[compass_offset_results_offset].status = status;
-            compass_offset_results[compass_offset_results_offset].timestamp = T;
-            compass_offset_results_offset++;
-            // have_compass_ofs[0] = false;
-            // have_compass_ofs[1] = false;
-            // have_compass_ofs[2] = false;
-        }
+    double compass_ofs[3];
+    compass_ofs[0] = _vehicle->param("COMPASS_OFS_X");
+    compass_ofs[1] = _vehicle->param("COMPASS_OFS_Y");
+    compass_ofs[2] = _vehicle->param("COMPASS_OFS_Z");
+
+    double len = vec_len(compass_ofs);
+    compass_offset_status status;
+    if (len >= fail_offset) {
+        status = compass_offset_fail;
+        // ::printf("FAIL: COMPASS_OFS %f>%d\n", len, fail_offset);
+    } else if (len >= warn_offset) {
+        // ::printf("WARNING: COMPASS_OFS %f>%d\n", len, warn_offset);
+        status = compass_offset_warn;
+    } else if (is_zero(len)) {
+        // ::printf("WARNING: Zero COMPASS_OFS - that's probably bad\n");
+        status = compass_offset_zero;
+    } else {
+        // ::printf("OK: COMPASS_OFS %f looks good\n", len);
+        status = compass_offset_ok;
     }
+
+    compass_offset_results[compass_offset_results_offset].len = len;
+    compass_offset_results[compass_offset_results_offset].status = status;
+    compass_offset_results[compass_offset_results_offset].timestamp = T;
+    compass_offset_results_offset++;
+}
+
+// swiped from AnalyzeTest_Compass in experimental ArduPilot tree:
+void Analyzer_Compass_Offsets::handle_decoded_message(uint64_t T, mavlink_param_value_t &param)
+{
+    evaluate(T);
 }
 
 #include <stdlib.h>

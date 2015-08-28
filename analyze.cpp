@@ -7,9 +7,10 @@
 #include "analyzer_ever_armed.h"
 #include "analyzer_ever_flew.h"
 #include "analyzer_good_ekf.h"
+#include "analyzer_attitude_control.h"
 #include "analyzer_battery.h"
 #include "analyzer_brownout.h"
-#include "analyzer_crashed.h"
+#include "analyzer_notcrashed.h"
 
 void Analyze::instantiate_analyzers(INIReader *config)
 {
@@ -18,21 +19,21 @@ void Analyze::instantiate_analyzers(INIReader *config)
 	exit(1);  // FIXME - throw exception
     }
 
-    Analyzer_Compass_Offsets *analyzer_compass_offsets = new Analyzer_Compass_Offsets(_fd_telem_forwarder, _sa_telemetry_forwarder);
+    Analyzer_Compass_Offsets *analyzer_compass_offsets = new Analyzer_Compass_Offsets(_fd_telem_forwarder, _sa_telemetry_forwarder, vehicle);
     if (analyzer_compass_offsets != NULL) {
         configure_analyzer(config, analyzer_compass_offsets, "Analyzer_Compass_Offsets");
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_compass_offsets");
     }
 
-    Analyzer_Ever_Armed *analyzer_ever_armed = new Analyzer_Ever_Armed(_fd_telem_forwarder, _sa_telemetry_forwarder);
+    Analyzer_Ever_Armed *analyzer_ever_armed = new Analyzer_Ever_Armed(_fd_telem_forwarder, _sa_telemetry_forwarder, vehicle);
     if (analyzer_ever_armed != NULL) {
         configure_analyzer(config, analyzer_ever_armed, "Analyzer_Ever_Armed");
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_ever_armed");
     }
 
-    Analyzer_Ever_Flew *analyzer_ever_flew = new Analyzer_Ever_Flew(_fd_telem_forwarder, _sa_telemetry_forwarder);
+    Analyzer_Ever_Flew *analyzer_ever_flew = new Analyzer_Ever_Flew(_fd_telem_forwarder, _sa_telemetry_forwarder, vehicle);
     if (analyzer_ever_flew != NULL) {
         configure_analyzer(config, analyzer_ever_flew, "Analyzer_Ever_Flew");
     } else {
@@ -40,21 +41,28 @@ void Analyze::instantiate_analyzers(INIReader *config)
     }
 
 
-    Analyzer_Good_EKF *analyzer_good_ekf = new Analyzer_Good_EKF(_fd_telem_forwarder, _sa_telemetry_forwarder);
+    Analyzer_Good_EKF *analyzer_good_ekf = new Analyzer_Good_EKF(_fd_telem_forwarder, _sa_telemetry_forwarder, vehicle);
     if (analyzer_good_ekf != NULL) {
         configure_analyzer(config, analyzer_good_ekf, "Analyzer_Good_EKF");
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_good_ekf");
     }
 
-    Analyzer_Battery *analyzer_battery = new Analyzer_Battery(_fd_telem_forwarder, _sa_telemetry_forwarder);
+    Analyzer_Attitude_Control *analyzer_attitude_control = new Analyzer_Attitude_Control(_fd_telem_forwarder, _sa_telemetry_forwarder, vehicle);
+    if (analyzer_attitude_control != NULL) {
+        configure_analyzer(config, analyzer_attitude_control, "Analyzer_Attitude_Control");
+    } else {
+        syslog(LOG_INFO, "Failed to create analyzer_attitude_control");
+    }
+
+    Analyzer_Battery *analyzer_battery = new Analyzer_Battery(_fd_telem_forwarder, _sa_telemetry_forwarder, vehicle);
     if (analyzer_battery != NULL) {
         configure_analyzer(config, analyzer_battery, "Analyzer_Battery");
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_battery");
     }
 
-    Analyzer_Brownout *analyzer_brownout = new Analyzer_Brownout(_fd_telem_forwarder, _sa_telemetry_forwarder);
+    Analyzer_Brownout *analyzer_brownout = new Analyzer_Brownout(_fd_telem_forwarder, _sa_telemetry_forwarder, vehicle);
     if (analyzer_brownout != NULL) {
         configure_analyzer(config, analyzer_brownout, "Analyzer_Brownout");
     } else {
@@ -62,11 +70,11 @@ void Analyze::instantiate_analyzers(INIReader *config)
     }
 
 
-    Analyzer_Crashed *analyzer_crashed = new Analyzer_Crashed(_fd_telem_forwarder, _sa_telemetry_forwarder);
-    if (analyzer_crashed != NULL) {
-        configure_analyzer(config, analyzer_crashed, "Analyzer_Crashed");
+    Analyzer_NotCrashed *analyzer_notcrashed = new Analyzer_NotCrashed(_fd_telem_forwarder, _sa_telemetry_forwarder, vehicle);
+    if (analyzer_notcrashed != NULL) {
+        configure_analyzer(config, analyzer_notcrashed, "Analyzer_NotCrashed");
     } else {
-        syslog(LOG_INFO, "Failed to create analyzer_crashed");
+        syslog(LOG_INFO, "Failed to create analyzer_not_crashed");
     }
 }
 
@@ -342,6 +350,9 @@ void Analyze::end_of_log(uint32_t packet_count) {
     }
 
     Json::Value root;
+    root["format-version"] = "0.1";
+    root["timestamp"] = (Json::UInt64)start_time;
+    root["duration"] = (Json::UInt64)(now() - start_time);
 
     results_json(root);
 
@@ -364,41 +375,92 @@ void Analyze::end_of_log(uint32_t packet_count) {
 }
 
 void Analyze::handle_decoded_message(uint64_t T, mavlink_ahrs2_t &msg) {
+    if (!vehicle) {
+        return;
+    }
     for(int i=0; i<next_analyzer; i++) {
         analyzer[i]->handle_decoded_message(T, msg);
     }
 }
 void Analyze::handle_decoded_message(uint64_t T, mavlink_attitude_t &msg) {
+    if (!vehicle) {
+        return;
+    }
+    vehicle->handle_decoded_message(T, msg);
     for(int i=0; i<next_analyzer; i++) {
         analyzer[i]->handle_decoded_message(T, msg);
     }
 }
 void Analyze::handle_decoded_message(uint64_t T, mavlink_heartbeat_t &msg) {
+    if (!vehicle) {
+        return;
+    }
+    vehicle->handle_decoded_message(T, msg);
+    for(int i=0; i<next_analyzer; i++) {
+        analyzer[i]->handle_decoded_message(T, msg);
+    }
+}
+void Analyze::handle_decoded_message(uint64_t T, mavlink_nav_controller_output_t &msg) {
+    if (!vehicle) {
+        return;
+    }
+    vehicle->handle_decoded_message(T, msg);
     for(int i=0; i<next_analyzer; i++) {
         analyzer[i]->handle_decoded_message(T, msg);
     }
 }
 void Analyze::handle_decoded_message(uint64_t T, mavlink_param_value_t &msg) {
+    if (!vehicle) {
+        return;
+    }
+    vehicle->handle_decoded_message(T, msg);
     for(int i=0; i<next_analyzer; i++) {
         analyzer[i]->handle_decoded_message(T, msg);
     }
 }
 void Analyze::handle_decoded_message(uint64_t T, mavlink_servo_output_raw_t &msg) {
+    if (!vehicle) {
+        return;
+    }
+    vehicle->handle_decoded_message(T, msg);
     for(int i=0; i<next_analyzer; i++) {
         analyzer[i]->handle_decoded_message(T, msg);
     }
 }
 void Analyze::handle_decoded_message(uint64_t T, mavlink_ekf_status_report_t &msg) {
+    if (!vehicle) {
+        return;
+    }
     for(int i=0; i<next_analyzer; i++) {
         analyzer[i]->handle_decoded_message(T, msg);
     }
 }
 void Analyze::handle_decoded_message(uint64_t T, mavlink_sys_status_t &msg) {
+    if (!vehicle) {
+        return;
+    }
     for(int i=0; i<next_analyzer; i++) {
         analyzer[i]->handle_decoded_message(T, msg);
     }
 }
 void Analyze::handle_decoded_message(uint64_t T, mavlink_vfr_hud_t &msg) {
+    if (!vehicle) {
+        return;
+    }
+    for(int i=0; i<next_analyzer; i++) {
+        analyzer[i]->handle_decoded_message(T, msg);
+    }
+}
+void Analyze::handle_decoded_message(uint64_t T, mavlink_statustext_t &msg) {
+    if (!vehicle) {
+        if (strstr(msg.text, "APM:Copter")) {
+            vehicle = new AnalyzerVehicle::Copter();
+        }
+    }
+    if (!vehicle) {
+        return;
+    }
+    vehicle->handle_decoded_message(T, msg);
     for(int i=0; i<next_analyzer; i++) {
         analyzer[i]->handle_decoded_message(T, msg);
     }

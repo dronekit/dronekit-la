@@ -1,8 +1,5 @@
 #include "analyzer_good_ekf.h"
 
-#include <syslog.h>
-#include <stdio.h>
-#include <unistd.h> // for fork()
 #include "util.h"
 #include "analyzer_util.h"
 

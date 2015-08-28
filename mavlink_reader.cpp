@@ -24,8 +24,6 @@
 
 #include <dirent.h>
 
-#define streq(a, b) (!strcmp(a, b))
-
 static bool sighup_received = false;
 void sighup_handler(int signal)
 {
@@ -196,9 +194,21 @@ void MAVLink_Reader::handle_message_received(uint64_t timestamp, mavlink_message
         handle_decoded_message_received(timestamp, decoded); // template in .h
         break;
     }
+    case MAVLINK_MSG_ID_EKF_STATUS_REPORT: {
+        mavlink_ekf_status_report_t decoded;
+        mavlink_msg_ekf_status_report_decode(&msg, &decoded);
+        handle_decoded_message_received(timestamp, decoded); // template in .h
+        break;
+    }
     case MAVLINK_MSG_ID_HEARTBEAT: {
         mavlink_heartbeat_t decoded;
         mavlink_msg_heartbeat_decode(&msg, &decoded);
+        handle_decoded_message_received(timestamp, decoded); // template in .h
+        break;
+    }
+    case MAVLINK_MSG_ID_NAV_CONTROLLER_OUTPUT: {
+        mavlink_nav_controller_output_t decoded;
+        mavlink_msg_nav_controller_output_decode(&msg, &decoded);
         handle_decoded_message_received(timestamp, decoded); // template in .h
         break;
     }
@@ -214,9 +224,9 @@ void MAVLink_Reader::handle_message_received(uint64_t timestamp, mavlink_message
         handle_decoded_message_received(timestamp, decoded); // template in .h
         break;
     }
-    case MAVLINK_MSG_ID_EKF_STATUS_REPORT: {
-        mavlink_ekf_status_report_t decoded;
-        mavlink_msg_ekf_status_report_decode(&msg, &decoded);
+    case MAVLINK_MSG_ID_STATUSTEXT: {
+        mavlink_statustext_t decoded;
+        mavlink_msg_statustext_decode(&msg, &decoded);
         handle_decoded_message_received(timestamp, decoded); // template in .h
         break;
     }
