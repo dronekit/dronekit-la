@@ -41,6 +41,8 @@ SRCS_CPP += analyzervehicle_copter.cpp
 SRCS_CPP += analyzervehicle.cpp
 SRCS_CPP += la-log.cpp
 SRCS_CPP += common_tool.cpp
+SRCS_CPP += telem_forwarder_client.cpp
+SRCS_CPP += dataflash_logger.cpp 
 SRCS_C = util.c ini.c
 
 OBJS = $(SRCS_CPP:.cpp=.o) $(SRCS_C:.c=.o)
@@ -51,8 +53,8 @@ LOG_ANALYZER = loganalyzer
 
 all: $(DATAFLASH_LOGGER) $(LOG_ANALYZER)
 
-$(DATAFLASH_LOGGER): $(OBJS) dataflash_logger.cpp
-	$(LINK.cpp) -o $(DATAFLASH_LOGGER) dataflash_logger.cpp $(OBJS) $(LIBS) $(DLIBS)
+$(DATAFLASH_LOGGER): $(OBJS) dataflash_logger_program.cpp
+	$(LINK.cpp) -o $(DATAFLASH_LOGGER) dataflash_logger_program.cpp $(OBJS) $(LIBS) $(DLIBS)
 
 $(LOG_ANALYZER): $(OBJS) loganalyzer.cpp
 	$(LINK.cpp) -o $(LOG_ANALYZER) loganalyzer.cpp $(OBJS) $(LIBS) $(DLIBS)

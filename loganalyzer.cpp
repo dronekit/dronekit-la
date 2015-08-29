@@ -109,6 +109,7 @@ void LogAnalyzer::run()
     INIReader *config = get_config();
 
     reader = new MAVLink_Reader(config);
+    reader->set_is_tlog(true);
 
     if (_pathname == NULL) {
         usage();

@@ -3,14 +3,9 @@
 #include <errno.h>
 #include <stdio.h> // for perror
 #include <stdlib.h> // for abort
-#include <sys/mman.h> // for MCL_ macros and mlockall
 #include "la-log.h"
 
 #include <unistd.h> // for usleep
-
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 
 #include <signal.h>
 #include <fcntl.h>
@@ -41,51 +36,6 @@ int MAVLink_Reader::can_log_error()
 }
 
 
-/*
-* create_and_bind - create a socket and bind it to a local UDP port
-*
-* Used to create the socket on the upstream side that receives from and sends
-* to telem_forwarder
-*
-* Returns fd on success, -1 on error.
-*/
-void MAVLink_Reader::create_and_bind()
-{
-    int fd;
-    struct sockaddr_in sa;
-
-    fd = socket(AF_INET, SOCK_DGRAM, 0);
-    if (fd < 0) {
-        perror("socket");
-        abort();
-    }
-
-    memset(&sa, 0, sizeof(sa));
-    sa.sin_family = AF_INET;
-    sa.sin_addr.s_addr = htonl(INADDR_ANY);
-    sa.sin_port = 0; // we don't care what our port is
-
-    if (bind(fd, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
-        perror("bind");
-        abort();
-    }
-
-    fd_telem_forwarder = fd;
-} /* create_and_bind */
-
-
-void MAVLink_Reader::pack_telem_forwarder_sockaddr(INIReader *config)
-{
-    uint16_t tf_port = config->GetInteger("solo", "telem_forward_port", 14560);
-    std::string ip = config->Get("solo", "soloIp", "10.1.1.10");
-
-    memset(&sa_tf, 0, sizeof(sa_tf));
-    sa_tf.sin_family = AF_INET;
-    //    sa_tf.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-    inet_aton(ip.c_str(), &sa_tf.sin_addr); // useful for debugging
-    sa_tf.sin_port = htons(tf_port);
-}
-
 bool MAVLink_Reader::add_message_handler(MAVLink_Message_Handler *handler,
                                          const char *handler_name)
 {
@@ -109,41 +59,9 @@ void MAVLink_Reader::clear_message_handlers()
     next_message_handler = 0;
 }
 
-bool MAVLink_Reader::sane_telem_forwarder_packet(uint8_t *pkt, uint16_t pktlen)
-{
-    if (sa.sin_addr.s_addr != sa_tf.sin_addr.s_addr) {
-	unsigned skipped;
-	if ((skipped = can_log_error()) >= 0)
-	    la_log(LOG_ERR, "[%u] received packet not from solo (0x%08x)",
-		   skipped, sa.sin_addr.s_addr);
-	return false;
-    }
-    if (pktlen < 8) { 
-	unsigned skipped;
-	if ((skipped = can_log_error()) >= 0)
-	    la_log(LOG_ERR, "[%u] received runt packet (%d bytes)",
-		   skipped, pktlen);
-	return false;
-    }
-    if (pkt[0] != 254) {
-	unsigned skipped;
-	if ((skipped = can_log_error()) >= 0)
-	    la_log(LOG_ERR, "[%u] received bad magic (0x%02x)",
-		   skipped, pkt[0]);
-	return false;
-    }
-    if (pkt[1] != (pktlen - 8)) {
-	unsigned skipped;
-	if ((skipped = can_log_error()) >= 0)
-	    la_log(LOG_ERR, "[%u] inconsistent length (%u, %u)",
-		   skipped, pkt[1], pktlen);
-	return false;
-    }
-    return true;
-}
-
 void MAVLink_Reader::handle_message_received(uint64_t timestamp, mavlink_message_t msg)
 {
+    ::fprintf(stderr, "msg.msgid=%u\n", msg.msgid);
     switch(msg.msgid) {
     case MAVLINK_MSG_ID_AHRS2: {
         mavlink_ahrs2_t decoded;
@@ -181,6 +99,13 @@ void MAVLink_Reader::handle_message_received(uint64_t timestamp, mavlink_message
         handle_decoded_message_received(timestamp, decoded); // template in .h
         break;
     }
+    case MAVLINK_MSG_ID_REMOTE_LOG_DATA_BLOCK: {
+        mavlink_remote_log_data_block_t decoded;
+        abort();
+        mavlink_msg_remote_log_data_block_decode(&msg, &decoded);
+        handle_decoded_message_received(timestamp, decoded); // template in .h
+        break;
+    }
     case MAVLINK_MSG_ID_SERVO_OUTPUT_RAW: {
         mavlink_servo_output_raw_t decoded;
         mavlink_msg_servo_output_raw_decode(&msg, &decoded);
@@ -206,31 +131,6 @@ void MAVLink_Reader::handle_message_received(uint64_t timestamp, mavlink_message
         break;
     }
     }
-}
-
-void MAVLink_Reader::handle_packet_received(uint8_t *pkt, uint16_t size)
-{
-    // for(int i=0; i<next_message_handler; i++) {
-    //     message_handler[i]->handle_packet(pkt, res);
-    // }
-}
-
-void MAVLink_Reader::handle_telem_forwarder_recv()
-{
-    // ::printf("Receiving packet\n");
-    /* packet from telem_forwarder */
-    uint8_t pkt[TELEM_PKT_MAX];
-    socklen_t sa_len = sizeof(sa);
-    uint16_t res = recvfrom(fd_telem_forwarder, pkt, sizeof(pkt), 0, (struct sockaddr*)&sa, &sa_len);
-
-    /* We get one mavlink packet per udp datagram. Sanity checks here
-       are: must be from solo's IP and have a valid mavlink header. */
-    if (!sane_telem_forwarder_packet(pkt, res)) {
-	return;
-    }
-
-    /* packet is from solo and passes sanity checks */
-    handle_packet_received(pkt, res);
 }
 
 void MAVLink_Reader::do_idle_callbacks() {
@@ -261,82 +161,47 @@ void MAVLink_Reader::do_idle_callbacks() {
     }
 }
 
-void MAVLink_Reader::sighup_handler(int signal)
+void MAVLink_Reader::sighup_handler()
 {
-    sighup_received = true;
+    for(int i=0; i<next_message_handler; i++) {
+        message_handler[i]->sighup_received();
+    }
 }
 
-void MAVLink_Reader::telem_forwarder_loop()
+
+uint32_t MAVLink_Reader::feed(const uint8_t *buf, const uint32_t len)
 {
-    while (1) {
-	if (sighup_received) {
-	    for(int i=0; i<next_message_handler; i++) {
-		message_handler[i]->sighup_received();
-	    }
-	    sighup_received = false;
-	}
-        /* Wait for a packet, or time out if no packets arrive so we always
-           periodically log status and check for new destinations. Downlink
-           packets are on the order of 100/sec, so the timeout is such that
-           we don't expect timeouts unless solo stops sending packets. We
-           almost always get a packet with a 200 msec timeout, but not with
-           a 100 msec timeout. (Timeouts don't really matter though.) */
-
-	struct timeval timeout;
-
-        fd_set fds;
-        fd_set fds_err;
-        FD_ZERO(&fds);
-        uint8_t nfds = 0;
-        FD_SET(fd_telem_forwarder, &fds);
-        if (fd_telem_forwarder >= nfds)
-            nfds = fd_telem_forwarder + 1;
-	fds_err = fds;
-
-        timeout.tv_sec = 0;
-        timeout.tv_usec = 200000;
-        int res = select(nfds, &fds, NULL, &fds_err, &timeout);
-
-        if (res < 0) {
-            unsigned skipped;
-            if ((skipped = can_log_error()) >= 0)
-                la_log(LOG_ERR, "[%u] select: %s", skipped, strerror(errno));
-            /* this sleep is to avoid soaking the CPU if select starts
-               returning immediately for some reason */
-	    /* previous code was not checking errfds; we are now, so
-	       perhaps this usleep can go away -pb20150730 */
-            usleep(10000);
-            continue;
+    for (uint32_t i=0; i<len; i++) {
+        // ::printf("Read (%d)\n", i);
+        if (is_tlog() && !done_timestamp) {
+            timestamp <<= 8;
+            timestamp |= (uint8_t)(buf[i]);
+            if (timestamp_offset++ == 7) {
+                done_timestamp = true;
+                // ::printf("timestamp (%lu)\n", timestamp);
+                timestamp_offset = 0;
+            }
+        } else {
+            if (mavlink_parse_char(MAVLINK_COMM_0, buf[i], &mav_msg, &mav_status)) {
+                if (!is_tlog()) {
+                    timestamp = now();
+                }
+                printf("message received at %d (parse_errors=%u)\n", i, mav_status.parse_error);
+                handle_message_received(timestamp, mav_msg);
+                packet_count++;
+                done_timestamp = false;
+                timestamp = 0;
+            } else {
+                printf("   %u state: %u\n", i, mav_status.parse_state);
+            }
         }
-
-        if (res == 0) {
-	  // select timeout
-        }
-
-        /* check for packets from telem_forwarder */
-        if (FD_ISSET(fd_telem_forwarder, &fds_err)) {
-            unsigned skipped;
-            if ((skipped = can_log_error()) >= 0)
-                la_log(LOG_ERR, "[%u] select(fd_telem_forwarder): %s", skipped, strerror(errno));
-	}
-
-        if (FD_ISSET(fd_telem_forwarder, &fds)) {
-   	    handle_telem_forwarder_recv();
-        }
-
-	do_idle_callbacks();
-    } /* while (1) */
+    }
+    return len; // at the moment we parse everything we receive
 }
 
 void MAVLink_Reader::parse_fd(int fd)
 {
-    mavlink_message_t mav_msg;
-    mavlink_status_t mav_status;
     char buf[1<<16];
-    uint32_t packet_count = 0;
-    uint8_t timestamp_offset = 0;
-    bool done_timestamp = false;
-    uint64_t timestamp = 0;
     while (true) {
         ssize_t bytes_read = read(fd, buf, sizeof(buf));
         if (bytes_read == -1) { 
@@ -347,26 +212,7 @@ void MAVLink_Reader::parse_fd(int fd)
             break;
         }
 
-        for (uint32_t i=0; i<bytes_read; i++) {
-            // ::printf("Read (%d)\n", i);
-            if (!done_timestamp) {
-                timestamp <<= 8;
-                timestamp |= (uint8_t)(buf[i]);
-                if (timestamp_offset++ == 7) {
-                    done_timestamp = true;
-                    // ::printf("timestamp (%lu)\n", timestamp);
-                    timestamp_offset = 0;
-                }
-            } else {
-                if (mavlink_parse_char(MAVLINK_COMM_0, buf[i], &mav_msg, &mav_status)) {
-                    // printf("Packet received at %d\n", i);
-                    handle_message_received(timestamp, mav_msg);
-                    packet_count++;
-                    done_timestamp = false;
-                    timestamp = 0;
-                }
-            }
-        }
+        feed((uint8_t*)buf, bytes_read);
     }
 
     for(int i=0; i<next_message_handler; i++) {

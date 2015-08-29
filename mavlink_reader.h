@@ -17,14 +17,14 @@
 class MAVLink_Reader {
 public:
     MAVLink_Reader(INIReader *config) :
-        fd_telem_forwarder(-1),
         _config(config),
         sighup_received(false),
         log_interval_us(10 * 1000000),
 	next_message_handler(0),
 	err_skipped(0),
 	err_time_us(0),            /* last time we logged */
-	err_interval_us(1000000)  /* once per second max */
+	err_interval_us(1000000),  /* once per second max */
+        _is_tlog(false)
     {
         uint64_t now_us = clock_gettime_us(CLOCK_MONOTONIC);
 	next_tenthhz_time = now_us;
@@ -35,23 +35,24 @@ public:
     void run();
     void clear_message_handlers();
 
-    void sighup_handler(int signal);
+    void sighup_handler();
 
     bool add_message_handler(MAVLink_Message_Handler *handler,
                              const char *handler_name);
     void pack_telem_forwarder_sockaddr(INIReader *config);
     void create_and_bind();
 
-    // public temporarily:
-    int fd_telem_forwarder;
-    struct sockaddr_in sa;
-    struct sockaddr_in sa_tf; /* solo's address */
-    void telem_forwarder_loop();
+    uint32_t feed(const uint8_t *buf, const uint32_t len);
 
+    // this will probably move?
     void parse_fd(int fd);
 
-private:
+    void do_idle_callbacks();
 
+    void set_is_tlog(bool value) { _is_tlog = value; }
+    bool is_tlog() { return _is_tlog; }
+
+private:
     INIReader *_config;
     bool sane_telem_forwarder_packet(uint8_t *pkt, uint16_t pktlen);
     void handle_telem_forwarder_recv();
@@ -86,7 +87,14 @@ private:
     uint64_t err_time_us;
     uint64_t err_interval_us;
 
-    void do_idle_callbacks();
+    uint32_t packet_count = 0;
+    uint8_t timestamp_offset = 0;
+    bool done_timestamp = false;
+    uint64_t timestamp = 0;
+    mavlink_message_t mav_msg;
+    mavlink_status_t mav_status;
+
+    bool _is_tlog;
 };
 
 

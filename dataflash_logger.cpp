@@ -1,20 +1,12 @@
-#include "common_tool.h"
-
 #include "dataflash_logger.h"
-#include "heart.h"
 
 #include <signal.h>
-
-#include "mavlink_reader.h"
-
-#include "la-log.h"
-
 #include <stdio.h> // for snprintf
-#include <syslog.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <unistd.h>
 
+#include "la-log.h"
 #include "util.h"
 #include "mavlink/c_library/common/mavlink.h"
 
@@ -27,7 +19,7 @@ void DataFlash_Logger::idle_tenthHz()
 {
     // the following isn't quite right given we seek around...
     if (logging_started) {
-	syslog(LOG_INFO, "Current log size: %ld", lseek(out_fd, 0, SEEK_CUR));
+	la_log(LOG_INFO, "mh-dfl: Current log size: %ld", lseek(out_fd, 0, SEEK_CUR));
     }
 }
 
@@ -48,7 +40,7 @@ void DataFlash_Logger::idle_10Hz()
 	// if no data packet in 10 seconds then close log
         uint64_t now_us = clock_gettime_us(CLOCK_MONOTONIC);
 	if (now_us - _last_data_packet_time > 10000000) {
-	    syslog(LOG_INFO, "No data packets received for some time (%ld/%ld).  Closing log.  Final log size: %ld", now_us,_last_data_packet_time, lseek(out_fd, 0, SEEK_CUR));
+	    la_log(LOG_INFO, "mh-dfl: No data packets received for some time (%ld/%ld).  Closing log.  Final log size: %ld", now_us,_last_data_packet_time, lseek(out_fd, 0, SEEK_CUR));
 	    logging_stop();
 	}
     }
@@ -98,20 +90,6 @@ bool DataFlash_Logger::configure(INIReader *config)
     return true;
 }
 
-void DataFlash_Logger::handle_packet(uint8_t *pkt, uint16_t pktlen)
-{
-    /* manual unpacking! */
-    // uint8_t seq = pkt[2];
-    // uint8_t sys_id = pkt[3];
-    // uint8_t comp_id = pkt[4];
-    uint8_t msg_id = pkt[5];
-
-    // ::printf("msg_id=%d\n", msg_id);
-    if (msg_id == MAVLINK_MSG_ID_REMOTE_LOG_DATA_BLOCK) {
-	return handle_packet_remote_log_data_block(pkt, pktlen);
-    }
-}
-
 bool DataFlash_Logger::make_new_log_filename(char *buffer, uint8_t bufferlen)
 {
     time_t t;
@@ -144,10 +122,10 @@ bool DataFlash_Logger::output_file_open()
     out_fd = open(filename, O_WRONLY|O_CREAT|O_TRUNC, 0777);
     if (out_fd == -1) {
 	printf("Failed to open (%s): %s\n", filename, strerror(errno));
-	syslog(LOG_ERR, "Failed to open (%s): %s", filename, strerror(errno));
+	la_log(LOG_ERR, "Failed to open (%s): %s", filename, strerror(errno));
 	return false;
     }
-    syslog(LOG_INFO, "Opened log file (%s)", filename);
+    la_log(LOG_INFO, "Opened log file (%s)", filename);
 
     return true;
 }
@@ -201,7 +179,7 @@ bool DataFlash_Logger::logging_start(uint8_t *pkt, uint16_t pktlen)
 {
     sender_system_id = pkt[3];
     sender_component_id = pkt[4];
-    syslog(LOG_INFO, "Starting log, target is (%d/%d)",
+    la_log(LOG_INFO, "mh-dfl: Starting log, target is (%d/%d)",
 	   sender_system_id, sender_component_id);
     if (!output_file_open()) {
 	return false;
@@ -216,47 +194,52 @@ void DataFlash_Logger::logging_stop()
     logging_started = false;
 }
 
-void DataFlash_Logger::handle_packet_remote_log_data_block(uint8_t *pkt, uint16_t pktlen)
+void handle_decoded_message(uint64_t T, mavlink_remote_log_data_block_t &msg)
 {
-    uint32_t seqno = *((uint32_t*)&pkt[6]);
-
-    if (!logging_started) {
-	if (seqno == 0) {
-	    if (!logging_start(pkt, pktlen)) {
-		return;
-	    }
-	} else {
-	    return;
-	}
-    }
-
-    // we could move this down to the end; that wold mean short-writes
-    // would end up closing this log...
-    _last_data_packet_time = clock_gettime_us(CLOCK_MONOTONIC);
-
-    const uint8_t length = pkt[12];
-    const uint8_t *data = &pkt[13];
-
-    /* send the dataflash data out to the log file */
-    lseek(out_fd,
-	  seqno*MAVLINK_MSG_REMOTE_LOG_DATA_BLOCK_FIELD_DATA_LEN,
-	  SEEK_SET);
-    if (write(out_fd, data, length) < length) {
-	syslog(LOG_ERR, "Short write: %s", strerror(errno));
-	// we'll get the block again... maybe we'll have better luck next time..
-	return;
-    }
-
-    // queue an ack for this packet
-    queue_ack(seqno);
-
-    // queue nacks for gaps
-    queue_gap_nacks(seqno);
-
-    if (seqno > highest_seqno_seen) {
-	highest_seqno_seen = seqno;
-    }
+    abort();
 }
+
+// void DataFlash_Logger::handle_packet_remote_log_data_block(uint8_t *pkt, uint16_t pktlen)
+// {
+//     uint32_t seqno = *((uint32_t*)&pkt[6]);
+
+//     if (!logging_started) {
+// 	if (seqno == 0) {
+// 	    if (!logging_start(pkt, pktlen)) {
+// 		return;
+// 	    }
+// 	} else {
+// 	    return;
+// 	}
+//     }
+
+//     // we could move this down to the end; that wold mean short-writes
+//     // would end up closing this log...
+//     _last_data_packet_time = clock_gettime_us(CLOCK_MONOTONIC);
+
+//     const uint8_t length = pkt[12];
+//     const uint8_t *data = &pkt[13];
+
+//     /* send the dataflash data out to the log file */
+//     lseek(out_fd,
+// 	  seqno*MAVLINK_MSG_REMOTE_LOG_DATA_BLOCK_FIELD_DATA_LEN,
+// 	  SEEK_SET);
+//     if (write(out_fd, data, length) < length) {
+// 	la_log(LOG_ERR, "Short write: %s", strerror(errno));
+// 	// we'll get the block again... maybe we'll have better luck next time..
+// 	return;
+//     }
+
+//     // queue an ack for this packet
+//     queue_ack(seqno);
+
+//     // queue nacks for gaps
+//     queue_gap_nacks(seqno);
+
+//     if (seqno > highest_seqno_seen) {
+// 	highest_seqno_seen = seqno;
+//     }
+// }
 
 void DataFlash_Logger::send_start_logging_packet()
 {
@@ -276,148 +259,14 @@ void DataFlash_Logger::send_start_or_stop_logging_packet(bool is_start)
     uint8_t component_id = is_start ? target_component_id : sender_component_id;
     uint32_t magic_number;
     if (is_start) {
-	syslog(LOG_INFO, "sending start packet to (%d/%d)", system_id,component_id);
+	la_log(LOG_INFO, "mh-dfl: sending start packet to (%d/%d)", system_id,component_id);
 	magic_number = MAV_REMOTE_LOG_DATA_BLOCK_START;
     } else {
-	syslog(LOG_INFO, "sending stop packet to (%d/%d)", system_id,component_id);
+	la_log(LOG_INFO, "mh-dfl: sending stop packet to (%d/%d)", system_id,component_id);
 	magic_number = MAV_REMOTE_LOG_DATA_BLOCK_STOP;
     }
     mavlink_msg_remote_log_block_status_pack
 	(system_id, component_id, &msg, system_id, component_id, magic_number, 1);
 
     send_message_to_telem_forwarder(msg);
-}
-
-class DataFlash_Logger_Program : Common_Tool {
-public:
-    DataFlash_Logger_Program() :
-        Common_Tool(),
-        use_telem_forwarder(false),
-        _argc(0),
-        _argv(NULL)
-        { }
-    void instantiate_message_handlers(INIReader *config,
-                                      int fd_telem_forwarder,
-                                      struct sockaddr_in *sa_tf);
-    void sighup_handler(int signal);
-    void run();
-    void parse_arguments(int argc, char *argv[]);
-    const char *program_name();
-
-private:
-    void usage();
-
-    bool use_telem_forwarder;
-    MAVLink_Reader *reader;
-
-    long _argc;
-    char **_argv;
-};
-
-const char *DataFlash_Logger_Program::program_name()
-{
-    if (_argv == NULL) {
-        return "[Unknown]";
-    }
-    return _argv[0];
-}
-
-void DataFlash_Logger_Program::usage()
-{
-    ::printf("Usage:\n");
-    ::printf("%s [OPTION] [FILE]\n", program_name());
-    ::printf(" -c filepath      use config file filepath\n");
-    ::printf(" -t               connect to telem forwarder to receive data\n");
-    ::printf(" -s style         use output style (plain-text|json)\n");
-    ::printf(" -h               display usage information\n");
-    ::printf("\n");
-    ::printf("Example: ./dataflash_logger -c /dev/null -s json 1.solo.tlog\n");
-    exit(0);
-}
-
-void DataFlash_Logger_Program::instantiate_message_handlers(INIReader *config,
-                                               int fd_telem_forwarder,
-                                               struct sockaddr_in *sa_tf)
-{
-    DataFlash_Logger *dataflash_logger = new DataFlash_Logger(fd_telem_forwarder, sa_tf);
-    if (dataflash_logger != NULL) {
-        reader->add_message_handler(dataflash_logger, "DataFlash_Logger");
-    } else {
-        la_log(LOG_INFO, "Failed to create dataflash logger");
-    }
-
-    Heart *heart= new Heart(fd_telem_forwarder, sa_tf);
-    if (heart != NULL) {
-        reader->add_message_handler(heart, "Heart");
-    } else {
-        la_log(LOG_INFO, "Failed to create heart");
-    }
-}
-
-DataFlash_Logger_Program logger;
-
-void sighup_handler(int signal)
-{
-    logger.sighup_handler(signal);
-}
-
-void DataFlash_Logger_Program::sighup_handler(int signal)
-{
-    reader->sighup_handler(signal);
-}
-    
-void DataFlash_Logger_Program::run()
-{
-    la_log(LOG_INFO, "dataflash_logger starting: built " __DATE__ " " __TIME__);
-    signal(SIGHUP, ::sighup_handler);
-
-    INIReader *config = get_config();
-
-    reader = new MAVLink_Reader(config);
-    if (reader == NULL) {
-        la_log(LOG_ERR, "Failed to create reader from (%s)\n", config_filename);
-        exit(1);
-    }
-
-    /* prepare sockaddr used to contact telem_forwarder */
-    reader->pack_telem_forwarder_sockaddr(config);
-
-    /* Prepare a port to receive and send data to/from telem_forwarder */
-    /* does not return on failure */
-    reader->create_and_bind();
-
-    instantiate_message_handlers(config, reader->fd_telem_forwarder, &reader->sa_tf);
-    return reader->telem_forwarder_loop();
-}
-
-void DataFlash_Logger_Program::parse_arguments(int argc, char *argv[])
-{
-    int opt;
-    _argc = argc;
-    _argv = argv;
-
-    while ((opt = getopt(argc, argv, "hc:ts:")) != -1) {
-        switch(opt) {
-        case 'h':
-            usage();
-            break;
-        case 'c':
-            config_filename = optarg;
-            break;
-        case 't':
-            use_telem_forwarder = true;
-            break;
-        }
-    }
-}
-
-
-
-/*
-* main - entry point
-*/
-int main(int argc, char* argv[])
-{
-    logger.parse_arguments(argc, argv);
-    logger.run();
 }

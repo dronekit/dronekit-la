@@ -58,9 +58,71 @@ void sighup_handler(int signal)
 
 void DataFlash_Logger_Program::sighup_handler(int signal)
 {
-    reader->sighup_handler(signal);
+    sighup_received = true;
 }
     
+void DataFlash_Logger_Program::loop()
+{
+    while (1) {
+	if (sighup_received) {
+            reader->sighup_handler();
+	    sighup_received = false;
+	}
+        /* Wait for a packet, or time out if no packets arrive so we always
+           periodically log status and check for new destinations. Downlink
+           packets are on the order of 100/sec, so the timeout is such that
+           we don't expect timeouts unless solo stops sending packets. We
+           almost always get a packet with a 200 msec timeout, but not with
+           a 100 msec timeout. (Timeouts don't really matter though.) */
+
+	struct timeval timeout;
+
+        fd_set fds;
+        fd_set fds_err;
+        FD_ZERO(&fds);
+        uint8_t nfds = 0;
+        FD_SET(client->fd_telem_forwarder, &fds);
+        if (client->fd_telem_forwarder >= nfds)
+            nfds = client->fd_telem_forwarder + 1;
+	fds_err = fds;
+
+        timeout.tv_sec = 0;
+        timeout.tv_usec = 200000;
+        int res = select(nfds, &fds, NULL, &fds_err, &timeout);
+
+        if (res < 0) {
+            unsigned skipped = 0;
+            // if ((skipped = can_log_error()) >= 0)
+            la_log(LOG_ERR, "[%u] select: %s", skipped, strerror(errno));
+            /* this sleep is to avoid soaking the CPU if select starts
+               returning immediately for some reason */
+	    /* previous code was not checking errfds; we are now, so
+	       perhaps this usleep can go away -pb20150730 */
+            usleep(10000);
+            continue;
+        }
+
+        if (res == 0) {
+	  // select timeout
+        }
+
+        /* check for packets from telem_forwarder */
+        if (FD_ISSET(client->fd_telem_forwarder, &fds_err)) {
+            unsigned skipped = 0;
+            // if ((skipped = can_log_error()) >= 0)
+                la_log(LOG_ERR, "[%u] select(fd_telem_forwarder): %s", skipped, strerror(errno));
+	}
+
+        if (FD_ISSET(client->fd_telem_forwarder, &fds)) {
+   	    uint32_t len = client->handle_recv();
+            ::fprintf(stderr, "feeding %u bytes\n", len);
+            reader->feed(_buf, len);
+        }
+
+	reader->do_idle_callbacks();
+    } /* while (1) */
+}
+
 void DataFlash_Logger_Program::run()
 {
     la_log(LOG_INFO, "dataflash_logger starting: built " __DATE__ " " __TIME__);
@@ -74,15 +136,11 @@ void DataFlash_Logger_Program::run()
         exit(1);
     }
 
-    /* prepare sockaddr used to contact telem_forwarder */
-    reader->pack_telem_forwarder_sockaddr(config);
+    client = new Telem_Forwarder_Client(_buf, sizeof(_buf));
+    client->configure(config);
 
-    /* Prepare a port to receive and send data to/from telem_forwarder */
-    /* does not return on failure */
-    reader->create_and_bind();
-
-    instantiate_message_handlers(config, reader->fd_telem_forwarder, &reader->sa_tf);
-    return reader->telem_forwarder_loop();
+    instantiate_message_handlers(config, client->fd_telem_forwarder, &client->sa_tf);
+    return loop();
 }
 
 void DataFlash_Logger_Program::parse_arguments(int argc, char *argv[])

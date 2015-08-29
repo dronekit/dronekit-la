@@ -1,9 +1,7 @@
 #include "heart.h"
 
-#include <syslog.h>
-#include <stdio.h>
-
 #include "util.h"
+#include "la-log.h"
 
 void Heart::idle_10Hz()
 {
@@ -33,7 +31,7 @@ void Heart::beat()
 
     mavlink_msg_heartbeat_pack(system_id, component_id, &msg, type, autopilot, base_mode, custom_mode, system_status);
 
-    syslog(LOG_INFO, "sending heartbeat");
+    la_log(LOG_INFO, "mh-h: sending heartbeat");
 
     send_message_to_telem_forwarder(msg);
 }

@@ -9,7 +9,7 @@ void MAVLink_Message_Handler::send_message_to_telem_forwarder(mavlink_message_t 
 
   uint16_t messageLen = mavlink_msg_to_send_buffer((uint8_t*)sendbuf,&msg);
 
-  if (sendto(_fd_telem_forwarder, sendbuf, messageLen, 0, (struct sockaddr *)&_sa_telemetry_forwarder, sizeof(_sa_telemetry_forwarder)) == -1) {
+  if (sendto(_fd_telem_forwarder, sendbuf, messageLen, 0, (struct sockaddr *)_sa_telemetry_forwarder, sizeof(struct sockaddr)) == -1) {
     la_log(LOG_INFO, "Failed sendto: %s", strerror(errno));
   }
 }
