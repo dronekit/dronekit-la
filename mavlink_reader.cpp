@@ -61,7 +61,7 @@ void MAVLink_Reader::clear_message_handlers()
 
 void MAVLink_Reader::handle_message_received(uint64_t timestamp, mavlink_message_t msg)
 {
-    ::fprintf(stderr, "msg.msgid=%u\n", msg.msgid);
+    // ::fprintf(stderr, "msg.msgid=%u\n", msg.msgid);
     switch(msg.msgid) {
     case MAVLINK_MSG_ID_AHRS2: {
         mavlink_ahrs2_t decoded;
@@ -81,9 +81,21 @@ void MAVLink_Reader::handle_message_received(uint64_t timestamp, mavlink_message
         handle_decoded_message_received(timestamp, decoded); // template in .h
         break;
     }
+    case MAVLINK_MSG_ID_GPS_RAW_INT: {
+        mavlink_gps_raw_int_t decoded;
+        mavlink_msg_gps_raw_int_decode(&msg, &decoded);
+        handle_decoded_message_received(timestamp, decoded); // template in .h
+        break;
+    }
     case MAVLINK_MSG_ID_HEARTBEAT: {
         mavlink_heartbeat_t decoded;
         mavlink_msg_heartbeat_decode(&msg, &decoded);
+        handle_decoded_message_received(timestamp, decoded); // template in .h
+        break;
+    }
+    case MAVLINK_MSG_ID_MOUNT_STATUS: {
+        mavlink_mount_status_t decoded;
+        mavlink_msg_mount_status_decode(&msg, &decoded);
         handle_decoded_message_received(timestamp, decoded); // template in .h
         break;
     }
@@ -186,13 +198,13 @@ uint32_t MAVLink_Reader::feed(const uint8_t *buf, const uint32_t len)
                 if (!is_tlog()) {
                     timestamp = now();
                 }
-                printf("message received at %d (parse_errors=%u)\n", i, mav_status.parse_error);
+                // printf("message received at %d (parse_errors=%u)\n", i, mav_status.parse_error);
                 handle_message_received(timestamp, mav_msg);
                 packet_count++;
                 done_timestamp = false;
                 timestamp = 0;
             } else {
-                printf("   %u state: %u\n", i, mav_status.parse_state);
+                // printf("   %u state: %u\n", i, mav_status.parse_state);
             }
         }
     }

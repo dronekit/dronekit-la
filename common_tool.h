@@ -5,8 +5,10 @@
 class Common_Tool {
 public:
     Common_Tool() :
-        config_filename(default_config_filename) {
-    }
+        _config(NULL),
+        config_filename(default_config_filename)
+        {
+        }
 
 protected:
     class INIReader *_config;

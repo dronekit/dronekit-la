@@ -51,13 +51,18 @@ DATAFLASH_LOGGER = dataflash_logger
 
 LOG_ANALYZER = loganalyzer
 
-all: $(DATAFLASH_LOGGER) $(LOG_ANALYZER)
+IMAGETAGGER = imagetagger
+
+all: $(DATAFLASH_LOGGER) $(LOG_ANALYZER) $(IMAGETAGGER)
 
 $(DATAFLASH_LOGGER): $(OBJS) dataflash_logger_program.cpp
 	$(LINK.cpp) -o $(DATAFLASH_LOGGER) dataflash_logger_program.cpp $(OBJS) $(LIBS) $(DLIBS)
 
 $(LOG_ANALYZER): $(OBJS) loganalyzer.cpp
 	$(LINK.cpp) -o $(LOG_ANALYZER) loganalyzer.cpp $(OBJS) $(LIBS) $(DLIBS)
+
+$(IMAGETAGGER): $(OBJS) imagetagger.cpp mh_imagetagger.cpp
+	$(LINK.cpp) -o $(IMAGETAGGER) imagetagger.cpp mh_imagetagger.cpp $(OBJS) $(LIBS) $(DLIBS)
 
 clean:
 	$(RM) *.o *~ $(DATAFLASH_LOGGER) $(LOG_ANALYZER)
