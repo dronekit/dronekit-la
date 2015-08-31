@@ -70,6 +70,8 @@ void ImageTagger::do_tagging(Image_Info *info)
         "-GPSLongitude=%f " \
         "-GPSLongitudeRef=%d " \
         "-GPSAltitude=%f " \
+        "-GPSDestBearing=%f " \
+        "-GPSDestBearingRef=%s " \
         "-GPSRoll=%f " \
         "-GPSPitch=%f " \
         ">%s",
@@ -79,6 +81,8 @@ void ImageTagger::do_tagging(Image_Info *info)
         fabs(info->longitude),
         int(info->longitude / fabs(info->longitude)),
         info->altitude,
+        (info->gimbal_yaw < 0) ? (360+info->gimbal_yaw) : info->gimbal_yaw,
+        "M",
         info->gimbal_roll,
         info->gimbal_pitch,
         exif_output_filepath);
