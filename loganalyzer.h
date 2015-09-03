@@ -44,9 +44,7 @@ private:
     const char *program_name();
 
     void usage();
-    void instantiate_message_handlers(INIReader *config,
-                                      int fd_telem_forwarder,
-                                      struct sockaddr_in *sa_tf);
+    void instantiate_message_handlers();
 };
 
 #endif

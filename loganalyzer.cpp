@@ -28,9 +28,7 @@ void LogAnalyzer::parse_path(const char *path)
 
     switch (buf.st_mode & S_IFMT) {
     case S_IFREG:
-        instantiate_message_handlers(_config, -1, NULL);
         parse_filepath(path);
-        reader->clear_message_handlers();
         return;
     case S_IFDIR:
         return parse_directory_full_of_files(path);
@@ -57,11 +55,9 @@ void LogAnalyzer::parse_directory_full_of_files(const char *dirpath)
         tmp += "/";
         tmp += ent->d_name;
 
-        instantiate_message_handlers(_config, -1, NULL);
         ::printf("**************** Analyzing (%s)\n", ent->d_name);
         parse_filepath(tmp.c_str());
         ::printf("**************** End analysis (%s)\n\n", ent->d_name);
-        reader->clear_message_handlers();
     }
 }
 
@@ -74,12 +70,12 @@ void LogAnalyzer::parse_filepath(const char *filepath)
     }
 
     examining_filename = filepath;
-    return reader->parse_fd(fd);
+    instantiate_message_handlers();
+    reader->parse_fd(fd);
+    reader->clear_message_handlers();
 }
 
-void LogAnalyzer::instantiate_message_handlers(INIReader *config,
-                                               int fd_telem_forwarder,
-                                               struct sockaddr_in *sa_tf)
+void LogAnalyzer::instantiate_message_handlers()
 {
     // if (use_telem_forwarder) {
     //     Heart *heart= new Heart(fd_telem_forwarder, sa_tf);
@@ -90,10 +86,10 @@ void LogAnalyzer::instantiate_message_handlers(INIReader *config,
     //     }
     // }
 
-    Analyze *analyze = new Analyze(fd_telem_forwarder, sa_tf);
+    Analyze *analyze = new Analyze();
     if (analyze != NULL) {
         analyze->set_output_style(output_style);
-        analyze->instantiate_analyzers(config);
+        analyze->instantiate_analyzers(_config);
         reader->add_message_handler(analyze, "Analyze");
     } else {
         la_log(LOG_ERR, "Failed to create analyze");
@@ -137,9 +133,6 @@ void LogAnalyzer::run()
     /* Prepare a port to receive and send data to/from telem_forwarder */
     /* does not return on failure */
     // reader.create_and_bind();
-
-    // instantiate_message_handlers(config, reader->fd_telem_forwarder, reader->sa_tf);
-    instantiate_message_handlers(config, -1, NULL);
 
     return parse_path(_pathname);
 }

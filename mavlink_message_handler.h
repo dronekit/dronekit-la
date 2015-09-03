@@ -25,6 +25,10 @@ public:
 	_fd_telem_forwarder(fd),
 	_sa_telemetry_forwarder(sa)
     { }
+    MAVLink_Message_Handler() :
+	_fd_telem_forwarder(-1),
+	_sa_telemetry_forwarder(NULL)
+    { }
 
     bool configure(INIReader *config) {
 	system_id = config->GetInteger("dflogger", "system_id", 254);
