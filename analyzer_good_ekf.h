@@ -61,7 +61,9 @@ public:
             T_start: 0
         }),
 
-        next_result_variance (0)
+        next_result_variance(0),
+        next_result_flags(0),
+        result_flags{ }
     {
     }
 
@@ -109,6 +111,19 @@ private:
     uint8_t next_result_variance;
     struct ekf_variance_result result_variance[MAX_VARIANCE_RESULTS];
 
+    struct ekf_flags_result {
+        uint64_t T_start;
+        uint64_t T_stop;
+        uint16_t flags;
+    };
+
+    #define MAX_FLAGS_RESULTS 100
+    uint8_t next_result_flags;
+    struct ekf_flags_result result_flags[MAX_FLAGS_RESULTS];
+
+    bool ekf_flags_bad(uint16_t flags);
+    void handle_flags(uint64_t T, uint16_t flags);
+
     void maybe_close_variance_result(struct ekf_variance_result &result);
     void close_variance_result(struct ekf_variance_result &result);
     void end_of_log(uint32_t packet_count) override;
@@ -119,6 +134,7 @@ private:
                          double value);
     
     void results_json_results_do_variance(Json::Value &root, const struct ekf_variance_result variance_result);
+    void results_json_results_do_flags(Json::Value &root, const struct ekf_flags_result flags_result);
 };
 
 #endif

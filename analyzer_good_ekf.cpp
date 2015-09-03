@@ -61,6 +61,42 @@ void Analyzer_Good_EKF::handle_variance(uint64_t T,
     }
 }
 
+bool Analyzer_Good_EKF::ekf_flags_bad(uint16_t flags)
+{
+    for (uint16_t i=1; i<EKF_STATUS_FLAGS_ENUM_END; i<<=1) {
+        if (!(flags & i)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void Analyzer_Good_EKF::handle_flags(uint64_t T, uint16_t flags)
+{
+    if (next_result_flags >= MAX_FLAGS_RESULTS) {
+        return;
+    }
+    if (result_flags[next_result_flags].T_start) {
+        if (result_flags[next_result_flags].flags != flags) {
+            // close off the old one
+            result_flags[next_result_flags].T_stop = T;
+            next_result_flags++;
+            if (next_result_flags >= MAX_FLAGS_RESULTS) {
+                return;
+            }
+            if (ekf_flags_bad(flags)) {
+                result_flags[next_result_flags].T_start = T;
+                result_flags[next_result_flags].flags = flags;
+            }
+        }
+    } else {
+        if (ekf_flags_bad(flags)) {
+            result_flags[next_result_flags].T_start = T;
+            result_flags[next_result_flags].flags = flags;
+        }
+    }
+}
+
 // swiped from AnalyzerTest_Compass in experimental ArduPilot tree:
 void Analyzer_Good_EKF::handle_decoded_message(uint64_t T, mavlink_ekf_status_report_t &ekf_status_report)
 {
@@ -85,7 +121,9 @@ void Analyzer_Good_EKF::handle_decoded_message(uint64_t T, mavlink_ekf_status_re
                     result_terrain_alt_variance,
                     ekf_status_report.terrain_alt_variance);
 
-    seen_ekf_packets = true;
+     handle_flags(T, ekf_status_report.flags);
+
+     seen_ekf_packets = true;
 }
 
 void Analyzer_Good_EKF::results_json_results_do_variance(Json::Value &root, const struct ekf_variance_result variance_result)
@@ -124,11 +162,76 @@ void Analyzer_Good_EKF::results_json_results_do_variance(Json::Value &root, cons
         add_evilness(this_sin_score);
     }
 }
+
+void Analyzer_Good_EKF::results_json_results_do_flags(Json::Value &root, const struct ekf_flags_result flags_result)
+{
+    
+    Json::Value result(Json::objectValue);
+    std::string tmp = string_format("%s.%s", "EKF_STATUS_REPORT", "flags");
+    result["series"] = tmp;
+    Json::Value reason(Json::arrayValue);
+
+    uint8_t this_sin_score = 10;
+    if (!(flags_result.flags & EKF_ATTITUDE)) {
+        this_sin_score++;
+        reason.append("attitude estimate bad");
+    }
+    if (!(flags_result.flags & EKF_VELOCITY_HORIZ)) {
+        this_sin_score++;
+        reason.append("horizontal velocity estimate bad");
+    }
+    if (!(flags_result.flags & EKF_VELOCITY_VERT)) {
+        this_sin_score++;
+        reason.append("vertical velocity estimate bad");
+    }
+    if (!(flags_result.flags & EKF_POS_HORIZ_REL)) {
+        this_sin_score++;
+        reason.append("horizontal position (relative) estimate bad");
+    }
+    if (!(flags_result.flags & EKF_POS_HORIZ_ABS)) {
+        this_sin_score++;
+        reason.append("horizontal position (absolute) estimate bad");
+    }
+    if (!(flags_result.flags & EKF_POS_VERT_ABS)) {
+        this_sin_score++;
+        reason.append("vertical position (absolute) estimate bad");
+    }
+    if (!(flags_result.flags & EKF_POS_VERT_AGL)) {
+        this_sin_score++;
+        reason.append("vertical position (above ground) estimate bad");
+    }
+    if (!(flags_result.flags & EKF_CONST_POS_MODE)) {
+        this_sin_score++;
+        reason.append("In constant position mode (no abs or rel position)");
+    }
+    if (!(flags_result.flags & EKF_PRED_POS_HORIZ_REL)) {
+        this_sin_score++;
+        reason.append("Predicted horizontal position (relative) bad");
+    }
+        if (!(flags_result.flags & EKF_PRED_POS_HORIZ_ABS)) {
+        this_sin_score++;
+        reason.append("Predicted horizontal position (absolute) bad");
+    }
+
+    result["reason"] = reason;
+    result["status"] = "FAIL";
+    result["evilness"] = this_sin_score;
+    result["timestamp_start"] = (Json::UInt64)flags_result.T_start;
+    result["timestamp_stop"] = (Json::UInt64)flags_result.T_stop;
+    root.append(result);
+
+    add_evilness(this_sin_score);
+}
+
+
 void Analyzer_Good_EKF::results_json_results(Json::Value &root)
 {
     if (seen_ekf_packets) {
         for (uint8_t i=0; i<next_result_variance;i++) {
             results_json_results_do_variance(root, result_variance[i]);
+        }
+        for (uint8_t i=0; i<next_result_flags;i++) {
+            results_json_results_do_flags(root, result_flags[i]);
         }
     } else {
         Json::Value result(Json::objectValue);
