@@ -12,6 +12,35 @@
 *
 * Returns fd on success, -1 on error.
 */
+void Telem_Forwarder_Client::pack_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds)
+{
+    FD_SET(fd_telem_forwarder, &fds_read);
+    FD_SET(fd_telem_forwarder, &fds_err);
+
+    if (fd_telem_forwarder >= nfds) {
+        nfds = fd_telem_forwarder + 1;
+    }
+}
+
+        
+void Telem_Forwarder_Client::handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds)
+{
+    /* check for packets from telem_forwarder */
+    if (FD_ISSET(fd_telem_forwarder, &fds_err)) {
+        FD_CLR(fd_telem_forwarder, &fds_err);
+        unsigned skipped = 0;
+        // if ((skipped = can_log_error()) >= 0)
+        la_log(LOG_ERR, "[%u] select(fd_telem_forwarder): %s", skipped, strerror(errno));
+    }
+
+    if (FD_ISSET(fd_telem_forwarder, &fds_read)) {
+        FD_CLR(fd_telem_forwarder, &fds_read);
+        _buflen_content = handle_recv();
+        ::fprintf(stderr, "received %u bytes\n", _buflen_content);
+    }
+}
+
+
 void Telem_Forwarder_Client::create_and_bind()
 {
     int fd;
@@ -91,7 +120,7 @@ uint32_t Telem_Forwarder_Client::handle_recv()
     // ::printf("Receiving packet\n");
     /* packet from telem_forwarder */
     socklen_t sa_len = sizeof(sa);
-    uint16_t res = recvfrom(fd_telem_forwarder, _buf, _buflen, 0, (struct sockaddr*)&sa, &sa_len);
+    uint16_t res = recvfrom(fd_telem_forwarder, &_buf[_buflen_content], _buflen-_buflen_content, 0, (struct sockaddr*)&sa, &sa_len);
 
     /* We get one mavlink packet per udp datagram. Sanity checks here
        are: must be from solo's IP and have a valid mavlink header. */

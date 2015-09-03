@@ -8,8 +8,10 @@ class Telem_Forwarder_Client {
 public:
     Telem_Forwarder_Client(uint8_t *buf, uint32_t buflen) :
         fd_telem_forwarder(-1),
+        _buflen_content(0),
         _buf(buf),
-        _buflen(buflen) { }
+        _buflen(buflen)
+        { }
 
     // FIXME: scope
     int fd_telem_forwarder;
@@ -18,6 +20,11 @@ public:
     struct sockaddr_in sa_tf; /* solo's address */
 
     void configure(INIReader *config);
+    void pack_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds);
+    void handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds);
+
+    // FIXME: scope
+    uint32_t _buflen_content;
 
 private:
     struct sockaddr_in sa;

@@ -56,71 +56,28 @@ void sighup_handler(int signal)
     logger.sighup_handler(signal);
 }
 
-void DataFlash_Logger_Program::sighup_handler(int signal)
+void DataFlash_Logger_Program::do_idle_callbacks()
 {
-    sighup_received = true;
+    reader->do_idle_callbacks();
 }
-    
-void DataFlash_Logger_Program::loop()
+
+void DataFlash_Logger_Program::sighup_received_tophalf()
 {
-    while (1) {
-	if (sighup_received) {
-            reader->sighup_handler();
-	    sighup_received = false;
-	}
-        /* Wait for a packet, or time out if no packets arrive so we always
-           periodically log status and check for new destinations. Downlink
-           packets are on the order of 100/sec, so the timeout is such that
-           we don't expect timeouts unless solo stops sending packets. We
-           almost always get a packet with a 200 msec timeout, but not with
-           a 100 msec timeout. (Timeouts don't really matter though.) */
+    reader->sighup_handler();
+}
 
-	struct timeval timeout;
+void DataFlash_Logger_Program::pack_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds)
+{
+    client->pack_select_fds(fds_read, fds_write, fds_err, nfds);
+}
 
-        fd_set fds;
-        fd_set fds_err;
-        FD_ZERO(&fds);
-        uint8_t nfds = 0;
-        FD_SET(client->fd_telem_forwarder, &fds);
-        if (client->fd_telem_forwarder >= nfds)
-            nfds = client->fd_telem_forwarder + 1;
-	fds_err = fds;
+void DataFlash_Logger_Program::handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds)
+{
+    client->handle_select_fds(fds_read, fds_write, fds_err, nfds);
 
-        timeout.tv_sec = 0;
-        timeout.tv_usec = 200000;
-        int res = select(nfds, &fds, NULL, &fds_err, &timeout);
-
-        if (res < 0) {
-            unsigned skipped = 0;
-            // if ((skipped = can_log_error()) >= 0)
-            la_log(LOG_ERR, "[%u] select: %s", skipped, strerror(errno));
-            /* this sleep is to avoid soaking the CPU if select starts
-               returning immediately for some reason */
-	    /* previous code was not checking errfds; we are now, so
-	       perhaps this usleep can go away -pb20150730 */
-            usleep(10000);
-            continue;
-        }
-
-        if (res == 0) {
-	  // select timeout
-        }
-
-        /* check for packets from telem_forwarder */
-        if (FD_ISSET(client->fd_telem_forwarder, &fds_err)) {
-            unsigned skipped = 0;
-            // if ((skipped = can_log_error()) >= 0)
-                la_log(LOG_ERR, "[%u] select(fd_telem_forwarder): %s", skipped, strerror(errno));
-	}
-
-        if (FD_ISSET(client->fd_telem_forwarder, &fds)) {
-   	    uint32_t len = client->handle_recv();
-            ::fprintf(stderr, "feeding %u bytes\n", len);
-            reader->feed(_buf, len);
-        }
-
-	reader->do_idle_callbacks();
-    } /* while (1) */
+    // FIXME: find a more interesting way of doing this...
+    reader->feed(_buf, client->_buflen_content);
+    client->_buflen_content = 0;
 }
 
 void DataFlash_Logger_Program::run()
@@ -140,8 +97,9 @@ void DataFlash_Logger_Program::run()
     client->configure(config);
 
     instantiate_message_handlers(config, client->fd_telem_forwarder, &client->sa_tf);
-    return loop();
+    return select_loop();
 }
+
 
 void DataFlash_Logger_Program::parse_arguments(int argc, char *argv[])
 {
