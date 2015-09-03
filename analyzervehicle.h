@@ -88,7 +88,7 @@ namespace AnalyzerVehicle {
         float despitch() { return _des[1]; }
 
         void set_desyaw(uint64_t T, float yaw) {
-            _des[1] = yaw;
+            _des[2] = yaw;
             _modtimes[2] = T;
         }
         float desyaw() { return _des[2]; }
