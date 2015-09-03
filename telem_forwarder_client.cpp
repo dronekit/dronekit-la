@@ -36,7 +36,7 @@ void Telem_Forwarder_Client::handle_select_fds(fd_set &fds_read, fd_set &fds_wri
     if (FD_ISSET(fd_telem_forwarder, &fds_read)) {
         FD_CLR(fd_telem_forwarder, &fds_read);
         _buflen_content = handle_recv();
-        ::fprintf(stderr, "received %u bytes\n", _buflen_content);
+        // ::fprintf(stderr, "received %u bytes\n", _buflen_content);
     }
 }
 

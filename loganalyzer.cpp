@@ -2,6 +2,8 @@
 
 #include "mavlink_reader.h"
 
+#include "heart.h"
+
 #include <syslog.h>
 #include "la-log.h"
 
@@ -77,16 +79,12 @@ void LogAnalyzer::parse_filepath(const char *filepath)
 
 void LogAnalyzer::instantiate_message_handlers()
 {
-    // if (use_telem_forwarder) {
-    //     Heart *heart= new Heart(fd_telem_forwarder, sa_tf);
-    //     if (heart != NULL) {
-    //         configure_message_handler(config, heart, "Heart");
-    //     } else {
-    //         la_log(LOG_INFO, "Failed to create heart");
-    //     }
-    // }
-
-    Analyze *analyze = new Analyze();
+    Analyze *analyze;
+    if (_vehicle != NULL) {
+        analyze = new Analyze(_vehicle);
+    } else {
+        analyze = new Analyze();
+    }
     if (analyze != NULL) {
         analyze->set_output_style(output_style);
         analyze->instantiate_analyzers(_config);
@@ -97,15 +95,71 @@ void LogAnalyzer::instantiate_message_handlers()
     }
 }
 
+
+void LogAnalyzer::do_idle_callbacks()
+{
+    reader->do_idle_callbacks();
+}
+void LogAnalyzer::pack_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds)
+{
+    _client->pack_select_fds(fds_read, fds_write, fds_err, nfds);
+}
+
+void LogAnalyzer::handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds)
+{
+    _client->handle_select_fds(fds_read, fds_write, fds_err, nfds);
+
+    // FIXME: find a more interesting way of doing this...
+    reader->feed(_client_buf, _client->_buflen_content);
+    _client->_buflen_content = 0;
+}
+
+void LogAnalyzer::live_analysis()
+{
+    INIReader *config = get_config();
+
+    reader = new MAVLink_Reader(config);
+
+    _client = new Telem_Forwarder_Client(_client_buf, sizeof(_client_buf));
+    _client->configure(config);
+
+    Heart *heart= new Heart(_client->fd_telem_forwarder, &_client->sa_tf);
+    if (heart != NULL) {
+        reader->add_message_handler(heart, "Heart");
+    } else {
+        la_log(LOG_INFO, "Failed to create heart");
+    }
+
+    instantiate_message_handlers();
+
+    select_loop();
+}
+
 void LogAnalyzer::run()
 {
     la_log(LOG_INFO, "loganalyzer starting: built " __DATE__ " " __TIME__);
     // signal(SIGHUP, sighup_handler);
 
+    if (_model_string != NULL) {
+        if (streq(_model_string,"copter")) {
+            _vehicle = new AnalyzerVehicle::Copter();
+        // } else if (streq(model_string,"plane")) {
+        //     model = new AnalyzerVehicle::Plane();
+        // } else if (streq(model_string,"rover")) {
+        //     model = new AnalyzerVehicle::Rover();
+        } else {
+            la_log(LOG_ERR, "Unknown model type (%s)", _model_string);
+            exit(1);
+        }
+    }
+
+    if (_use_telem_forwarder) {
+        return live_analysis();
+    }
+
     INIReader *config = get_config();
 
     reader = new MAVLink_Reader(config);
-    reader->set_is_tlog(true);
 
     if (_pathname == NULL) {
         usage();
@@ -127,13 +181,7 @@ void LogAnalyzer::run()
         }
     }
 
-    /* prepare sockaddr used to contact telem_forwarder */
-    // reader.telem_forwarder_pack_sockaddr(config);
-
-    /* Prepare a port to receive and send data to/from telem_forwarder */
-    /* does not return on failure */
-    // reader.create_and_bind();
-
+    reader->set_is_tlog(true);
     return parse_path(_pathname);
 }
 
@@ -142,7 +190,8 @@ void LogAnalyzer::usage()
     ::printf("Usage:\n");
     ::printf("%s [OPTION] [FILE]\n", program_name());
     ::printf(" -c filepath      use config file filepath\n");
-    // ::printf(" -t               connect to telem forwarder to receive data\n");
+    ::printf(" -t               connect to telem forwarder to receive data\n");
+    ::printf(" -m modeltype     override model; copter|plane|rover\n");
     ::printf(" -s style         use output style (plain-text|json)\n");
     ::printf(" -h               display usage information\n");
     ::printf("\n");
@@ -164,7 +213,7 @@ void LogAnalyzer::parse_arguments(int argc, char *argv[])
     _argc = argc;
     _argv = argv;
 
-    while ((opt = getopt(argc, argv, "hc:ts:")) != -1) {
+    while ((opt = getopt(argc, argv, "hc:ts:m:")) != -1) {
         switch(opt) {
         case 'h':
             usage();
@@ -172,11 +221,14 @@ void LogAnalyzer::parse_arguments(int argc, char *argv[])
         case 'c':
             config_filename = optarg;
             break;
-        // case 't':
-        //     use_telem_forwarder = true;
-        //     break;
+        case 't':
+            _use_telem_forwarder = true;
+            break;
         case 's':
             output_style_string = optarg;
+            break;
+        case 'm':
+            _model_string = optarg;
             break;
         }
     }

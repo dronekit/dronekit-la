@@ -18,6 +18,14 @@ public:
         {
             start_time = now();
         }
+    Analyze(AnalyzerVehicle::Base *vehicle) :
+	MAVLink_Message_Handler(),
+        vehicle(vehicle),
+        _output_style(OUTPUT_JSON),
+        next_analyzer(0)
+        {
+            start_time = now();
+        }
     void instantiate_analyzers(INIReader *config);
 
     void end_of_log(uint32_t packet_count);
