@@ -24,31 +24,36 @@ void Analyzer_Battery::handle_decoded_message(uint64_t T, mavlink_sys_status_t &
 
 void Analyzer_Battery::results_json_results(Json::Value &root)
 {
+    Json::Value result(Json::objectValue);
     if (seen_sys_status_packets) {
-        Json::Value result(Json::objectValue);
         result["timestamp"] = 0;
-        Json::Value reason(Json::arrayValue);
         if (has_failed()) {
             result["status"] = "FAILED";
-            reason.append(string_format("Battery below failsafe (%f < %f)",
-                                        lowest_battery_remaining_seen, low_battery_threshold));
+            result["reason"] = "Battery fell below failsafe threshold";
+
+            Json::Value evidence(Json::arrayValue);
+            evidence.append(string_format("Battery below failsafe (%f < %f)",
+                                          lowest_battery_remaining_seen, low_battery_threshold));
+            result["evidence"] = evidence;
+
             Json::Value series(Json::arrayValue);
             series.append("SYS_STATUS.battery_remaining");
             result["series"] = series;
         } else {
             result["status"] = "OK";
-            reason.append(string_format("Battery never below failsafe (%f >= %f)",
-                                        lowest_battery_remaining_seen, low_battery_threshold));
+            result["reason"] = "Battery never below failsafe";
+
+            Json::Value evidence(Json::arrayValue);
+            evidence.append(string_format("battery-remaining=%f", lowest_battery_remaining_seen));
+            evidence.append(string_format("failsafe=%f", low_battery_threshold));
+            result["evidence"] = evidence;
         }
-        result["reason"] = reason;
-        root.append(result);
     } else {
-        Json::Value result(Json::objectValue);
         result["timestamp"] = 0;
         result["status"] = "WARN";
         Json::Value reason(Json::arrayValue);
         reason.append("No SYS_STATUS messages received");
         result["reason"] = reason;
-        root.append(result);
     }
+    root.append(result);
 }

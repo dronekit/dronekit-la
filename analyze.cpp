@@ -447,6 +447,7 @@ void Analyze::handle_decoded_message(uint64_t T, mavlink_vfr_hud_t &msg) {
     if (!vehicle) {
         return;
     }
+    vehicle->handle_decoded_message(T, msg);
     for(int i=0; i<next_analyzer; i++) {
         analyzer[i]->handle_decoded_message(T, msg);
     }

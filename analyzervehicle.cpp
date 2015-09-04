@@ -49,6 +49,10 @@ void Base::handle_decoded_message(uint64_t T, mavlink_statustext_t &msg)
     history_statustext.packet(msg);
 }
 
+void Base::handle_decoded_message(uint64_t T, mavlink_vfr_hud_t &msg)
+{
+    pos().set_alt(T, msg.alt);
+}
 
 
 bool Base::param_seen(const char *name) const

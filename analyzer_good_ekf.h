@@ -13,12 +13,6 @@ class Analyzer_Good_EKF : public Analyzer {
 public:
     Analyzer_Good_EKF(int fd, struct sockaddr_in *sa, AnalyzerVehicle::Base *&vehicle) :
 	Analyzer(fd, sa, vehicle),
-        seen_ekf_packets(false),
-        velocity_variance{
-            name: "velocity_variance",
-            threshold_warn: 0.5f,
-            threshold_fail: 1.0f,
-        },
         pos_horiz_variance{
             name: "pos_horiz_variance",
             threshold_warn: 0.5f,
@@ -59,17 +53,13 @@ public:
         result_terrain_alt_variance({
             variance: &terrain_alt_variance,
             T_start: 0
-        }),
-
-        next_result_variance(0),
-        next_result_flags(0),
-        result_flags{ }
+        })
     {
     }
 
-    const char *name() { return "Good EKF"; }
-    const char *description() {
-        return "EKF variances remain within bounds";
+    const char *name() const { return "Good EKF"; }
+    const char *description() const {
+        return "This test will FAIL if EKF variances exceed thresholds, or if the EKF status flags indicate errors";
     }
 
     bool configure(INIReader *config);
@@ -80,7 +70,7 @@ public:
     void results_json_results(Json::Value &root);
 
 private:
-    bool seen_ekf_packets;
+    bool seen_ekf_packets = false;
     
     struct ekf_variance {
         const char *name;
@@ -88,7 +78,11 @@ private:
         double threshold_fail;
     };
 
-    struct ekf_variance velocity_variance;
+    struct ekf_variance velocity_variance = {
+        name: "velocity_variance",
+        threshold_warn: 0.5f,
+        threshold_fail: 1.0f,
+    };
     struct ekf_variance pos_horiz_variance;
     struct ekf_variance pos_vert_variance;
     struct ekf_variance compass_variance;
@@ -108,8 +102,8 @@ private:
     struct ekf_variance_result result_terrain_alt_variance;
 
     #define MAX_VARIANCE_RESULTS 100
-    uint8_t next_result_variance;
-    struct ekf_variance_result result_variance[MAX_VARIANCE_RESULTS];
+    uint8_t next_result_variance = 0;
+    struct ekf_variance_result result_variance[MAX_VARIANCE_RESULTS] = { };
 
     struct ekf_flags_result {
         uint64_t T_start;
@@ -118,8 +112,8 @@ private:
     };
 
     #define MAX_FLAGS_RESULTS 100
-    uint8_t next_result_flags;
-    struct ekf_flags_result result_flags[MAX_FLAGS_RESULTS];
+    uint8_t next_result_flags = 0;
+    struct ekf_flags_result result_flags[MAX_FLAGS_RESULTS] = { };
 
     bool ekf_flags_bad(uint16_t flags);
     void handle_flags(uint64_t T, uint16_t flags);

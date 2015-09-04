@@ -12,25 +12,23 @@ class Analyzer_Battery : public Analyzer {
 
 public:
     Analyzer_Battery(int fd, struct sockaddr_in *sa, AnalyzerVehicle::Base *&vehicle) :
-	Analyzer(fd, sa, vehicle),
-        seen_sys_status_packets(false),
-        lowest_battery_remaining_seen(999999999.0f)
+	Analyzer(fd, sa, vehicle)
     {
     }
 
-    const char *name() { return "Battery"; }
-    const char *description() {
-        return "Battery levels remain reasonable";
+    const char *name() const { return "Battery"; }
+    const char *description() const {
+        return "This test will FAIL if the battery level remaining falls below a threshold level";
     }
     bool configure(INIReader *config);
-    void handle_decoded_message(uint64_t T, mavlink_sys_status_t &ekf_sys_status) override;
+    void handle_decoded_message(uint64_t T, mavlink_sys_status_t &msg) override;
     bool has_failed();
 
     void results_json_results(Json::Value &root);
 
 private:
-    bool seen_sys_status_packets;
-    double lowest_battery_remaining_seen;
+    bool seen_sys_status_packets = false;
+    double lowest_battery_remaining_seen = 999999999.0f;
     const double low_battery_threshold = 15;
 };
 

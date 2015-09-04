@@ -18,7 +18,6 @@ void Analyzer_Brownout::results_json_results(Json::Value &root)
     if (_vehicle->pos().alt_modtime() > 0) {
         Json::Value result(Json::objectValue);
         result["timestamp"] = 0;
-        Json::Value reason(Json::arrayValue);
 
         const float last_altitude = _vehicle->pos().alt();
         if (last_altitude > max_last_altitude &&
@@ -27,23 +26,29 @@ void Analyzer_Brownout::results_json_results(Json::Value &root)
             result["status"] = "FAILED";
             result["evilness"] = this_sin_score;
             add_evilness(this_sin_score);
-            reason.append(string_format("Possible brownout detected (end of log at %f metres, still flying)", last_altitude));
+            result["reason"] = "Log ended while craft still flying";
+
+            Json::Value evidence(Json::arrayValue);
+            evidence.append(string_format("Final altitude %f metres", last_altitude));
+            evidence.append("Vehicle still flying");
+            result["evidence"] = evidence;
         } else {
             result["status"] = "OK";
-            reason.append(string_format("No brownout detected (final altitude %f metres", last_altitude));
+            result["reason"] = "No brownout detected";
+
+            Json::Value evidence(Json::arrayValue);
+            evidence.append(string_format("Final altitude %f metres", last_altitude));
+            result["evidence"] = evidence;
         }
-        result["reason"] = reason;
         root.append(result);
     } else {
         uint8_t this_sin_score = 5;
         Json::Value result(Json::objectValue);
         // result["timestamp"] = 0;
         result["status"] = "WARN";
-        Json::Value reason(Json::arrayValue);
-        reason.append("No VFR_HUD messages received");
+        result["reason"] = "No VFR_HUD messages received";
         result["evilness"] = this_sin_score;
         add_evilness(this_sin_score);
-        result["reason"] = reason;
         Json::Value series(Json::arrayValue);
         series.append("VFR_HUD.alt");
         series.append("SERVO_OUTPUT_RAW.servo1_raw");

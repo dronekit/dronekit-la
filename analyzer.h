@@ -44,8 +44,8 @@ public:
         _status(analyzer_status_ok)
         { }
 
-    virtual const char *name() = 0;
-    virtual const char *description() = 0;
+    virtual const char *name() const = 0;
+    virtual const char *description() const = 0;
     virtual void results_json_results(Json::Value &root) = 0;
     virtual void end_of_log(uint32_t packet_count) { }
 

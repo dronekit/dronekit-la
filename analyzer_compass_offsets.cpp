@@ -105,28 +105,30 @@ const char * Analyzer_Compass_Offsets::results_json_compass_offsets_status_strin
     }
 }
 
-void Analyzer_Compass_Offsets::addStatusReason(Json::Value &root,compass_offset_result result)
+void Analyzer_Compass_Offsets::add_evidence(Json::Value &root,compass_offset_result result)
 {
-    std::string reason  = std::string("");
-    reason += "COMPASS_OFS " + to_string(result.len);
+    Json::Value evidence(Json::arrayValue);
+    std::string explanation  = std::string("");
+    explanation += "COMPASS_OFS " + to_string(result.len);
     switch(result.status) {
     case compass_offset_warn:
-        reason += " > ";
-        reason += to_string(warn_offset);
+        explanation += " > ";
+        explanation += to_string(warn_offset);
         break;
     case compass_offset_ok:
-        reason += " <= ";
-        reason += to_string(warn_offset);
+        explanation += " <= ";
+        explanation += to_string(warn_offset);
         break;
     case compass_offset_zero:
-        reason += " == 0";
+        explanation += " == 0";
         break;
     case compass_offset_fail:
-        reason += " > ";
-        reason += to_string(fail_offset);
+        explanation += " > ";
+        explanation += to_string(fail_offset);
         break;
     }
-    root["reason"] = reason;
+    evidence.append(explanation);
+    root["evidence"] = evidence;
 }
 
 void Analyzer_Compass_Offsets::do_add_evilness(struct compass_offset_result result)
@@ -157,7 +159,8 @@ void Analyzer_Compass_Offsets::results_json_compass_offsets(Json::Value &root)
         Json::Value series(Json::arrayValue);
         series.append("PARM");
         result["series"] = series;
-        addStatusReason(result,compass_offset_results[i]);
+        result["reason"] = "Compass offsets in parameters are out of bounds";
+        add_evidence(result,compass_offset_results[i]);
         root.append(result);
     }
     if (compass_offset_results_offset == 0) {

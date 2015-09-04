@@ -12,21 +12,20 @@ class Analyzer_Brownout : public Analyzer {
 
 public:
     Analyzer_Brownout(int fd, struct sockaddr_in *sa, AnalyzerVehicle::Base *&vehicle) :
-	Analyzer(fd, sa, vehicle),
-        seen_packets(false)
+	Analyzer(fd, sa, vehicle)
     {
     }
 
-    const char *name() { return "Brownout"; }
-    const char *description() {
-        return "Log does not end while vehicle appears to be flying";
+    const char *name() const { return "Brownout"; }
+    const char *description() const {
+        return "This test will FAIL if the craft appears to lose onboard power during a flight";
     }
     bool configure(INIReader *config);
 
     void results_json_results(Json::Value &root);
 
 private:
-    bool seen_packets;
+    bool seen_packets = false;
 
     const double max_last_altitude = 5.0f; // metres
 };

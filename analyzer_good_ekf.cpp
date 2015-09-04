@@ -137,12 +137,15 @@ void Analyzer_Good_EKF::results_json_results_do_variance(Json::Value &root, cons
     Json::Value result(Json::objectValue);
     std::string tmp = string_format("%s.%s", "EKF_STATUS_REPORT", name);
     result["series"] = tmp;
-    Json::Value reason(Json::arrayValue);
     if (max > threshold_fail) {
         uint8_t this_sin_score = 10;
-        reason.append(string_format("%s exceeds threshold (%f > %f)",
-                                    name, max, threshold_fail));
-        result["reason"] = reason;
+        result["reason"] = string_format("%s exceeds fail threshold", name);
+
+        Json::Value evidence(Json::arrayValue);
+        evidence.append(string_format("max-variance=%f", max));
+        evidence.append(string_format("threshold=%f", threshold_fail));
+        result["evidence"] = evidence;
+
         result["status"] = "FAIL";
         result["evilness"] = this_sin_score;
         result["timestamp_start"] = (Json::UInt64)variance_result.T_start;
@@ -151,10 +154,14 @@ void Analyzer_Good_EKF::results_json_results_do_variance(Json::Value &root, cons
         add_evilness(this_sin_score);
     } else if (max > threshold_warn) {
         uint8_t this_sin_score = 4;
-        reason.append(string_format("%s exceeds threshold (%f > %f)",
-                                           name, max, threshold_warn));
+        result["reason"] = string_format("%s exceeds warn threshold", name);
+
+        Json::Value evidence(Json::arrayValue);
+        evidence.append(string_format("max=%f", max));
+        evidence.append(string_format("threshold=%f", threshold_warn));
+        result["evidence"] = evidence;
+
         result["evilness"] = this_sin_score;
-        result["reason"] = reason;
         result["status"] = "WARN";
         result["timestamp_start"] = (Json::UInt64)variance_result.T_start;
         result["timestamp_stop"] = (Json::UInt64)variance_result.T_stop;
@@ -169,51 +176,52 @@ void Analyzer_Good_EKF::results_json_results_do_flags(Json::Value &root, const s
     Json::Value result(Json::objectValue);
     std::string tmp = string_format("%s.%s", "EKF_STATUS_REPORT", "flags");
     result["series"] = tmp;
-    Json::Value reason(Json::arrayValue);
+    result["reason"] = "The EKF status report indicates a problem with the EKF";
+    Json::Value evidence(Json::arrayValue);
 
     uint8_t this_sin_score = 10;
     if (!(flags_result.flags & EKF_ATTITUDE)) {
         this_sin_score++;
-        reason.append("attitude estimate bad");
+        evidence.append("attitude estimate bad");
     }
     if (!(flags_result.flags & EKF_VELOCITY_HORIZ)) {
         this_sin_score++;
-        reason.append("horizontal velocity estimate bad");
+        evidence.append("horizontal velocity estimate bad");
     }
     if (!(flags_result.flags & EKF_VELOCITY_VERT)) {
         this_sin_score++;
-        reason.append("vertical velocity estimate bad");
+        evidence.append("vertical velocity estimate bad");
     }
     if (!(flags_result.flags & EKF_POS_HORIZ_REL)) {
         this_sin_score++;
-        reason.append("horizontal position (relative) estimate bad");
+        evidence.append("horizontal position (relative) estimate bad");
     }
     if (!(flags_result.flags & EKF_POS_HORIZ_ABS)) {
         this_sin_score++;
-        reason.append("horizontal position (absolute) estimate bad");
+        evidence.append("horizontal position (absolute) estimate bad");
     }
     if (!(flags_result.flags & EKF_POS_VERT_ABS)) {
         this_sin_score++;
-        reason.append("vertical position (absolute) estimate bad");
+        evidence.append("vertical position (absolute) estimate bad");
     }
     if (!(flags_result.flags & EKF_POS_VERT_AGL)) {
         this_sin_score++;
-        reason.append("vertical position (above ground) estimate bad");
+        evidence.append("vertical position (above ground) estimate bad");
     }
     if (!(flags_result.flags & EKF_CONST_POS_MODE)) {
         this_sin_score++;
-        reason.append("In constant position mode (no abs or rel position)");
+        evidence.append("In constant position mode (no abs or rel position)");
     }
     if (!(flags_result.flags & EKF_PRED_POS_HORIZ_REL)) {
         this_sin_score++;
-        reason.append("Predicted horizontal position (relative) bad");
+        evidence.append("Predicted horizontal position (relative) bad");
     }
         if (!(flags_result.flags & EKF_PRED_POS_HORIZ_ABS)) {
         this_sin_score++;
-        reason.append("Predicted horizontal position (absolute) bad");
+        evidence.append("Predicted horizontal position (absolute) bad");
     }
 
-    result["reason"] = reason;
+    result["evidence"] = evidence;
     result["status"] = "FAIL";
     result["evilness"] = this_sin_score;
     result["timestamp_start"] = (Json::UInt64)flags_result.T_start;

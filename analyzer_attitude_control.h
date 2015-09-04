@@ -19,9 +19,9 @@ public:
         attitude_control_results_offset(0)
     { }
 
-    const char *name() { return "Attitude Control"; }
-    const char *description() {
-        return "Craft's desired attitudes and achieved attitudes match";
+    const char *name() const { return "Attitude Control"; }
+    const char *description() const {
+        return "This test will FAIL if the craft's desired attitudes and achieved attitudes do not match";
     }
 
     bool configure(INIReader *config);

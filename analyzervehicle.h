@@ -142,8 +142,10 @@ public:
     virtual void handle_decoded_message(uint64_t T, mavlink_heartbeat_t&);
     virtual void handle_decoded_message(uint64_t T, mavlink_nav_controller_output_t &msg);
     virtual void handle_decoded_message(uint64_t T, mavlink_param_value_t &msg);
-    virtual void handle_decoded_message(uint64_t T, mavlink_statustext_t&);
     virtual void handle_decoded_message(uint64_t T, mavlink_servo_output_raw_t &);
+    virtual void handle_decoded_message(uint64_t T, mavlink_statustext_t&);
+    virtual void handle_decoded_message(uint64_t T, mavlink_vfr_hud_t &msg);
+    
     AV_Attitude& att() { return _att; };
     AV_Position& pos() { return _pos; };
     AV_Nav& nav() { return _nav; };
