@@ -3,6 +3,7 @@
 #include <syslog.h>
 #include <stdlib.h> // for exit() (fixme)
 
+#include "analyzer_arming_checks.h"
 #include "analyzer_compass_offsets.h"
 #include "analyzer_ever_armed.h"
 #include "analyzer_ever_flew.h"
@@ -17,6 +18,13 @@ void Analyze::instantiate_analyzers(INIReader *config)
     if (MAX_ANALYZERS - next_analyzer < 2) {
 	syslog(LOG_INFO, "Insufficient analyzer slots (MAX=%d) (next=%d)?!", MAX_ANALYZERS, next_analyzer);
 	exit(1);  // FIXME - throw exception
+    }
+
+    Analyzer_Arming_Checks *analyzer_arming_checks = new Analyzer_Arming_Checks(_fd_telem_forwarder, _sa_telemetry_forwarder, vehicle);
+    if (analyzer_arming_checks != NULL) {
+        configure_analyzer(config, analyzer_arming_checks, "Analyzer_Arming_Checks");
+    } else {
+        syslog(LOG_INFO, "Failed to create analyzer_arming_checks");
     }
 
     Analyzer_Compass_Offsets *analyzer_compass_offsets = new Analyzer_Compass_Offsets(_fd_telem_forwarder, _sa_telemetry_forwarder, vehicle);
@@ -393,6 +401,11 @@ void Analyze::handle_decoded_message(uint64_t T, mavlink_attitude_t &msg) {
 }
 void Analyze::handle_decoded_message(uint64_t T, mavlink_heartbeat_t &msg) {
     if (!vehicle) {
+        return;
+    }
+    if (msg.autopilot == 8) {
+        // drop any invalid-autopilot message; this could possibly be moved into
+        // all callees
         return;
     }
     vehicle->handle_decoded_message(T, msg);
