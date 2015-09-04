@@ -124,3 +124,43 @@ void Common_Tool::select_loop()
 	do_idle_callbacks();
     } /* while (1) */
 }
+
+void Common_Tool::parse_fd(Format_Reader *reader, int fd)
+{
+    char buf[1<<16];
+    ssize_t buf_start = 0;
+    while (true) {
+        ssize_t bytes_read = read(fd, &buf[buf_start], sizeof(buf)-buf_start);
+        if (bytes_read == -1) { 
+            fprintf(stderr, "Read failed: %s\n", strerror(errno));
+            exit(1);
+        }
+        if (bytes_read == 0) {
+            while (reader->feed((uint8_t*)buf, buf_start+bytes_read)) {
+            }
+            break;
+        }
+
+        bytes_read += buf_start;
+        ssize_t total_bytes_used = 0;
+        while (total_bytes_used < bytes_read) {
+            ssize_t bytes_used = reader->feed((uint8_t*)(&buf[total_bytes_used]), bytes_read-total_bytes_used);
+            if (bytes_used > bytes_read-total_bytes_used) {
+                abort();
+            }
+            if (bytes_used == 0) {
+                break;
+            }
+            total_bytes_used += bytes_used;
+        }
+        // ::fprintf(stderr, "total_bytes_used = %u\n", total_bytes_used);
+        // ::fprintf(stderr, "bytes_read = %u\n", bytes_read);
+        memcpy(&buf[0], (uint8_t*)(&(buf[total_bytes_used])), bytes_read-total_bytes_used);
+        buf_start = bytes_read-total_bytes_used;
+    }
+
+    reader->end_of_log();
+
+    // ::fprintf(stderr, "Packet count: %d\n", packet_count);
+}
+

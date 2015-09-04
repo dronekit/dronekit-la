@@ -11,8 +11,13 @@
 class Analyzer_Good_EKF : public Analyzer {
 
 public:
-    Analyzer_Good_EKF(int fd, struct sockaddr_in *sa, AnalyzerVehicle::Base *&vehicle) :
-	Analyzer(fd, sa, vehicle),
+    Analyzer_Good_EKF(AnalyzerVehicle::Base *&vehicle) :
+	Analyzer(vehicle),
+        velocity_variance{
+            name: "velocity_variance",
+            threshold_warn: 0.5f,
+            threshold_fail: 1.0f,
+        },
         pos_horiz_variance{
             name: "pos_horiz_variance",
             threshold_warn: 0.5f,
@@ -54,8 +59,8 @@ public:
             variance: &terrain_alt_variance,
             T_start: 0
         })
-    {
-    }
+    { }
+
 
     const char *name() const { return "Good EKF"; }
     const char *description() const {
@@ -63,31 +68,14 @@ public:
     }
 
     bool configure(INIReader *config);
-    void handle_decoded_message(uint64_t T, mavlink_ekf_status_report_t &ekf_status_report) override;
-    bool has_failed();
-
 
     void results_json_results(Json::Value &root);
 
-private:
-    bool seen_ekf_packets = false;
-    
     struct ekf_variance {
         const char *name;
         double threshold_warn;
         double threshold_fail;
     };
-
-    struct ekf_variance velocity_variance = {
-        name: "velocity_variance",
-        threshold_warn: 0.5f,
-        threshold_fail: 1.0f,
-    };
-    struct ekf_variance pos_horiz_variance;
-    struct ekf_variance pos_vert_variance;
-    struct ekf_variance compass_variance;
-    struct ekf_variance terrain_alt_variance;
-
     struct ekf_variance_result {
         struct ekf_variance *variance;
         uint64_t T_start;
@@ -95,11 +83,33 @@ private:
         double max;
     };
 
+    struct ekf_variance_result *variance_result(std::string name) {
+        return _results[name];
+    }
+private:
+    bool seen_ekf_packets = false;
+
+    
+
+    struct ekf_variance velocity_variance;
+    struct ekf_variance pos_horiz_variance;
+    struct ekf_variance pos_vert_variance;
+    struct ekf_variance compass_variance;
+    struct ekf_variance terrain_alt_variance;
+
     struct ekf_variance_result result_velocity_variance;
     struct ekf_variance_result result_pos_horiz_variance;
     struct ekf_variance_result result_pos_vert_variance;
     struct ekf_variance_result result_compass_variance;
     struct ekf_variance_result result_terrain_alt_variance;
+
+    std::map<const std::string, struct ekf_variance_result*> _results = {
+        { "velocity", &result_velocity_variance },
+        { "pos_horiz", &result_pos_horiz_variance },
+        { "pos_vert", &result_pos_vert_variance },
+        { "compass", &result_compass_variance },
+        { "terrain_alt", &result_terrain_alt_variance }
+    };
 
     #define MAX_VARIANCE_RESULTS 100
     uint8_t next_result_variance = 0;
@@ -115,19 +125,17 @@ private:
     uint8_t next_result_flags = 0;
     struct ekf_flags_result result_flags[MAX_FLAGS_RESULTS] = { };
 
-    bool ekf_flags_bad(uint16_t flags);
-    void handle_flags(uint64_t T, uint16_t flags);
+    void evaluate_variance(std::string name, double value);
+    void evaluate_variances();
+    void evaluate_flags();
+    void evaluate() override;
 
-    void maybe_close_variance_result(struct ekf_variance_result &result);
-    void close_variance_result(struct ekf_variance_result &result);
+    bool ekf_flags_bad(uint16_t flags);
+
+    void close_variance_result(struct ekf_variance_result *result);
     void end_of_log(uint32_t packet_count) override;
 
-    void handle_variance(uint64_t T,
-                         struct ekf_variance &variance,
-                         struct ekf_variance_result &result,
-                         double value);
-    
-    void results_json_results_do_variance(Json::Value &root, const struct ekf_variance_result variance_result);
+    void results_json_results_do_variance(Json::Value &root, const struct ekf_variance_result *variance_result);
     void results_json_results_do_flags(Json::Value &root, const struct ekf_flags_result flags_result);
 };
 

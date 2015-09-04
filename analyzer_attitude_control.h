@@ -8,12 +8,14 @@
 
 #include "analyzer.h"
 
+#include <set>
+
 class Analyzer_Attitude_Control : public Analyzer {
 
 public:
 
-    Analyzer_Attitude_Control(int fd, struct sockaddr_in *sa, AnalyzerVehicle::Base *&vehicle) :
-	Analyzer(fd, sa, vehicle)
+    Analyzer_Attitude_Control(AnalyzerVehicle::Base *&vehicle) :
+	Analyzer(vehicle)
     { }
 
     const char *name() const { return "Attitude Control"; }
@@ -22,10 +24,10 @@ public:
     }
 
     bool configure(INIReader *config);
-    void handle_decoded_message(uint64_t T, mavlink_nav_controller_output_t &param);
-    void handle_decoded_message(uint64_t T, mavlink_attitude_t &msg);
+    // void handle_decoded_message(uint64_t T, mavlink_nav_controller_output_t &param);
+    // void handle_decoded_message(uint64_t T, mavlink_attitude_t &msg);
 
-    void evaluate(uint64_t T);
+    void evaluate() override;
 
 private:
 
@@ -42,6 +44,10 @@ private:
         float desroll_at_deltamax;
         float pitch_at_deltamax;
         float despitch_at_deltamax;
+        bool motors_clipping = false;
+        std::set<uint8_t> motors_failing;
+        std::set<uint8_t> motors_clipping_high;
+        std::set<uint8_t> motors_clipping_low;
     };
 
     void end_of_log(uint32_t packet_count);

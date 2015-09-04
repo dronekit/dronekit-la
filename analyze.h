@@ -2,27 +2,17 @@
 #define ANALYZE_H
 
 #include "mavlink_message_handler.h"
+
 #include "analyzer.h"
 #include "analyzervehicle_copter.h"
 
 #include "analyzer_util.h"
 
-class Analyze : public MAVLink_Message_Handler {
+class Analyze {
 
 public:
-    Analyze() :
-	MAVLink_Message_Handler(),
-        vehicle(NULL),
-        _output_style(OUTPUT_JSON),
-        next_analyzer(0)
-        {
-            start_time = now();
-        }
-    Analyze(AnalyzerVehicle::Base *vehicle) :
-	MAVLink_Message_Handler(),
-        vehicle(vehicle),
-        _output_style(OUTPUT_JSON),
-        next_analyzer(0)
+    Analyze(AnalyzerVehicle::Base *&vehicle) :
+        vehicle(vehicle)
         {
             start_time = now();
         }
@@ -38,14 +28,16 @@ public:
 
     void set_output_style(output_style_option option) { _output_style = option;}
 
+    void evaluate_all();
+
 private:
     uint64_t start_time;
 
-    AnalyzerVehicle::Base *vehicle;
+    AnalyzerVehicle::Base *&vehicle;
 
-    output_style_option _output_style;
+    output_style_option _output_style = OUTPUT_JSON;
 #define MAX_ANALYZERS 10
-    uint8_t next_analyzer;
+    uint8_t next_analyzer = 0;
     Analyzer *analyzer[MAX_ANALYZERS];
 
     void configure_message_handler(INIReader *config,
@@ -56,16 +48,8 @@ private:
                             Analyzer *handler,
                             const char *handler_name);
 
-    virtual void handle_decoded_message(uint64_t T, mavlink_ahrs2_t &msg);
-    virtual void handle_decoded_message(uint64_t T, mavlink_attitude_t &msg);
-    virtual void handle_decoded_message(uint64_t T, mavlink_ekf_status_report_t &msg);
-    virtual void handle_decoded_message(uint64_t T, mavlink_heartbeat_t &msg);
-    virtual void handle_decoded_message(uint64_t T, mavlink_nav_controller_output_t &msg);
-    virtual void handle_decoded_message(uint64_t T, mavlink_param_value_t &msg);    
-    virtual void handle_decoded_message(uint64_t T, mavlink_servo_output_raw_t &msg);
-    virtual void handle_decoded_message(uint64_t T, mavlink_statustext_t &msg);
-    virtual void handle_decoded_message(uint64_t T, mavlink_sys_status_t &msg);
-    virtual void handle_decoded_message(uint64_t T, mavlink_vfr_hud_t &msg);
+    void set_vehicle_copter();
+    void set_copter_frametype(const char *frame_config_string);
 
     void results_json(Json::Value &root);
 

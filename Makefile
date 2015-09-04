@@ -14,6 +14,7 @@ GIT_VERSION := $(shell git describe --abbrev=4 --dirty --always --tags)
 VPATH = ./util ./ini ./ini/cpp
 
 INCS = -I./util -I./ini -I./ini/cpp
+INCS += -I.  # for <DataFlash/DataFlash.h> in MsgHandler
 
 STD=-std=c++11
 CFLAGS += -Wall $(INCS) -DGIT_VERSION=\"$(GIT_VERSION)\"
@@ -25,6 +26,10 @@ DLIBS += -ljsoncpp
 SRCS_CPP += INIReader.cpp
 SRCS_CPP += analyzer_util.cpp
 SRCS_CPP += mavlink_message_handler.cpp
+SRCS_CPP += message_handler.cpp
+SRCS_CPP += MsgHandler.cpp
+SRCS_CPP += format_reader.cpp
+SRCS_CPP += dataflash_reader.cpp
 SRCS_CPP += mavlink_reader.cpp
 SRCS_CPP += analyze.cpp
 SRCS_CPP += analyzer.cpp
@@ -44,6 +49,9 @@ SRCS_CPP += la-log.cpp
 SRCS_CPP += common_tool.cpp
 SRCS_CPP += telem_forwarder_client.cpp
 SRCS_CPP += dataflash_logger.cpp 
+SRCS_CPP += analyzing_dataflash_message_handler.cpp
+SRCS_CPP += LA_MsgHandler.cpp
+SRCS_CPP += analyzing_mavlink_message_handler.cpp
 SRCS_C = util.c ini.c
 
 OBJS = $(SRCS_CPP:.cpp=.o) $(SRCS_C:.c=.o)
@@ -54,7 +62,7 @@ LOG_ANALYZER = loganalyzer
 
 IMAGETAGGER = imagetagger
 
-all: $(DATAFLASH_LOGGER) $(LOG_ANALYZER) $(IMAGETAGGER)
+all: $(LOG_ANALYZER)
 
 $(DATAFLASH_LOGGER): $(OBJS) dataflash_logger_program.cpp
 	$(LINK.cpp) -o $(DATAFLASH_LOGGER) dataflash_logger_program.cpp $(OBJS) $(LIBS) $(DLIBS)

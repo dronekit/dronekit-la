@@ -3,11 +3,8 @@
 #include "util.h"
 #include "analyzer_util.h"
 
-void Analyzer_Arming_Checks::evaluate(uint64_t T)
+void Analyzer_Arming_Checks::evaluate()
 {
-    if (!_vehicle) {
-        return;
-    }
     if (!_vehicle->param_seen("ARMING_CHECK")) {
         return;
     }
@@ -29,7 +26,7 @@ void Analyzer_Arming_Checks::evaluate(uint64_t T)
                         continue;
                     }
                     if (!(arming_check & (*it).first)) {
-                        results[next_result].T = T;
+                        results[next_result].T = _vehicle->T();
                         results[next_result].arming_check = arming_check;
                         next_result++;
                         break;
@@ -38,16 +35,6 @@ void Analyzer_Arming_Checks::evaluate(uint64_t T)
             }            
         }
     }
-}
-
-void Analyzer_Arming_Checks::handle_decoded_message(uint64_t T, mavlink_heartbeat_t &heartbeat)
-{
-    evaluate(T);
-}
-
-void Analyzer_Arming_Checks::handle_decoded_message(uint64_t T, mavlink_param_value_t &param)
-{
-    evaluate(T);
 }
 
 void Analyzer_Arming_Checks::results_json_results_do_result(Json::Value &root,
@@ -70,6 +57,7 @@ void Analyzer_Arming_Checks::results_json_results_do_result(Json::Value &root,
             evilness++;
         }
     }
+
     root["evilness"] = evilness;
 
     root["evidence"] = evidence;
@@ -81,9 +69,18 @@ void Analyzer_Arming_Checks::results_json_results_do_result(Json::Value &root,
                                                           
 void Analyzer_Arming_Checks::results_json_results(Json::Value &root)
 {
-    for (uint8_t i=0; i < next_result; i++) {
-        Json::Value result(Json::objectValue);
-        results_json_results_do_result(result, results[i]);
-        root.append(result);
-    }
+    // if (!_vehicle->param_modtime("ARMING_CHECK")) {
+    //     Json::Value result(Json::objectValue);
+    //     root["timestamp"] = (Json::UInt64)T;
+    //     root["status"] = "WARN";
+    //     root["reason"] = "The ARMING_CHECK parameter was never set";
+    //     result["evilness"] = 10;
+    //     root.append(result);
+    // } else {
+        for (uint8_t i=0; i < next_result; i++) {
+            Json::Value result(Json::objectValue);
+            results_json_results_do_result(result, results[i]);
+            root.append(result);
+        }
+    // }
 }

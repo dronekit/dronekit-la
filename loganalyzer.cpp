@@ -12,12 +12,15 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-const char *examining_filename; // REMOVE ME!
+#include "dataflash_reader.h"
+
+#include "analyzing_dataflash_message_handler.h"
+#include "analyzing_mavlink_message_handler.h"
 
 void LogAnalyzer::parse_path(const char *path)
 {
     if (!strcmp(path, "-")) {
-        reader->parse_fd(fileno(stdin));
+        parse_fd(reader, fileno(stdin));
         reader->clear_message_handlers();
         return;
     }
@@ -63,32 +66,37 @@ void LogAnalyzer::parse_directory_full_of_files(const char *dirpath)
     }
 }
 
-void LogAnalyzer::parse_filepath(const char *filepath)
+int LogAnalyzer::xopen(const char *filepath, const uint8_t mode)
 {
-    int fd = open(filepath, O_RDONLY);
+    int fd = open(filepath, mode);
     if (fd == -1) {
         fprintf(stderr, "Failed to open (%s): %s\n", filepath, strerror(errno));
         exit(1);
     }
+    return fd;
+}
+void LogAnalyzer::parse_filepath(const char *filepath)
+{
+    int fd = xopen(filepath, O_RDONLY);
 
-    examining_filename = filepath;
     instantiate_message_handlers();
-    reader->parse_fd(fd);
+    parse_fd(reader, fd);
     reader->clear_message_handlers();
 }
 
 void LogAnalyzer::instantiate_message_handlers()
 {
-    Analyze *analyze;
-    if (_vehicle != NULL) {
-        analyze = new Analyze(_vehicle);
-    } else {
-        analyze = new Analyze();
+    if (_vehicle == NULL) { 
+        _vehicle = new AnalyzerVehicle::Base();
     }
+    Analyze *analyze = new Analyze(_vehicle);
     if (analyze != NULL) {
         analyze->set_output_style(output_style);
         analyze->instantiate_analyzers(_config);
-        reader->add_message_handler(analyze, "Analyze");
+        // which base class doesn't really matter here:
+        Analyzing_MAVLink_Message_Handler *handler = new Analyzing_MAVLink_Message_Handler(analyze, _vehicle);
+        // Message_Handler *x = static_cast<MAVLink_Message_Handler*>(analyze);
+        reader->add_message_handler(handler, "Analyze");
     } else {
         la_log(LOG_ERR, "Failed to create analyze");
         abort();
@@ -114,7 +122,7 @@ void LogAnalyzer::handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set 
     _client->_buflen_content = 0;
 }
 
-void LogAnalyzer::live_analysis()
+void LogAnalyzer::run_live_analysis()
 {
     INIReader *config = get_config();
 
@@ -135,9 +143,38 @@ void LogAnalyzer::live_analysis()
     select_loop();
 }
 
+void LogAnalyzer::run_df(const char *_pathname)
+{
+    get_config();
+
+    reader = new DataFlash_Reader(_config);
+
+    if (_vehicle == NULL) {
+        _vehicle = new AnalyzerVehicle::Base();
+    }
+    Analyze *analyze = new Analyze(_vehicle);
+
+    if (analyze != NULL) {
+        analyze->set_output_style(output_style);
+        analyze->instantiate_analyzers(_config);
+        Analyzing_DataFlash_Message_Handler *handler = new Analyzing_DataFlash_Message_Handler(analyze, _vehicle);
+        // Message_Handler *x = static_cast<DataFlash_Message_Handler*>(handler);
+        reader->add_message_handler(handler, "Analyze");
+    } else {
+        la_log(LOG_ERR, "Failed to create analyze");
+        abort();
+    }
+
+    int fd = xopen(_pathname, O_RDONLY);
+
+    parse_fd(reader, fd);
+    reader->clear_message_handlers();
+    exit(0);
+}
+
 void LogAnalyzer::run()
 {
-    la_log(LOG_INFO, "loganalyzer starting: built " __DATE__ " " __TIME__);
+    // la_log(LOG_INFO, "loganalyzer starting: built " __DATE__ " " __TIME__);
     // signal(SIGHUP, sighup_handler);
 
     if (_model_string != NULL) {
@@ -154,12 +191,8 @@ void LogAnalyzer::run()
     }
 
     if (_use_telem_forwarder) {
-        return live_analysis();
+        return run_live_analysis();
     }
-
-    INIReader *config = get_config();
-
-    reader = new MAVLink_Reader(config);
 
     if (_pathname == NULL) {
         usage();
@@ -181,7 +214,16 @@ void LogAnalyzer::run()
         }
     }
 
-    reader->set_is_tlog(true);
+    if (strstr(_pathname, ".BIN") ||
+        strstr(_pathname, ".bin")) {
+        return run_df(_pathname);
+    }
+    
+    INIReader *config = get_config();
+
+    reader = new MAVLink_Reader(config);
+    ((MAVLink_Reader*)reader)->set_is_tlog(true);
+
     return parse_path(_pathname);
 }
 
@@ -245,4 +287,5 @@ int main(int argc, char* argv[])
     LogAnalyzer analyzer;
     analyzer.parse_arguments(argc, argv);
     analyzer.run();
+    exit(0);
 }

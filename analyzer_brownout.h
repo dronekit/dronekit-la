@@ -11,8 +11,8 @@
 class Analyzer_Brownout : public Analyzer {
 
 public:
-    Analyzer_Brownout(int fd, struct sockaddr_in *sa, AnalyzerVehicle::Base *&vehicle) :
-	Analyzer(fd, sa, vehicle)
+    Analyzer_Brownout(AnalyzerVehicle::Base *&vehicle) :
+	Analyzer(vehicle)
     {
     }
 

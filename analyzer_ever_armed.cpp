@@ -2,10 +2,10 @@
 
 #include "util.h"
 
-void Analyzer_Ever_Armed::handle_decoded_message(uint64_t T, mavlink_heartbeat_t &heartbeat)
+void Analyzer_Ever_Armed::evaluate()
 {
     if (_vehicle->is_armed()) {
-        arm_time = T;
+        arm_time = _vehicle->T();
         ever_armed = true;
     }
 }

@@ -22,8 +22,7 @@ void ImageTagger::parse_filepath(const char *filepath)
         exit(1);
     }
 
-
-    return reader->parse_fd(fd);
+    return parse_fd(reader, fd);
 }
 
 uint64_t find_image_timesstamp(const std::string path)

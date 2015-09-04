@@ -2,6 +2,8 @@
 #include "analyzer_util.h"
 #include "INIReader.h"
 
+#include "format_reader.h"
+
 class Common_Tool {
 public:
     Common_Tool() :
@@ -12,6 +14,8 @@ public:
         }
 
     void sighup_handler(int signal);
+
+    void parse_fd(Format_Reader *reader, int fd);
 
 protected:
     class INIReader *_config;

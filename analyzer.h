@@ -1,12 +1,11 @@
 #ifndef ANALYZER_H
 #define ANALYZER_H
 
-#include "mavlink_message_handler.h"
-
 #include <jsoncpp/json/json.h> // libjsoncpp0 and libjsoncpp-dev on debian
 #include <jsoncpp/json/writer.h> // libjsoncpp0 and libjsoncpp-dev on debian
 
 #include "analyzervehicle.h"
+#include "INIReader.h"
 
 enum analyzer_status {
     analyzer_status_warn = 17,
@@ -28,21 +27,19 @@ public:
         }
         return "STRANGE";
     }
-    // std::string reason_as_string() const {
-    //     return string_format("Desired attitude not achieved");
-    // }
 };
 
 
-class Analyzer : public MAVLink_Message_Handler {
+class Analyzer {
 
 public:
-    Analyzer(int fd, struct sockaddr_in *sa, AnalyzerVehicle::Base *&vehicle) :
-	MAVLink_Message_Handler(fd, sa),
-        evilness(0),
-        _vehicle(vehicle),
-        _status(analyzer_status_ok)
+    Analyzer(AnalyzerVehicle::Base *&vehicle) :
+        _vehicle(vehicle)
         { }
+
+    virtual bool configure(INIReader *config) {
+        return true;
+    }
 
     virtual const char *name() const = 0;
     virtual const char *description() const = 0;
@@ -56,15 +53,17 @@ public:
 
     analyzer_status status() const { return _status; }
 
+    virtual void evaluate() { }
 protected:
-
     std::string to_string(double x);
-    uint16_t evilness;
+
     AnalyzerVehicle::Base *&_vehicle;
+
+    uint16_t evilness = 0;
     void set_status(analyzer_status status) { _status = status; }
 
 private:
-    analyzer_status _status;
+    analyzer_status _status = analyzer_status_ok;
 };
 
 #endif

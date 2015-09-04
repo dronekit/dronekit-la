@@ -11,8 +11,8 @@
 class Analyzer_Ever_Armed : public Analyzer {
 
 public:
-    Analyzer_Ever_Armed(int fd, struct sockaddr_in *sa, AnalyzerVehicle::Base *&vehicle) :
-	Analyzer(fd, sa, vehicle)
+    Analyzer_Ever_Armed(AnalyzerVehicle::Base *&vehicle) :
+	Analyzer(vehicle)
     { }
 
     const char *name() const { return "Ever Armed"; }
@@ -20,7 +20,7 @@ public:
         return "This test will FAIL if the craft never armed during the log";
     }
 
-    void handle_decoded_message(uint64_t T, mavlink_heartbeat_t &hearbeat) override;
+    void evaluate() override;
 
     void results_json_results(Json::Value &root);
 private:

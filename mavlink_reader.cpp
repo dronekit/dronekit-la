@@ -36,29 +36,6 @@ int MAVLink_Reader::can_log_error()
 }
 
 
-bool MAVLink_Reader::add_message_handler(MAVLink_Message_Handler *handler,
-                                         const char *handler_name)
-{
-    if (MAX_MESSAGE_HANDLERS - next_message_handler < 2) {
-	la_log(LOG_INFO, "Insufficient message handler slots (MAX=%d) (next=%d)?!", MAX_MESSAGE_HANDLERS, next_message_handler);
-	return false;
-    }
-
-    if (!handler->configure(_config)) {
-        la_log(LOG_INFO, "Failed to configure (%s)", handler_name);
-        return false;
-    }
-
-    message_handler[next_message_handler++] = handler;
-    return true;
-}
-
-
-void MAVLink_Reader::clear_message_handlers()
-{
-    next_message_handler = 0;
-}
-
 void MAVLink_Reader::handle_message_received(uint64_t timestamp, mavlink_message_t msg)
 {
     // ::fprintf(stderr, "msg.msgid=%u\n", msg.msgid);
@@ -145,42 +122,6 @@ void MAVLink_Reader::handle_message_received(uint64_t timestamp, mavlink_message
     }
 }
 
-void MAVLink_Reader::do_idle_callbacks() {
-    uint64_t now_us = clock_gettime_us(CLOCK_MONOTONIC);
-    if (next_100hz_time <= now_us) {
-	for(int i=0; i<next_message_handler; i++) {
-	    message_handler[i]->idle_100Hz();
-	}
-	next_100hz_time += 10000;
-    }
-    if (next_10hz_time <= now_us) {
-	for(int i=0; i<next_message_handler; i++) {
-	    message_handler[i]->idle_10Hz();
-	}
-	next_10hz_time += 100000;
-    }
-    if (next_1hz_time <= now_us) {
-	for(int i=0; i<next_message_handler; i++) {
-	    message_handler[i]->idle_1Hz();
-	}
-	next_1hz_time += 1000000;
-    }
-    if (next_tenthhz_time <= now_us) {
-	for(int i=0; i<next_message_handler; i++) {
-	    message_handler[i]->idle_tenthHz();
-	}
-	next_tenthhz_time += 10000000;
-    }
-}
-
-void MAVLink_Reader::sighup_handler()
-{
-    for(int i=0; i<next_message_handler; i++) {
-        message_handler[i]->sighup_received();
-    }
-}
-
-
 uint32_t MAVLink_Reader::feed(const uint8_t *buf, const uint32_t len)
 {
     for (uint32_t i=0; i<len; i++) {
@@ -211,25 +152,9 @@ uint32_t MAVLink_Reader::feed(const uint8_t *buf, const uint32_t len)
     return len; // at the moment we parse everything we receive
 }
 
-void MAVLink_Reader::parse_fd(int fd)
+void MAVLink_Reader::end_of_log()
 {
-    char buf[1<<16];
-    while (true) {
-        ssize_t bytes_read = read(fd, buf, sizeof(buf));
-        if (bytes_read == -1) { 
-            fprintf(stderr, "Read failed: %s\n", strerror(errno));
-            exit(1);
-        }
-        if (bytes_read == 0) {
-            break;
-        }
-
-        feed((uint8_t*)buf, bytes_read);
-    }
-
     for(int i=0; i<next_message_handler; i++) {
         message_handler[i]->end_of_log(packet_count);
     }
-
-    // ::fprintf(stderr, "Packet count: %d\n", packet_count);
 }

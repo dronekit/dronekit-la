@@ -4,7 +4,7 @@
 #include "analyzer_util.h"
 
 bool Analyzer_Brownout::configure(INIReader *config) {
-    if (!MAVLink_Message_Handler::configure(config)) {
+    if (!Analyzer::configure(config)) {
 	return false;
     }
     return true;
@@ -15,11 +15,11 @@ void Analyzer_Brownout::results_json_results(Json::Value &root)
     if (!_vehicle) {
         return;
     }
-    if (_vehicle->pos().alt_modtime() > 0) {
+    if (_vehicle->alt_modtime() > 0) {
         Json::Value result(Json::objectValue);
         result["timestamp"] = 0;
 
-        const float last_altitude = _vehicle->pos().alt();
+        const float last_altitude = _vehicle->alt();
         if (last_altitude > max_last_altitude &&
             _vehicle->is_flying()) {
             uint8_t this_sin_score = 10;

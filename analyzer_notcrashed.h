@@ -13,8 +13,8 @@
 class Analyzer_NotCrashed : public Analyzer {
 
 public:
-    Analyzer_NotCrashed(int fd, struct sockaddr_in *sa, AnalyzerVehicle::Base *&vehicle) :
-	Analyzer(fd, sa, vehicle)
+    Analyzer_NotCrashed(AnalyzerVehicle::Base *&vehicle) :
+	Analyzer(vehicle)
     { }
 
     const uint16_t servo_output_threshold = 1250;
@@ -26,10 +26,6 @@ public:
 
     void end_of_log(const uint32_t packet_count);
 
-    void handle_decoded_message(uint64_t T, mavlink_param_value_t &param) override;
-    void handle_decoded_message(uint64_t T, mavlink_attitude_t &att);
-    void handle_decoded_message(uint64_t T, mavlink_servo_output_raw_t &servos);
-    
     class notcrashed_result : public analyzer_result {
     public:
         uint64_t timestamp_start;
@@ -45,12 +41,10 @@ public:
     bool notcrashed_results_overrun;
 
 private:
-    void evaluate(uint64_t T);
+    void evaluate() override;
 
     void add_series(Json::Value &root);
         
-    bool seen_packets_attitude = false;
-
     // const double angle_max_default_degrees = 20.0f;
     
     void results_json_results(Json::Value &root);
