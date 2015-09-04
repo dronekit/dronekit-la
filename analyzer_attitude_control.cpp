@@ -16,6 +16,11 @@ void Analyzer_Attitude_Control::evaluate(uint64_t T)
     if (!_vehicle->is_flying()) {
         return;
     }
+
+    if (attitude_control_results_offset >= MAX_ATTITUDE_CONTROL_RESULTS) {
+        return;
+    }
+
     float roll = _vehicle->att().roll();
     float desroll = _vehicle->nav().desroll();
     float roll_delta = fabs(roll - desroll);
@@ -57,7 +62,8 @@ void Analyzer_Attitude_Control::evaluate(uint64_t T)
         case analyzer_status_fail:
             attitude_control_results_offset++;
         }
-        if (status() != analyzer_status_ok) {
+        if (attitude_control_results_offset < MAX_ATTITUDE_CONTROL_RESULTS &&
+            status() != analyzer_status_ok) {
             attitude_control_result &result = attitude_control_results[attitude_control_results_offset];
             result.status = status();
             result.timestamp_start = T;
@@ -92,6 +98,9 @@ void Analyzer_Attitude_Control::handle_decoded_message(uint64_t T, mavlink_attit
 
 void Analyzer_Attitude_Control::results_json_results(Json::Value &root)
 {
+    if (_vehicle == NULL) {
+        return;
+    }
     if (_vehicle->att().roll_modtime() > 0) {
         for (uint8_t i=0; i<attitude_control_results_offset; i++) {
             uint8_t this_sin_score = 10;

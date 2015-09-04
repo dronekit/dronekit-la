@@ -90,6 +90,9 @@ void Analyzer_NotCrashed::add_series(Json::Value &root)
 
 void Analyzer_NotCrashed::results_json_results(Json::Value &root)
 {
+    if (_vehicle == NULL) {
+        return;
+    }
     AnalyzerVehicle::Copter *v = (AnalyzerVehicle::Copter*&)_vehicle;
     for (uint8_t i=0; i<notcrashed_results_offset; i++) {
         class notcrashed_result &x = notcrashed_results[i];
