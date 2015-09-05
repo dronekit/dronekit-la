@@ -111,11 +111,11 @@ void Analyzer_Attitude_Control::results_json_results(Json::Value &root)
             add_evilness(this_sin_score);
             result["reason"] = "Desired attitude not achieved";
             Json::Value evidence(Json::arrayValue);
-            evidence.append(string_format("Max-Delta=%f", x.deltamax));
-            evidence.append(string_format("Roll-at-Max-Delta=%f", x.roll_at_deltamax));
-            evidence.append(string_format("Desired-Roll-at-Max-Delta=%f", x.desroll_at_deltamax));
-            evidence.append(string_format("Pitch-at-Max-Delta=%f", x.pitch_at_deltamax));
-            evidence.append(string_format("Desired-Pitch-at-Max-Delta=%f", x.despitch_at_deltamax));
+            evidence.append(string_format("Max-Delta=%f degrees", x.deltamax));
+            evidence.append(string_format("Roll-at-Max-Delta=%f degrees", x.roll_at_deltamax));
+            evidence.append(string_format("Desired-Roll-at-Max-Delta=%f degrees", x.desroll_at_deltamax));
+            evidence.append(string_format("Pitch-at-Max-Delta=%f degrees", x.pitch_at_deltamax));
+            evidence.append(string_format("Desired-Pitch-at-Max-Delta=%f degrees", x.despitch_at_deltamax));
             result["evidence"] = evidence;
             result["timestamp_start"] = (Json::UInt64)x.timestamp_start;
             if (x.timestamp_stop != 0) {

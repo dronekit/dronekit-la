@@ -32,7 +32,7 @@ void Analyzer_Battery::results_json_results(Json::Value &root)
             result["reason"] = "Battery fell below failsafe threshold";
 
             Json::Value evidence(Json::arrayValue);
-            evidence.append(string_format("Battery below failsafe (%f < %f)",
+            evidence.append(string_format("Battery below failsafe (%.0f%% < %.0f%%)",
                                           lowest_battery_remaining_seen, low_battery_threshold));
             result["evidence"] = evidence;
 
@@ -44,8 +44,8 @@ void Analyzer_Battery::results_json_results(Json::Value &root)
             result["reason"] = "Battery never below failsafe";
 
             Json::Value evidence(Json::arrayValue);
-            evidence.append(string_format("battery-remaining=%f", lowest_battery_remaining_seen));
-            evidence.append(string_format("failsafe=%f", low_battery_threshold));
+            evidence.append(string_format("battery-remaining=%f%%", lowest_battery_remaining_seen));
+            evidence.append(string_format("failsafe=%f%%", low_battery_threshold));
             result["evidence"] = evidence;
         }
     } else {
