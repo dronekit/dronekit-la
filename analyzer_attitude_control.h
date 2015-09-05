@@ -13,15 +13,12 @@ class Analyzer_Attitude_Control : public Analyzer {
 public:
 
     Analyzer_Attitude_Control(int fd, struct sockaddr_in *sa, AnalyzerVehicle::Base *&vehicle) :
-	Analyzer(fd, sa, vehicle),
-        offset_warn(5.0), // degrees
-        offset_fail(7.5), // degrees
-        attitude_control_results_offset(0)
+	Analyzer(fd, sa, vehicle)
     { }
 
     const char *name() const { return "Attitude Control"; }
     const char *description() const {
-        return "This test will FAIL if the craft's desired attitudes and achieved attitudes do not match";
+        return "This test will FAIL if the craft's desired attitudes and achieved attitudes do not match for more than a threshold time";
     }
 
     bool configure(INIReader *config);
@@ -31,10 +28,10 @@ public:
     void evaluate(uint64_t T);
 
 private:
-    void x_evaluate(uint64_t T);
 
-    const float offset_warn;
-    const float offset_fail;
+    const float offset_warn = 5.0f;
+    const float offset_fail = 10.0f;
+    const uint32_t duration_min = 250000; // microseconds
 
     class attitude_control_result : public analyzer_result {
     public:
@@ -52,7 +49,7 @@ private:
     void do_add_evilness(struct compass_offset_result result);
 
     #define MAX_ATTITUDE_CONTROL_RESULTS 100
-    uint8_t attitude_control_results_offset;
+    uint8_t attitude_control_results_offset = 0;
     attitude_control_result attitude_control_results[MAX_ATTITUDE_CONTROL_RESULTS];
     bool attitude_control_results_overrun;
     

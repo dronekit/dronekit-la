@@ -54,16 +54,23 @@ void Analyzer_Attitude_Control::evaluate(uint64_t T)
             }
         }
     } else {
+        // status has changed:
         attitude_control_results[attitude_control_results_offset].timestamp_stop = T;
-        switch(_status_prev) {
-        case analyzer_status_ok:
-            break;
-        case analyzer_status_warn:
-        case analyzer_status_fail:
-            attitude_control_results_offset++;
+        if (status() == analyzer_status_ok) {
+            // attitude control problem has finished.
+            attitude_control_result &result = attitude_control_results[attitude_control_results_offset];
+            if (result.timestamp_stop - result.timestamp_start >= duration_min) {
+                // of sufficient duration to care about.... lock this result in
+                attitude_control_results_offset++;
+            } else {
+                // forget this result....
+                result.timestamp_start = 0;
+                result.timestamp_stop = 0;
+            }
         }
         if (attitude_control_results_offset < MAX_ATTITUDE_CONTROL_RESULTS &&
             status() != analyzer_status_ok) {
+            // start a new record of we're-being-bad:
             attitude_control_result &result = attitude_control_results[attitude_control_results_offset];
             result.status = status();
             result.timestamp_start = T;
@@ -116,11 +123,14 @@ void Analyzer_Attitude_Control::results_json_results(Json::Value &root)
             evidence.append(string_format("Desired-Roll-at-Max-Delta=%f degrees", x.desroll_at_deltamax));
             evidence.append(string_format("Pitch-at-Max-Delta=%f degrees", x.pitch_at_deltamax));
             evidence.append(string_format("Desired-Pitch-at-Max-Delta=%f degrees", x.despitch_at_deltamax));
-            result["evidence"] = evidence;
             result["timestamp_start"] = (Json::UInt64)x.timestamp_start;
             if (x.timestamp_stop != 0) {
                 result["timestamp_stop"] = (Json::UInt64)x.timestamp_stop;
+                evidence.append(string_format("duration=%f seconds", (x.timestamp_stop - x.timestamp_start) / 1000000.0f));
+                evidence.append(string_format("threshold-duration=%f seconds", (duration_min / 1000000.0f)));
             }
+
+            result["evidence"] = evidence;
 
             // current structure makes this stuff awfully magical:
             // tomorrow this should change because we'll be updated from
