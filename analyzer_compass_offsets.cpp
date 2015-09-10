@@ -6,14 +6,7 @@
 #include "analyzer_util.h"
 
 bool Analyzer_Compass_Offsets::configure(INIReader *config) {
-    if (!MAVLink_Message_Handler::configure(config)) {
-	return false;
-    }
     return true;
-}
-
-double vec_len(double vec[3]) {
-    return sqrt(vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2]);
 }
 
 // true if we have all elements of vector and we haven't processed
@@ -42,9 +35,8 @@ bool Analyzer_Compass_Offsets::new_compass_results()
     return true;
 }
 
-void Analyzer_Compass_Offsets::evaluate(uint64_t T)
+void Analyzer_Compass_Offsets::evaluate()
 {
-
     if (compass_offset_results_offset == MAX_COMPASS_OFFSET_RESULTS) {
         compass_offset_results_overrun = true;
         return;
@@ -77,14 +69,8 @@ void Analyzer_Compass_Offsets::evaluate(uint64_t T)
 
     compass_offset_results[compass_offset_results_offset].len = len;
     compass_offset_results[compass_offset_results_offset].status = status;
-    compass_offset_results[compass_offset_results_offset].timestamp = T;
+    compass_offset_results[compass_offset_results_offset].timestamp = _vehicle->T();
     compass_offset_results_offset++;
-}
-
-// swiped from AnalyzeTest_Compass in experimental ArduPilot tree:
-void Analyzer_Compass_Offsets::handle_decoded_message(uint64_t T, mavlink_param_value_t &param)
-{
-    evaluate(T);
 }
 
 #include <stdlib.h>
@@ -105,28 +91,37 @@ const char * Analyzer_Compass_Offsets::results_json_compass_offsets_status_strin
     }
 }
 
-void Analyzer_Compass_Offsets::addStatusReason(Json::Value &root,compass_offset_result result)
+void Analyzer_Compass_Offsets::add_evidence(Json::Value &root,compass_offset_result result)
 {
-    std::string reason  = std::string("");
-    reason += "COMPASS_OFS " + to_string(result.len);
+    Json::Value evidence(Json::arrayValue);
+    const char *rel;
+    float offset;
     switch(result.status) {
     case compass_offset_warn:
-        reason += " > ";
-        reason += to_string(warn_offset);
+        rel = ">";
+        offset = warn_offset;
         break;
     case compass_offset_ok:
-        reason += " <= ";
-        reason += to_string(warn_offset);
+        rel = "<=";
+        offset = warn_offset;
         break;
     case compass_offset_zero:
-        reason += " == 0";
+        rel = "==";
+        offset = 0;
         break;
     case compass_offset_fail:
-        reason += " > ";
-        reason += to_string(fail_offset);
+        rel = ">";
+        offset = fail_offset;
         break;
     }
-    root["reason"] = reason;
+    
+    std::string explanation = string_format("COMPASS_OFS %f %s %f",
+                                            result.len,
+                                            rel,
+                                            offset);
+
+    evidence.append(explanation);
+    root["evidence"] = evidence;
 }
 
 void Analyzer_Compass_Offsets::do_add_evilness(struct compass_offset_result result)
@@ -157,10 +152,11 @@ void Analyzer_Compass_Offsets::results_json_compass_offsets(Json::Value &root)
         Json::Value series(Json::arrayValue);
         series.append("PARM");
         result["series"] = series;
-        addStatusReason(result,compass_offset_results[i]);
+        result["reason"] = "Compass offsets in parameters are out of bounds";
+        add_evidence(result,compass_offset_results[i]);
         root.append(result);
     }
-    if (compass_offset_results_offset == 0) {
+    if (! _vehicle->param_seen("COMPASS_OFS_X")) {
         Json::Value result(Json::objectValue);
         result["status"] = "FAIL";
         Json::Value series(Json::arrayValue);

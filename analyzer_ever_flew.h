@@ -11,26 +11,22 @@
 
 class Analyzer_Ever_Flew : public Analyzer {
 public:
-    Analyzer_Ever_Flew(int fd, struct sockaddr_in &sa, AnalyzerVehicle::Base *&vehicle) :
-	Analyzer(fd, sa, vehicle),
-        ever_armed(false),
-        servos_past_threshold(false),
-        pass_timestamp(0)
+    Analyzer_Ever_Flew(AnalyzerVehicle::Base *&vehicle) :
+	Analyzer(vehicle)
     { }
 
-    const char *name() { return "Ever Flew"; }
-const char *description() { return "The vehicle flew, as defined by having ever armed and having the motor outputs pass a threshold value"; }
-
-    void handle_decoded_message(uint64_t T, mavlink_heartbeat_t &hearbeat) override;
-    void handle_decoded_message(uint64_t T, mavlink_servo_output_raw_t &servos) override;
+    const char *name() const { return "Ever Flew"; }
+    const char *description() const {
+        return "This test will FAIL if the craft did not ever seem to fly";
+    }
 
     void results_json_results(Json::Value&);
 private:
-    bool ever_armed;
-    bool servos_past_threshold;
-    uint64_t pass_timestamp;
+    bool ever_armed = false;
+    bool servos_past_threshold = false;
+    uint64_t pass_timestamp = 0;
 
-    void evaluate(uint64_t T);
+    void evaluate() override;
 };
 
 #endif

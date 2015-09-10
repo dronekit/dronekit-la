@@ -16,8 +16,10 @@
 class DataFlash_Logger : public MAVLink_Message_Handler {
 
 public:
-    DataFlash_Logger(int fd, struct sockaddr_in &sa) :
+    DataFlash_Logger(int fd, struct sockaddr_in *sa) :
 	MAVLink_Message_Handler(fd, sa),
+        target_system_id(target_system_id_default),
+        target_component_id(target_component_id_default),
 	sender_system_id(0),
 	sender_component_id(0),
 	logging_started(false),
@@ -27,7 +29,7 @@ public:
     {  }
 
     // this may change to handle_message(mavlink_message_t):
-    void handle_packet(uint8_t *pkt, uint16_t pktlen);
+    // void handle_packet(uint8_t *pkt, uint16_t pktlen);
     bool configure(INIReader *config);
 
     void sighup_received();
@@ -44,6 +46,10 @@ private:
     void logging_stop();
     bool output_file_open();
     void output_file_close();
+
+    const uint8_t target_system_id_default = 0;
+    const uint8_t target_component_id_default = 0;
+    
     uint8_t target_system_id;     // who to send our request-for-logs to
     uint8_t target_component_id;  // who to send our request-for-logs to
     uint8_t sender_system_id;     // who the logs areactually coming from
@@ -54,7 +60,7 @@ private:
     int out_fd;
     bool logging_started;
 
-    void handle_packet_remote_log_data_block(uint8_t *pkt, uint16_t pktlen);
+    void handle_decoded_message(uint64_t T, mavlink_remote_log_data_block_t);
 
     bool make_new_log_filename(char *buffer, uint8_t bufferlen);
 

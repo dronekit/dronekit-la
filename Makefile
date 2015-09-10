@@ -14,6 +14,7 @@ GIT_VERSION := $(shell git describe --abbrev=4 --dirty --always --tags)
 VPATH = ./util ./ini ./ini/cpp
 
 INCS = -I./util -I./ini -I./ini/cpp
+INCS += -I.  # for <DataFlash/DataFlash.h> in MsgHandler
 
 STD=-std=c++11
 CFLAGS += -Wall $(INCS) -DGIT_VERSION=\"$(GIT_VERSION)\"
@@ -21,38 +22,59 @@ CXXFLAGS += -Wall $(INCS) $(STD) -g -DGIT_VERSION=\"$(GIT_VERSION)\"
 
 DLIBS += -ljsoncpp
 
-SRCS_CPP = dataflash_logger.cpp
+# SRCS_CPP = dataflash_logger.cpp
 SRCS_CPP += INIReader.cpp
 SRCS_CPP += analyzer_util.cpp
 SRCS_CPP += mavlink_message_handler.cpp
+SRCS_CPP += message_handler.cpp
+SRCS_CPP += MsgHandler.cpp
+SRCS_CPP += format_reader.cpp
+SRCS_CPP += dataflash_reader.cpp
 SRCS_CPP += mavlink_reader.cpp
 SRCS_CPP += analyze.cpp
 SRCS_CPP += analyzer.cpp
 SRCS_CPP += heart.cpp
+SRCS_CPP += analyzer_arming_checks.cpp
+SRCS_CPP += analyzer_attitude_control.cpp
+SRCS_CPP += analyzer_battery.cpp
+SRCS_CPP += analyzer_brownout.cpp
 SRCS_CPP += analyzer_compass_offsets.cpp
 SRCS_CPP += analyzer_ever_armed.cpp
 SRCS_CPP += analyzer_ever_flew.cpp
 SRCS_CPP += analyzer_good_ekf.cpp
-SRCS_CPP += analyzer_battery.cpp
-SRCS_CPP += analyzer_brownout.cpp
 SRCS_CPP += analyzer_notcrashed.cpp
-SRCS_CPP += analyzer_attitude_control.cpp
 SRCS_CPP += analyzervehicle_copter.cpp
 SRCS_CPP += analyzervehicle.cpp
 SRCS_CPP += la-log.cpp
+SRCS_CPP += common_tool.cpp
+SRCS_CPP += telem_forwarder_client.cpp
+SRCS_CPP += dataflash_logger.cpp 
+SRCS_CPP += analyzing_dataflash_message_handler.cpp
+SRCS_CPP += LA_MsgHandler.cpp
+SRCS_CPP += analyzing_mavlink_message_handler.cpp
 SRCS_C = util.c ini.c
 
 OBJS = $(SRCS_CPP:.cpp=.o) $(SRCS_C:.c=.o)
 
-MAIN = dataflash_logger # actually, the main is in mavlink_reader...
+DATAFLASH_LOGGER = dataflash_logger
 
-all: $(MAIN)
+LOG_ANALYZER = loganalyzer
 
-$(MAIN): $(OBJS)
-	$(LINK.cpp) -o $(MAIN) $(OBJS) $(LIBS) $(DLIBS)
+IMAGETAGGER = imagetagger
+
+all: $(LOG_ANALYZER)
+
+$(DATAFLASH_LOGGER): $(OBJS) dataflash_logger_program.cpp
+	$(LINK.cpp) -o $(DATAFLASH_LOGGER) dataflash_logger_program.cpp $(OBJS) $(LIBS) $(DLIBS)
+
+$(LOG_ANALYZER): $(OBJS) loganalyzer.cpp
+	$(LINK.cpp) -o $(LOG_ANALYZER) loganalyzer.cpp $(OBJS) $(LIBS) $(DLIBS)
+
+$(IMAGETAGGER): $(OBJS) imagetagger.cpp mh_imagetagger.cpp
+	$(LINK.cpp) -o $(IMAGETAGGER) imagetagger.cpp mh_imagetagger.cpp $(OBJS) $(LIBS) $(DLIBS)
 
 clean:
-	$(RM) *.o *~ $(MAIN)
+	$(RM) *.o *~ $(DATAFLASH_LOGGER) $(LOG_ANALYZER)
 
 test: clean all
 	cd test; ./test.sh

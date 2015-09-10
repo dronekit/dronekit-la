@@ -23,13 +23,57 @@ bool Copter::any_motor_running_fast() {
     }
     return false;
 }
-void Copter::handle_decoded_message(uint64_t T, mavlink_statustext_t &msg) {
-    Base::handle_decoded_message(T, msg);
 
-    if (strstr(msg.text, "Frame")) {
-        if (strstr(msg.text, "QUAD")) {
-            _num_motors = 4;
+std::set<uint8_t> Copter::motors_clipping_high() {
+    std::set<uint8_t> ret;
+    char label[] = "RCx_MAX";
+    for (uint8_t i=1; i<=_num_motors; i++) {
+        label[2] = '0' + i;
+        float max;
+        if (param(label, max)) {
+            uint16_t delta = abs((int32_t)_servo_output[i] - (uint16_t)max);
+            if ((float)delta/max < .05) { // within 5%
+                ret.insert(i);
+            }
         }
+    }
+    return ret;
+}
+
+std::set<uint8_t> Copter::motors_clipping_low() {
+    std::set<uint8_t> ret;
+    char label[] = "RCx_MIN";
+    for (uint8_t i=1; i <= _num_motors; i++) {
+        label[2] = '0' + i;
+        float min;
+        if (param(label, min)) {
+            if (_servo_output[i] < (uint16_t)min ||
+                _servo_output[i] - min < 105) { // FIXME: constant
+                ret.insert(i);
+            }
+            // uint16_t delta = abs((int32_t)_servo_output[i] - (uint16_t)min);
+            // ::fprintf(stderr, "%d delta=%d (%f)\n", i, delta, (float)delta/min);
+            // if ((float)delta/min < .05) {
+            //     ::fprintf(stderr, "%d clipping low \n", i);
+            //     ret.insert(i);
+            // }
+        }
+    }
+    return ret;
+}
+
+void Copter::set_frame_type(copter_frame_type frame_type)
+{
+    _frame_type = frame_type;
+    switch(frame_type) {
+    case frame_type_quad:
+        _num_motors = 4;
+        break;
+    case frame_type_y6:
+        _num_motors = 6;
+        break;
+    case invalid:
+        abort();
     }
 }
 
@@ -51,16 +95,15 @@ bool Copter::exceeding_angle_max()
 }
 
 
-void Copter::handle_decoded_message(uint64_t T, mavlink_servo_output_raw_t &msg)
+void Copter::set_frame(const char *frame_config_string)
 {
-    Base::handle_decoded_message(T, msg);
-
-    _servo_output[1] = msg.servo1_raw;
-    _servo_output[2] = msg.servo2_raw;
-    _servo_output[3] = msg.servo3_raw;
-    _servo_output[4] = msg.servo4_raw;
-    _servo_output[5] = msg.servo5_raw;
-    _servo_output[6] = msg.servo6_raw;
-    _servo_output[7] = msg.servo7_raw;
-    _servo_output[8] = msg.servo8_raw;
+    if (strstr(frame_config_string, "QUAD")) {
+        set_frame_type(AnalyzerVehicle::Copter::frame_type_quad);
+    } else if (strstr(frame_config_string, "Y6")) {
+        set_frame_type(AnalyzerVehicle::Copter::frame_type_y6);
+    } else {
+        ::fprintf(stderr, "Unknown frame (%s)\n", frame_config_string);
+        abort();
+    }
 }
+

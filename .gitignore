@@ -2,3 +2,5 @@
 *.o
 dataflash_logger
 *.tlog
+imagetagger
+loganalyzer

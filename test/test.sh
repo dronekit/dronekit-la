@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ANALYZER=../dataflash_logger
+ANALYZER=../loganalyzer
 
 set -e
 set -x

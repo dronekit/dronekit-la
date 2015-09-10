@@ -1,0 +1,423 @@
+{
+  "duration": "987654321", 
+  "evilness": 185, 
+  "format-version": "0.1", 
+  "git_version": "some-hash", 
+  "packet_count": 41809, 
+  "tests": {
+    "Arming Checks": {
+      "description": "This test will FAIL if the craft ever arms when some arming checks are disabled", 
+      "evilness": 0, 
+      "name": "Arming Checks", 
+      "results": []
+    }, 
+    "Attitude Control": {
+      "description": "This test will FAIL if the craft's desired attitudes and achieved attitudes do not match for more than a threshold time", 
+      "evilness": 30, 
+      "name": "Attitude Control", 
+      "results": [
+        {
+          "evidence": [
+            "Max-Delta=8.310314 degrees", 
+            "Roll-at-Max-Delta=3.650314 degrees", 
+            "Desired-Roll-at-Max-Delta=-4.660000 degrees", 
+            "Pitch-at-Max-Delta=11.818577 degrees", 
+            "Desired-Pitch-at-Max-Delta=15.540000 degrees", 
+            "duration=0.270912 seconds", 
+            "threshold-duration=0.250000 seconds"
+          ], 
+          "evilness": 10, 
+          "reason": "Desired attitude not achieved", 
+          "series": [
+            "NAV_CONTROLLER_OUTPUT.nav_roll", 
+            "NAV_CONTROLLER_OUTPUT.nav_pitch", 
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch"
+          ], 
+          "status": "WARN", 
+          "timestamp_start": 1434326699541394, 
+          "timestamp_stop": 1434326699812306
+        }, 
+        {
+          "evidence": [
+            "Max-Delta=7.607708 degrees", 
+            "Roll-at-Max-Delta=-2.625914 degrees", 
+            "Desired-Roll-at-Max-Delta=0.350000 degrees", 
+            "Pitch-at-Max-Delta=-0.937708 degrees", 
+            "Desired-Pitch-at-Max-Delta=6.670000 degrees", 
+            "duration=0.255048 seconds", 
+            "threshold-duration=0.250000 seconds"
+          ], 
+          "evilness": 10, 
+          "reason": "Desired attitude not achieved", 
+          "series": [
+            "NAV_CONTROLLER_OUTPUT.nav_roll", 
+            "NAV_CONTROLLER_OUTPUT.nav_pitch", 
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch"
+          ], 
+          "status": "WARN", 
+          "timestamp_start": 1434326700062613, 
+          "timestamp_stop": 1434326700317661
+        }, 
+        {
+          "evidence": [
+            "Max-Delta=198.267700 degrees", 
+            "Roll-at-Max-Delta=-171.777695 degrees", 
+            "Desired-Roll-at-Max-Delta=26.490000 degrees", 
+            "Pitch-at-Max-Delta=7.252589 degrees", 
+            "Desired-Pitch-at-Max-Delta=26.490000 degrees", 
+            "Motor 3 clipping high"
+          ], 
+          "evilness": 10, 
+          "reason": "Desired attitude not achieved", 
+          "series": [
+            "NAV_CONTROLLER_OUTPUT.nav_roll", 
+            "NAV_CONTROLLER_OUTPUT.nav_pitch", 
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch"
+          ], 
+          "status": "FAIL", 
+          "timestamp_start": 1434326705062324
+        }
+      ]
+    }, 
+    "Battery": {
+      "description": "This test will FAIL if the battery level remaining falls below a threshold level", 
+      "evilness": 0, 
+      "name": "Battery", 
+      "results": [
+        {
+          "evidence": [
+            "battery-remaining=67.000000%", 
+            "failsafe=15.000000%"
+          ], 
+          "reason": "Battery never below failsafe", 
+          "status": "OK", 
+          "timestamp": 1434326733112682
+        }
+      ]
+    }, 
+    "Brownout": {
+      "description": "This test will FAIL if the craft appears to lose onboard power during a flight", 
+      "evilness": 0, 
+      "name": "Brownout", 
+      "results": [
+        {
+          "evidence": [
+            "Final altitude 0.650000 metres"
+          ], 
+          "reason": "No brownout detected", 
+          "status": "OK", 
+          "timestamp": 0
+        }
+      ]
+    }, 
+    "Compass Offsets": {
+      "description": "This test will FAIL if the compass offset parameters exceed thresholds", 
+      "evilness": 5, 
+      "name": "Compass Offsets", 
+      "results": [
+        {
+          "evidence": [
+            "COMPASS_OFS 315.754636 > 200.000000"
+          ], 
+          "reason": "Compass offsets in parameters are out of bounds", 
+          "series": [
+            "PARM"
+          ], 
+          "status": "FAIL", 
+          "timestamp": 1434322219950713
+        }
+      ]
+    }, 
+    "Crash Test": {
+      "description": "This test will FAIL if the vehicle appears to crash", 
+      "evilness": 10, 
+      "name": "Crash Test", 
+      "results": [
+        {
+          "evidence": [
+            "ANGLE_MAX (179.658707 > 26.490000)", 
+            "SERVO_OUTPUT_RAW.servo1_raw=1502.000000", 
+            "SERVO_OUTPUT_RAW.servo2_raw=1292.000000", 
+            "SERVO_OUTPUT_RAW.servo4_raw=1709.000000"
+          ], 
+          "evilness": 10, 
+          "reason": "Vehicle is past maximum allowed angle and running its motors", 
+          "series": [
+            "PARAM", 
+            "SERVO_OUTPUT_RAW.servo1_raw", 
+            "SERVO_OUTPUT_RAW.servo2_raw", 
+            "SERVO_OUTPUT_RAW.servo3_raw", 
+            "SERVO_OUTPUT_RAW.servo4_raw"
+          ], 
+          "status": "FAIL", 
+          "timestamp_start": 1434326741537645
+        }
+      ]
+    }, 
+    "Ever Armed": {
+      "description": "This test will FAIL if the craft never armed during the log", 
+      "evilness": 0, 
+      "name": "Ever Armed", 
+      "results": [
+        {
+          "reason": "The vehicle armed", 
+          "status": "OK", 
+          "timestamp": 1434326742510502
+        }
+      ]
+    }, 
+    "Ever Flew": {
+      "description": "This test will FAIL if the craft did not ever seem to fly", 
+      "evilness": 0, 
+      "name": "Ever Flew", 
+      "results": [
+        {
+          "reason": "The vehicle appeared to fly", 
+          "status": "OK", 
+          "timestamp": 1434326404251548
+        }
+      ]
+    }, 
+    "Good EKF": {
+      "description": "This test will FAIL if EKF variances exceed thresholds, or if the EKF status flags indicate errors", 
+      "evilness": 140, 
+      "name": "Good EKF", 
+      "results": [
+        {
+          "evidence": [
+            "max=0.586537", 
+            "threshold=0.500000"
+          ], 
+          "evilness": 4, 
+          "reason": "pos_horiz_variance exceeds warn threshold", 
+          "series": "EKF_STATUS_REPORT.pos_horiz_variance", 
+          "status": "WARN", 
+          "timestamp_start": 1434326613751675, 
+          "timestamp_stop": 1434326614777980
+        }, 
+        {
+          "evidence": [
+            "max=0.569607", 
+            "threshold=0.500000"
+          ], 
+          "evilness": 4, 
+          "reason": "pos_horiz_variance exceeds warn threshold", 
+          "series": "EKF_STATUS_REPORT.pos_horiz_variance", 
+          "status": "WARN", 
+          "timestamp_start": 1434326617374681, 
+          "timestamp_stop": 1434326618425890
+        }, 
+        {
+          "evidence": [
+            "max=0.837287", 
+            "threshold=0.500000"
+          ], 
+          "evilness": 4, 
+          "reason": "pos_horiz_variance exceeds warn threshold", 
+          "series": "EKF_STATUS_REPORT.pos_horiz_variance", 
+          "status": "WARN", 
+          "timestamp_start": 1434326698071503, 
+          "timestamp_stop": 1434326701711361
+        }, 
+        {
+          "evidence": [
+            "max-variance=1.227308", 
+            "threshold=1.000000"
+          ], 
+          "evilness": 10, 
+          "reason": "velocity_variance exceeds fail threshold", 
+          "series": "EKF_STATUS_REPORT.velocity_variance", 
+          "status": "FAIL", 
+          "timestamp_start": 1434326703802242, 
+          "timestamp_stop": 1434326706416664
+        }, 
+        {
+          "evidence": [
+            "max=0.599691", 
+            "threshold=0.500000"
+          ], 
+          "evilness": 4, 
+          "reason": "compass_variance exceeds warn threshold", 
+          "series": "EKF_STATUS_REPORT.compass_variance", 
+          "status": "WARN", 
+          "timestamp_start": 1434326706935792, 
+          "timestamp_stop": 1434326707458313
+        }, 
+        {
+          "evidence": [
+            "max-variance=5.714452", 
+            "threshold=1.000000"
+          ], 
+          "evilness": 10, 
+          "reason": "pos_horiz_variance exceeds fail threshold", 
+          "series": "EKF_STATUS_REPORT.pos_horiz_variance", 
+          "status": "FAIL", 
+          "timestamp_start": 1434326702256849, 
+          "timestamp_stop": 1434326713188969
+        }, 
+        {
+          "evidence": [
+            "max=0.530743", 
+            "threshold=0.500000"
+          ], 
+          "evilness": 4, 
+          "reason": "compass_variance exceeds warn threshold", 
+          "series": "EKF_STATUS_REPORT.compass_variance", 
+          "status": "WARN", 
+          "timestamp_start": 1434326722609030, 
+          "timestamp_stop": 1434326723151062
+        }, 
+        {
+          "evidence": [
+            "max=0.515186", 
+            "threshold=0.500000"
+          ], 
+          "evilness": 4, 
+          "reason": "compass_variance exceeds warn threshold", 
+          "series": "EKF_STATUS_REPORT.compass_variance", 
+          "status": "WARN", 
+          "timestamp_start": 1434326728386148, 
+          "timestamp_stop": 1434326728915250
+        }, 
+        {
+          "evidence": [
+            "max-variance=1.414812", 
+            "threshold=1.000000"
+          ], 
+          "evilness": 10, 
+          "reason": "velocity_variance exceeds fail threshold", 
+          "series": "EKF_STATUS_REPORT.velocity_variance", 
+          "status": "FAIL", 
+          "timestamp_start": 1434326727854056, 
+          "timestamp_stop": 1434326728915250
+        }, 
+        {
+          "evidence": [
+            "max-variance=4.043245", 
+            "threshold=1.000000"
+          ], 
+          "evilness": 10, 
+          "reason": "pos_horiz_variance exceeds fail threshold", 
+          "series": "EKF_STATUS_REPORT.pos_horiz_variance", 
+          "status": "FAIL", 
+          "timestamp_start": 1434326727854056, 
+          "timestamp_stop": 1434326734639194
+        }, 
+        {
+          "evidence": [
+            "max=0.526657", 
+            "threshold=0.500000"
+          ], 
+          "evilness": 4, 
+          "reason": "velocity_variance exceeds warn threshold", 
+          "series": "EKF_STATUS_REPORT.velocity_variance", 
+          "status": "WARN", 
+          "timestamp_start": 1434326735165674, 
+          "timestamp_stop": 1434326735710806
+        }, 
+        {
+          "evidence": [
+            "max=0.846526", 
+            "threshold=0.500000"
+          ], 
+          "evilness": 4, 
+          "reason": "pos_horiz_variance exceeds warn threshold", 
+          "series": "EKF_STATUS_REPORT.pos_horiz_variance", 
+          "status": "WARN", 
+          "timestamp_start": 1434326735165674, 
+          "timestamp_stop": 1434326736737647
+        }, 
+        {
+          "evidence": [
+            "max=0.557990", 
+            "threshold=0.500000"
+          ], 
+          "evilness": 4, 
+          "reason": "velocity_variance exceeds warn threshold", 
+          "series": "EKF_STATUS_REPORT.velocity_variance", 
+          "status": "WARN", 
+          "timestamp_start": 1434326740356540, 
+          "timestamp_stop": 1434326740880062
+        }, 
+        {
+          "evidence": [
+            "max=0.838248", 
+            "threshold=0.500000"
+          ], 
+          "evilness": 4, 
+          "reason": "velocity_variance exceeds warn threshold", 
+          "series": "EKF_STATUS_REPORT.velocity_variance", 
+          "status": "WARN", 
+          "timestamp_start": 1434326741408100, 
+          "timestamp_stop": 1434326741953598
+        }, 
+        {
+          "evidence": [
+            "max-variance=2.114971", 
+            "threshold=1.000000"
+          ], 
+          "evilness": 10, 
+          "reason": "pos_horiz_variance exceeds fail threshold", 
+          "series": "EKF_STATUS_REPORT.pos_horiz_variance", 
+          "status": "FAIL", 
+          "timestamp_start": 1434326739856068, 
+          "timestamp_stop": 1434326736737647
+        }, 
+        {
+          "evidence": [
+            "attitude estimate bad", 
+            "horizontal velocity estimate bad", 
+            "vertical velocity estimate bad", 
+            "horizontal position (relative) estimate bad", 
+            "horizontal position (absolute) estimate bad", 
+            "vertical position (absolute) estimate bad", 
+            "vertical position (above ground) estimate bad", 
+            "In constant position mode (no abs or rel position)", 
+            "Predicted horizontal position (relative) bad", 
+            "Predicted horizontal position (absolute) bad"
+          ], 
+          "evilness": 20, 
+          "reason": "The EKF status report indicates a problem with the EKF", 
+          "series": "EKF_STATUS_REPORT.flags", 
+          "status": "FAIL", 
+          "timestamp_start": 1434322219026185, 
+          "timestamp_stop": 1434326304198476
+        }, 
+        {
+          "evidence": [
+            "horizontal velocity estimate bad", 
+            "horizontal position (relative) estimate bad", 
+            "horizontal position (absolute) estimate bad", 
+            "vertical position (above ground) estimate bad", 
+            "Predicted horizontal position (relative) bad", 
+            "Predicted horizontal position (absolute) bad"
+          ], 
+          "evilness": 16, 
+          "reason": "The EKF status report indicates a problem with the EKF", 
+          "series": "EKF_STATUS_REPORT.flags", 
+          "status": "FAIL", 
+          "timestamp_start": 1434326304198476, 
+          "timestamp_stop": 1434326309732475
+        }, 
+        {
+          "evidence": [
+            "horizontal velocity estimate bad", 
+            "horizontal position (relative) estimate bad", 
+            "horizontal position (absolute) estimate bad", 
+            "vertical position (above ground) estimate bad"
+          ], 
+          "evilness": 14, 
+          "reason": "The EKF status report indicates a problem with the EKF", 
+          "series": "EKF_STATUS_REPORT.flags", 
+          "status": "FAIL", 
+          "timestamp_start": 1434326309732475, 
+          "timestamp_stop": 1434326396789150
+        }
+      ]
+    }
+  }, 
+  "timestamp": "123456789"
+}

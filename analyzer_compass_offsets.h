@@ -11,28 +11,29 @@
 class Analyzer_Compass_Offsets : public Analyzer {
 
 public:
-    Analyzer_Compass_Offsets(int fd, struct sockaddr_in &sa, AnalyzerVehicle::Base *&vehicle) :
-	Analyzer(fd, sa, vehicle),
-        modtime_compass_ofs{ },
-        warn_offset(100),
-        fail_offset(200),
-        compass_offset_results_offset(0)
+    Analyzer_Compass_Offsets(AnalyzerVehicle::Base *&vehicle) :
+	Analyzer(vehicle)
     { }
 
-    const char *name() { return "Compass Offsets"; }
-    const char *description() {
-        return "Compass offsets and vector length are reasonable";
+    const char *name() const { return "Compass Offsets"; }
+    const char *description() const {
+        return "This test will FAIL if the compass offset parameters exceed thresholds";
     }
 
     bool configure(INIReader *config);
-    void handle_decoded_message(uint64_t T, mavlink_param_value_t &param) override;
-    void evaluate(uint64_t T);
+    // void handle_decoded_message(uint64_t T, mavlink_param_value_t &param) override;
+    void evaluate() override;
 
 private:
-    uint64_t modtime_compass_ofs[3];
+    // we rely on these changing:
+    uint64_t modtime_compass_ofs[3] = {
+        (uint64_t)-1,
+        (uint64_t)-1,
+        (uint64_t)-1
+    };
 
-    const uint16_t warn_offset;
-    const uint16_t fail_offset;
+    const uint16_t warn_offset = 100;
+    const uint16_t fail_offset = 200;
 
     enum compass_offset_status {
         compass_offset_warn = 17,
@@ -50,11 +51,11 @@ private:
     void do_add_evilness(struct compass_offset_result result);
 
     #define MAX_COMPASS_OFFSET_RESULTS 100
-    uint8_t compass_offset_results_offset;
+    uint8_t compass_offset_results_offset = 0;
     compass_offset_result compass_offset_results[MAX_COMPASS_OFFSET_RESULTS];
-    bool compass_offset_results_overrun;
+    bool compass_offset_results_overrun = false;
     
-    void addStatusReason(Json::Value &root, compass_offset_result result);
+    void add_evidence(Json::Value &root, compass_offset_result result);
     uint32_t results_json_compass_offsets_status_reason(char *buf, const uint32_t buflen, compass_offset_result result);
     const char * results_json_compass_offsets_status_string(compass_offset_result result);
     uint32_t results_json_compass_offsets(char *buf, uint32_t buflen);

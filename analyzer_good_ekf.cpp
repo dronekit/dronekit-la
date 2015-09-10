@@ -4,116 +4,264 @@
 #include "analyzer_util.h"
 
 bool Analyzer_Good_EKF::configure(INIReader *config) {
-    if (!MAVLink_Message_Handler::configure(config)) {
+    if (!Analyzer::configure(config)) {
 	return false;
     }
     return true;
 }
 
-bool Analyzer_Good_EKF::has_failed() {
-return (result_velocity_variance.max > velocity_variance.threshold_fail ||
-        result_pos_horiz_variance.max > pos_horiz_variance.threshold_fail ||
-        result_pos_vert_variance.max > pos_vert_variance.threshold_fail ||
-        result_compass_variance.max > compass_variance.threshold_fail || 
-        result_terrain_alt_variance.max > terrain_alt_variance.threshold_fail);
+void Analyzer_Good_EKF::close_variance_result(struct ekf_variance_result *result)
+{
+    result_variance[next_result_variance].variance = result->variance;
+    result_variance[next_result_variance].T_start = result->T_start;
+    result_variance[next_result_variance].T_stop = result->T_stop;
+    result_variance[next_result_variance].max = result->max;
+    next_result_variance++;
 }
 
-// swiped from AnalyzerTest_Compass in experimental ArduPilot tree:
-void Analyzer_Good_EKF::handle_decoded_message(uint64_t T, mavlink_ekf_status_report_t &ekf_status_report)
+void Analyzer_Good_EKF::end_of_log(uint32_t packet_count)
 {
-    if (ekf_status_report.velocity_variance > result_velocity_variance.max) {
-        result_velocity_variance.max = ekf_status_report.velocity_variance;
+    std::map<const std::string, double> variances = _vehicle->ekf_variances();
+    
+    for (std::map<const std::string, double>::const_iterator it = variances.begin();
+         it != variances.end();
+         ++it) {
+        // ::fprintf(stderr, "would evaluate (%s)\n", (*it).first.c_str());
+        std::string name = (*it).first;
+        struct ekf_variance_result *result = variance_result(name);
+        if (result->T_start != 0) {
+            close_variance_result(result);
+        }
     }
-    if (ekf_status_report.pos_horiz_variance > result_pos_horiz_variance.max) {
-        result_pos_horiz_variance.max = ekf_status_report.pos_horiz_variance;
-    }
-    if (ekf_status_report.pos_vert_variance > result_pos_vert_variance.max) {
-        result_pos_vert_variance.max = ekf_status_report.pos_vert_variance;
-    }
-    if (ekf_status_report.compass_variance > result_compass_variance.max) {
-        result_compass_variance.max = ekf_status_report.compass_variance;
-    }
-    if (ekf_status_report.terrain_alt_variance > result_terrain_alt_variance.max) {
-        result_terrain_alt_variance.max = ekf_status_report.terrain_alt_variance;
-    }
-    seen_ekf_packets = true;
 }
 
-extern char *examining_filename;
-
-// void show_graph(const char *series)
-// {
-//     return;
-//     if (fork()) { // parent
-//         return;
-//     }
-//     const char *args[4];
-//     args[0] = "mavgraph.py";
-//     args[1] = examining_filename;
-//     args[2] = series;
-//     args[3] = NULL;
-//     execvp(args[0], args);
-//     ::fprintf(stderr, "exec of (%s) failed: %s\n", args[0], strerror(errno));
-//     exit(1);
-// }
-
-void Analyzer_Good_EKF::results_json_results_do_variance(Json::Value &root, const struct ekf_variance variance, const struct ekf_variance_result variance_result)
+bool Analyzer_Good_EKF::ekf_flags_bad(uint16_t flags)
 {
-    const char *name = variance.name;
-    const double threshold_fail = variance.threshold_fail;
-    const double threshold_warn = variance.threshold_warn;
-    const double max = variance_result.max;
+    for (uint16_t i=1; i<EKF_STATUS_FLAGS_ENUM_END; i<<=1) {
+        if (!(flags & i)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void Analyzer_Good_EKF::evaluate_variance(std::string name, double value)
+{
+    struct ekf_variance_result *result = variance_result(name);
+    if (result ==NULL) {
+        ::fprintf(stderr, "result for (%s) is NULL\n", name.c_str());
+        abort();
+    }
+    struct ekf_variance *variance = result->variance;
+
+    if (result->T_start) {
+        if (value > result->max) {
+            // a new record!
+            result->max = value;
+        } else if (value > variance->threshold_warn) {
+            // we continue to exceed variances...
+        } else {
+            // our variances have come down sufficiently to close this instance
+            result->T_stop = _vehicle->T();
+            close_variance_result(result);
+            result->T_start = 0;
+        }
+    } else {
+        if (value > variance->threshold_warn) {
+            // we have exceeeded a threshold
+            result->T_start = _vehicle->T();
+            result->max = value;
+        }
+    }
+}
+
+void Analyzer_Good_EKF::evaluate_variances()
+{
+    std::map<const std::string, double> variances = _vehicle->ekf_variances();
+    
+    for (std::map<const std::string, double>::const_iterator it = variances.begin();
+         it != variances.end();
+         ++it) {
+        evaluate_variance((*it).first, (*it).second);
+    }
+}
+
+// FIXME: should be taking timestamps from ekf_flags_t rather than
+// _vehicle->T()
+void Analyzer_Good_EKF::evaluate_flags()
+{
+    // ::fprintf(stderr, "flags: %d\n", _vehicle->ekf_flags());
+    if (next_result_flags >= MAX_FLAGS_RESULTS) {
+        return;
+    }
+    if (result_flags[next_result_flags].T_start) {
+        if (result_flags[next_result_flags].flags != _vehicle->ekf_flags()) {
+            // close off the old one
+            result_flags[next_result_flags].T_stop = _vehicle->T();
+            next_result_flags++;
+            if (next_result_flags >= MAX_FLAGS_RESULTS) {
+                return;
+            }
+            if (ekf_flags_bad(_vehicle->ekf_flags())) {
+                result_flags[next_result_flags].T_start = _vehicle->T();
+                result_flags[next_result_flags].flags = _vehicle->ekf_flags();
+            }
+        }
+    } else {
+        if (ekf_flags_bad(_vehicle->ekf_flags())) {
+            result_flags[next_result_flags].T_start = _vehicle->T();
+            result_flags[next_result_flags].flags = _vehicle->ekf_flags();
+        }
+    }
+}
+
+
+void Analyzer_Good_EKF::evaluate()
+{
+    evaluate_variances();
+    evaluate_flags();
+}
+    
+
+void Analyzer_Good_EKF::results_json_results_do_variance(Json::Value &root, const struct Analyzer_Good_EKF::ekf_variance_result *variance_result)
+{
+    struct ekf_variance *variance  = variance_result->variance;
+    const char *name = variance->name;
+    const double threshold_fail = variance->threshold_fail;
+    const double threshold_warn = variance->threshold_warn;
+    const double max = variance_result->max;
     
     Json::Value result(Json::objectValue);
     std::string tmp = string_format("%s.%s", "EKF_STATUS_REPORT", name);
     result["series"] = tmp;
-    Json::Value reason(Json::arrayValue);
     if (max > threshold_fail) {
         uint8_t this_sin_score = 10;
-        reason.append(string_format("%s exceeds threshold (%f > %f)",
-                                    name, max, threshold_fail));
-        result["reason"] = reason;
+        result["reason"] = string_format("%s exceeds fail threshold", name);
+
+        Json::Value evidence(Json::arrayValue);
+        evidence.append(string_format("max-variance=%f", max));
+        evidence.append(string_format("threshold=%f", threshold_fail));
+        result["evidence"] = evidence;
+
         result["status"] = "FAIL";
         result["evilness"] = this_sin_score;
-        result["timestamp"] = (Json::UInt64)variance_result.T;
+        result["timestamp_start"] = (Json::UInt64)variance_result->T_start;
+        result["timestamp_stop"] = (Json::UInt64)variance_result->T_stop;
         root.append(result);
-        // show_graph(tmp.c_str());
         add_evilness(this_sin_score);
     } else if (max > threshold_warn) {
         uint8_t this_sin_score = 4;
-        reason.append(string_format("%s exceeds threshold (%f > %f)",
-                                           name, max, threshold_fail));
-        result["evilness"] = this_sin_score;
-        result["reason"] = reason;
-        result["status"] = "WARN";
-        result["timestamp"] = (Json::UInt64)variance_result.T;
-        root.append(result);
-        // show_graph(tmp.c_str());
-        add_evilness(this_sin_score);
-    } else {
-        reason.append(string_format("%s within threshold (%f <= %f)",
-                                    name, max, threshold_fail));
+        result["reason"] = string_format("%s exceeds warn threshold", name);
 
-        result["reason"] = reason;
-        result["status"] = "OK";
+        Json::Value evidence(Json::arrayValue);
+        evidence.append(string_format("max=%f", max));
+        evidence.append(string_format("threshold=%f", threshold_warn));
+        result["evidence"] = evidence;
+
+        result["evilness"] = this_sin_score;
+        result["status"] = "WARN";
+        result["timestamp_start"] = (Json::UInt64)variance_result->T_start;
+        result["timestamp_stop"] = (Json::UInt64)variance_result->T_stop;
         root.append(result);
+        add_evilness(this_sin_score);
     }
 }
+
+void Analyzer_Good_EKF::results_json_results_do_flags(Json::Value &root, const struct ekf_flags_result flags_result)
+{
+    
+    Json::Value result(Json::objectValue);
+    std::string tmp = string_format("%s.%s", "EKF_STATUS_REPORT", "flags");
+    result["series"] = tmp;
+    result["reason"] = "The EKF status report indicates a problem with the EKF";
+    Json::Value evidence(Json::arrayValue);
+
+    uint8_t this_sin_score = 10;
+    if (!(flags_result.flags & EKF_ATTITUDE)) {
+        this_sin_score++;
+        evidence.append("attitude estimate bad");
+    }
+    if (!(flags_result.flags & EKF_VELOCITY_HORIZ)) {
+        this_sin_score++;
+        evidence.append("horizontal velocity estimate bad");
+    }
+    if (!(flags_result.flags & EKF_VELOCITY_VERT)) {
+        this_sin_score++;
+        evidence.append("vertical velocity estimate bad");
+    }
+    if (!(flags_result.flags & EKF_POS_HORIZ_REL)) {
+        this_sin_score++;
+        evidence.append("horizontal position (relative) estimate bad");
+    }
+    if (!(flags_result.flags & EKF_POS_HORIZ_ABS)) {
+        this_sin_score++;
+        evidence.append("horizontal position (absolute) estimate bad");
+    }
+    if (!(flags_result.flags & EKF_POS_VERT_ABS)) {
+        this_sin_score++;
+        evidence.append("vertical position (absolute) estimate bad");
+    }
+    if (!(flags_result.flags & EKF_POS_VERT_AGL)) {
+        this_sin_score++;
+        evidence.append("vertical position (above ground) estimate bad");
+    }
+    if (!(flags_result.flags & EKF_CONST_POS_MODE)) {
+        this_sin_score++;
+        evidence.append("In constant position mode (no abs or rel position)");
+    }
+    if (!(flags_result.flags & EKF_PRED_POS_HORIZ_REL)) {
+        this_sin_score++;
+        evidence.append("Predicted horizontal position (relative) bad");
+    }
+        if (!(flags_result.flags & EKF_PRED_POS_HORIZ_ABS)) {
+        this_sin_score++;
+        evidence.append("Predicted horizontal position (absolute) bad");
+    }
+
+    result["evidence"] = evidence;
+    result["status"] = "FAIL";
+    result["evilness"] = this_sin_score;
+    result["timestamp_start"] = (Json::UInt64)flags_result.T_start;
+    result["timestamp_stop"] = (Json::UInt64)flags_result.T_stop;
+    root.append(result);
+
+    add_evilness(this_sin_score);
+}
+
+
 void Analyzer_Good_EKF::results_json_results(Json::Value &root)
 {
-    if (seen_ekf_packets) {
-        results_json_results_do_variance(root, velocity_variance, result_velocity_variance);
-        results_json_results_do_variance(root, pos_horiz_variance, result_pos_horiz_variance);
-        results_json_results_do_variance(root, pos_vert_variance, result_pos_vert_variance);
-        results_json_results_do_variance(root, compass_variance, result_compass_variance);
-        results_json_results_do_variance(root, terrain_alt_variance, result_terrain_alt_variance);
-    } else {
+    for (uint8_t i=0; i<next_result_variance;i++) {
+        results_json_results_do_variance(root, &result_variance[i]);
+    }
+    for (uint8_t i=0; i<next_result_flags;i++) {
+        results_json_results_do_flags(root, result_flags[i]);
+    }
+
+    std::map<const std::string, double> variances = _vehicle->ekf_variances();
+    for (std::map<const std::string, double>::const_iterator it = variances.begin();
+         it != variances.end();
+         ++it) {
+        std::string name = (*it).first;
+        if (!_vehicle->ekf_variance_T(name)) {
+            Json::Value result(Json::objectValue);
+            result["timestamp"] = 0;
+            result["status"] = "WARN";
+            Json::Value reason(Json::arrayValue);
+            reason.append(string_format("%s was never updated", name.c_str()));
+            result["reason"] = reason;
+            root.append(result);
+        }
+    }
+
+    if (!_vehicle->ekf_flags_T()) {
         Json::Value result(Json::objectValue);
         result["timestamp"] = 0;
         result["status"] = "WARN";
         Json::Value reason(Json::arrayValue);
-        reason.append("No EKF_STATUS_REPORT messages received");
+        reason.append("EKF flags were never updated");
         result["reason"] = reason;
         root.append(result);
     }
+
 }
