@@ -40,11 +40,10 @@ public:
 	return true;
     }
 
-    virtual void handle_packet(uint8_t *pkt, uint16_t pktlen) { }
-
     // template <typename msgtype>
     // virtual void handle_decoded_message(msgtype &msg) { }
 
+    virtual void handle_message(uint64_t timestamp, mavlink_message_t &msg);
     virtual void handle_decoded_message(uint64_t T, mavlink_ahrs2_t &msg) { }
     virtual void handle_decoded_message(uint64_t T, mavlink_attitude_t &msg) { }
     virtual void handle_decoded_message(uint64_t T, mavlink_ekf_status_report_t &msg) { }

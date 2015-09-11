@@ -68,8 +68,10 @@ void Telem_Forwarder_Client::create_and_bind()
 
 void Telem_Forwarder_Client::pack_telem_forwarder_sockaddr(INIReader *config)
 {
+    // uint16_t tf_port = config->GetInteger("solo", "telem_forward_port", 14560);
+    // std::string ip = config->Get("solo", "soloIp", "10.1.1.10");
     uint16_t tf_port = config->GetInteger("solo", "telem_forward_port", 14560);
-    std::string ip = config->Get("solo", "soloIp", "10.1.1.10");
+    std::string ip = config->Get("solo", "soloIp", "127.0.0.1");
 
     la_log(LOG_INFO, "df-tfc: connecting to telem-forwarder at %s:%u", ip.c_str(), tf_port);
     memset(&sa_tf, 0, sizeof(sa_tf));
@@ -117,7 +119,7 @@ bool Telem_Forwarder_Client::sane_telem_forwarder_packet(uint8_t *pkt, uint16_t 
 
 uint32_t Telem_Forwarder_Client::handle_recv()
 {
-    // ::printf("Receiving packet\n");
+    // ::printf("Receiving packet into position %u\n", _buflen_content);
     /* packet from telem_forwarder */
     socklen_t sa_len = sizeof(sa);
     uint16_t res = recvfrom(fd_telem_forwarder, &_buf[_buflen_content], _buflen-_buflen_content, 0, (struct sockaddr*)&sa, &sa_len);
@@ -125,6 +127,7 @@ uint32_t Telem_Forwarder_Client::handle_recv()
     /* We get one mavlink packet per udp datagram. Sanity checks here
        are: must be from solo's IP and have a valid mavlink header. */
     // FIXME: we don't necessarily get just one packet/buffer!
+    // ::fprintf(stderr, "handle_recv\n");
     if (!sane_telem_forwarder_packet(_buf, res)) {
 	return 0;
     }

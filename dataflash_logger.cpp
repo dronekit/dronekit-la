@@ -175,10 +175,10 @@ void DataFlash_Logger::queue_gap_nacks(uint32_t seqno)
     }
 }
 
-bool DataFlash_Logger::logging_start(uint8_t *pkt, uint16_t pktlen)
+bool DataFlash_Logger::logging_start(mavlink_remote_log_data_block_t &msg)
 {
-    sender_system_id = pkt[3];
-    sender_component_id = pkt[4];
+    sender_system_id = most_recent_sender_system_id;
+    sender_component_id = most_recent_sender_component_id;
     la_log(LOG_INFO, "mh-dfl: Starting log, target is (%d/%d)",
 	   sender_system_id, sender_component_id);
     if (!output_file_open()) {
@@ -194,52 +194,52 @@ void DataFlash_Logger::logging_stop()
     logging_started = false;
 }
 
-void handle_decoded_message(uint64_t T, mavlink_remote_log_data_block_t &msg)
+void DataFlash_Logger::handle_message(uint64_t timestamp, mavlink_message_t &msg)
 {
-    abort();
+    most_recent_sender_system_id = msg.sysid;
+    most_recent_sender_component_id = msg.compid;
+    MAVLink_Message_Handler::handle_message(timestamp, msg);
 }
 
-// void DataFlash_Logger::handle_packet_remote_log_data_block(uint8_t *pkt, uint16_t pktlen)
-// {
-//     uint32_t seqno = *((uint32_t*)&pkt[6]);
+void DataFlash_Logger::handle_decoded_message(uint64_t T, mavlink_remote_log_data_block_t &msg)
+{
+    if (!logging_started) {
+	if (msg.block_cnt == 0) {
+	    if (!logging_start(msg)) {
+		return;
+	    }
+	} else {
+	    return;
+	}
+    }
 
-//     if (!logging_started) {
-// 	if (seqno == 0) {
-// 	    if (!logging_start(pkt, pktlen)) {
-// 		return;
-// 	    }
-// 	} else {
-// 	    return;
-// 	}
-//     }
+    ::fprintf(stderr, "target=(%d/%d)\n", msg.target_system, msg.target_component);
+    // we could move this down to the end; that wold mean short-writes
+    // would end up closing this log...
+    _last_data_packet_time = clock_gettime_us(CLOCK_MONOTONIC);
 
-//     // we could move this down to the end; that wold mean short-writes
-//     // would end up closing this log...
-//     _last_data_packet_time = clock_gettime_us(CLOCK_MONOTONIC);
+    const uint8_t length = MAVLINK_MSG_REMOTE_LOG_DATA_BLOCK_FIELD_DATA_LEN;
 
-//     const uint8_t length = pkt[12];
-//     const uint8_t *data = &pkt[13];
+    /* send the dataflash data out to the log file */
+    lseek(out_fd,
+	  msg.block_cnt*MAVLINK_MSG_REMOTE_LOG_DATA_BLOCK_FIELD_DATA_LEN,
+	  SEEK_SET);
+    if (write(out_fd, msg.data, length) < length) {
+	la_log(LOG_ERR, "Short write: %s", strerror(errno));
+	// we'll get the block again... maybe we'll have better luck next time..
+	return;
+    }
 
-//     /* send the dataflash data out to the log file */
-//     lseek(out_fd,
-// 	  seqno*MAVLINK_MSG_REMOTE_LOG_DATA_BLOCK_FIELD_DATA_LEN,
-// 	  SEEK_SET);
-//     if (write(out_fd, data, length) < length) {
-// 	la_log(LOG_ERR, "Short write: %s", strerror(errno));
-// 	// we'll get the block again... maybe we'll have better luck next time..
-// 	return;
-//     }
+    // queue an ack for this packet
+    queue_ack(msg.block_cnt);
 
-//     // queue an ack for this packet
-//     queue_ack(seqno);
+    // queue nacks for gaps
+    queue_gap_nacks(msg.block_cnt);
 
-//     // queue nacks for gaps
-//     queue_gap_nacks(seqno);
-
-//     if (seqno > highest_seqno_seen) {
-// 	highest_seqno_seen = seqno;
-//     }
-// }
+    if (msg.block_cnt > highest_seqno_seen) {
+	highest_seqno_seen = msg.block_cnt;
+    }
+}
 
 void DataFlash_Logger::send_start_logging_packet()
 {
@@ -266,7 +266,7 @@ void DataFlash_Logger::send_start_or_stop_logging_packet(bool is_start)
 	magic_number = MAV_REMOTE_LOG_DATA_BLOCK_STOP;
     }
     mavlink_msg_remote_log_block_status_pack
-	(system_id, component_id, &msg, system_id, component_id, magic_number, 1);
+	(this_system_id, this_component_id, &msg, system_id, component_id, magic_number, 1);
 
     send_message_to_telem_forwarder(msg);
 }

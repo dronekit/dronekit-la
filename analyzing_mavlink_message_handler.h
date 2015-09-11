@@ -12,6 +12,7 @@ public:
         _analyze(analyze),
         _vehicle(vehicle) { }
 
+private:
     virtual void handle_decoded_message(uint64_t T, mavlink_ahrs2_t &msg);
     virtual void handle_decoded_message(uint64_t T, mavlink_attitude_t &msg);
     virtual void handle_decoded_message(uint64_t T, mavlink_ekf_status_report_t &msg);
@@ -25,7 +26,6 @@ public:
 
     void end_of_log(uint32_t packet_count) override;
     
-private:
     Analyze *_analyze;
     AnalyzerVehicle::Base *&_vehicle;
 

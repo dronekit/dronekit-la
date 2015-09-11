@@ -6,11 +6,7 @@
 class DataFlash_Logger_Program : public Common_Tool {
 public:
     DataFlash_Logger_Program() :
-        Common_Tool(),
-        use_telem_forwarder(false),
-        _argc(0),
-        _argv(NULL),
-        _buf{ }
+        Common_Tool()
         { }
     void instantiate_message_handlers(INIReader *config,
                                       int fd_telem_forwarder,
@@ -19,23 +15,20 @@ public:
     void parse_arguments(int argc, char *argv[]);
     const char *program_name();
 
-    void pack_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds);
-    void handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds);
-
-    void loop();
+    void pack_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds) override;
+    void handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds) override;
     
 private:
     void usage();
     void sighup_received_tophalf() override;
     void do_idle_callbacks() override;
 
-    bool use_telem_forwarder;
     MAVLink_Reader *reader;
 
-    long _argc;
-    char **_argv;
+    long _argc = 0;
+    char **_argv = NULL;
 
-    uint8_t _buf[512]; // FIXME constant was TELEM_PKT_MAX
+    uint8_t _buf[512] = { }; // FIXME constant was TELEM_PKT_MAX
 
-    Telem_Forwarder_Client *client;
+    Telem_Forwarder_Client *client = NULL;
 };

@@ -115,9 +115,6 @@ void DataFlash_Logger_Program::parse_arguments(int argc, char *argv[])
         case 'c':
             config_filename = optarg;
             break;
-        case 't':
-            use_telem_forwarder = true;
-            break;
         }
     }
 }
