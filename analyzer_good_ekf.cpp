@@ -144,11 +144,12 @@ void Analyzer_Good_EKF::results_json_results_do_variance(Json::Value &root, cons
         result["evidence"] = evidence;
 
         result["status"] = "FAIL";
-        result["evilness"] = this_sin_score;
+        result["severity-score"] = this_sin_score;
+        result["evilness"] = result["severity-score"];
         result["timestamp_start"] = (Json::UInt64)variance_result->T_start;
         result["timestamp_stop"] = (Json::UInt64)variance_result->T_stop;
         root.append(result);
-        add_evilness(this_sin_score);
+        add_severity_score(this_sin_score);
     } else if (max > threshold_warn) {
         uint8_t this_sin_score = 4;
         result["reason"] = string_format("%s exceeds warn threshold", name);
@@ -158,12 +159,13 @@ void Analyzer_Good_EKF::results_json_results_do_variance(Json::Value &root, cons
         evidence.append(string_format("threshold=%f", threshold_warn));
         result["evidence"] = evidence;
 
-        result["evilness"] = this_sin_score;
+        result["severity-score"] = this_sin_score;
+        result["evilness"] = result["severity-score"];
         result["status"] = "WARN";
         result["timestamp_start"] = (Json::UInt64)variance_result->T_start;
         result["timestamp_stop"] = (Json::UInt64)variance_result->T_stop;
         root.append(result);
-        add_evilness(this_sin_score);
+        add_severity_score(this_sin_score);
     }
 }
 
@@ -220,12 +222,13 @@ void Analyzer_Good_EKF::results_json_results_do_flags(Json::Value &root, const s
 
     result["evidence"] = evidence;
     result["status"] = "FAIL";
-    result["evilness"] = this_sin_score;
+    result["severity-score"] = this_sin_score;
+    result["evilness"] = result["severity-score"];
     result["timestamp_start"] = (Json::UInt64)flags_result.T_start;
     result["timestamp_stop"] = (Json::UInt64)flags_result.T_stop;
     root.append(result);
 
-    add_evilness(this_sin_score);
+    add_severity_score(this_sin_score);
 }
 
 

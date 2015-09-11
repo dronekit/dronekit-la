@@ -44,11 +44,12 @@ private:
     struct compass_offset_result {
         uint64_t timestamp;
         double len;
+        double lens[3];
         compass_offset_status status;
     };
     bool new_compass_results();
 
-    void do_add_evilness(struct compass_offset_result result);
+    void do_add_severity_score(struct compass_offset_result result);
 
     #define MAX_COMPASS_OFFSET_RESULTS 100
     uint8_t compass_offset_results_offset = 0;

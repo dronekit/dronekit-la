@@ -2,6 +2,20 @@
 
 using namespace AnalyzerVehicle;
 
+bool Copter::param_default(const char *name, float &ret) {
+    if (_frame_type == frame_type_quad) {
+        if (_param_defaults_quad[name]) {
+            ret = _param_defaults_quad[name];
+            return true;
+        }
+    }
+    if (_param_defaults[name]) {
+        ret = _param_defaults[name];
+        return true;
+    }
+    return Base::param_default(name, ret);
+}
+
 bool Copter::is_flying() {
     if (! is_armed()) {
         // we hope we're not flying, anyway!
@@ -79,17 +93,15 @@ void Copter::set_frame_type(copter_frame_type frame_type)
 
 bool Copter::exceeding_angle_max()
 {
-    if (!param_seen("ANGLE_MAX")) {
-        return false;
-    }
-
-    float angle_max = param("ANGLE_MAX") / 100; // convert from centidegrees
-
-    if (att().roll() > angle_max) {
-        return true;
-    }
-    if (att().pitch() > angle_max) {
-        return true;
+    float angle_max; // convert from centidegrees
+    if (param_with_defaults("ANGLE_MAX", angle_max)) {
+        angle_max /= 100;
+        if (att().roll() > angle_max) {
+            return true;
+        }
+        if (att().pitch() > angle_max) {
+            return true;
+        }
     }
     return false;
 }

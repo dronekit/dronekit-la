@@ -1,12 +1,15 @@
 #include "analyzing_mavlink_message_handler.h"
 
-void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_ahrs2_t &msg) {
-    _vehicle->set_T(T);
-}
-
 void Analyzing_MAVLink_Message_Handler::end_of_log(uint32_t packet_count)
 {
     _analyze->end_of_log(packet_count);
+}
+
+
+void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_ahrs2_t &msg) {
+    _vehicle->position_estimate("AHRS2").set_lat(T, msg.lat/10000000.0f);
+    _vehicle->position_estimate("AHRS2").set_lon(T, msg.lng/10000000.0f);
+    _vehicle->position_estimate("AHRS2").set_alt(T, msg.altitude);
 }
 
 void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_attitude_t &msg) {
@@ -17,6 +20,24 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
     _vehicle->set_yaw(rad_to_deg(msg.yaw)); // is this right?!
 
     _analyze->evaluate_all();
+}
+
+void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_global_position_int_t &msg) {
+    _vehicle->position_estimate("GLOBAL_POSITION_INT").set_lat(T, msg.lat/10000000.0f);
+    _vehicle->position_estimate("GLOBAL_POSITION_INT").set_lon(T, msg.lon/10000000.0f);
+    _vehicle->position_estimate("GLOBAL_POSITION_INT").set_alt(T, msg.alt/1000.0f);
+
+    // GLOBAL_POSITION_INT is the "offical" position of the vehicle:
+    _vehicle->set_T(T);
+    _vehicle->set_lat(msg.lat/10000000.0f);
+    _vehicle->set_lon(msg.lon/10000000.0f);
+    _vehicle->set_alt(msg.alt/1000.0f);
+}
+
+void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_gps_raw_int_t &msg) {
+    _vehicle->position_estimate("GPS_RAW_INT").set_lat(T, msg.lat/10000000.0f);
+    _vehicle->position_estimate("GPS_RAW_INT").set_lon(T, msg.lon/10000000.0f);
+    _vehicle->position_estimate("GPS_RAW_INT").set_alt(T, msg.alt/1000.0f);
 }
 
 void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_heartbeat_t &msg) {
@@ -93,9 +114,10 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
 void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_vfr_hud_t &msg) {
     _vehicle->set_T(T);
 
-    _vehicle->set_alt(msg.alt);
+    // vfr_hud is a relative altitude, set_alt sets absolute altitude
+//    _vehicle->set_alt(msg.alt);
 
-    _analyze->evaluate_all();
+    // _analyze->evaluate_all();
 }
 
 // something like this is in analyzing_dataflash_mavlink_message_handler

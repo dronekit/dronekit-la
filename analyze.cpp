@@ -3,21 +3,31 @@
 #include <syslog.h>
 #include <stdlib.h> // for exit() (fixme)
 
+#include "analyzer_any_parameters_seen.h"
 #include "analyzer_arming_checks.h"
+#include "analyzer_attitude_control.h"
+#include "analyzer_battery.h"
+#include "analyzer_brownout.h"
 #include "analyzer_compass_offsets.h"
 #include "analyzer_ever_armed.h"
 #include "analyzer_ever_flew.h"
 #include "analyzer_good_ekf.h"
-#include "analyzer_attitude_control.h"
-#include "analyzer_battery.h"
-#include "analyzer_brownout.h"
 #include "analyzer_notcrashed.h"
+#include "analyzer_position_estimate_divergence.h"
+#include "analyzer_vehicle_definition.h"
 
 void Analyze::instantiate_analyzers(INIReader *config)
 {
     if (MAX_ANALYZERS - next_analyzer < 2) {
 	syslog(LOG_INFO, "Insufficient analyzer slots (MAX=%d) (next=%d)?!", MAX_ANALYZERS, next_analyzer);
 	exit(1);  // FIXME - throw exception
+    }
+
+    Analyzer_Any_Parameters_Seen *analyzer_any_parameters_seen = new Analyzer_Any_Parameters_Seen(vehicle);
+    if (analyzer_any_parameters_seen != NULL) {
+        configure_analyzer(config, analyzer_any_parameters_seen, "Analyzer_Any_Parameters_Seen");
+    } else {
+        syslog(LOG_INFO, "Failed to create analyzer_any_parameters_seen");
     }
 
     Analyzer_Arming_Checks *analyzer_arming_checks = new Analyzer_Arming_Checks(vehicle);
@@ -77,6 +87,12 @@ void Analyze::instantiate_analyzers(INIReader *config)
         syslog(LOG_INFO, "Failed to create analyzer_brownout");
     }
 
+    Analyzer_Position_Estimate_Divergence *analyzer_position_estimate_divergence = new Analyzer_Position_Estimate_Divergence(vehicle);
+    if (analyzer_position_estimate_divergence != NULL) {
+        configure_analyzer(config, analyzer_position_estimate_divergence, "Analyzer_Position_Estimate_Divergence");
+    } else {
+        syslog(LOG_INFO, "Failed to create analyzer_position_estimate_divergence");
+    }
 
     Analyzer_NotCrashed *analyzer_notcrashed = new Analyzer_NotCrashed(vehicle);
     if (analyzer_notcrashed != NULL) {
@@ -84,6 +100,14 @@ void Analyze::instantiate_analyzers(INIReader *config)
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_not_crashed");
     }
+
+    Analyzer_Vehicle_Definition *analyzer_vehicle_definition = new Analyzer_Vehicle_Definition(vehicle);
+    if (analyzer_vehicle_definition != NULL) {
+        configure_analyzer(config, analyzer_vehicle_definition, "Analyzer_Vehicle_Definition");
+    } else {
+        syslog(LOG_INFO, "Failed to create analyzer_vehicle_definition");
+    }
+
 }
 
 
@@ -108,24 +132,26 @@ void results_json_add_version(Json::Value &root)
 void Analyze::results_json(Json::Value &root)
 {
     Json::Value tests;
-    uint16_t total_evilness= 0;
+    uint16_t total_severity_score= 0;
     for(int i=0; i<next_analyzer; i++) {
         Json::Value results(Json::arrayValue);
         analyzer[i]->results_json_results(results);
-        uint16_t evilness = analyzer[i]->get_evilness();
-        total_evilness += evilness;
+        uint16_t severity_score = analyzer[i]->get_severity_score();
+        total_severity_score += severity_score;
         const char *name = analyzer[i]->name();
 
         Json::Value test_info(Json::objectValue);
         test_info["description"] = analyzer[i]->description();
         test_info["results"] = results;
-        test_info["evilness"] = evilness;
+        test_info["severity-score"] = severity_score;
+        test_info["evilness"] = test_info["severity-score"];
         test_info["name"] = name;
 
         tests[name] = test_info;
     }
     
-    root["evilness"] = total_evilness;
+    root["severity-score"] = total_severity_score;
+    root["evilness"] = root["severity-score"];
     root["tests"] = tests;
     results_json_add_version(root);
 }

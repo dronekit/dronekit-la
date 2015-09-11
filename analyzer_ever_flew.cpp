@@ -2,48 +2,58 @@
 
 #include "util.h"
 
+void Analyzer_Ever_Flew_Result::to_json(Json::Value &root) const
+{
+    Analyzer_Result_Summary::to_json(root);
+    root["timestamp-first-flying"] = (Json::UInt64)pass_timestamp();
+}
+
+bool Analyzer_Ever_Flew::configure(INIReader *config)
+{
+    if (!Analyzer::configure(config)) {
+	return false;
+    }
+
+    _result.set_status(analyzer_status_fail);
+    _result.set_reason("The vehicle never seemed to take off");
+    
+    return true;
+}
+
 void Analyzer_Ever_Flew::evaluate()
 {
-    if (pass_timestamp != 0) {
+    if (_result.status() == analyzer_status_ok) {
         // already passed
         return;
     }
 
     if (_vehicle->is_armed()) {
-        ever_armed = true;
+        _result.set_ever_armed(true);
     }
+
     if (_vehicle->vehicletype() == AnalyzerVehicle::Base::vehicletype_t::copter) {
         if (((AnalyzerVehicle::Copter*&)_vehicle)->any_motor_running_fast()) {
-            servos_past_threshold = true;
+            _result.set_servos_past_threshold(true);
         }
     }
 
     if (_vehicle->is_flying()) {
-        pass_timestamp = _vehicle->T();
+        _result.set_status(analyzer_status_ok);
+        _result.set_reason("The vehicle appeared to fly");
+        _result.set_pass_timestamp(_vehicle->T());
     }
 }
 
-void Analyzer_Ever_Flew::results_json_results(Json::Value &results)
+void Analyzer_Ever_Flew::end_of_log(const uint32_t packet_count)
 {
-    Json::Value everflew(Json::objectValue);
-    if (pass_timestamp) {
-        Json::Value timestamp(Json::objectValue);
-        timestamp = (Json::UInt64)pass_timestamp;
-        everflew["timestamp"] = timestamp;
-        everflew["status"] = "OK";
-        everflew["reason"] = "The vehicle appeared to fly";
-    } else {
-        everflew["status"] = "FAIL";
-        Json::Value evidence(Json::arrayValue);
-        if (!ever_armed) {
-            evidence.append("Never Armed");
+    if (_result.status() == analyzer_status_fail) {
+        if (!_result.ever_armed()) {
+            _result.add_evidence("Never Armed");
         }
-        if (!servos_past_threshold) {
-            evidence.append("Servos never passed takeoff threshold");
+        if (!_result.servos_past_threshold()) {
+            _result.add_evidence("Servos never passed takeoff threshold");
         }
-        everflew["evidence"] = evidence;
-        everflew["reason"] = "The vehicle never seemed to take off";
     }
 
-    results.append(everflew);
+    add_result(&_result);
 }

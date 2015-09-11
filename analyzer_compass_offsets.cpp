@@ -46,7 +46,8 @@ void Analyzer_Compass_Offsets::evaluate()
         return;
     }
 
-    double compass_ofs[3];
+    double *compass_ofs = &(compass_offset_results[compass_offset_results_offset].lens[0]);
+        
     compass_ofs[0] = _vehicle->param("COMPASS_OFS_X");
     compass_ofs[1] = _vehicle->param("COMPASS_OFS_Y");
     compass_ofs[2] = _vehicle->param("COMPASS_OFS_Z");
@@ -119,22 +120,24 @@ void Analyzer_Compass_Offsets::add_evidence(Json::Value &root,compass_offset_res
                                             result.len,
                                             rel,
                                             offset);
-
     evidence.append(explanation);
+    evidence.append(string_format("COMPASS_OFS_X=%f", result.lens[0]));
+    evidence.append(string_format("COMPASS_OFS_Y=%f", result.lens[1]));
+    evidence.append(string_format("COMPASS_OFS_Z=%f", result.lens[2]));
     root["evidence"] = evidence;
 }
 
-void Analyzer_Compass_Offsets::do_add_evilness(struct compass_offset_result result)
+void Analyzer_Compass_Offsets::do_add_severity_score(struct compass_offset_result result)
 {
     switch(result.status) {
     case compass_offset_warn:
-        add_evilness(2);
+        add_severity_score(2);
         break;
     case compass_offset_fail:
-        add_evilness(5);
+        add_severity_score(5);
         break;
     case compass_offset_zero:
-        add_evilness(4);
+        add_severity_score(4);
         break;
     case compass_offset_ok:
         break;
@@ -148,7 +151,7 @@ void Analyzer_Compass_Offsets::results_json_compass_offsets(Json::Value &root)
         Json::Value result(Json::objectValue);
         result["timestamp"] = (Json::UInt64)(compass_offset_results[i].timestamp);
         result["status"] = results_json_compass_offsets_status_string(compass_offset_results[i]);
-        do_add_evilness(compass_offset_results[i]);
+        do_add_severity_score(compass_offset_results[i]);
         Json::Value series(Json::arrayValue);
         series.append("PARM");
         result["series"] = series;
@@ -164,7 +167,7 @@ void Analyzer_Compass_Offsets::results_json_compass_offsets(Json::Value &root)
         result["series"] = series;
         result["reason"] = "No compass offset parameter set seen";
         root.append(result);
-        add_evilness(5);
+        add_severity_score(5);
     }
 }
 

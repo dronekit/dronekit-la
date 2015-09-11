@@ -25,6 +25,26 @@ void Base::set_T(const uint64_t time_us)
     // ::fprintf(stderr, "Set T to (%lu)\n", T);
 }
 
+bool Base::param_default(const char *name, float &ret)
+{
+    if (_param_defaults[name]) {
+        ret = _param_defaults[name];
+        return true;
+    }
+    return false;
+}
+
+// will return value of param if see, otherwise a default value
+bool Base::param_with_defaults(const char *name, float &ret)
+{
+    if (param_seen(name)) {
+        ret = param(name);
+        return true;
+    }
+
+    return param_default(name, ret);
+}
+
 bool Base::param(const char *name, float &ret)
 {
     if (!param_seen(name)) {
@@ -74,3 +94,22 @@ void Base::set_servo_output(const uint8_t channel_number, const uint16_t value)
 {
     _servo_output[channel_number] = (float)value;
 }
+
+// haversine formula:
+// http://www.movable-type.co.uk/scripts/latlong.html
+double haversine(double from_lat, double from_lon, double to_lat, double to_lon) {
+    double lat_delta_radians = deg_to_rad(from_lat - to_lat);
+    double lon_delta_radians = deg_to_rad(from_lon - to_lon);
+    double sin_lat_delta_radians = sin(lat_delta_radians * 0.5);
+    sin_lat_delta_radians *= sin_lat_delta_radians;
+    double sin_lon_delta_radians = sin(lon_delta_radians * 0.5);
+    sin_lon_delta_radians *= sin_lon_delta_radians;
+    return 2.0 * asin(sqrt(sin_lat_delta_radians +
+                           cos(deg_to_rad(from_lat)) * cos(deg_to_rad(to_lat))*sin_lon_delta_radians));
+}
+
+double AnalyzerVehicle::AV_Position::horizontal_distance_to(AnalyzerVehicle::AV_Position otherpos)
+{
+    return 6371000.0f * (haversine(lat(), lon(), otherpos.lat(), otherpos.lon()));
+}
+

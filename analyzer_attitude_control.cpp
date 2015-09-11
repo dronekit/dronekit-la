@@ -107,7 +107,7 @@ void Analyzer_Attitude_Control::evaluate()
             status() != analyzer_status_ok) {
             // start a new record of we're-being-bad:
             attitude_control_result &result = attitude_control_results[attitude_control_results_offset];
-            result.status = status();
+            result.set_status(status());
             result.timestamp_start = _vehicle->T();
             result.timestamp_stop = 0;
             result.deltamax = delta;
@@ -139,8 +139,9 @@ void Analyzer_Attitude_Control::results_json_results(Json::Value &root)
             Json::Value result(Json::objectValue);
             class attitude_control_result &x = attitude_control_results[i];
             result["status"] = x.status_as_string();
-            result["evilness"] = this_sin_score;
-            add_evilness(this_sin_score);
+            result["severity-score"] = this_sin_score;
+            result["evilness"] = result["severity-score"];
+            add_severity_score(this_sin_score);
             result["reason"] = "Desired attitude not achieved";
             Json::Value evidence(Json::arrayValue);
             evidence.append(string_format("Max-Delta=%f degrees", x.deltamax));
@@ -195,8 +196,9 @@ void Analyzer_Attitude_Control::results_json_results(Json::Value &root)
         result["status"] = "WARN";
         Json::Value reason(Json::arrayValue);
         reason.append("Vehicle attitude never set");
-        result["evilness"] = this_sin_score;
-        add_evilness(this_sin_score);
+        result["severity-score"] = this_sin_score;
+        result["evilness"] = result["severity-score"];
+        add_severity_score(this_sin_score);
         result["reason"] = reason;
         Json::Value series(Json::arrayValue);
         series.append("ATTITUDE.roll");

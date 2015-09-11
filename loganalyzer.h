@@ -44,6 +44,7 @@ private:
     char **_argv;
     const char * output_style_string = NULL;
     const char * _model_string = NULL;
+    const char * _frame_string = NULL;
 
     AnalyzerVehicle::Base *_vehicle = NULL;
 

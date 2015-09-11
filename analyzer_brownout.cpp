@@ -3,59 +3,60 @@
 #include "util.h"
 #include "analyzer_util.h"
 
-bool Analyzer_Brownout::configure(INIReader *config) {
+bool Analyzer_Brownout::configure(INIReader *config)
+{
     if (!Analyzer::configure(config)) {
 	return false;
     }
+
+    _result.set_status(analyzer_status_ok);
+    _result.set_reason("No brownout detected");
+    
     return true;
 }
 
-void Analyzer_Brownout::results_json_results(Json::Value &root)
+void Analyzer_Brownout::evaluate()
 {
-    if (!_vehicle) {
-        return;
+    bool new_is_flying = _vehicle->is_flying();
+    if (new_is_flying && !_old_is_flying) {
+        _result.set_takeoff_altitude(_vehicle->alt());
+        _old_is_flying = new_is_flying;
+    } else if (!new_is_flying && _old_is_flying) {
+        _old_is_flying = new_is_flying;
     }
+}
+
+void Analyzer_Brownout::end_of_log(const uint32_t packet_count)
+{
+    double last_altitude = _vehicle->alt();
+    _result.set_last_altitude(last_altitude);
+
     if (_vehicle->alt_modtime() > 0) {
-        Json::Value result(Json::objectValue);
-        result["timestamp"] = 0;
+        _result.add_evidence(string_format("Final altitude %f metres", _result.last_altitude()));
+        _result.add_evidence(string_format("Takeoff altitude %f metres", _result.takeoff_altitude()));
 
-        const float last_altitude = _vehicle->alt();
-        if (last_altitude > max_last_altitude &&
+        if (last_altitude > _result.takeoff_altitude() + max_last_relative_altitude &&
             _vehicle->is_flying()) {
-            uint8_t this_sin_score = 10;
-            result["status"] = "FAILED";
-            result["evilness"] = this_sin_score;
-            add_evilness(this_sin_score);
-            result["reason"] = "Log ended while craft still flying";
-
-            Json::Value evidence(Json::arrayValue);
-            evidence.append(string_format("Final altitude %f metres", last_altitude));
-            evidence.append("Vehicle still flying");
-            result["evidence"] = evidence;
-        } else {
-            result["status"] = "OK";
-            result["reason"] = "No brownout detected";
-
-            Json::Value evidence(Json::arrayValue);
-            evidence.append(string_format("Final altitude %f metres", last_altitude));
-            result["evidence"] = evidence;
+            _result.set_status(analyzer_status_fail);
+            _result.add_evilness(10);
+            _result.set_reason("Log ended while craft still flying");
+            _result.add_evidence("Vehicle still flying");
         }
-        root.append(result);
     } else {
-        uint8_t this_sin_score = 5;
-        Json::Value result(Json::objectValue);
-        // result["timestamp"] = 0;
-        result["status"] = "WARN";
-        result["reason"] = "No VFR_HUD messages received";
-        result["evilness"] = this_sin_score;
-        add_evilness(this_sin_score);
-        Json::Value series(Json::arrayValue);
-        series.append("VFR_HUD.alt");
-        series.append("SERVO_OUTPUT_RAW.servo1_raw");
-        series.append("SERVO_OUTPUT_RAW.servo2_raw");
-        series.append("SERVO_OUTPUT_RAW.servo3_raw");
-        series.append("SERVO_OUTPUT_RAW.servo4_raw");
-        result["series"] = series;
-        root.append(result);
+        _result.set_status(analyzer_status_warn);
+        _result.add_evilness(5);
+        _result.set_reason("No VFR_HUD messages received");
+        _result.add_series("VFR_HUD.alt");
+        _result.add_series("SERVO_OUTPUT_RAW.servo1_raw");
+        _result.add_series("SERVO_OUTPUT_RAW.servo2_raw");
+        _result.add_series("SERVO_OUTPUT_RAW.servo3_raw");
+        _result.add_series("SERVO_OUTPUT_RAW.servo4_raw");
     }
+
+    add_result(&_result);
+}
+
+uint16_t Analyzer_Brownout::get_severity_score() const
+{
+    return _result.evilness();
 }

@@ -36,7 +36,7 @@ private:
     AnalyzerVehicle::Base *&vehicle;
 
     output_style_option _output_style = OUTPUT_JSON;
-#define MAX_ANALYZERS 10
+#define MAX_ANALYZERS 128
     uint8_t next_analyzer = 0;
     Analyzer *analyzer[MAX_ANALYZERS];
 

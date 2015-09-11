@@ -47,13 +47,15 @@ void Analyzer_NotCrashed::evaluate()
         }
         if (status() != analyzer_status_ok) {
             notcrashed_result &result = notcrashed_results[notcrashed_results_offset];
-            result.status = status();
+            result.set_status(status());
             result.timestamp_start = _vehicle->T();
             result.timestamp_stop = 0;
             result.angle = (v->roll() > v->pitch()) ? v->roll() : v->pitch();
-            result.angle_max = v->param("ANGLE_MAX")/100;
-            for (uint8_t i=1; i<=v->num_motors(); i++) {
-                result.servo_output[i] = v->_servo_output[i];
+            if (v->param_with_defaults("ANGLE_MAX", result.angle_max)) {
+                result.angle_max /= 100; // 100* degrees to degrees
+                for (uint8_t i=1; i<=v->num_motors(); i++) {
+                    result.servo_output[i] = v->_servo_output[i];
+                }
             }
         }
         _status_prev = status();
@@ -102,8 +104,9 @@ void Analyzer_NotCrashed::results_json_results(Json::Value &root)
         add_series(result);
 
         const uint8_t this_sin_score = 10;
-        result["evilness"] = this_sin_score;
-        add_evilness(this_sin_score);
+        result["severity-score"] = this_sin_score;
+        result["evilness"] = result["severity-score"];
+        add_severity_score(this_sin_score);
         root.append(result);
     }
 

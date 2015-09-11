@@ -9,6 +9,29 @@
 #include "analyzer.h"
 #include "analyzervehicle_copter.h"
 
+class Analyzer_Ever_Flew_Result : public Analyzer_Result_Summary {
+public:
+    Analyzer_Ever_Flew_Result() :
+        Analyzer_Result_Summary()
+        { }
+
+    uint64_t pass_timestamp() const { return _pass_timestamp; }
+    void set_pass_timestamp(uint64_t timestamp) { _pass_timestamp = timestamp; }
+
+    bool ever_armed() const { return _ever_armed; }
+    void set_ever_armed(bool value) { _ever_armed = value; }
+
+    bool servos_past_threshold() const { return _servos_past_threshold; }
+    void set_servos_past_threshold(bool value) { _servos_past_threshold = value; }
+
+    void to_json(Json::Value &root) const override;
+
+private:
+    uint64_t _pass_timestamp = 0;
+    bool _ever_armed = false;
+    bool _servos_past_threshold = false;
+};
+
 class Analyzer_Ever_Flew : public Analyzer {
 public:
     Analyzer_Ever_Flew(AnalyzerVehicle::Base *&vehicle) :
@@ -20,11 +43,12 @@ public:
         return "This test will FAIL if the craft did not ever seem to fly";
     }
 
-    void results_json_results(Json::Value&);
+    bool configure(INIReader *config) override;
+
+    void end_of_log(const uint32_t packet_count) override;
 private:
-    bool ever_armed = false;
-    bool servos_past_threshold = false;
-    uint64_t pass_timestamp = 0;
+
+    Analyzer_Ever_Flew_Result _result;
 
     void evaluate() override;
 };

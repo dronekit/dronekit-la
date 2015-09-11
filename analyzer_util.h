@@ -33,8 +33,8 @@ std::string string_format( const char* format, Args ... args )
 //     return rad*180/M_PI;
 // }
 
-#define deg_to_rad(x) (x/180*M_PI)
-#define rad_to_deg(x) (x/M_PI * 180)
+#define deg_to_rad(x) ((x)*M_PI/180.0f)
+#define rad_to_deg(x) ((x)*180.0f/M_PI)
 
 #define is_zero(x)  (x < 0.00001)
 

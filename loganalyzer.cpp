@@ -180,6 +180,10 @@ void LogAnalyzer::run()
     if (_model_string != NULL) {
         if (streq(_model_string,"copter")) {
             _vehicle = new AnalyzerVehicle::Copter();
+//            _analyze->set_vehicle_copter();
+            if (_frame_string != NULL) {
+                ((AnalyzerVehicle::Copter*)_vehicle)->set_frame(_frame_string);
+            }
         // } else if (streq(model_string,"plane")) {
         //     model = new AnalyzerVehicle::Plane();
         // } else if (streq(model_string,"rover")) {
@@ -234,6 +238,7 @@ void LogAnalyzer::usage()
     ::printf(" -c filepath      use config file filepath\n");
     ::printf(" -t               connect to telem forwarder to receive data\n");
     ::printf(" -m modeltype     override model; copter|plane|rover\n");
+    ::printf(" -f frame         set frame; QUAD|Y6\n");
     ::printf(" -s style         use output style (plain-text|json)\n");
     ::printf(" -h               display usage information\n");
     ::printf("\n");
@@ -255,7 +260,7 @@ void LogAnalyzer::parse_arguments(int argc, char *argv[])
     _argc = argc;
     _argv = argv;
 
-    while ((opt = getopt(argc, argv, "hc:ts:m:")) != -1) {
+    while ((opt = getopt(argc, argv, "hc:ts:m:f:")) != -1) {
         switch(opt) {
         case 'h':
             usage();
@@ -271,6 +276,9 @@ void LogAnalyzer::parse_arguments(int argc, char *argv[])
             break;
         case 'm':
             _model_string = optarg;
+            break;
+        case 'f':
+            _frame_string = optarg;
             break;
         }
     }

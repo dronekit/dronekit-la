@@ -46,7 +46,7 @@ void Analyzer_Arming_Checks::results_json_results_do_result(Json::Value &root,
 
     Json::Value evidence(Json::arrayValue);
     evidence.append(string_format("Arming flags: %u", result.arming_check));
-    uint32_t evilness = 10;
+    uint32_t severity_score = 10;
     for (std::map<uint32_t, const char *>::const_iterator it = _bit_to_name.begin(); it != _bit_to_name.end(); ++it) {
         if ((*it).first == ARMING_CHECK_ALL ||
             (*it).first == ARMING_CHECK_NONE) {
@@ -54,11 +54,12 @@ void Analyzer_Arming_Checks::results_json_results_do_result(Json::Value &root,
         }
         if (!(result.arming_check & (*it).first)) {
             evidence.append(string_format("%s check disabled", (*it).second));
-            evilness++;
+            severity_score++;
         }
     }
 
-    root["evilness"] = evilness;
+    root["severity-score"] = severity_score;
+    root["evilness"] = root["severity-score"];
 
     root["evidence"] = evidence;
     Json::Value series(Json::arrayValue);
@@ -74,7 +75,7 @@ void Analyzer_Arming_Checks::results_json_results(Json::Value &root)
     //     root["timestamp"] = (Json::UInt64)T;
     //     root["status"] = "WARN";
     //     root["reason"] = "The ARMING_CHECK parameter was never set";
-    //     result["evilness"] = 10;
+    //     result["severity-score"] = 10;
     //     root.append(result);
     // } else {
         for (uint8_t i=0; i < next_result; i++) {

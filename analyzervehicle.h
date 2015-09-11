@@ -60,11 +60,30 @@ namespace AnalyzerVehicle {
         float alt() { return _alt; };
         uint64_t alt_modtime() { return _alt_modtime; };
 
+        void set_lat(uint64_t T, double lat) {
+            _lat = lat;
+            _lat_modtime = T;
+        }
+        double lat() { return _lat; };
+        uint64_t lat_modtime() { return _lat_modtime; };
+
+        void set_lon(uint64_t T, double lon) {
+            _lon = lon;
+            _lon_modtime = T;
+        }
+        double lon() { return _lon; };
+        uint64_t lon_modtime() { return _lon_modtime; };
+
+//        double distance_to(AV_Position otherpos);
+        double horizontal_distance_to(AV_Position otherpos);
+
     private:
-        float _lat;
-        float _lon;
-        float _alt; // relative
+        double _lat;
+        double _lon;
+        float _alt; // relative, in metres
         uint64_t _alt_modtime;
+        uint64_t _lat_modtime;
+        uint64_t _lon_modtime;
     };
 
     class EKF {
@@ -104,6 +123,30 @@ namespace AnalyzerVehicle {
     //     uint16_t E;
     //     uint16_t D;
     // };
+
+    class PositionEstimate {
+    public:
+        PositionEstimate(const std::string name, AV_Position position) :
+            _name(name),
+            _position(position)
+            { }
+        PositionEstimate() :
+            _name(NULL),
+            _position({})
+            { }
+        const std::string name() { return _name; }
+        const AV_Position position() { return _position; }
+        void set_alt(uint64_t T, float alt) { _position.set_alt(T, alt); }
+        void set_lat(uint64_t T, double lat) { _position.set_lat(T, lat); }
+        void set_lon(uint64_t T, double lon) { _position.set_lon(T, lon); }
+        float alt() { return _position.alt(); }
+        double lat() { return _position.lat(); }
+        double lon() { return _position.lon(); }
+
+    private:
+        const std::string _name;
+        AV_Position _position;
+    };
 
     class Battery {
     public:
@@ -169,6 +212,7 @@ namespace AnalyzerVehicle {
 class Base {
 public:
     Base() { }
+    virtual ~Base() { }
 
     // vehicle state information
     virtual bool is_flying() { return false; }
@@ -215,10 +259,13 @@ public:
     
     // Parameters
     float param(const char *name) { return _param[name]; };
+    uint16_t param_count() { return _param.size(); };
     bool param(const char *name, float &ret);
     bool param_seen(const char *name) const;
     uint64_t param_modtime(const char *name) { return _param_modtime[name]; }
     void param_set(const char *name, const float value);
+    virtual bool param_default(const char *name, float &ret);
+    bool param_with_defaults(const char *name, float &ret);
 
     // servo output
     void set_servo_output(uint16_t ch1, uint16_t ch2, uint16_t ch3, uint16_t ch4, uint16_t ch5, uint16_t ch6, uint16_t ch7, uint16_t ch8);
@@ -257,6 +304,16 @@ public:
     float alt() { return pos().alt(); };
     uint64_t alt_modtime() { return pos().alt_modtime(); }
 
+    void set_lat(double lat) { pos().set_lat(T(), lat); }
+    void set_lon(double lon) { pos().set_lon(T(), lon); }
+    double lat() { return pos().lat(); }
+    double lon() { return pos().lon(); }
+
+    PositionEstimate &position_estimate(const std::string name) {
+        PositionEstimate &x = _position_estimates[name];
+        return x;
+    };
+
     // battery
     void set_battery_remaining(float percent) {
         _battery._remaining = percent;
@@ -279,15 +336,23 @@ public:
         return _battery._failsafe_event_T;
     }
 
-protected:
+    const std::map<const std::string, PositionEstimate> &position_estimates() {
+        return _position_estimates;
+    }
+
     AV_Attitude& att() { return _att; };
     AV_Position& pos() { return _pos; };
+
+protected:
     AV_Nav& nav() { return _nav; };
 
     bool _armed = false;
 
     std::map<const std::string, float> _param;
     std::map<const std::string, uint64_t> _param_modtime;
+    std::map<const std::string, float> _param_defaults = {
+    };
+    
     AV_Attitude _att = { };
     AV_Position _pos = { };
     AV_Nav _nav = { };
@@ -298,6 +363,12 @@ private:
     vehicletype_t _vehicletype = invalid;
 
     Battery _battery;
+
+    std::map<const std::string, PositionEstimate> _position_estimates = {
+        { "AHRS2", PositionEstimate{ "AHRS2", AV_Position{ } } },
+        { "GLOBAL_POSITION_INT", PositionEstimate{ "GLOBAL_POSITION_INT", AV_Position{ } } },
+        { "GPS_RAW_INT", PositionEstimate{ "GPS_RAW_INT", AV_Position{ } } }
+    };
 
     PacketHistory<mavlink_heartbeat_t> history_heartbeat;
     PacketHistory<mavlink_nav_controller_output_t> history_nav_controller_output;

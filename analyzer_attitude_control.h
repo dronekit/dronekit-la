@@ -52,7 +52,7 @@ private:
 
     void end_of_log(uint32_t packet_count);
 
-    void do_add_evilness(struct compass_offset_result result);
+    void do_add_severity_score(struct compass_offset_result result);
 
     #define MAX_ATTITUDE_CONTROL_RESULTS 100
     uint8_t attitude_control_results_offset = 0;
