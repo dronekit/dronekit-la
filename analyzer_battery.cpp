@@ -20,56 +20,34 @@ void Analyzer_Battery::evaluate()
     }
 }
 
-void Analyzer_Battery::results_json_results(Json::Value &root)
+void Analyzer_Battery::end_of_log(const uint32_t packet_count)
 {
     if (lowest_battery_remaining_seen_T) {
-        Json::Value result(Json::objectValue);
-        result["timestamp"] = (Json::UInt64)lowest_battery_remaining_seen_T;
+        Analyzer_Battery_Result *result = new Analyzer_Battery_Result();
+        result->add_evidence(string_format("battery-remaining=%f%%", lowest_battery_remaining_seen));
+        result->add_evidence(string_format("failsafe=%f%%", low_battery_threshold));
         if (lowest_battery_remaining_seen < low_battery_threshold) {
-            result["status"] = "FAILED";
-            result["reason"] = "Battery fell below failsafe threshold";
-
-            Json::Value evidence(Json::arrayValue);
-            evidence.append(string_format("Battery below failsafe (%.0f%% < %.0f%%)",
-                                          lowest_battery_remaining_seen, low_battery_threshold));
-            result["evidence"] = evidence;
-
-            Json::Value series(Json::arrayValue);
-            series.append("SYS_STATUS.battery_remaining");
-            result["series"] = series;
+            result->set_status(analyzer_status_fail);
+            result->set_reason("Battery fell below failsafe threshold");
+            result->add_evidence(string_format("Battery below failsafe (%.0f%% < %.0f%%)",
+                                               lowest_battery_remaining_seen, low_battery_threshold));
+            result->add_series(_data_sources.get("BATTERY_REMAINING"));
+            result->add_evilness(20);
         } else {
-            result["status"] = "OK";
-            result["reason"] = "Battery never below failsafe";
-
-            Json::Value evidence(Json::arrayValue);
-            evidence.append(string_format("battery-remaining=%f%%", lowest_battery_remaining_seen));
-            evidence.append(string_format("failsafe=%f%%", low_battery_threshold));
-            result["evidence"] = evidence;
+            result->set_status(analyzer_status_ok);
+            result->set_reason("Battery never below failsafe");
         }
-        root.append(result);
+        add_result(result);
     }
+
     if (seen_failsafe_battery_event_T) {
-        Json::Value result(Json::objectValue);
-        result["timestamp"] = (Json::UInt64)seen_failsafe_battery_event_T;
-        result["reason"] = "Battery failsafe event received";
-        Json::Value evidence(Json::arrayValue);
-        evidence.append(string_format("Failsafe set at %u",
-                                      seen_failsafe_battery_event_T));
-        result["evidence"] = evidence;
-
-        Json::Value series(Json::arrayValue);
-        series.append("EV");
-        result["series"] = series;
-        root.append(result);
+        Analyzer_Battery_Result *result = new Analyzer_Battery_Result();
+        result->set_status(analyzer_status_fail);
+        result->set_reason("Battery failsafe event received");
+        result->add_evidence(string_format("Failsafe set at %u",
+                                           seen_failsafe_battery_event_T));
+        result->add_series(_data_sources.get("BATTERY_FAILSAFE"));
+        result->add_evilness(20);
+        add_result(result);
     }
-
-    // else {
-    //     Json::Value result(Json::objectValue);
-    //     result["timestamp"] = 0;
-    //     result["status"] = "WARN";
-    //     Json::Value reason(Json::arrayValue);
-    //     reason.append("No SYS_STATUS messages received");
-    //     result["reason"] = reason;
-    //     root.append(result);
-    // }
 }

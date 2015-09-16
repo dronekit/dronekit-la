@@ -87,7 +87,10 @@ public:
 class LA_MsgHandler_ERR : public LA_MsgHandler {
 public:
     LA_MsgHandler_ERR(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(f, analyze, vehicle) { };
+        LA_MsgHandler(f, analyze, vehicle) {
+        _analyze->add_data_source("BATTERY_FAILSAFE", "ERR.Subsys");
+        _analyze->add_data_source("BATTERY_FAILSAFE", "ERR.ECode");
+    };
 
     void xprocess(const uint8_t *msg) override {
         uint8_t subsys = require_field_uint8_t(msg, "Subsys");

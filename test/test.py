@@ -62,8 +62,8 @@ FAIL: %s
 ---------diff-----------------
 %s
 ---------diff-----------------
-Accept new result: cp %s %s
-""" % (filepath_log, mydiff, new_json_filepath, correctish_json_filepath))
+Accept new result: cp %s %s; git add %s
+""" % (filepath_log, mydiff, new_json_filepath, correctish_json_filepath, correctish_json_filepath))
 
 log_dirpath = os.getenv("LOGANALYZE_DIRPATH_LOG", "test/logs");
 

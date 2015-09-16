@@ -26,8 +26,9 @@ private:
 class Analyzer_Ever_Armed : public Analyzer {
 
 public:
-    Analyzer_Ever_Armed(AnalyzerVehicle::Base *&vehicle) :
-	Analyzer(vehicle)
+
+    Analyzer_Ever_Armed(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
+	Analyzer(vehicle,data_sources)
     { }
 
     bool configure(INIReader *config);

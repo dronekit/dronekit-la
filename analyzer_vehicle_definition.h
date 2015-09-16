@@ -8,11 +8,20 @@
 
 #include "analyzer.h"
 
+class Analyzer_Vehicle_Definition_Result : public Analyzer_Result_Summary {
+public:
+    Analyzer_Vehicle_Definition_Result() :
+        Analyzer_Result_Summary()
+        { }
+private:
+};
+
 class Analyzer_Vehicle_Definition : public Analyzer {
 
 public:
-    Analyzer_Vehicle_Definition(AnalyzerVehicle::Base *&vehicle) :
-	Analyzer(vehicle)
+
+    Analyzer_Vehicle_Definition(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
+	Analyzer(vehicle,data_sources)
     { }
 
     const char *name() const override { return "Vehicle Defintion"; }
@@ -22,7 +31,8 @@ public:
 
     void evaluate() override;
 
-    void results_json_results(Json::Value &root);
+    void end_of_log(const uint32_t packet_count) override;
+
 private:
     bool vehicle_invalid = true;
 };

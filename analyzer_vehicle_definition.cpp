@@ -10,23 +10,18 @@ void Analyzer_Vehicle_Definition::evaluate()
     }
 }
 
-void Analyzer_Vehicle_Definition::results_json_results(Json::Value &root)
+void Analyzer_Vehicle_Definition::end_of_log(const uint32_t packet_count)
 {
-    Json::Value result(Json::objectValue);
-    
+    Analyzer_Vehicle_Definition_Result *result = new Analyzer_Vehicle_Definition_Result();
     if (vehicle_invalid) {
-        result["reason"] = "No information provided defined what type of vehicle was being analysed";
-        result["severity-score"] = 50;
-        result["evilness"] = result["severity-score"];
-        result["status"] =  "FAIL";
-        Json::Value series(Json::arrayValue);
-        series.append("MESSAGE");
-        result["series"] = series;
+        result->set_reason("No information provided defined what type of vehicle was being analysed");
+        result->set_status(analyzer_status_fail);
+        result->add_series(_data_sources.get("VEHICLE_DEFINITION"));
+        result->add_evilness(50);
     } else {
-        result["reason"] = "Vehicle was appropriately defined";
-        result["severity-score"] = 0;
-        result["evilness"] = result["severity-score"];
-        result["status"] =  "PASS";
+        result->set_reason("Vehicle was appropriately defined");
+        result->set_status(analyzer_status_ok);
     }
-    root.append(result);
+    
+    add_result(result);
 }

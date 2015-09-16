@@ -10,22 +10,35 @@
 
 #include <set>
 
+class Analyzer_Attitude_Control_Result : public Analyzer_Result_Period {
+public:
+    //FIXME: scope
+    float deltamax;
+    float roll_at_deltamax;
+    float desroll_at_deltamax;
+    float pitch_at_deltamax;
+    float despitch_at_deltamax;
+    bool motors_clipping = false;
+    std::set<uint8_t> motors_failing;
+    std::set<uint8_t> motors_clipping_high;
+    std::set<uint8_t> motors_clipping_low;
+};
+
+
 class Analyzer_Attitude_Control : public Analyzer {
 
 public:
 
-    Analyzer_Attitude_Control(AnalyzerVehicle::Base *&vehicle) :
-	Analyzer(vehicle)
+    Analyzer_Attitude_Control(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
+	Analyzer(vehicle,data_sources)
     { }
 
-    const char *name() const { return "Attitude Control"; }
-    const char *description() const {
+    const char *name() const override { return "Attitude Control"; }
+    const char *description() const override {
         return "This test will FAIL if the craft's desired attitudes and achieved attitudes do not match for more than a threshold time";
     }
 
-    bool configure(INIReader *config);
-    // void handle_decoded_message(uint64_t T, mavlink_nav_controller_output_t &param);
-    // void handle_decoded_message(uint64_t T, mavlink_attitude_t &msg);
+    bool configure(INIReader *config) override;
 
     void evaluate() override;
 
@@ -35,37 +48,14 @@ private:
     const float offset_fail = 10.0f;
     const uint32_t duration_min = 250000; // microseconds
 
-    class attitude_control_result : public analyzer_result {
-    public:
-        uint64_t timestamp_start;
-        uint64_t timestamp_stop;
-        float deltamax;
-        float roll_at_deltamax;
-        float desroll_at_deltamax;
-        float pitch_at_deltamax;
-        float despitch_at_deltamax;
-        bool motors_clipping = false;
-        std::set<uint8_t> motors_failing;
-        std::set<uint8_t> motors_clipping_high;
-        std::set<uint8_t> motors_clipping_low;
-    };
-
     void end_of_log(uint32_t packet_count);
 
-    void do_add_severity_score(struct compass_offset_result result);
+    void do_add_evilness(struct compass_offset_result result);
 
-    #define MAX_ATTITUDE_CONTROL_RESULTS 100
-    uint8_t attitude_control_results_offset = 0;
-    attitude_control_result attitude_control_results[MAX_ATTITUDE_CONTROL_RESULTS];
-    bool attitude_control_results_overrun;
-    
-    void addStatusReason(Json::Value &root, attitude_control_result result);
-    uint32_t results_json_attitude_control_status_reason(char *buf, const uint32_t buflen, attitude_control_result result);
-    const char * results_json_attitude_control_status_string(attitude_control_result result);
-    uint32_t results_json_attitude_control(char *buf, uint32_t buflen);
-    void results_json_results(Json::Value &root);
-
-    void results_json_attitude_control(Json::Value &root);
+    Analyzer_Attitude_Control_Result *_result = NULL;
+    void open_result(double delta);
+    void update_result(double delta);
+    void close_result();
 };
 
 #endif

@@ -8,6 +8,8 @@
 
 #include "analyzer_util.h"
 
+#include "data_sources.h"
+
 class Analyze {
 
 public:
@@ -29,6 +31,10 @@ public:
     void set_output_style(output_style_option option) { _output_style = option;}
 
     void evaluate_all();
+
+    void add_data_source(const char *type, const char *data_source) {
+        _data_sources.add(type, data_source);
+    }
 
 private:
     uint64_t start_time;
@@ -54,6 +60,8 @@ private:
     void results_json(Json::Value &root);
 
     void output_plaintext(Json::Value &root);
+
+    Data_Sources _data_sources;
 };
 
 #endif

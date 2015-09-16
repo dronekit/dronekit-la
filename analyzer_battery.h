@@ -8,13 +8,21 @@
 
 #include "analyzer.h"
 
+class Analyzer_Battery_Result : public Analyzer_Result_Summary {
+public:
+    Analyzer_Battery_Result() :
+        Analyzer_Result_Summary()
+        { }
+};
+
+
 class Analyzer_Battery : public Analyzer {
 
 public:
-    Analyzer_Battery(AnalyzerVehicle::Base *&vehicle) :
-	Analyzer(vehicle)
-    {
-    }
+
+    Analyzer_Battery(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
+	Analyzer(vehicle,data_sources)
+    { }
 
     void evaluate() override;
 
@@ -22,10 +30,9 @@ public:
     const char *description() const override {
         return "This test will FAIL if the battery level remaining falls below a threshold level";
     }
-    bool configure(INIReader *config);
-    bool has_failed();
+    bool configure(INIReader *config) override;
 
-    void results_json_results(Json::Value &root);
+    void end_of_log(const uint32_t packet_count) override;
 
 private:
     double lowest_battery_remaining_seen = 999999999.0f;

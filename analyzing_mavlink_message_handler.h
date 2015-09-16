@@ -10,7 +10,52 @@ public:
                                       AnalyzerVehicle::Base *&vehicle) :
         MAVLink_Message_Handler(),
         _analyze(analyze),
-        _vehicle(vehicle) { }
+        _vehicle(vehicle) {
+
+        _analyze->add_data_source("ALTITUDE", "GLOBAL_POSITION_INT.alt");
+
+        _analyze->add_data_source("ARMING", "HEARBEAT.base_mode");
+
+        _analyze->add_data_source("ATTITUDE", "ATTITUDE.roll");
+        _analyze->add_data_source("ATTITUDE", "ATTITUDE.pitch");
+        _analyze->add_data_source("ATTITUDE", "ATTITUDE.yaw");
+
+        _analyze->add_data_source("BATTERY_REMAINING", "SYS_STATUS.battery_remaining");
+
+        _analyze->add_data_source("DESATTITUDE", "NAV_CONTROLLER_OUTPUT.nav_roll");
+        _analyze->add_data_source("DESATTITUDE", "NAV_CONTROLLER_OUTPUT.nav_pitch");
+        _analyze->add_data_source("DESATTITUDE", "NAV_CONTROLLER_OUTPUT.nav_bearing");
+
+        _analyze->add_data_source("EKF_FLAGS", "EKF_STATUS_REPORT.flags");
+        _analyze->add_data_source("EKF_VARIANCE_velocity_variance", "EKF_STATUS_REPORT.velocity");
+        _analyze->add_data_source("EKF_VARIANCE_pos_horiz_variance", "EKF_STATUS_REPORT.pos_horiz");
+        _analyze->add_data_source("EKF_VARIANCES_pos_vert_variance", "EKF_STATUS_REPORT.pos_vert");
+        _analyze->add_data_source("EKF_VARIANCES_compass_variance", "EKF_STATUS_REPORT.compass");
+        _analyze->add_data_source("EKF_VARIANCES_terrain_alt_variance", "EKF_STATUS_REPORT.terrain_alt");
+
+        _analyze->add_data_source("SERVO_OUTPUT", "SERVO_OUTPUT_RAW.servo1_raw");
+        _analyze->add_data_source("SERVO_OUTPUT", "SERVO_OUTPUT_RAW.servo2_raw");
+        _analyze->add_data_source("SERVO_OUTPUT", "SERVO_OUTPUT_RAW.servo3_raw");
+        _analyze->add_data_source("SERVO_OUTPUT", "SERVO_OUTPUT_RAW.servo4_raw");
+        _analyze->add_data_source("SERVO_OUTPUT", "SERVO_OUTPUT_RAW.servo5_raw");
+        _analyze->add_data_source("SERVO_OUTPUT", "SERVO_OUTPUT_RAW.servo6_raw");
+        _analyze->add_data_source("SERVO_OUTPUT", "SERVO_OUTPUT_RAW.servo7_raw");
+        _analyze->add_data_source("SERVO_OUTPUT", "SERVO_OUTPUT_RAW.servo8_raw");
+
+        _analyze->add_data_source("PARAM", "PARAM.param_id");
+        _analyze->add_data_source("PARAM", "PARAM.value");
+
+        _analyze->add_data_source("POSITION", "GLOBAL_POSITION_INT.lat");
+        _analyze->add_data_source("POSITION", "GLOBAL_POSITION_INT.lon");
+
+        _analyze->add_data_source("POSITION_ESTIMATE_AHRS2", "AHRS2.lat");
+        _analyze->add_data_source("POSITION_ESTIMATE_AHRS2", "AHRS2.lng");
+
+        _analyze->add_data_source("POSITION_ESTIMATE_GPS_RAW_INT", "GPS_RAW_INT.lat");
+        _analyze->add_data_source("POSITION_ESTIMATE_GPS_RAW_INT", "GPS_RAW_INT.lon");
+        
+        _analyze->add_data_source("VEHICLE_DEFINITION", "STATUSTEXT.text");
+    }
 
 private:
     virtual void handle_decoded_message(uint64_t T, mavlink_ahrs2_t &msg) override;

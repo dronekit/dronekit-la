@@ -43,8 +43,8 @@ void Analyzer_Position_Estimate_Divergence::evaluate_estimate(
     } else {
         // status has changed
         if (result.status() != analyzer_status_ok) {
-            // check minimum duration:
             if (new_status == analyzer_status_ok) {
+                // check minimum duration:
                 if (_vehicle->T() - result._T_start > 500000) {
                     // not moving from OK and not moving from fail back to warn
                     // lock this result in and move onto another
@@ -59,7 +59,9 @@ void Analyzer_Position_Estimate_Divergence::evaluate_estimate(
                     copy->name = result.name;
                     copy->add_evidence(string_format("max-delta=%f metres", result.max_delta));
                     copy->add_evidence(string_format("delta-threshold=%f metres", result.delta_threshold));
-
+                    copy->set_evilness(result.evilness());
+                    copy->add_series(_data_sources.get("POSITION"));
+                    copy->add_series(_data_sources.get(std::string("POSITION_ESTIMATE_") + name));
                     add_result(copy);
                 }
             }
@@ -68,6 +70,16 @@ void Analyzer_Position_Estimate_Divergence::evaluate_estimate(
         result._T_start = _vehicle->T();
         result.set_status(new_status);
         result.delta_threshold = (new_status == analyzer_status_warn ? 4.0f : 5.0f); // FIXME
+        switch(new_status) {
+        case analyzer_status_warn:
+            result.set_evilness(10);
+            break;
+        case analyzer_status_fail:
+            result.set_evilness(20);
+            break;
+        case analyzer_status_ok:
+            break;
+        }
     }
 
         

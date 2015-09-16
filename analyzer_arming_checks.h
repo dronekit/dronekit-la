@@ -8,11 +8,20 @@
 
 #include "analyzer.h"
 
+class Analyzer_Arming_Checks_Result : public Analyzer_Result_Event {
+public:
+    void set_arming_check(uint32_t arming_check) { _arming_check = arming_check; }
+    uint32_t arming_check() const { return _arming_check; }
+private:
+    uint32_t _arming_check;
+};
+
 class Analyzer_Arming_Checks : public Analyzer {
 
 public:
-    Analyzer_Arming_Checks(AnalyzerVehicle::Base *&vehicle) :
-	Analyzer(vehicle)
+
+    Analyzer_Arming_Checks(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
+	Analyzer(vehicle,data_sources)
     { }
 
     const char *name() const override { return "Arming Checks"; }
@@ -21,20 +30,11 @@ public:
     }
 
     void evaluate() override;
-    
-    void results_json_results(Json::Value &root);
 
 private:
     bool _armed = false;
 
-    struct result {
-        uint64_t T;
-        uint32_t arming_check;
-    };
-
     #define MAX_RESULTS 100
-    uint8_t next_result = 0;
-    struct result results[MAX_RESULTS] = { };
 
     void results_json_results_do_result(Json::Value &root, const struct result result);
 

@@ -11,8 +11,7 @@ namespace AnalyzerVehicle {
     public:
         Copter() :
             Base()
-            {
-            }
+            { }
         bool is_flying();
         
         uint8_t num_motors() { return _num_motors; }

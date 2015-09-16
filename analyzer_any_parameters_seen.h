@@ -8,11 +8,20 @@
 
 #include "analyzer.h"
 
+class Analyzer_Any_Parameters_Seen_Result : public Analyzer_Result_Summary {
+public:
+    Analyzer_Any_Parameters_Seen_Result() :
+        Analyzer_Result_Summary()
+        { }
+private:
+};
+
 class Analyzer_Any_Parameters_Seen : public Analyzer {
 
 public:
-    Analyzer_Any_Parameters_Seen(AnalyzerVehicle::Base *&vehicle) :
-	Analyzer(vehicle)
+
+    Analyzer_Any_Parameters_Seen(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
+	Analyzer(vehicle,data_sources)
     { }
 
     const char *name() const override { return "Any Parameters Seen"; }
@@ -22,7 +31,8 @@ public:
 
     void evaluate() override;
 
-    void results_json_results(Json::Value &root) override;
+    void end_of_log(const uint32_t packet_count) override;
+
 private:
     bool any_parameters_seen = false;
 };

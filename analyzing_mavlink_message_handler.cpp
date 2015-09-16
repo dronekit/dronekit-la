@@ -10,6 +10,8 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
     _vehicle->position_estimate("AHRS2").set_lat(T, msg.lat/10000000.0f);
     _vehicle->position_estimate("AHRS2").set_lon(T, msg.lng/10000000.0f);
     _vehicle->position_estimate("AHRS2").set_alt(T, msg.altitude);
+
+    _analyze->evaluate_all();
 }
 
 void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_attitude_t &msg) {
@@ -32,12 +34,16 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
     _vehicle->set_lat(msg.lat/10000000.0f);
     _vehicle->set_lon(msg.lon/10000000.0f);
     _vehicle->set_alt(msg.alt/1000.0f);
+
+    _analyze->evaluate_all();
 }
 
 void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_gps_raw_int_t &msg) {
     _vehicle->position_estimate("GPS_RAW_INT").set_lat(T, msg.lat/10000000.0f);
     _vehicle->position_estimate("GPS_RAW_INT").set_lon(T, msg.lon/10000000.0f);
     _vehicle->position_estimate("GPS_RAW_INT").set_alt(T, msg.alt/1000.0f);
+
+    _analyze->evaluate_all();
 }
 
 void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_heartbeat_t &msg) {

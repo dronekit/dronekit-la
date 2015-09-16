@@ -9,23 +9,17 @@ void Analyzer_Any_Parameters_Seen::evaluate()
     }
 }
 
-void Analyzer_Any_Parameters_Seen::results_json_results(Json::Value &root)
+void Analyzer_Any_Parameters_Seen::end_of_log(const uint32_t packet_count)
 {
-    Json::Value result(Json::objectValue);
-    
-    result["reason"] = any_parameters_seen ? "Parameters seen" : "No parameters seen";
+    Analyzer_Any_Parameters_Seen_Result *result = new Analyzer_Any_Parameters_Seen_Result();
     if (any_parameters_seen) {
-        result["status"] =  "OK";
-        result["severity-score"] = 0;
-        result["evilness"] = result["severity-score"];
+        result->set_status(analyzer_status_ok);
+        result->set_reason("Parameters seen");
     } else {
-        Json::Value series(Json::arrayValue);
-        series.append("PARAM");
-        result["series"] = series;
-        result["severity-score"] = 20;
-        result["evilness"] = result["severity-score"];
-        result["status"] =  "FAIL";
+        result->set_status(analyzer_status_fail);
+        result->set_reason("No parameters seen");
+        result->add_evilness(20);
+        result->add_series(_data_sources.get("PARAM"));
     }
-
-    root.append(result);
+    add_result(result);
 }

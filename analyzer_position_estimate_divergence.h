@@ -25,8 +25,9 @@ private:
 class Analyzer_Position_Estimate_Divergence : public Analyzer {
 
 public:
-    Analyzer_Position_Estimate_Divergence(AnalyzerVehicle::Base *&vehicle) :
-	Analyzer(vehicle)
+
+    Analyzer_Position_Estimate_Divergence(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
+	Analyzer(vehicle,data_sources)
     { }
 
     const char *name() const override { return "Position Estimate Divergence"; }

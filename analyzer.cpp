@@ -1,6 +1,6 @@
 #include "analyzer.h"
 
-void analyzer_result::to_json_add_array(Json::Value &root,
+void Analyzer_Result::to_json_add_array(Json::Value &root,
                                         std::string name,
                                         std::vector<std::string> array) const
 {
@@ -17,9 +17,12 @@ void analyzer_result::to_json_add_array(Json::Value &root,
     root[name] = json_array;
 }
 
-void analyzer_result::to_json(Json::Value &root) const
+void Analyzer_Result::to_json(Json::Value &root) const
 {
     root["status"] = status_as_string();
+    root["evilness"] = evilness();
+    root["severity-score"] = evilness();
+
     const std::string *my_reason = reason();
     if (my_reason != NULL) {
         root["reason"] = *my_reason;
@@ -31,7 +34,7 @@ void analyzer_result::to_json(Json::Value &root) const
 
 void Analyzer_Result_Period::to_json(Json::Value &root) const
 {
-    analyzer_result::to_json(root);
+    Analyzer_Result::to_json(root);
     root["timestamp_start"] = (Json::UInt64)_T_start;
     root["timestamp_stop"] = (Json::UInt64)_T_stop;
     root["duration"] = (_T_stop - _T_start) / 1000000.0f;
@@ -40,14 +43,26 @@ void Analyzer_Result_Period::to_json(Json::Value &root) const
 
 void Analyzer_Result_Event::to_json(Json::Value &root) const
 {
-    analyzer_result::to_json(root);
+    Analyzer_Result::to_json(root);
     root["timestamp"] = (Json::UInt64)_T;
+}
+
+
+uint32_t Analyzer::evilness() const {
+    uint32_t ret = _evilness; // remove _evilness here?
+    std::vector<Analyzer_Result*> my_results = results();
+    for (std::vector<Analyzer_Result*>::const_iterator it = my_results.begin();
+         it != my_results.end();
+         it++) {
+        ret += (*it)->evilness();
+    }
+    return ret;
 }
 
 void Analyzer::results_json_results(Json::Value &root)
 {
-    std::vector<analyzer_result*> my_results = results();
-    for (std::vector<analyzer_result*>::const_iterator it = my_results.begin();
+    std::vector<Analyzer_Result*> my_results = results();
+    for (std::vector<Analyzer_Result*>::const_iterator it = my_results.begin();
          it != my_results.end();
          it++) {
         Json::Value result(Json::objectValue);

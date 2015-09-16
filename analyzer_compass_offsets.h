@@ -8,21 +8,41 @@
 
 #include "analyzer.h"
 
+#include "Vector3f.h"
+
+class Analyzer_Compass_Offsets_Result : public Analyzer_Result_Event {
+public:
+    void set_lens(double x, double y, double z) {
+        _lens[0] = x;
+        _lens[1] = y;
+        _lens[2] = z;
+    }
+    Vector3f lens()& { return _lens; }
+
+    virtual void to_json(Json::Value &root) const override;
+
+    // FIXME: scope
+    Vector3f _lens;
+};
+
 class Analyzer_Compass_Offsets : public Analyzer {
 
 public:
-    Analyzer_Compass_Offsets(AnalyzerVehicle::Base *&vehicle) :
-	Analyzer(vehicle)
+
+    Analyzer_Compass_Offsets(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
+	Analyzer(vehicle,data_sources)
     { }
 
-    const char *name() const { return "Compass Offsets"; }
-    const char *description() const {
+    const char *name() const override { return "Compass Offsets"; }
+    const char *description() const override {
         return "This test will FAIL if the compass offset parameters exceed thresholds";
     }
 
-    bool configure(INIReader *config);
+    bool configure(INIReader *config) override;
     // void handle_decoded_message(uint64_t T, mavlink_param_value_t &param) override;
     void evaluate() override;
+
+    void end_of_log(uint32_t packet_count) override;
 
 private:
     // we rely on these changing:
@@ -32,37 +52,13 @@ private:
         (uint64_t)-1
     };
 
-    const uint16_t warn_offset = 100;
-    const uint16_t fail_offset = 200;
-
-    enum compass_offset_status {
-        compass_offset_warn = 17,
-        compass_offset_fail,
-        compass_offset_zero,
-        compass_offset_ok,
-    };
-    struct compass_offset_result {
-        uint64_t timestamp;
-        double len;
-        double lens[3];
-        compass_offset_status status;
-    };
     bool new_compass_results();
 
-    void do_add_severity_score(struct compass_offset_result result);
-
-    #define MAX_COMPASS_OFFSET_RESULTS 100
-    uint8_t compass_offset_results_offset = 0;
-    compass_offset_result compass_offset_results[MAX_COMPASS_OFFSET_RESULTS];
+#define MAX_COMPASS_OFFSET_RESULTS 100
     bool compass_offset_results_overrun = false;
     
-    void add_evidence(Json::Value &root, compass_offset_result result);
-    uint32_t results_json_compass_offsets_status_reason(char *buf, const uint32_t buflen, compass_offset_result result);
-    const char * results_json_compass_offsets_status_string(compass_offset_result result);
-    uint32_t results_json_compass_offsets(char *buf, uint32_t buflen);
-    void results_json_results(Json::Value &root);
-
-    void results_json_compass_offsets(Json::Value &root);
+    const double warn_offset = 100.0f;
+    const double fail_offset = 200.0f;
 };
 
 #endif

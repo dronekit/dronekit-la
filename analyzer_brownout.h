@@ -29,8 +29,9 @@ private:
 class Analyzer_Brownout : public Analyzer {
 
 public:
-    Analyzer_Brownout(AnalyzerVehicle::Base *&vehicle) :
-	Analyzer(vehicle)
+
+    Analyzer_Brownout(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
+	Analyzer(vehicle,data_sources)
     { }
 
     const char *name() const override { return "Brownout"; }
@@ -41,9 +42,6 @@ public:
 
     void evaluate() override;
     void end_of_log(const uint32_t packet_count) override;
-
-    //FIXME: move this up:
-    uint16_t get_severity_score() const override;
 
 private:
     bool seen_packets = false;

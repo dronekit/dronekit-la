@@ -5,122 +5,77 @@
 #include "analyzer_util.h"
 #include "analyzervehicle_copter.h"
 
+class Analyzer_Ever_Armed_Result : public Analyzer_Result_Event {
+public:
+    Analyzer_Ever_Armed_Result() :
+        Analyzer_Result_Event()
+        { }
+};
 
 void Analyzer_NotCrashed::end_of_log(const uint32_t packet_count)
 {
-    if (status() != analyzer_status_ok) {
-        // close off the final result
-        notcrashed_results_offset++;
+    if (_result != NULL) {
+        add_result(_result);
+        _result = NULL;
+    }
+    if (_vehicle->roll_modtime() == 0) {
+        _result = new Analyzer_NotCrashed_Result();
+        _result->set_reason("Vehicle's attitude never updated");
+        _result->set_status(analyzer_status_warn);
+        add_result(_result);
+        _result = NULL;
+    } else if (!result_count()) {
+        _result = new Analyzer_NotCrashed_Result();
+        _result->set_reason("Never crashed");
+        _result->set_status(analyzer_status_ok);
+        add_result(_result);
+        _result = NULL;
     }
 }
 
 void Analyzer_NotCrashed::evaluate()
 {
-    AnalyzerVehicle::Copter *v = (AnalyzerVehicle::Copter*&)_vehicle;
-
-    analyzer_status _status_prev = status();
-
-    if (v->exceeding_angle_max() &&
-        v->any_motor_running_fast()) {
-        set_status(analyzer_status_fail);
-    } else {
-        set_status(analyzer_status_ok);
-    }
-
-
-    if (status() == _status_prev) {
-        // nothing... yet...
-    } else {
-        switch(_status_prev) {
-        case analyzer_status_ok:
-            break;
-        case analyzer_status_warn:
-        case analyzer_status_fail:
-            if (status() != analyzer_status_ok) {
-                // only "crash" if this state persists for >1second:
-                if (_vehicle->T() - notcrashed_results[notcrashed_results_offset].timestamp_start > 1000000) {
-                    // accept this result
-                    notcrashed_results[notcrashed_results_offset].timestamp_stop = _vehicle->T();
-                    notcrashed_results_offset++;
-                }
-            }
-        }
-        if (status() != analyzer_status_ok) {
-            notcrashed_result &result = notcrashed_results[notcrashed_results_offset];
-            result.set_status(status());
-            result.timestamp_start = _vehicle->T();
-            result.timestamp_stop = 0;
-            result.angle = (v->roll() > v->pitch()) ? v->roll() : v->pitch();
-            if (v->param_with_defaults("ANGLE_MAX", result.angle_max)) {
-                result.angle_max /= 100; // 100* degrees to degrees
-                for (uint8_t i=1; i<=v->num_motors(); i++) {
-                    result.servo_output[i] = v->_servo_output[i];
-                }
-            }
-        }
-        _status_prev = status();
-    }
-}
-
-void Analyzer_NotCrashed::add_series(Json::Value &root)
-{
-    Json::Value series(Json::arrayValue);
-    series.append("PARAM");
-    series.append("SERVO_OUTPUT_RAW.servo1_raw");
-    series.append("SERVO_OUTPUT_RAW.servo2_raw");
-    series.append("SERVO_OUTPUT_RAW.servo3_raw");
-    series.append("SERVO_OUTPUT_RAW.servo4_raw");
-    root["series"] = series;
-}
-
-void Analyzer_NotCrashed::results_json_results(Json::Value &root)
-{
-    if (_vehicle == NULL) {
+    if (_vehicle->vehicletype() != AnalyzerVehicle::Base::copter) {
+        // need to subclass this class to do notcrashed properly
         return;
     }
     AnalyzerVehicle::Copter *v = (AnalyzerVehicle::Copter*&)_vehicle;
-    for (uint8_t i=0; i<notcrashed_results_offset; i++) {
-        class notcrashed_result &x = notcrashed_results[i];
 
-        Json::Value result(Json::objectValue);
-    
-        result["status"] = x.status_as_string();
-        result["reason"] = "Vehicle is past maximum allowed angle and running its motors";
-        Json::Value evidence(Json::arrayValue);
-        evidence.append(string_format("ANGLE_MAX (%f > %f)", x.angle, x.angle_max));
-        for (uint8_t i=1; i<=v->num_motors(); i++) {
-            if (v->_servo_output[i] > v->is_flying_motor_threshold) {
-                evidence.append(string_format("SERVO_OUTPUT_RAW.servo%d_raw=%f",
-                                              i, x.servo_output[i]));
+    bool crashed = v->exceeding_angle_max() &&
+        v->any_motor_running_fast();
+    if (_result == NULL) {
+        if (crashed) {
+            _result = new Analyzer_NotCrashed_Result();
+            _result->set_status(analyzer_status_fail);
+            _result->set_reason("Vehicle is past maximum allowed angle and running its motors");
+            _result->set_T(_vehicle->T());
+            _result->angle = (v->roll() > v->pitch()) ? v->roll() : v->pitch();
+            if (v->param_with_defaults("ANGLE_MAX", _result->angle_max)) {
+                _result->angle_max /= 100; // 100* degrees to degrees
+                for (uint8_t i=1; i<=v->num_motors(); i++) {
+                    _result->servo_output[i] = v->_servo_output[i];
+                }
             }
+            _result->add_evidence(string_format("ANGLE_MAX (%f > %f)", _result->angle, _result->angle_max));
+            for (uint8_t i=1; i<=v->num_motors(); i++) {
+                if (v->_servo_output[i] > v->is_flying_motor_threshold) {
+                    _result->add_evidence(string_format("SERVO_OUTPUT_RAW.servo%d_raw=%f",
+                                                       i, _result->servo_output[i]));
+                }
+            }
+
+            _result->add_series(_data_sources.get("SERVO_OUTPUT"));
+            _result->add_series(_data_sources.get("PARAM"));
+            _result->add_evilness(100);
         }
-        result["evidence"] = evidence;
-
-        result["timestamp_start"] = (Json::UInt64)x.timestamp_start;
-        if (x.timestamp_stop != 0) {
-            result["timestamp_stop"] = (Json::UInt64)x.timestamp_stop;
+    } else { // _result is set, incident underway
+        if (!crashed) {
+            // incident done
+            if (_vehicle->T() - _result->T() > 1000000) {
+                // accept this result
+                add_result(_result);
+            }
+            _result = NULL;
         }
-
-        add_series(result);
-
-        const uint8_t this_sin_score = 10;
-        result["severity-score"] = this_sin_score;
-        result["evilness"] = result["severity-score"];
-        add_severity_score(this_sin_score);
-        root.append(result);
     }
-
-    if (notcrashed_results_offset == 0) {
-        Json::Value result(Json::objectValue);
-        if (_vehicle->roll_modtime() == 0) {
-            result["reason"] = "Vehicle's attitude never updated";
-            result["status"] =  "WARN";
-        } else {
-            result["reason"] = "Never Crashed";
-            result["status"] =  "OK";
-        }
-        add_series(result);
-        root.append(result);
-    }
-
 }

@@ -37,8 +37,6 @@ void Analyzer_Ever_Armed::evaluate()
 
 void Analyzer_Ever_Armed::end_of_log(const uint32_t packet_count)
 {
-    if (_result.status() != analyzer_status_ok) {
-        _result.add_series("HEARBEAT.base_mode & MAV_MODE_FLAG_SAFETY_ARMED");
-    }
+    _result.add_series(_data_sources.get("ARMING"));
     add_result(&_result);
 }

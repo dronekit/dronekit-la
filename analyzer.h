@@ -7,13 +7,15 @@
 #include "analyzervehicle.h"
 #include "INIReader.h"
 
+#include "data_sources.h"
+
 enum analyzer_status {
     analyzer_status_warn = 17,
     analyzer_status_fail,
     analyzer_status_ok,
 };
 
-class analyzer_result {
+class Analyzer_Result {
 public:
 
     const char *status_as_string() const {
@@ -23,7 +25,7 @@ public:
         case analyzer_status_warn:
             return "WARN";
         case analyzer_status_ok:
-            return "OK";
+            return "PASS";
         }
         return "STRANGE";
     }
@@ -43,12 +45,18 @@ public:
     void add_evidence(const std::string f) {
         _evidence.push_back(f);
     }
-    void add_series(const std::string f) {
-        _series.push_back(f);
+    // void add_series(const std::string f) {
+    //     _series.push_back(f);
+    // }
+    void add_series(const std::vector<const char *>&f) {
+        _series.insert(_series.end(), f.begin(), f.end());
     }
 
     void add_evilness(uint32_t evilness) {
         _evilness += evilness;
+    }
+    void set_evilness(uint32_t evilness) {
+        _evilness = evilness;
     }
     uint32_t evilness() const {
         return _evilness;
@@ -67,14 +75,22 @@ private:
     uint32_t _evilness = 0;
 };
 
-class Analyzer_Result_Period : public analyzer_result {
+class Analyzer_Result_Period : public Analyzer_Result {
 public:
     Analyzer_Result_Period() :
-        analyzer_result()
+        Analyzer_Result()
         { }
 
     virtual void to_json(Json::Value &root) const override;
     
+    void set_T_start(const uint64_t start) { _T_start = start; }
+    uint64_t T_start() const { return _T_start; }
+
+    void set_T_stop(const uint64_t stop) { _T_stop = stop; }
+    uint64_t T_stop() const { return _T_stop; }
+
+    uint64_t duration() const { return _T_stop - _T_start; }
+
     // FIXME: scope
     uint64_t _T_start = 0;
     uint64_t _T_stop;
@@ -82,10 +98,10 @@ public:
 private:
 };
 
-class Analyzer_Result_Summary : public analyzer_result {
+class Analyzer_Result_Summary : public Analyzer_Result {
 public:
     Analyzer_Result_Summary() :
-        analyzer_result()
+        Analyzer_Result()
         { }
 
     // virtual void to_json(Json::Value &root) const override;
@@ -94,26 +110,33 @@ private:
 };
 
 
-class Analyzer_Result_Event : public analyzer_result {
+class Analyzer_Result_Event : public Analyzer_Result {
 public:
     Analyzer_Result_Event() :
-        analyzer_result()
+        Analyzer_Result()
         { }
 
     virtual void to_json(Json::Value &root) const;
     
-    // FIXME: scope
-    uint64_t _T;
+    void set_T(uint64_t timestamp) {
+        _T = timestamp;
+    }
+
+    uint64_t T() const {
+        return _T;
+    }
 
 private:
+    uint64_t _T;
 };
 
 
 class Analyzer {
 
 public:
-    Analyzer(AnalyzerVehicle::Base *&vehicle) :
-        _vehicle(vehicle)
+    Analyzer(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
+        _vehicle(vehicle),
+        _data_sources(data_sources)
         { }
 
     virtual bool configure(INIReader *config) {
@@ -126,20 +149,21 @@ public:
     virtual void end_of_log(uint32_t packet_count) { }
 
 
-    std::vector<analyzer_result*> results() {
+    std::vector<Analyzer_Result*> results() const {
         return _results;
     }
-
-    void add_severity_score(uint8_t sin_points) {
-        _severity_score += sin_points;
+    uint16_t result_count() {
+        return _results.size();
     }
-    virtual uint16_t get_severity_score() const { return _severity_score; }
 
-    analyzer_status status() const { return _status; }
+    void add_evilness(uint8_t sin_points) {
+        _evilness += sin_points;
+    }
+    virtual uint32_t evilness() const;
 
     virtual void evaluate() { }
 
-    virtual void add_result(analyzer_result* result) {
+    virtual void add_result(Analyzer_Result* result) {
         _results.push_back(result);
     }
 
@@ -148,14 +172,14 @@ protected:
 
     AnalyzerVehicle::Base *&_vehicle;
 
-    uint16_t _severity_score = 0;
-    void set_status(analyzer_status status) { _status = status; }
+    uint16_t _evilness = 0;
 
     // FIXME: scope
-    std::vector<analyzer_result*> _results;
+    std::vector<Analyzer_Result*> _results;
+
+    Data_Sources &_data_sources;
 
 private:
-    analyzer_status _status = analyzer_status_ok;
 };
 
 #endif

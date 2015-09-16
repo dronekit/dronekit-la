@@ -34,8 +34,9 @@ private:
 
 class Analyzer_Ever_Flew : public Analyzer {
 public:
-    Analyzer_Ever_Flew(AnalyzerVehicle::Base *&vehicle) :
-	Analyzer(vehicle)
+
+    Analyzer_Ever_Flew(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
+	Analyzer(vehicle,data_sources)
     { }
 
     const char *name() const { return "Ever Flew"; }
