@@ -19,7 +19,14 @@ public:
         _analyze->add_data_source("ATTITUDE", "ATTITUDE.roll");
         _analyze->add_data_source("ATTITUDE", "ATTITUDE.pitch");
         _analyze->add_data_source("ATTITUDE", "ATTITUDE.yaw");
+        _analyze->add_data_source("ATTITUDE_ESTIMATE_ATTITUDE", "ATTITUDE.roll");
+        _analyze->add_data_source("ATTITUDE_ESTIMATE_ATTITUDE", "ATTITUDE.pitch");
+        _analyze->add_data_source("ATTITUDE_ESTIMATE_ATTITUDE", "ATTITUDE.yaw");
+        _analyze->add_data_source("ATTITUDE_ESTIMATE_AHRS2", "AHRS2.roll");
+        _analyze->add_data_source("ATTITUDE_ESTIMATE_AHRS2", "AHRS2.pitch");
+        _analyze->add_data_source("ATTITUDE_ESTIMATE_AHRS2", "AHRS2.yaw");
 
+        
         _analyze->add_data_source("BATTERY_REMAINING", "SYS_STATUS.battery_remaining");
 
         _analyze->add_data_source("DESATTITUDE", "NAV_CONTROLLER_OUTPUT.nav_roll");

@@ -18,6 +18,7 @@ public:
         { };
 
     void process_set_T(const uint8_t *msg);
+    uint64_t T() const { return _vehicle->T(); }
 
     virtual void xprocess(const uint8_t *msg) = 0;
 
@@ -32,6 +33,48 @@ protected:
     AnalyzerVehicle::Base *&_vehicle;
 };
 
+class LA_MsgHandler_AHR2 : public LA_MsgHandler {
+public:
+    LA_MsgHandler_AHR2(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(f, analyze, vehicle) {
+        _analyze->add_data_source("ATTITUDE_ESTIMATE_AHR2", "AHR2.Roll");
+        _analyze->add_data_source("ATTITUDE_ESTIMATE_AHR2", "AHR2.Pitch");
+        _analyze->add_data_source("ATTITUDE_ESTIMATE_AHR2", "AHR2.Yaw");
+
+        _analyze->add_data_source("POSITION_ESTIMATE_AHR2", "AHR2.Lat");
+        _analyze->add_data_source("POSITION_ESTIMATE_AHR2", "AHR2.Lng");
+    };
+    void xprocess(const uint8_t *msg) override {
+        int16_t Roll = require_field_int16_t(msg, "Roll");
+        int16_t Pitch = require_field_int16_t(msg, "Pitch");
+        float Yaw = require_field_float(msg, "Yaw");
+
+        _vehicle->attitude_estimate("AHR2")->set_roll(T(), Roll/100.0f);
+        _vehicle->attitude_estimate("AHR2")->set_pitch(T(), Pitch/100.0f);
+        _vehicle->attitude_estimate("AHR2")->set_yaw(T(), Yaw-180);
+
+        int32_t Lat = require_field_int32_t(msg, "Lat");
+        int32_t Lng = require_field_int32_t(msg, "Lng");
+        float Alt = require_field_float(msg, "Alt");
+
+        _vehicle->position_estimate("AHR2")->set_lat(T(), Lat/10000000.0f);
+        _vehicle->position_estimate("AHR2")->set_lon(T(), Lng/10000000.0f);
+        _vehicle->position_estimate("AHR2")->set_alt(T(), Alt);
+
+        if (canonical_for_position()) {
+            _vehicle->set_lat(Lat/10000000.0f);
+            _vehicle->set_lon(Lng/10000000.0f);
+            _vehicle->set_alt(Alt);
+        }
+    }
+
+    bool canonical_for_position() { return _canonical_for_position; };
+    void set_canonical_for_position(bool value) { _canonical_for_position = value; }
+
+private:
+    bool _canonical_for_position = true;
+};
+
 class LA_MsgHandler_ATT : public LA_MsgHandler {
 public:
     LA_MsgHandler_ATT(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
@@ -42,6 +85,10 @@ public:
         _analyze->add_data_source("DESATTITUDE", "ATT.DesRoll");
         _analyze->add_data_source("DESATTITUDE", "ATT.DesPitch");
         _analyze->add_data_source("DESATTITUDE", "ATT.DesYaw");
+
+        _analyze->add_data_source("ATTITUDE_ESTIMATE_ATTITUDE", "ATT.Roll");
+        _analyze->add_data_source("ATTITUDE_ESTIMATE_ATTITUDE", "ATT.Pitch");
+        _analyze->add_data_source("ATTITUDE_ESTIMATE_ATTITUDE", "ATT.Yaw");
     };
     void xprocess(const uint8_t *msg) override {
         int16_t DesRoll = require_field_int16_t(msg, "DesRoll");
@@ -60,6 +107,40 @@ public:
         _vehicle->set_desroll((float)DesRoll/100.0f);
         _vehicle->set_despitch((float)DesPitch/100.0f);
         _vehicle->set_desyaw(DesYaw);
+
+        _vehicle->attitude_estimate("ATT")->set_roll(T(), Roll/100.0f);
+        _vehicle->attitude_estimate("ATT")->set_pitch(T(), Pitch/100.0f);
+        _vehicle->attitude_estimate("ATT")->set_yaw(T(), Yaw);
+    }
+};
+
+class LA_MsgHandler_EKF1 : public LA_MsgHandler {
+public:
+    LA_MsgHandler_EKF1(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(f, analyze, vehicle) {
+        _analyze->add_data_source("ATTITUDE_ESTIMATE_EKF1", "EKF1.Roll");
+        _analyze->add_data_source("ATTITUDE_ESTIMATE_EKF1", "EKF1.Pitch");
+        _analyze->add_data_source("ATTITUDE_ESTIMATE_EKF1", "EKF1.Yaw");
+
+        // these are all relative; need to work out an origin:
+        // _analyze->add_data_source("POSITION_ESTIMATE_EKF1", "EKF1.PN");
+        // _analyze->add_data_source("POSITION_ESTIMATE_EKF1", "EKF1.PE");
+        // _analyze->add_data_source("POSITION_ESTIMATE_EKF1", "EKF1.PD");
+
+    };
+    void xprocess(const uint8_t *msg) override {
+        int16_t Roll = require_field_int16_t(msg, "Roll");
+        int16_t Pitch = require_field_int16_t(msg, "Pitch");
+        float Yaw = require_field_float(msg, "Yaw");
+
+        _vehicle->attitude_estimate("EKF1")->set_roll(T(), Roll/100.0f);
+        _vehicle->attitude_estimate("EKF1")->set_pitch(T(), Pitch/100.0f);
+        _vehicle->attitude_estimate("EKF1")->set_yaw(T(), Yaw-180);
+
+        // these are all relative; need to work out an origin:
+        // _vehicle->position_estimate("EKF1")->set_lat(T(), Roll/100.0f);
+        // _vehicle->position_estimate("EKF1")->set_lon(T(), Pitch/100.0f);
+        // _vehicle->position_estimate("EKF1")->set_alt(T(), Yaw-180);
     }
 };
 
@@ -137,6 +218,42 @@ public:
     }
 };
 
+class LA_MsgHandler_GPS : public LA_MsgHandler {
+public:
+    LA_MsgHandler_GPS(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(f, analyze, vehicle) {
+        _analyze->add_data_source("POSITION_ESTIMATE_GPS", "GPS.Lat");
+        _analyze->add_data_source("POSITION_ESTIMATE_GPS", "GPS.Lng");
+    };
+    void xprocess(const uint8_t *msg) override {
+        int32_t Lat = require_field_int32_t(msg, "Lat");
+        int32_t Lng = require_field_int32_t(msg, "Lng");
+        int32_t Alt = require_field_int32_t(msg, "Alt");
+
+        _vehicle->position_estimate("GPS")->set_lat(T(), Lat/10000000.0f);
+        _vehicle->position_estimate("GPS")->set_lon(T(), Lng/10000000.0f);
+        _vehicle->position_estimate("GPS")->set_alt(T(), Alt/100.0f);
+    }
+};
+
+class LA_MsgHandler_GPS2 : public LA_MsgHandler {
+public:
+    LA_MsgHandler_GPS2(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(f, analyze, vehicle) {
+        _analyze->add_data_source("POSITION_ESTIMATE_GPS2", "GPS2.Lat");
+        _analyze->add_data_source("POSITION_ESTIMATE_GPS2", "GPS2.Lng");
+    };
+    void xprocess(const uint8_t *msg) override {
+        int32_t Lat = require_field_int32_t(msg, "Lat");
+        int32_t Lng = require_field_int32_t(msg, "Lng");
+        int32_t Alt = require_field_int32_t(msg, "Alt");
+
+        _vehicle->position_estimate("GPS2")->set_lat(T(), Lat/10000000.0f);
+        _vehicle->position_estimate("GPS2")->set_lon(T(), Lng/10000000.0f);
+        _vehicle->position_estimate("GPS2")->set_alt(T(), Alt/100.0f);
+    }
+};
+
 class LA_MsgHandler_MSG : public LA_MsgHandler {
 public:
     LA_MsgHandler_MSG(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
@@ -194,6 +311,28 @@ public:
         _vehicle->param_set(name, value);
     }
 
+};
+
+class LA_MsgHandler_POS : public LA_MsgHandler {
+public:
+    LA_MsgHandler_POS(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(f, analyze, vehicle) {
+        _analyze->add_data_source("POSITION_ESTIMATE_POS", "POS.Lat");
+        _analyze->add_data_source("POSITION_ESTIMATE_POS", "POS.Lng");
+    };
+    void xprocess(const uint8_t *msg) override {
+        int32_t Lat = require_field_int32_t(msg, "Lat");
+        int32_t Lng = require_field_int32_t(msg, "Lng");
+        float Alt = require_field_float(msg, "Alt");
+
+        _vehicle->position_estimate("POS")->set_lat(T(), Lat/10000000.0f);
+        _vehicle->position_estimate("POS")->set_lon(T(), Lng/10000000.0f);
+        _vehicle->position_estimate("POS")->set_alt(T(), Alt);
+
+        _vehicle->set_lat(Lat/10000000.0f);
+        _vehicle->set_lon(Lng/10000000.0f);
+        _vehicle->set_alt(Alt);
+    }
 };
 
 class LA_MsgHandler_RCOU : public LA_MsgHandler {

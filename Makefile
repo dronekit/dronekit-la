@@ -45,6 +45,7 @@ SRCS_CPP += analyzer_ever_flew.cpp
 SRCS_CPP += analyzer_good_ekf.cpp
 SRCS_CPP += analyzer_notcrashed.cpp
 SRCS_CPP += analyzer_position_estimate_divergence.cpp
+SRCS_CPP += analyzer_attitude_estimate_divergence.cpp
 SRCS_CPP += analyzer_vehicle_definition.cpp
 SRCS_CPP += analyzervehicle_copter.cpp
 SRCS_CPP += analyzervehicle.cpp

@@ -9,10 +9,10 @@
 
 namespace AnalyzerVehicle {
 
-    // AV_Attitude should be the best guess as to what the vehicle's
+    // Attitude should be the best guess as to what the vehicle's
     // status is - typicall the POS message from dataflash, for
     // example
-    class AV_Attitude {
+    class Attitude {
     public:
        
         float roll() const { return _att[0]; };
@@ -51,7 +51,7 @@ namespace AnalyzerVehicle {
         }
 };
 
-    class AV_Position {
+    class Position {
     public:
         void set_alt(uint64_t T, float alt) {
             _alt = alt;
@@ -74,8 +74,8 @@ namespace AnalyzerVehicle {
         double lon() { return _lon; };
         uint64_t lon_modtime() { return _lon_modtime; };
 
-//        double distance_to(AV_Position otherpos);
-        double horizontal_distance_to(AV_Position otherpos);
+//        double distance_to(Position otherpos);
+        double horizontal_distance_to(Position otherpos);
 
     private:
         double _lat;
@@ -124,18 +124,40 @@ namespace AnalyzerVehicle {
     //     uint16_t D;
     // };
 
+    class AttitudeEstimate {
+    public:
+        AttitudeEstimate(const std::string name) :
+            _name(name)
+            { }
+        AttitudeEstimate() :
+            _name(NULL),
+            _attitude({})
+            { }
+        const std::string name() { return _name; }
+        const Attitude attitude() { return _attitude; }
+        void set_roll(uint64_t T, double roll) { _attitude.set_roll(T, roll); }
+        void set_pitch(uint64_t T, double pitch) { _attitude.set_pitch(T, pitch); }
+        void set_yaw(uint64_t T, double yaw) { _attitude.set_yaw(T, yaw); }
+        double roll() { return _attitude.roll(); }
+        double pitch() { return _attitude.pitch(); }
+        double yaw() { return _attitude.yaw(); }
+
+    private:
+        const std::string _name;
+        Attitude _attitude;
+    };
+
     class PositionEstimate {
     public:
-        PositionEstimate(const std::string name, AV_Position position) :
-            _name(name),
-            _position(position)
+        PositionEstimate(const std::string name) :
+            _name(name)
             { }
         PositionEstimate() :
             _name(NULL),
             _position({})
             { }
         const std::string name() { return _name; }
-        const AV_Position position() { return _position; }
+        const Position position() { return _position; }
         void set_alt(uint64_t T, float alt) { _position.set_alt(T, alt); }
         void set_lat(uint64_t T, double lat) { _position.set_lat(T, lat); }
         void set_lon(uint64_t T, double lon) { _position.set_lon(T, lon); }
@@ -145,7 +167,7 @@ namespace AnalyzerVehicle {
 
     private:
         const std::string _name;
-        AV_Position _position;
+        Position _position = { };
     };
 
     class Battery {
@@ -306,9 +328,18 @@ public:
     double lat() { return pos().lat(); }
     double lon() { return pos().lon(); }
 
-    PositionEstimate &position_estimate(const std::string name) {
-        PositionEstimate &x = _position_estimates[name];
-        return x;
+    PositionEstimate *position_estimate(const std::string name) {
+        if (_position_estimates.count(name) == 0) {
+            _position_estimates[name] = new PositionEstimate(name);
+        }
+        return _position_estimates[name];
+    };
+
+    AttitudeEstimate *attitude_estimate(const std::string name) {
+        if (_attitude_estimates.count(name) == 0) {
+            _attitude_estimates[name] = new AttitudeEstimate(name);
+        }
+        return _attitude_estimates[name];
     };
 
     // battery
@@ -333,12 +364,15 @@ public:
         return _battery._failsafe_event_T;
     }
 
-    const std::map<const std::string, PositionEstimate> &position_estimates() {
+    const std::map<const std::string, AttitudeEstimate*> &attitude_estimates() {
+        return _attitude_estimates;
+    }
+    const std::map<const std::string, PositionEstimate*> &position_estimates() {
         return _position_estimates;
     }
 
-    AV_Attitude& att() { return _att; };
-    AV_Position& pos() { return _pos; };
+    Attitude& att() { return _att; };
+    Position& pos() { return _pos; };
 
 protected:
     AV_Nav& nav() { return _nav; };
@@ -350,8 +384,8 @@ protected:
     std::map<const std::string, float> _param_defaults = {
     };
     
-    AV_Attitude _att = { };
-    AV_Position _pos = { };
+    Attitude _att = { };
+    Position _pos = { };
     AV_Nav _nav = { };
     
 private:
@@ -361,12 +395,9 @@ private:
 
     Battery _battery;
 
-    std::map<const std::string, PositionEstimate> _position_estimates = {
-        { "AHRS2", PositionEstimate{ "AHRS2", AV_Position{ } } },
-        { "GLOBAL_POSITION_INT", PositionEstimate{ "GLOBAL_POSITION_INT", AV_Position{ } } },
-        { "GPS_RAW_INT", PositionEstimate{ "GPS_RAW_INT", AV_Position{ } } }
-    };
-
+    std::map<const std::string, PositionEstimate*> _position_estimates;
+    std::map<const std::string, AttitudeEstimate*> _attitude_estimates;
+    
     PacketHistory<mavlink_heartbeat_t> history_heartbeat;
     PacketHistory<mavlink_nav_controller_output_t> history_nav_controller_output;
     PacketHistory<mavlink_servo_output_raw_t> history_servo_output_raw;

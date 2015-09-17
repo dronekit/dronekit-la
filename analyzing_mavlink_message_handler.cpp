@@ -7,9 +7,13 @@ void Analyzing_MAVLink_Message_Handler::end_of_log(uint32_t packet_count)
 
 
 void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_ahrs2_t &msg) {
-    _vehicle->position_estimate("AHRS2").set_lat(T, msg.lat/10000000.0f);
-    _vehicle->position_estimate("AHRS2").set_lon(T, msg.lng/10000000.0f);
-    _vehicle->position_estimate("AHRS2").set_alt(T, msg.altitude);
+    _vehicle->position_estimate("AHRS2")->set_lat(T, msg.lat/10000000.0f);
+    _vehicle->position_estimate("AHRS2")->set_lon(T, msg.lng/10000000.0f);
+    _vehicle->position_estimate("AHRS2")->set_alt(T, msg.altitude);
+
+    _vehicle->attitude_estimate("AHRS2")->set_roll(T, rad_to_deg(msg.roll));
+    _vehicle->attitude_estimate("AHRS2")->set_pitch(T, rad_to_deg(msg.pitch));
+    _vehicle->attitude_estimate("AHRS2")->set_yaw(T, rad_to_deg(msg.yaw));
 
     _analyze->evaluate_all();
 }
@@ -17,17 +21,21 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
 void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_attitude_t &msg) {
     _vehicle->set_T(T);
 
+    _vehicle->attitude_estimate("ATTITUDE")->set_roll(T, rad_to_deg(msg.roll));
+    _vehicle->attitude_estimate("ATTITUDE")->set_pitch(T, rad_to_deg(msg.pitch));
+    _vehicle->attitude_estimate("ATTITUDE")->set_yaw(T, rad_to_deg(msg.yaw));
+
     _vehicle->set_roll(rad_to_deg(msg.roll));
     _vehicle->set_pitch(rad_to_deg(msg.pitch));
-    _vehicle->set_yaw(rad_to_deg(msg.yaw)); // is this right?!
+    _vehicle->set_yaw(rad_to_deg(msg.yaw));
 
     _analyze->evaluate_all();
 }
 
 void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_global_position_int_t &msg) {
-    _vehicle->position_estimate("GLOBAL_POSITION_INT").set_lat(T, msg.lat/10000000.0f);
-    _vehicle->position_estimate("GLOBAL_POSITION_INT").set_lon(T, msg.lon/10000000.0f);
-    _vehicle->position_estimate("GLOBAL_POSITION_INT").set_alt(T, msg.alt/1000.0f);
+    _vehicle->position_estimate("GLOBAL_POSITION_INT")->set_lat(T, msg.lat/10000000.0f);
+    _vehicle->position_estimate("GLOBAL_POSITION_INT")->set_lon(T, msg.lon/10000000.0f);
+    _vehicle->position_estimate("GLOBAL_POSITION_INT")->set_alt(T, msg.alt/1000.0f);
 
     // GLOBAL_POSITION_INT is the "offical" position of the vehicle:
     _vehicle->set_T(T);
@@ -39,9 +47,9 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
 }
 
 void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_gps_raw_int_t &msg) {
-    _vehicle->position_estimate("GPS_RAW_INT").set_lat(T, msg.lat/10000000.0f);
-    _vehicle->position_estimate("GPS_RAW_INT").set_lon(T, msg.lon/10000000.0f);
-    _vehicle->position_estimate("GPS_RAW_INT").set_alt(T, msg.alt/1000.0f);
+    _vehicle->position_estimate("GPS_RAW_INT")->set_lat(T, msg.lat/10000000.0f);
+    _vehicle->position_estimate("GPS_RAW_INT")->set_lon(T, msg.lon/10000000.0f);
+    _vehicle->position_estimate("GPS_RAW_INT")->set_alt(T, msg.alt/1000.0f);
 
     _analyze->evaluate_all();
 }

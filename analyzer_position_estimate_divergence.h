@@ -18,7 +18,7 @@ public:
     double max_delta;
     double delta_threshold;
 
-    void to_json(Json::Value &root) const;
+    void to_json(Json::Value &root) const override;
 private:
 };
 
@@ -37,11 +37,14 @@ public:
 
     void evaluate_estimate(
         std::string name,
-        AnalyzerVehicle::AV_Position position,
-        AnalyzerVehicle::AV_Position estimate);
+        AnalyzerVehicle::Position position,
+        AnalyzerVehicle::Position oestimate);
     void evaluate() override;
         
 private:
+
+    const float position_delta_warn = 4.0f;
+    const float position_delta_fail = 5.0f;
 
     std::map<const std::string, Analyzer_Position_Estimate_Divergence_Result> _current_states;
 };

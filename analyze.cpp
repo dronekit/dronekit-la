@@ -5,6 +5,7 @@
 
 #include "analyzer_any_parameters_seen.h"
 #include "analyzer_arming_checks.h"
+#include "analyzer_attitude_estimate_divergence.h"
 #include "analyzer_attitude_control.h"
 #include "analyzer_battery.h"
 #include "analyzer_brownout.h"
@@ -35,6 +36,13 @@ void Analyze::instantiate_analyzers(INIReader *config)
         configure_analyzer(config, analyzer_arming_checks, "Analyzer_Arming_Checks");
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_arming_checks");
+    }
+
+    Analyzer_Attitude_Estimate_Divergence *analyzer_attitude_estimate_divergence = new Analyzer_Attitude_Estimate_Divergence(vehicle,_data_sources);
+    if (analyzer_attitude_estimate_divergence != NULL) {
+        configure_analyzer(config, analyzer_attitude_estimate_divergence, "Analyzer_Attitude_Estimate_Divergence");
+    } else {
+        syslog(LOG_INFO, "Failed to create analyzer_attitude_estimate_divergence");
     }
 
     Analyzer_Compass_Offsets *analyzer_compass_offsets = new Analyzer_Compass_Offsets(vehicle,_data_sources);

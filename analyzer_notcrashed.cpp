@@ -41,6 +41,11 @@ void Analyzer_NotCrashed::evaluate()
     }
     AnalyzerVehicle::Copter *v = (AnalyzerVehicle::Copter*&)_vehicle;
 
+    // {
+    //     float angle_max = 0;
+    //     v->param_with_defaults("ANGLE_MAX", angle_max);
+    //     ::fprintf(stderr, "angle_max = %f angle= %f\n",angle_max,(v->roll() > v->pitch()) ? v->roll() : v->pitch());
+    // }
     bool crashed = v->exceeding_angle_max() &&
         v->any_motor_running_fast();
     if (_result == NULL) {

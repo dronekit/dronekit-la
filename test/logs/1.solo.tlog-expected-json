@@ -1,10 +1,10 @@
 {
   "duration": "987654321", 
-  "evilness": 447, 
+  "evilness": 577, 
   "format-version": "0.1", 
   "git_version": "some-hash", 
   "packet_count": 41809, 
-  "severity-score": 447, 
+  "severity-score": 577, 
   "tests": {
     "Any Parameters Seen": {
       "description": "This test will FAIL if no parameters are seen from the UAV", 
@@ -224,6 +224,326 @@
         }
       ], 
       "severity-score": 60
+    }, 
+    "Attitude Estimate Divergence": {
+      "description": "This test will FAIL if various craft's attitude estimates diverge", 
+      "evilness": 130, 
+      "name": "Attitude Estimate Divergence", 
+      "results": [
+        {
+          "duration": 0.6359279751777649, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=5.905668 degrees", 
+            "delta-threshold=5.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326569815394, 
+          "timestamp_stop": 1434326570451322
+        }, 
+        {
+          "duration": 0.6474840044975281, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=6.285734 degrees", 
+            "delta-threshold=5.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326577722808, 
+          "timestamp_stop": 1434326578370292
+        }, 
+        {
+          "duration": 0.5133829712867737, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=6.713810 degrees", 
+            "delta-threshold=5.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326578370292, 
+          "timestamp_stop": 1434326578883675
+        }, 
+        {
+          "duration": 1.433122038841248, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=8.144611 degrees", 
+            "delta-threshold=5.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326578883675, 
+          "timestamp_stop": 1434326580316797
+        }, 
+        {
+          "duration": 3.241332054138184, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=8.646156 degrees", 
+            "delta-threshold=5.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326581474768, 
+          "timestamp_stop": 1434326584716100
+        }, 
+        {
+          "duration": 1.247601985931396, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=6.584295 degrees", 
+            "delta-threshold=5.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326585474100, 
+          "timestamp_stop": 1434326586721702
+        }, 
+        {
+          "duration": 1.255604982376099, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=5.989949 degrees", 
+            "delta-threshold=5.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326587883997, 
+          "timestamp_stop": 1434326589139602
+        }, 
+        {
+          "duration": 1.341125965118408, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=221.960770 degrees", 
+            "delta-threshold=10.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326702467582, 
+          "timestamp_stop": 1434326703808708
+        }, 
+        {
+          "duration": 1.476848006248474, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=86.778847 degrees", 
+            "delta-threshold=10.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326704622558, 
+          "timestamp_stop": 1434326706099406
+        }, 
+        {
+          "duration": 0.7458040118217468, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=139.012909 degrees", 
+            "delta-threshold=10.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326706197252, 
+          "timestamp_stop": 1434326706943056
+        }, 
+        {
+          "duration": 1.373325943946838, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=349.648865 degrees", 
+            "delta-threshold=10.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326707044816, 
+          "timestamp_stop": 1434326708418142
+        }, 
+        {
+          "duration": 10.28797912597656, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=23.681101 degrees", 
+            "delta-threshold=10.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326708418142, 
+          "timestamp_stop": 1434326718706121
+        }, 
+        {
+          "duration": 6.980299949645996, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=357.801147 degrees", 
+            "delta-threshold=10.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326731673828, 
+          "timestamp_stop": 1434326738654128
+        }
+      ], 
+      "severity-score": 130
     }, 
     "Battery": {
       "description": "This test will FAIL if the battery level remaining falls below a threshold level", 

@@ -10,8 +10,8 @@ void Analyzer_Position_Estimate_Divergence_Result::to_json(Json::Value &root) co
 
 void Analyzer_Position_Estimate_Divergence::evaluate_estimate(
     std::string name,
-    AnalyzerVehicle::AV_Position position,
-    AnalyzerVehicle::AV_Position estimate)
+    AnalyzerVehicle::Position position,
+    AnalyzerVehicle::Position estimate)
 {
     if (estimate.lat_modtime() == 0) {
         // No estimate for this  yet
@@ -25,9 +25,10 @@ void Analyzer_Position_Estimate_Divergence::evaluate_estimate(
         result.name = name;
     }
     analyzer_status new_status;
-    if (delta > 5.0f) { // FIXME magic number
+    // ::fprintf(stderr, "%s=(%f/%f) canon=(%f/%f) %f\n", name.c_str(), estimate.lat(), estimate.lon(),position.lat(), position.lon(), delta);
+    if (delta > position_delta_fail) { // FIXME magic number
         new_status = analyzer_status_fail;
-    } else if (delta > 4.0f && result.status() != analyzer_status_fail) { // FIXME magic number
+    } else if (delta > position_delta_warn && result.status() != analyzer_status_fail) { // FIXME magic number
         new_status = analyzer_status_warn;
     } else {
         new_status = analyzer_status_ok;
@@ -69,7 +70,7 @@ void Analyzer_Position_Estimate_Divergence::evaluate_estimate(
         result.max_delta = delta;
         result._T_start = _vehicle->T();
         result.set_status(new_status);
-        result.delta_threshold = (new_status == analyzer_status_warn ? 4.0f : 5.0f); // FIXME
+        result.delta_threshold = (new_status == analyzer_status_warn ? position_delta_warn : position_delta_fail); // FIXME
         switch(new_status) {
         case analyzer_status_warn:
             result.set_evilness(10);
@@ -86,19 +87,19 @@ void Analyzer_Position_Estimate_Divergence::evaluate_estimate(
 }
 void Analyzer_Position_Estimate_Divergence::evaluate()
 {
-    const std::map<const std::string, AnalyzerVehicle::PositionEstimate> &estimates =
+    const std::map<const std::string, AnalyzerVehicle::PositionEstimate*> &estimates =
         _vehicle->position_estimates();
-    AnalyzerVehicle::AV_Position pos = _vehicle->pos();
+    AnalyzerVehicle::Position pos = _vehicle->pos();
     // ::fprintf(stderr, "Position: %.20f/%.20f\n", pos.lat(), pos.lon());
     if (pos.lat_modtime() == 0) {
         // No craft position yet
         return;
     }
-    for (std::map<const std::string, AnalyzerVehicle::PositionEstimate>::const_iterator it = estimates.begin();
+    for (std::map<const std::string, AnalyzerVehicle::PositionEstimate*>::const_iterator it = estimates.begin();
          it != estimates.end();
          ++it) {
-        AnalyzerVehicle::PositionEstimate est = (*it).second;
-        AnalyzerVehicle::AV_Position estimate = est.position();
+        AnalyzerVehicle::PositionEstimate *est = (*it).second;
+        AnalyzerVehicle::Position estimate = est->position();
         evaluate_estimate((*it).first, pos, estimate);
     }
 }
