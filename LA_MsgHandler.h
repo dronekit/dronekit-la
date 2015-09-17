@@ -35,7 +35,14 @@ protected:
 class LA_MsgHandler_ATT : public LA_MsgHandler {
 public:
     LA_MsgHandler_ATT(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(f, analyze, vehicle) { };
+        LA_MsgHandler(f, analyze, vehicle) {
+        _analyze->add_data_source("ATTITUDE", "ATT.Roll");
+        _analyze->add_data_source("ATTITUDE", "ATT.Pitch");
+        _analyze->add_data_source("ATTITUDE", "ATT.Yaw");
+        _analyze->add_data_source("DESATTITUDE", "ATT.DesRoll");
+        _analyze->add_data_source("DESATTITUDE", "ATT.DesPitch");
+        _analyze->add_data_source("DESATTITUDE", "ATT.DesYaw");
+    };
     void xprocess(const uint8_t *msg) override {
         int16_t DesRoll = require_field_int16_t(msg, "DesRoll");
         int16_t Roll = require_field_int16_t(msg, "Roll");
@@ -59,7 +66,16 @@ public:
 class LA_MsgHandler_EKF4 : public LA_MsgHandler {
 public:
     LA_MsgHandler_EKF4(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(f, analyze, vehicle) { };
+        LA_MsgHandler(f, analyze, vehicle) {
+        _analyze->add_data_source("EKF_FLAGS", "EKF4.SS");
+        _analyze->add_data_source("EKF_VARIANCE_velocity_variance", "EKF4.SV");
+        _analyze->add_data_source("EKF_VARIANCE_pos_horiz_variance", "EKF4.SP");
+        _analyze->add_data_source("EKF_VARIANCES_pos_vert_variance", "EKF4.SH");
+        _analyze->add_data_source("EKF_VARIANCES_compass_variance", "EKF4.SMX");
+        _analyze->add_data_source("EKF_VARIANCES_compass_variance", "EKF4.SMY");
+        _analyze->add_data_source("EKF_VARIANCES_compass_variance", "EKF4.SMZ");
+        _analyze->add_data_source("EKF_VARIANCES_terrain_alt_variance", "EKF4.SVT");
+    };
     void xprocess(const uint8_t *msg) override {
         _vehicle->ekf_set_variance("velocity", require_field_uint16_t(msg, "SV") / 100.0f);
         _vehicle->ekf_set_variance("pos_horiz", require_field_uint16_t(msg, "SP") / 100.0f);
@@ -104,7 +120,9 @@ public:
 class LA_MsgHandler_EV : public LA_MsgHandler {
 public:
     LA_MsgHandler_EV(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(f, analyze, vehicle) { };
+        LA_MsgHandler(f, analyze, vehicle) {
+        _analyze->add_data_source("ARMING", "EV.Id");
+    };
 
     void xprocess(const uint8_t *msg) override {
         uint8_t Id = require_field_uint8_t(msg, "Id");
@@ -122,7 +140,9 @@ public:
 class LA_MsgHandler_MSG : public LA_MsgHandler {
 public:
     LA_MsgHandler_MSG(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(f, analyze, vehicle) { };
+        LA_MsgHandler(f, analyze, vehicle) {
+        _analyze->add_data_source("VEHICLE_DEFINITION", "MSG.Message");
+    };
 
     void set_vehicle_copter()
         {
@@ -131,7 +151,6 @@ public:
             vehicle_new->take_state(vehicle_old);
             _vehicle = vehicle_new;
             delete vehicle_old;
-            _vehicle->set_vehicletype(AnalyzerVehicle::Base::vehicletype_t::copter);
         }
 
     void xprocess(const uint8_t *msg) override {
@@ -159,7 +178,10 @@ public:
 class LA_MsgHandler_PARM : public LA_MsgHandler {
 public:
     LA_MsgHandler_PARM(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(f, analyze, vehicle) { };
+        LA_MsgHandler(f, analyze, vehicle) {
+        _analyze->add_data_source("PARAM", "PARM.Name");
+        _analyze->add_data_source("PARAM", "PARM.Value");
+    };
 
     void xprocess(const uint8_t *msg) override {
         const uint8_t namelen = 255;
@@ -177,7 +199,32 @@ public:
 class LA_MsgHandler_RCOU : public LA_MsgHandler {
 public:
     LA_MsgHandler_RCOU(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(f, analyze, vehicle) { };
+        LA_MsgHandler(f, analyze, vehicle) {
+        // FIXME:
+        if (find_field_info("Ch1")) {
+            _analyze->add_data_source("SERVO_OUTPUT", "RCOU.Ch1");
+            _analyze->add_data_source("SERVO_OUTPUT", "RCOU.Ch2");
+            _analyze->add_data_source("SERVO_OUTPUT", "RCOU.Ch3");
+            _analyze->add_data_source("SERVO_OUTPUT", "RCOU.Ch4");
+            if (find_field_info("Ch5")) {
+                _analyze->add_data_source("SERVO_OUTPUT", "RCOU.Ch5");
+                _analyze->add_data_source("SERVO_OUTPUT", "RCOU.Ch6");
+                _analyze->add_data_source("SERVO_OUTPUT", "RCOU.Ch7");
+                _analyze->add_data_source("SERVO_OUTPUT", "RCOU.Ch8");
+            }
+        } else {
+            _analyze->add_data_source("SERVO_OUTPUT", "RCOU.Chan1");
+            _analyze->add_data_source("SERVO_OUTPUT", "RCOU.Chan2");
+            _analyze->add_data_source("SERVO_OUTPUT", "RCOU.Chan3");
+            _analyze->add_data_source("SERVO_OUTPUT", "RCOU.Chan4");
+            if (find_field_info("Chan5")) {
+                _analyze->add_data_source("SERVO_OUTPUT", "RCOU.Chan5");
+                _analyze->add_data_source("SERVO_OUTPUT", "RCOU.Chan6");
+                _analyze->add_data_source("SERVO_OUTPUT", "RCOU.Chan7");
+                _analyze->add_data_source("SERVO_OUTPUT", "RCOU.Chan8");
+            }
+        } 
+    };
 
     void xprocess(const uint8_t *msg) override {
         char label[4] = "Chx";

@@ -227,11 +227,8 @@ public:
         invalid = 0,
         copter = 17
     };
-    vehicletype_t vehicletype() {
-        return _vehicletype;
-    }
-    void set_vehicletype(vehicletype_t vehicletype) {
-        _vehicletype = vehicletype;
+    virtual vehicletype_t vehicletype() {
+        return invalid;
     }
 
     // EKF

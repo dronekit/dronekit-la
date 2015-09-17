@@ -71,14 +71,14 @@ private:
     uint8_t next_field;
     size_t size_for_type_table[52]; // maps field type (e.g. 'f') to e.g 4 bytes
 
-    struct format_field_info *find_field_info(const char *label);
-
     void parse_format_fields();
     void init_field_types();
     void add_field_type(char type, size_t size);
     uint8_t size_for_type(char type);
 
 protected:
+    struct format_field_info *find_field_info(const char *label);
+
     struct log_Format f; // the format we are a parser for
     ~MsgHandler();
 

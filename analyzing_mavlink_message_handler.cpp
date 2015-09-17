@@ -134,7 +134,6 @@ void Analyzing_MAVLink_Message_Handler::set_vehicle_copter()
     vehicle_new->take_state(vehicle_old);
     _vehicle = vehicle_new;
     delete vehicle_old;
-    _vehicle->set_vehicletype(AnalyzerVehicle::Base::vehicletype_t::copter);
 }
 
 void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_statustext_t &msg) {

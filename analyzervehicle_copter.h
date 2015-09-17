@@ -26,6 +26,10 @@ namespace AnalyzerVehicle {
 
         static const uint16_t is_flying_motor_threshold = 1250;
 
+        vehicletype_t vehicletype() override {
+            return copter;
+        }
+
         enum copter_frame_type {
             invalid = 0,
             frame_type_quad = 19,
