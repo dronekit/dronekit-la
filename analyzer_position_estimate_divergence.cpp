@@ -5,7 +5,19 @@
 void Analyzer_Position_Estimate_Divergence_Result::to_json(Json::Value &root) const
 {
     Analyzer_Result_Period::to_json(root);
-    root["name"] = name;
+    root["name"] = _name;
+}
+
+void Analyzer_Position_Estimate_Divergence::end_of_log(const uint32_t packet_count)
+{
+    for (std::map<const std::string, Analyzer_Position_Estimate_Divergence_Result*>::iterator it = _result.begin();
+         it != _result.end();
+         ++it) {
+        Analyzer_Position_Estimate_Divergence_Result *result = (*it).second;
+        if (result != NULL) {
+            close_result((*it).first);
+        }        
+    }
 }
 
 void Analyzer_Position_Estimate_Divergence::evaluate_estimate(
@@ -19,72 +31,69 @@ void Analyzer_Position_Estimate_Divergence::evaluate_estimate(
     }
     double delta = estimate.horizontal_distance_to(position);
 
-    Analyzer_Position_Estimate_Divergence_Result &result =
-        _current_states[name];
-    if (result.name == "") {
-        result.name = name;
-    }
-    analyzer_status new_status;
-    // ::fprintf(stderr, "%s=(%f/%f) canon=(%f/%f) %f\n", name.c_str(), estimate.lat(), estimate.lon(),position.lat(), position.lon(), delta);
-    if (delta > position_delta_fail) { // FIXME magic number
-        new_status = analyzer_status_fail;
-    } else if (delta > position_delta_warn && result.status() != analyzer_status_fail) { // FIXME magic number
-        new_status = analyzer_status_warn;
-    } else {
-        new_status = analyzer_status_ok;
-    }
+    bool failing = (delta > position_delta_warn);
 
-    if (new_status == result.status()) {
-        // same status as before; see if we can update i
-        if (result.status() != analyzer_status_ok) {
-            if (delta > result.max_delta) {
-                result.max_delta = delta;
-            }
+    if (_result[name] == NULL) {
+        // no current problem
+        if (failing) {
+            open_result(name, delta);
         }
     } else {
-        // status has changed
-        if (result.status() != analyzer_status_ok) {
-            if (new_status == analyzer_status_ok) {
-                // check minimum duration:
-                if (_vehicle->T() - result._T_start > 500000) {
-                    // not moving from OK and not moving from fail back to warn
-                    // lock this result in and move onto another
-                    result._T_stop = _vehicle->T();
-                    Analyzer_Position_Estimate_Divergence_Result *copy = new Analyzer_Position_Estimate_Divergence_Result();
-                    copy->set_reason("This position estimate differs from the canonical craft position");
-                    copy->max_delta = result.max_delta;
-                    copy->delta_threshold = result.delta_threshold;
-                    copy->_T_start = result._T_start;
-                    copy->_T_stop = result._T_stop;
-                    copy->set_status(result.status());
-                    copy->name = result.name;
-                    copy->add_evidence(string_format("max-delta=%f metres", result.max_delta));
-                    copy->add_evidence(string_format("delta-threshold=%f metres", result.delta_threshold));
-                    copy->set_evilness(result.evilness());
-                    copy->add_series(_data_sources.get("POSITION"));
-                    copy->add_series(_data_sources.get(std::string("POSITION_ESTIMATE_") + name));
-                    add_result(copy);
-                }
-            }
-        }
-        result.max_delta = delta;
-        result._T_start = _vehicle->T();
-        result.set_status(new_status);
-        result.delta_threshold = (new_status == analyzer_status_warn ? position_delta_warn : position_delta_fail); // FIXME
-        switch(new_status) {
-        case analyzer_status_warn:
-            result.set_evilness(10);
-            break;
-        case analyzer_status_fail:
-            result.set_evilness(20);
-            break;
-        case analyzer_status_ok:
-            break;
+        // problem currently underway
+        if (failing) {
+            update_result(name, delta);
+        } else {
+            close_result(name);
         }
     }
-
-        
 }
+
+void Analyzer_Position_Estimate_Divergence::open_result(std::string name,
+                                                        double delta)
+{
+    _result[name] = new Analyzer_Position_Estimate_Divergence_Result(name);
+    _result[name]->set_reason("This position estimate differs from the canonical craft position");
+    _result[name]->set_T_start(_vehicle->T());
+    _result[name]->set_max_delta(0);
+    _result[name]->add_series(_data_sources.get("POSITION"));
+    _result[name]->add_series(_data_sources.get(std::string("POSITION_ESTIMATE_") + name));
+    update_result(name, delta);
+}
+
+void Analyzer_Position_Estimate_Divergence::update_result(std::string name,
+                                                          double delta)
+{
+    if (delta > _result[name]->max_delta()) {
+        _result[name]->set_max_delta(delta);
+        if (delta >= position_delta_fail) {
+            _result[name]->set_delta_threshold(position_delta_fail);
+            _result[name]->set_status(analyzer_status_fail);
+            _result[name]->set_evilness(20);
+        } else if (delta >= position_delta_warn) {
+            _result[name]->set_status(analyzer_status_warn);
+            _result[name]->set_delta_threshold(position_delta_warn);
+            _result[name]->set_evilness(10);
+        }
+    }
+}
+
+void Analyzer_Position_Estimate_Divergence::close_result(std::string name)
+{
+    _result[name]->set_T_stop(_vehicle->T());
+    if (_result[name]->duration() < delta_time_threshold) {
+        delete _result[name];
+        _result[name] = NULL;
+        return;
+    }
+
+    _result[name]->add_evidence(string_format("max-delta=%f metres", _result[name]->max_delta()));
+    _result[name]->add_evidence(string_format("delta-threshold=%f metres", _result[name]->delta_threshold()));
+    _result[name]->add_evidence(string_format("delta-time-threshold=%f seconds", delta_time_threshold / 1000000.0f));
+
+    add_result(_result[name]);
+    _result[name] = NULL;
+}
+
 void Analyzer_Position_Estimate_Divergence::evaluate()
 {
     const std::map<const std::string, AnalyzerVehicle::PositionEstimate*> &estimates =

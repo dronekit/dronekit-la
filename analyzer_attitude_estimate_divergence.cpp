@@ -8,9 +8,16 @@ void Analyzer_Attitude_Estimate_Divergence_Result::to_json(Json::Value &root) co
     root["name"] = _name;
 }
 
-analyzer_status Analyzer_Attitude_Estimate_Divergence::status_for_delta(double delta)
+void Analyzer_Attitude_Estimate_Divergence::end_of_log(const uint32_t packet_count)
 {
-    return analyzer_status_ok;
+    for (std::map<const std::string, Analyzer_Attitude_Estimate_Divergence_Result*>::iterator it = _result.begin();
+         it != _result.end();
+         ++it) {
+        Analyzer_Attitude_Estimate_Divergence_Result *result = (*it).second;
+        if (result != NULL) {
+            close_result((*it).first);
+        }        
+    }
 }
 
 void Analyzer_Attitude_Estimate_Divergence::open_result(std::string name,
@@ -21,6 +28,8 @@ void Analyzer_Attitude_Estimate_Divergence::open_result(std::string name,
     _result[name]->set_reason("This attitude estimate differs from the canonical craft attitude");
     _result[name]->set_T_start(_vehicle->T());
     _result[name]->set_max_delta(0);
+    _result[name]->add_series(_data_sources.get("ATTITUDE"));
+    _result[name]->add_series(_data_sources.get(std::string("ATTITUDE_ESTIMATE_") + name));
     update_result(name, delta);
 }
 
@@ -29,10 +38,10 @@ void Analyzer_Attitude_Estimate_Divergence::update_result(std::string name,
 {
     if (delta > _result[name]->max_delta()) {
         _result[name]->set_max_delta(delta);
-        if (delta > attitude_max_delta_roll_pitch_fail) {
+        if (delta >= attitude_max_delta_roll_pitch_fail) {
             _result[name]->set_delta_threshold(attitude_max_delta_roll_pitch_fail);
             _result[name]->set_status(analyzer_status_fail);
-        } else if (delta > attitude_max_delta_roll_pitch_warn) {
+        } else if (delta >= attitude_max_delta_roll_pitch_warn) {
             _result[name]->set_status(analyzer_status_warn);
             _result[name]->set_delta_threshold(attitude_max_delta_roll_pitch_warn);
         }
@@ -53,8 +62,7 @@ void Analyzer_Attitude_Estimate_Divergence::close_result(std::string name)
     _result[name]->add_evidence(string_format("delta-threshold=%f degrees", _result[name]->delta_threshold()));
     _result[name]->add_evidence(string_format("delta-time-threshold=%f seconds", delta_time_threshold / 1000000.0f));
     _result[name]->set_evilness(10);
-    _result[name]->add_series(_data_sources.get("ATTITUDE"));
-    _result[name]->add_series(_data_sources.get(std::string("ATTITUDE_ESTIMATE_") + name));
+
     add_result(_result[name]);
     _result[name] = NULL;
 }

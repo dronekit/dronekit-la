@@ -1,10 +1,10 @@
 {
   "duration": "987654321", 
-  "evilness": 577, 
+  "evilness": 667, 
   "format-version": "0.1", 
   "git_version": "some-hash", 
   "packet_count": 41809, 
-  "severity-score": 577, 
+  "severity-score": 667, 
   "tests": {
     "Any Parameters Seen": {
       "description": "This test will FAIL if no parameters are seen from the UAV", 
@@ -227,7 +227,7 @@
     }, 
     "Attitude Estimate Divergence": {
       "description": "This test will FAIL if various craft's attitude estimates diverge", 
-      "evilness": 130, 
+      "evilness": 140, 
       "name": "Attitude Estimate Divergence", 
       "results": [
         {
@@ -541,9 +541,33 @@
           "status": "FAIL", 
           "timestamp_start": 1434326731673828, 
           "timestamp_stop": 1434326738654128
+        }, 
+        {
+          "duration": 0.9856799840927124, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=358.322144 degrees", 
+            "delta-threshold=10.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326741537645, 
+          "timestamp_stop": 1434326742523325
         }
       ], 
-      "severity-score": 130
+      "severity-score": 140
     }, 
     "Battery": {
       "description": "This test will FAIL if the battery level remaining falls below a threshold level", 
@@ -1000,15 +1024,60 @@
     }, 
     "Position Estimate Divergence": {
       "description": "This test will FAIL if various craft's position estimates diverge", 
-      "evilness": 40, 
+      "evilness": 120, 
       "name": "Position Estimate Divergence", 
       "results": [
+        {
+          "duration": 0.7129660248756409, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=6.430318 metres", 
+            "delta-threshold=5.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 20, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This position estimate differs from the canonical craft position", 
+          "series": [
+            "GLOBAL_POSITION_INT.lat", 
+            "GLOBAL_POSITION_INT.lon", 
+            "GPS_RAW_INT.lat", 
+            "GPS_RAW_INT.lon"
+          ], 
+          "severity-score": 20, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326594702923, 
+          "timestamp_stop": 1434326595415889
+        }, 
+        {
+          "duration": 0.6511070132255554, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=6.744456 metres", 
+            "delta-threshold=5.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 20, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This position estimate differs from the canonical craft position", 
+          "series": [
+            "GLOBAL_POSITION_INT.lat", 
+            "GLOBAL_POSITION_INT.lon", 
+            "GPS_RAW_INT.lat", 
+            "GPS_RAW_INT.lon"
+          ], 
+          "severity-score": 20, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326613932593, 
+          "timestamp_stop": 1434326614583700
+        }, 
         {
           "duration": 10.45837116241455, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=54.108439 metres", 
-            "delta-threshold=5.000000 metres"
+            "delta-threshold=5.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 20, 
           "name": "AHRS2", 
@@ -1029,7 +1098,8 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=54.108439 metres", 
-            "delta-threshold=5.000000 metres"
+            "delta-threshold=5.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 20, 
           "name": "GPS_RAW_INT", 
@@ -1044,9 +1114,53 @@
           "status": "FAIL", 
           "timestamp_start": 1434326702837297, 
           "timestamp_stop": 1434326713029432
+        }, 
+        {
+          "duration": 29.28837585449219, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=43.832657 metres", 
+            "delta-threshold=5.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 20, 
+          "name": "AHRS2", 
+          "reason": "This position estimate differs from the canonical craft position", 
+          "series": [
+            "GLOBAL_POSITION_INT.lat", 
+            "GLOBAL_POSITION_INT.lon", 
+            "AHRS2.lat", 
+            "AHRS2.lng"
+          ], 
+          "severity-score": 20, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326713234950, 
+          "timestamp_stop": 1434326742523325
+        }, 
+        {
+          "duration": 29.28837585449219, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=43.832657 metres", 
+            "delta-threshold=5.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 20, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This position estimate differs from the canonical craft position", 
+          "series": [
+            "GLOBAL_POSITION_INT.lat", 
+            "GLOBAL_POSITION_INT.lon", 
+            "GPS_RAW_INT.lat", 
+            "GPS_RAW_INT.lon"
+          ], 
+          "severity-score": 20, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326713234950, 
+          "timestamp_stop": 1434326742523325
         }
       ], 
-      "severity-score": 40
+      "severity-score": 120
     }, 
     "Vehicle Defintion": {
       "description": "This test will FAIL if the craft type is never defined", 

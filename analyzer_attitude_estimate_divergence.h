@@ -49,7 +49,9 @@ public:
         AnalyzerVehicle::Attitude attitude,
         AnalyzerVehicle::Attitude estimate);
     void evaluate() override;
-        
+
+    void end_of_log(const uint32_t packet_count);
+
 private:
 
     // FIXME: magic numbers!
@@ -60,7 +62,6 @@ private:
     void open_result(std::string name, double delta);
     void update_result(std::string name, double delta);
     void close_result(std::string name);
-    analyzer_status  status_for_delta(double delta);
     std::map<const std::string, Analyzer_Attitude_Estimate_Divergence_Result*> _result;
 };
 
