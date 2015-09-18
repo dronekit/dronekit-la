@@ -44,7 +44,7 @@ void Analyzer_NotCrashed::evaluate()
     // {
     //     float angle_max = 0;
     //     v->param_with_defaults("ANGLE_MAX", angle_max);
-    //     ::fprintf(stderr, "angle_max = %f angle= %f\n",angle_max,(v->roll() > v->pitch()) ? v->roll() : v->pitch());
+    //     ::fprintf(stderr, "angle_max = %f angle= %f\n",angle_max, (fabs(v->roll()) > fabs(v->pitch())) ? v->roll() : v->pitch());
     // }
     bool crashed = v->exceeding_angle_max() &&
         v->any_motor_running_fast();
@@ -54,14 +54,14 @@ void Analyzer_NotCrashed::evaluate()
             _result->set_status(analyzer_status_fail);
             _result->set_reason("Vehicle is past maximum allowed angle and running its motors");
             _result->set_T(_vehicle->T());
-            _result->angle = (v->roll() > v->pitch()) ? v->roll() : v->pitch();
+            _result->angle = (fabs(v->roll()) > fabs(v->pitch())) ? v->roll() : v->pitch();
             if (v->param_with_defaults("ANGLE_MAX", _result->angle_max)) {
                 _result->angle_max /= 100; // 100* degrees to degrees
                 for (uint8_t i=1; i<=v->num_motors(); i++) {
                     _result->servo_output[i] = v->_servo_output[i];
                 }
             }
-            _result->add_evidence(string_format("ANGLE_MAX (%f > %f)", _result->angle, _result->angle_max));
+            _result->add_evidence(string_format("ANGLE_MAX (fabs(%f) > %f)", _result->angle, _result->angle_max));
             for (uint8_t i=1; i<=v->num_motors(); i++) {
                 if (v->_servo_output[i] > v->is_flying_motor_threshold) {
                     _result->add_evidence(string_format("SERVO_OUTPUT_RAW.servo%d_raw=%f",
@@ -69,6 +69,7 @@ void Analyzer_NotCrashed::evaluate()
                 }
             }
 
+            _result->add_series(_data_sources.get("ATTITUDE"));
             _result->add_series(_data_sources.get("SERVO_OUTPUT"));
             _result->add_series(_data_sources.get("PARAM"));
             _result->add_evilness(100);

@@ -96,10 +96,10 @@ bool Copter::exceeding_angle_max()
     float angle_max; // convert from centidegrees
     if (param_with_defaults("ANGLE_MAX", angle_max)) {
         angle_max /= 100;
-        if (att().roll() > angle_max) {
+        if (fabs(att().roll()) > angle_max) {
             return true;
         }
-        if (att().pitch() > angle_max) {
+        if (fabs(att().pitch()) > angle_max) {
             return true;
         }
     }

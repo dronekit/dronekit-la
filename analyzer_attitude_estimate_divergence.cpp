@@ -68,7 +68,17 @@ void Analyzer_Attitude_Estimate_Divergence::close_result(std::string name)
 }
 
 
-
+double angle_delta(double a, double b)
+{
+    double delta = b - a;
+    if (delta > 180) {
+        delta = delta - 360;
+    } else if (delta < -180) {
+        delta += 360;
+    }
+    // ::fprintf(stderr, "delta (%f, %f) = %f\n", a, b, delta);
+    return delta;
+}
 void Analyzer_Attitude_Estimate_Divergence::evaluate_estimate(
     std::string name,
     AnalyzerVehicle::Attitude attitude,
@@ -79,8 +89,8 @@ void Analyzer_Attitude_Estimate_Divergence::evaluate_estimate(
         return;
     }
 
-    double delta_roll = fabs(estimate.roll() - attitude.roll());
-    double delta_pitch = fabs(estimate.pitch() - attitude.pitch());
+    double delta_roll = fabs(angle_delta(estimate.roll(), attitude.roll()));
+    double delta_pitch = fabs(angle_delta(estimate.pitch(), attitude.pitch()));
     // double delta_yaw = estimate.yaw() - attitude.yaw();
 
     double delta = delta_roll > delta_pitch ? delta_roll : delta_pitch;

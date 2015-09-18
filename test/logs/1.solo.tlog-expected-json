@@ -1,10 +1,10 @@
 {
   "duration": "987654321", 
-  "evilness": 667, 
+  "evilness": 547, 
   "format-version": "0.1", 
   "git_version": "some-hash", 
   "packet_count": 41809, 
-  "severity-score": 667, 
+  "severity-score": 547, 
   "tests": {
     "Any Parameters Seen": {
       "description": "This test will FAIL if no parameters are seen from the UAV", 
@@ -227,7 +227,7 @@
     }, 
     "Attitude Estimate Divergence": {
       "description": "This test will FAIL if various craft's attitude estimates diverge", 
-      "evilness": 140, 
+      "evilness": 120, 
       "name": "Attitude Estimate Divergence", 
       "results": [
         {
@@ -402,7 +402,7 @@
           "duration": 1.341125965118408, 
           "duration-units": "seconds", 
           "evidence": [
-            "max-delta=221.960770 degrees", 
+            "max-delta=138.039230 degrees", 
             "delta-threshold=10.000000 degrees", 
             "delta-time-threshold=0.500000 seconds"
           ], 
@@ -450,7 +450,7 @@
           "duration": 0.7458040118217468, 
           "duration-units": "seconds", 
           "evidence": [
-            "max-delta=139.012909 degrees", 
+            "max-delta=139.012902 degrees", 
             "delta-threshold=10.000000 degrees", 
             "delta-time-threshold=0.500000 seconds"
           ], 
@@ -474,7 +474,7 @@
           "duration": 1.373325943946838, 
           "duration-units": "seconds", 
           "evidence": [
-            "max-delta=349.648865 degrees", 
+            "max-delta=128.150679 degrees", 
             "delta-threshold=10.000000 degrees", 
             "delta-time-threshold=0.500000 seconds"
           ], 
@@ -517,57 +517,9 @@
           "status": "FAIL", 
           "timestamp_start": 1434326708418142, 
           "timestamp_stop": 1434326718706121
-        }, 
-        {
-          "duration": 6.980299949645996, 
-          "duration-units": "seconds", 
-          "evidence": [
-            "max-delta=357.801147 degrees", 
-            "delta-threshold=10.000000 degrees", 
-            "delta-time-threshold=0.500000 seconds"
-          ], 
-          "evilness": 10, 
-          "name": "AHRS2", 
-          "reason": "This attitude estimate differs from the canonical craft attitude", 
-          "series": [
-            "ATTITUDE.roll", 
-            "ATTITUDE.pitch", 
-            "ATTITUDE.yaw", 
-            "AHRS2.roll", 
-            "AHRS2.pitch", 
-            "AHRS2.yaw"
-          ], 
-          "severity-score": 10, 
-          "status": "FAIL", 
-          "timestamp_start": 1434326731673828, 
-          "timestamp_stop": 1434326738654128
-        }, 
-        {
-          "duration": 0.9856799840927124, 
-          "duration-units": "seconds", 
-          "evidence": [
-            "max-delta=358.322144 degrees", 
-            "delta-threshold=10.000000 degrees", 
-            "delta-time-threshold=0.500000 seconds"
-          ], 
-          "evilness": 10, 
-          "name": "AHRS2", 
-          "reason": "This attitude estimate differs from the canonical craft attitude", 
-          "series": [
-            "ATTITUDE.roll", 
-            "ATTITUDE.pitch", 
-            "ATTITUDE.yaw", 
-            "AHRS2.roll", 
-            "AHRS2.pitch", 
-            "AHRS2.yaw"
-          ], 
-          "severity-score": 10, 
-          "status": "FAIL", 
-          "timestamp_start": 1434326741537645, 
-          "timestamp_stop": 1434326742523325
         }
       ], 
-      "severity-score": 140
+      "severity-score": 120
     }, 
     "Battery": {
       "description": "This test will FAIL if the battery level remaining falls below a threshold level", 
@@ -631,19 +583,23 @@
     }, 
     "Crash Test": {
       "description": "This test will FAIL if the vehicle appears to crash", 
-      "evilness": 200, 
+      "evilness": 100, 
       "name": "Crash Test", 
       "results": [
         {
           "evidence": [
-            "ANGLE_MAX (179.647354 > 26.490000)", 
-            "SERVO_OUTPUT_RAW.servo2_raw=1582.000000", 
-            "SERVO_OUTPUT_RAW.servo3_raw=1546.000000", 
-            "SERVO_OUTPUT_RAW.servo4_raw=1455.000000"
+            "ANGLE_MAX (fabs(34.780518) > 26.490000)", 
+            "SERVO_OUTPUT_RAW.servo1_raw=1528.000000", 
+            "SERVO_OUTPUT_RAW.servo2_raw=1801.000000", 
+            "SERVO_OUTPUT_RAW.servo3_raw=1853.000000", 
+            "SERVO_OUTPUT_RAW.servo4_raw=1298.000000"
           ], 
           "evilness": 100, 
           "reason": "Vehicle is past maximum allowed angle and running its motors", 
           "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
             "SERVO_OUTPUT_RAW.servo1_raw", 
             "SERVO_OUTPUT_RAW.servo2_raw", 
             "SERVO_OUTPUT_RAW.servo3_raw", 
@@ -657,35 +613,10 @@
           ], 
           "severity-score": 100, 
           "status": "FAIL", 
-          "timestamp": 1434326731673828
-        }, 
-        {
-          "evidence": [
-            "ANGLE_MAX (179.658707 > 26.490000)", 
-            "SERVO_OUTPUT_RAW.servo1_raw=1502.000000", 
-            "SERVO_OUTPUT_RAW.servo2_raw=1292.000000", 
-            "SERVO_OUTPUT_RAW.servo4_raw=1709.000000"
-          ], 
-          "evilness": 100, 
-          "reason": "Vehicle is past maximum allowed angle and running its motors", 
-          "series": [
-            "SERVO_OUTPUT_RAW.servo1_raw", 
-            "SERVO_OUTPUT_RAW.servo2_raw", 
-            "SERVO_OUTPUT_RAW.servo3_raw", 
-            "SERVO_OUTPUT_RAW.servo4_raw", 
-            "SERVO_OUTPUT_RAW.servo5_raw", 
-            "SERVO_OUTPUT_RAW.servo6_raw", 
-            "SERVO_OUTPUT_RAW.servo7_raw", 
-            "SERVO_OUTPUT_RAW.servo8_raw", 
-            "PARAM.param_id", 
-            "PARAM.value"
-          ], 
-          "severity-score": 100, 
-          "status": "FAIL", 
-          "timestamp": 1434326741537645
+          "timestamp": 1434326707890326
         }
       ], 
-      "severity-score": 200
+      "severity-score": 100
     }, 
     "Ever Armed": {
       "description": "This test will FAIL if the craft never armed during the log", 
