@@ -67,7 +67,7 @@ void Base::take_state(Base *old)
     _param_modtime = old->_param_modtime;
 }
 
-bool Base::param_seen(const char *name) const
+bool Base::param_seen(const std::string name) const
 {
     const std::string x = std::string(name);
     // ::fprintf(stderr, "Looking for (%s)\n", name);

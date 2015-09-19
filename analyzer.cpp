@@ -49,7 +49,7 @@ void Analyzer_Result_Event::to_json(Json::Value &root) const
 
 
 uint32_t Analyzer::evilness() const {
-    uint32_t ret = _evilness; // remove _evilness here?
+    uint32_t ret = 0; // remove _evilness here?
     std::vector<Analyzer_Result*> my_results = results();
     for (std::vector<Analyzer_Result*>::const_iterator it = my_results.begin();
          it != my_results.end();

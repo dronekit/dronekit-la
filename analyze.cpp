@@ -45,11 +45,29 @@ void Analyze::instantiate_analyzers(INIReader *config)
         syslog(LOG_INFO, "Failed to create analyzer_attitude_estimate_divergence");
     }
 
-    Analyzer_Compass_Offsets *analyzer_compass_offsets = new Analyzer_Compass_Offsets(vehicle,_data_sources);
-    if (analyzer_compass_offsets != NULL) {
-        configure_analyzer(config, analyzer_compass_offsets, "Analyzer_Compass_Offsets");
-    } else {
-        syslog(LOG_INFO, "Failed to create analyzer_compass_offsets");
+    {
+        Analyzer_Compass_Offsets *analyzer_compass_offsets = new Analyzer_Compass_Offsets(vehicle,_data_sources, "");
+        if (analyzer_compass_offsets != NULL) {
+            configure_analyzer(config, analyzer_compass_offsets, "Analyzer_Compass_Offsets");
+        } else {
+            syslog(LOG_INFO, "Failed to create analyzer_compass_offsets");
+        }
+    }
+    {
+        Analyzer_Compass_Offsets *analyzer_compass_offsets = new Analyzer_Compass_Offsets(vehicle,_data_sources, "2");
+        if (analyzer_compass_offsets != NULL) {
+            configure_analyzer(config, analyzer_compass_offsets, "Analyzer_Compass_Offsets");
+        } else {
+            syslog(LOG_INFO, "Failed to create analyzer_compass_offsets");
+        }
+    }
+    {
+        Analyzer_Compass_Offsets *analyzer_compass_offsets = new Analyzer_Compass_Offsets(vehicle,_data_sources, "3");
+        if (analyzer_compass_offsets != NULL) {
+            configure_analyzer(config, analyzer_compass_offsets, "Analyzer_Compass_Offsets");
+        } else {
+            syslog(LOG_INFO, "Failed to create analyzer_compass_offsets");
+        }
     }
 
     Analyzer_Ever_Armed *analyzer_ever_armed = new Analyzer_Ever_Armed(vehicle,_data_sources);
@@ -142,24 +160,23 @@ void Analyze::results_json(Json::Value &root)
     Json::Value tests;
     uint16_t total_evilness= 0;
     for(int i=0; i<next_analyzer; i++) {
-        Json::Value results(Json::arrayValue);
-        analyzer[i]->results_json_results(results);
-        uint16_t evilness = analyzer[i]->evilness();
-        total_evilness += evilness;
         const char *name = analyzer[i]->name();
+        if (tests[name].isNull()) {
+            Json::Value test_info(Json::objectValue);
+            test_info["description"] = analyzer[i]->description();
+            test_info["name"] = name;
+            test_info["results"] = Json::Value(Json::arrayValue);
+            tests[name] = test_info;
+        }
 
-        Json::Value test_info(Json::objectValue);
-        test_info["description"] = analyzer[i]->description();
-        test_info["results"] = results;
-        test_info["severity-score"] = evilness;
-        test_info["evilness"] = test_info["severity-score"];
-        test_info["name"] = name;
-
-        tests[name] = test_info;
+        analyzer[i]->results_json_results(tests[name]["results"]);
+        tests[name]["evilness"] = tests[name]["evilness"].asLargestUInt() + analyzer[i]->evilness();
+        tests[name]["severity-score"] = tests[name]["evilness"];
+        total_evilness += analyzer[i]->evilness();
     }
     
-    root["severity-score"] = total_evilness;
-    root["evilness"] = root["severity-score"];
+    root["evilness"] = total_evilness;
+    root["severity-score"] = root["evilness"];
     root["tests"] = tests;
     results_json_add_version(root);
 }

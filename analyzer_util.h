@@ -6,8 +6,10 @@
 
 // from: http://stackoverflow.com/questions/2342162/stdstring-formatting-like-sprintf
 #include <memory>
+
 template<typename ... Args>
-std::string string_format( const char* format, Args ... args )
+std::string
+string_format( const char* format, Args ... args )
 {
     
     uint32_t size = snprintf( nullptr, 0, format, args ... );
@@ -20,6 +22,14 @@ std::string string_format( const char* format, Args ... args )
     snprintf( buf.get(), size, format, args ... );
     return std::string( buf.get(), buf.get() + size - 1 ); // We don't want the '\0' inside
 }
+
+template<typename ... Args>
+std::string
+string_format( const std::string format, Args ... args )
+{
+    return string_format(format.c_str(), args ... );
+}
+
 
 #ifndef streq
 #define streq(x,y) (!strcmp(x,y))

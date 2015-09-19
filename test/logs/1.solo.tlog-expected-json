@@ -1,10 +1,10 @@
 {
   "duration": "987654321", 
-  "evilness": 547, 
+  "evilness": 552, 
   "format-version": "0.1", 
   "git_version": "some-hash", 
   "packet_count": 41809, 
-  "severity-score": 547, 
+  "severity-score": 552, 
   "tests": {
     "Any Parameters Seen": {
       "description": "This test will FAIL if no parameters are seen from the UAV", 
@@ -558,7 +558,7 @@
     }, 
     "Compass Offsets": {
       "description": "This test will FAIL if the compass offset parameters exceed thresholds", 
-      "evilness": 5, 
+      "evilness": 10, 
       "name": "Compass Offsets", 
       "results": [
         {
@@ -576,10 +576,27 @@
           ], 
           "severity-score": 5, 
           "status": "FAIL", 
-          "timestamp": 1434322219950713
+          "timestamp": 1434322219952336
+        }, 
+        {
+          "evidence": [
+            "COMPASS_OFS2_X=68.603691", 
+            "COMPASS_OFS2_Y=62.510509", 
+            "COMPASS_OFS2_Z=-242.777222", 
+            "COMPASS_OFS2 259.913086 >= 200.000000"
+          ], 
+          "evilness": 5, 
+          "reason": "Compass offsets in parameters are out of bounds", 
+          "series": [
+            "PARAM.param_id", 
+            "PARAM.value"
+          ], 
+          "severity-score": 5, 
+          "status": "FAIL", 
+          "timestamp": 1434322220048425
         }
       ], 
-      "severity-score": 5
+      "severity-score": 10
     }, 
     "Crash Test": {
       "description": "This test will FAIL if the vehicle appears to crash", 

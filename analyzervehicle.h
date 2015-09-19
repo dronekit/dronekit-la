@@ -277,11 +277,11 @@ public:
     void take_state(Base *old);
     
     // Parameters
-    float param(const char *name) { return _param[name]; };
+    float param(const std::string name) { return _param[name]; };
     uint16_t param_count() { return _param.size(); };
     bool param(const char *name, float &ret);
-    bool param_seen(const char *name) const;
-    uint64_t param_modtime(const char *name) { return _param_modtime[name]; }
+    bool param_seen(const std::string name) const;
+    uint64_t param_modtime(const std::string name) { return _param_modtime[name]; }
     void param_set(const char *name, const float value);
     virtual bool param_default(const char *name, float &ret);
     bool param_with_defaults(const char *name, float &ret);

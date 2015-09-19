@@ -19,8 +19,7 @@ public:
     }
     Vector3f lens()& { return _lens; }
 
-    virtual void to_json(Json::Value &root) const override;
-
+private:
     // FIXME: scope
     Vector3f _lens;
 };
@@ -29,8 +28,9 @@ class Analyzer_Compass_Offsets : public Analyzer {
 
 public:
 
-    Analyzer_Compass_Offsets(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
-	Analyzer(vehicle,data_sources)
+    Analyzer_Compass_Offsets(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources, const std::string param_extra_string) :
+	Analyzer(vehicle,data_sources),
+        _param_extra_string(param_extra_string)
     { }
 
     const char *name() const override { return "Compass Offsets"; }
@@ -51,12 +51,17 @@ private:
         (uint64_t)-1,
         (uint64_t)-1
     };
-
+    
+    bool compass_use(const std::string param_extra_string);
     bool new_compass_results();
 
 #define MAX_COMPASS_OFFSET_RESULTS 100
     bool compass_offset_results_overrun = false;
-    
+
+    bool _old_compass_use = false;
+
+    const std::string _param_extra_string;
+
     const double warn_offset = 100.0f;
     const double fail_offset = 200.0f;
 };

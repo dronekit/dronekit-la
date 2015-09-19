@@ -156,9 +156,6 @@ public:
         return _results.size();
     }
 
-    void add_evilness(uint8_t sin_points) {
-        _evilness += sin_points;
-    }
     virtual uint32_t evilness() const;
 
     virtual void evaluate() { }
@@ -171,8 +168,6 @@ protected:
     std::string to_string(double x);
 
     AnalyzerVehicle::Base *&_vehicle;
-
-    uint16_t _evilness = 0;
 
     // FIXME: scope
     std::vector<Analyzer_Result*> _results;
