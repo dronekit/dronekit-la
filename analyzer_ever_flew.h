@@ -39,8 +39,8 @@ public:
 	Analyzer(vehicle,data_sources)
     { }
 
-    const char *name() const { return "Ever Flew"; }
-    const char *description() const {
+    const std::string name() const { return "Ever Flew"; }
+    const std::string description() const {
         return "This test will FAIL if the craft did not ever seem to fly";
     }
 

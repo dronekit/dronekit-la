@@ -143,8 +143,8 @@ public:
         return true;
     }
 
-    virtual const char *name() const = 0;
-    virtual const char *description() const = 0;
+    virtual const std::string name() const = 0;
+    virtual const std::string description() const = 0;
     virtual void results_json_results(Json::Value &root);
     virtual void end_of_log(uint32_t packet_count) { }
 

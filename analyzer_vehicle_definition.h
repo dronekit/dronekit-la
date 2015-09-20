@@ -24,8 +24,8 @@ public:
 	Analyzer(vehicle,data_sources)
     { }
 
-    const char *name() const override { return "Vehicle Defintion"; }
-    const char *description() const override {
+    const std::string name() const override { return "Vehicle Defintion"; }
+    const std::string description() const override {
         return "This test will FAIL if the craft type is never defined";
     }
 

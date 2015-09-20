@@ -33,8 +33,8 @@ public:
         _param_extra_string(param_extra_string)
     { }
 
-    const char *name() const override { return "Compass Offsets"; }
-    const char *description() const override {
+    const std::string name() const override { return "Compass Offsets"; }
+    const std::string description() const override {
         return "This test will FAIL if the compass offset parameters exceed thresholds";
     }
 

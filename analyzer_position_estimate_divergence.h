@@ -40,8 +40,8 @@ public:
 	Analyzer(vehicle,data_sources)
     { }
 
-    const char *name() const override { return "Position Estimate Divergence"; }
-    const char *description() const override {
+    const std::string name() const override { return "Position Estimate Divergence"; }
+    const std::string description() const override {
         return "This test will FAIL if various craft's position estimates diverge";
     }
 

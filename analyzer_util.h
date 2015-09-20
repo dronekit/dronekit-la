@@ -9,7 +9,7 @@
 
 template<typename ... Args>
 std::string
-string_format( const char* format, Args ... args )
+string_format( const char* format, const Args ... args )
 {
     
     uint32_t size = snprintf( nullptr, 0, format, args ... );
@@ -25,7 +25,7 @@ string_format( const char* format, Args ... args )
 
 template<typename ... Args>
 std::string
-string_format( const std::string format, Args ... args )
+string_format( const std::string format, const Args ... args )
 {
     return string_format(format.c_str(), args ... );
 }
@@ -47,6 +47,7 @@ string_format( const std::string format, Args ... args )
 #define rad_to_deg(x) ((x)*180.0f/M_PI)
 
 #define is_zero(x)  (x < 0.00001)
+#define is_equal(x, y)  (is_zero(fabs((x)-(y))))
 
 void format_timestamp(char *buf, uint8_t buflen, uint64_t T);
 

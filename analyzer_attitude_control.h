@@ -33,8 +33,8 @@ public:
 	Analyzer(vehicle,data_sources)
     { }
 
-    const char *name() const override { return "Attitude Control"; }
-    const char *description() const override {
+    const std::string name() const override { return "Attitude Control"; }
+    const std::string description() const override {
         return "This test will FAIL if the craft's desired attitudes and achieved attitudes do not match for more than a threshold time";
     }
 

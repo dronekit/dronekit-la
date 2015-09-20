@@ -59,12 +59,12 @@ public:
 
         _vehicle->position_estimate("AHR2")->set_lat(T(), Lat/10000000.0f);
         _vehicle->position_estimate("AHR2")->set_lon(T(), Lng/10000000.0f);
-        _vehicle->position_estimate("AHR2")->set_alt(T(), Alt);
+        _vehicle->altitude_estimate("AHR2")->set_alt(T(), Alt);
 
         if (canonical_for_position()) {
             _vehicle->set_lat(Lat/10000000.0f);
             _vehicle->set_lon(Lng/10000000.0f);
-            _vehicle->set_alt(Alt);
+            _vehicle->set_altitude(Alt);
         }
     }
 
@@ -232,7 +232,7 @@ public:
 
         _vehicle->position_estimate("GPS")->set_lat(T(), Lat/10000000.0f);
         _vehicle->position_estimate("GPS")->set_lon(T(), Lng/10000000.0f);
-        _vehicle->position_estimate("GPS")->set_alt(T(), Alt/100.0f);
+        _vehicle->altitude_estimate("GPS")->set_alt(T(), Alt/100.0f);
     }
 };
 
@@ -250,7 +250,7 @@ public:
 
         _vehicle->position_estimate("GPS2")->set_lat(T(), Lat/10000000.0f);
         _vehicle->position_estimate("GPS2")->set_lon(T(), Lng/10000000.0f);
-        _vehicle->position_estimate("GPS2")->set_alt(T(), Alt/100.0f);
+        _vehicle->altitude_estimate("GPS2")->set_alt(T(), Alt/100.0f);
     }
 };
 
@@ -327,11 +327,11 @@ public:
 
         _vehicle->position_estimate("POS")->set_lat(T(), Lat/10000000.0f);
         _vehicle->position_estimate("POS")->set_lon(T(), Lng/10000000.0f);
-        _vehicle->position_estimate("POS")->set_alt(T(), Alt);
+        _vehicle->altitude_estimate("POS")->set_alt(T(), Alt);
 
         _vehicle->set_lat(Lat/10000000.0f);
         _vehicle->set_lon(Lng/10000000.0f);
-        _vehicle->set_alt(Alt);
+        _vehicle->set_altitude(Alt);
     }
 };
 

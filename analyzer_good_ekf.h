@@ -46,8 +46,8 @@ public:
     { }
 
 
-    const char *name() const override { return "Good EKF"; }
-    const char *description() const override {
+    const std::string name() const override { return "Good EKF"; }
+    const std::string description() const override {
         return "This test will FAIL if EKF variances exceed thresholds, or if the EKF status flags indicate errors";
     }
 

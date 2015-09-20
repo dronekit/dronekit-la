@@ -24,8 +24,8 @@ public:
 	Analyzer(vehicle,data_sources)
     { }
 
-    const char *name() const override { return "Arming Checks"; }
-    const char *description() const override {
+    const std::string name() const override { return "Arming Checks"; }
+    const std::string description() const override {
         return "This test will FAIL if the craft ever arms when some arming checks are disabled";
     }
 

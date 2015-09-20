@@ -26,8 +26,8 @@ public:
 
     void evaluate() override;
 
-    const char *name() const override { return "Battery"; }
-    const char *description() const override {
+    const std::string name() const override { return "Battery"; }
+    const std::string description() const override {
         return "This test will FAIL if the battery level remaining falls below a threshold level";
     }
     bool configure(INIReader *config) override;

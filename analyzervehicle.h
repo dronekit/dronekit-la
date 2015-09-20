@@ -51,14 +51,51 @@ namespace AnalyzerVehicle {
         }
 };
 
-    class Position {
+    class Altitude {
     public:
-        void set_alt(uint64_t T, float alt) {
+        void set_alt(uint64_t T, double alt) {
             _alt = alt;
             _alt_modtime = T;
         }
-        float alt() { return _alt; };
-        uint64_t alt_modtime() { return _alt_modtime; };
+        double alt() {
+            return _alt;
+        }
+        double alt_modtime() {
+            return _alt_modtime;
+        }
+
+    private:
+        double _alt;
+        double _alt_modtime;
+    };
+
+    class AltitudeEstimate {
+    public:
+        AltitudeEstimate(const std::string name) :
+            _name(name)
+            { }
+        AltitudeEstimate() :
+            _name(NULL),
+            _altitude({})
+            { }
+        const std::string name() { return _name; }
+        const Altitude altitude() { return _altitude; }
+        void set_alt(uint64_t T, float alt) { _altitude.set_alt(T, alt); }
+        float alt() { return _altitude.alt(); }
+
+    private:
+        const std::string _name;
+        Altitude _altitude = { };
+    };
+
+    class Position {
+    public:
+        // void set_alt(uint64_t T, float alt) {
+        //     _alt = alt;
+        //     _alt_modtime = T;
+        // }
+        // float alt() { return _alt; };
+        // uint64_t alt_modtime() { return _alt_modtime; };
 
         void set_lat(uint64_t T, double lat) {
             _lat = lat;
@@ -81,7 +118,7 @@ namespace AnalyzerVehicle {
         double _lat;
         double _lon;
         float _alt; // relative, in metres
-        uint64_t _alt_modtime;
+        // uint64_t _alt_modtime;
         uint64_t _lat_modtime;
         uint64_t _lon_modtime;
     };
@@ -158,10 +195,12 @@ namespace AnalyzerVehicle {
             { }
         const std::string name() { return _name; }
         const Position position() { return _position; }
-        void set_alt(uint64_t T, float alt) { _position.set_alt(T, alt); }
+        // void set_alt(uint64_t T, float alt) {
+        //     _position.set_alt(T, alt);
+        // }
         void set_lat(uint64_t T, double lat) { _position.set_lat(T, lat); }
         void set_lon(uint64_t T, double lon) { _position.set_lon(T, lon); }
-        float alt() { return _position.alt(); }
+        // float alt() { return _position.alt(); }
         double lat() { return _position.lat(); }
         double lon() { return _position.lon(); }
 
@@ -319,9 +358,12 @@ public:
     float despitch() { return nav().despitch(); }
     float desyaw() { return nav().desyaw(); }
 
-    void set_alt(float alt) { pos().set_alt(T(), alt); }
-    float alt() { return pos().alt(); };
-    uint64_t alt_modtime() { return pos().alt_modtime(); }
+    void set_altitude(float value) {
+        // pos().set_alt(T(), value);
+        alt().set_alt(T(), value);
+    }
+    float altitude() { return alt().alt(); };
+    uint64_t alt_modtime() { return alt().alt_modtime(); }
 
     void set_lat(double lat) { pos().set_lat(T(), lat); }
     void set_lon(double lon) { pos().set_lon(T(), lon); }
@@ -341,6 +383,14 @@ public:
         }
         return _attitude_estimates[name];
     };
+
+    AltitudeEstimate *altitude_estimate(const std::string name) {
+        if (_altitude_estimates.count(name) == 0) {
+            _altitude_estimates[name] = new AltitudeEstimate(name);
+        }
+        return _altitude_estimates[name];
+    };
+
 
     // battery
     void set_battery_remaining(float percent) {
@@ -370,9 +420,13 @@ public:
     const std::map<const std::string, PositionEstimate*> &position_estimates() {
         return _position_estimates;
     }
+    const std::map<const std::string, AltitudeEstimate*> &altitude_estimates() {
+        return _altitude_estimates;
+    }
 
     Attitude& att() { return _att; };
     Position& pos() { return _pos; };
+    Altitude& alt() { return _alt; };
 
 protected:
     AV_Nav& nav() { return _nav; };
@@ -386,6 +440,7 @@ protected:
     
     Attitude _att = { };
     Position _pos = { };
+    Altitude _alt = { };
     AV_Nav _nav = { };
     
 private:
@@ -397,6 +452,7 @@ private:
 
     std::map<const std::string, PositionEstimate*> _position_estimates;
     std::map<const std::string, AttitudeEstimate*> _attitude_estimates;
+    std::map<const std::string, AltitudeEstimate*> _altitude_estimates;
     
     PacketHistory<mavlink_heartbeat_t> history_heartbeat;
     PacketHistory<mavlink_nav_controller_output_t> history_nav_controller_output;

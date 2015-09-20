@@ -19,7 +19,7 @@ void Analyzer_Brownout::evaluate()
 {
     bool new_is_flying = _vehicle->is_flying();
     if (new_is_flying && !_old_is_flying) {
-        _result.set_takeoff_altitude(_vehicle->alt());
+        _result.set_takeoff_altitude(_vehicle->altitude());
         _old_is_flying = new_is_flying;
     } else if (!new_is_flying && _old_is_flying) {
         _old_is_flying = new_is_flying;
@@ -28,7 +28,7 @@ void Analyzer_Brownout::evaluate()
 
 void Analyzer_Brownout::end_of_log(const uint32_t packet_count)
 {
-    double last_altitude = _vehicle->alt();
+    double last_altitude = _vehicle->altitude();
     _result.set_last_altitude(last_altitude);
 
     if (_vehicle->alt_modtime() > 0) {

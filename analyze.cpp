@@ -5,6 +5,7 @@
 
 #include "analyzer_any_parameters_seen.h"
 #include "analyzer_arming_checks.h"
+#include "analyzer_altitude_estimate_divergence.h"
 #include "analyzer_attitude_estimate_divergence.h"
 #include "analyzer_attitude_control.h"
 #include "analyzer_battery.h"
@@ -36,6 +37,13 @@ void Analyze::instantiate_analyzers(INIReader *config)
         configure_analyzer(config, analyzer_arming_checks, "Analyzer_Arming_Checks");
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_arming_checks");
+    }
+
+    Analyzer_Altitude_Estimate_Divergence *analyzer_altitude_estimate_divergence = new Analyzer_Altitude_Estimate_Divergence(vehicle,_data_sources);
+    if (analyzer_altitude_estimate_divergence != NULL) {
+        configure_analyzer(config, analyzer_altitude_estimate_divergence, "Analyzer_Altitude_Estimate_Divergence");
+    } else {
+        syslog(LOG_INFO, "Failed to create analyzer_altitude_estimate_divergence");
     }
 
     Analyzer_Attitude_Estimate_Divergence *analyzer_attitude_estimate_divergence = new Analyzer_Attitude_Estimate_Divergence(vehicle,_data_sources);
@@ -160,7 +168,7 @@ void Analyze::results_json(Json::Value &root)
     Json::Value tests;
     uint16_t total_evilness= 0;
     for(int i=0; i<next_analyzer; i++) {
-        const char *name = analyzer[i]->name();
+        const std::string name = analyzer[i]->name();
         if (tests[name].isNull()) {
             Json::Value test_info(Json::objectValue);
             test_info["description"] = analyzer[i]->description();

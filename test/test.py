@@ -6,12 +6,6 @@ import json
 import difflib
 import subprocess
 
-def analyze(filepath_log):
-    analysis_string = subprocess.check_output(["./loganalyzer", filepath_log]);
-    analysis_json = json.loads(analysis_string)
-#    print(analysis_string)
-    return analysis_json
-
 def filter_analysis_json(json_stuff, depth):
     if isinstance(json_stuff, dict):
         for key in json_stuff.keys():
@@ -49,21 +43,32 @@ def json_from_filepath(filepath):
     return json.loads(contents)
 
 def test_log(filepath_log):
-    analysis_json = analyze(filepath_log)
-    filter_analysis_json(analysis_json, 0) # modifies in place
-    correctish_json_filepath = filepath_log + "-expected-json"
-    correctish_json = json_from_filepath(correctish_json_filepath)
-    new_json_filepath = "/tmp/" + os.path.basename(filepath_log) + "-new-json"
-    spew_string_to_file(json.dumps(analysis_json, indent=2, sort_keys=True), new_json_filepath)
-    mydiff = diff_json(correctish_json, analysis_json)
-    if len(mydiff):
-        print("""
+    try:
+        analysis_string = subprocess.check_output(["./loganalyzer", filepath_log]);
+        analysis_json = json.loads(analysis_string)
+        filter_analysis_json(analysis_json, 0) # modifies in place
+        correctish_json_filepath = filepath_log + "-expected-json"
+        correctish_json = json_from_filepath(correctish_json_filepath)
+        new_json_filepath = "/tmp/" + os.path.basename(filepath_log) + "-new-json"
+        spew_string_to_file(json.dumps(analysis_json, indent=2, sort_keys=True), new_json_filepath)
+        mydiff = diff_json(correctish_json, analysis_json)
+        if len(mydiff):
+            print("""
 FAIL: %s
 ---------diff-----------------
 %s
 ---------diff-----------------
 Accept new result: cp %s %s; git add %s
 """ % (filepath_log, mydiff, new_json_filepath, correctish_json_filepath, correctish_json_filepath))
+        else:
+            print("PASS: %s" % (filepath_log,))
+
+    except subprocess.CalledProcessError as E:
+        print("""
+FAIL: %s 
+subprocess exception (%s)
+""" % (filepath_log, str(E),))
+
 
 log_dirpath = os.getenv("LOGANALYZE_DIRPATH_LOG", "test/logs");
 

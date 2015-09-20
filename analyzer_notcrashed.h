@@ -28,8 +28,8 @@ public:
 
     const uint16_t servo_output_threshold = 1250;
     
-    const char *name() const override { return "Crash Test"; }
-    const char *description() const override {
+    const std::string name() const override { return "Crash Test"; }
+    const std::string description() const override {
         return "This test will FAIL if the vehicle appears to crash";
     }
 
