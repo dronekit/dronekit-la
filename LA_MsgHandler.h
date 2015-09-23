@@ -11,32 +11,54 @@
 
 class LA_MsgHandler : public MsgHandler {
 public:
-    LA_MsgHandler(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+    LA_MsgHandler(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
         MsgHandler(f),
+        _name(name),
         _analyze(analyze),
         _vehicle(vehicle)
         { };
 
-    void process_set_T(const uint8_t *msg);
-    uint64_t T() const { return _vehicle->T(); }
+    virtual bool find_T(const uint8_t *msg, uint64_t &T);
+    bool process_set_T(const uint8_t *msg);
+    uint64_t T() const { return _vehicle->T(); } // only valid after process_set_T
 
     virtual void xprocess(const uint8_t *msg) = 0;
 
     virtual void process(const uint8_t *msg) {
-        process_set_T(msg);
+        if (!process_set_T(msg)) {
+            return;
+        }
         xprocess(msg);
         _analyze->evaluate_all();
     }
 
+    AnalyzerVehicle::AltitudeEstimate* altitude_estimate();
+    AnalyzerVehicle::AttitudeEstimate* attitude_estimate();
+    AnalyzerVehicle::PositionEstimate* position_estimate();
+
+    const std::string name() const { return _name; }
+
 protected:
+    std::string _name;
     Analyze *_analyze;
     AnalyzerVehicle::Base *&_vehicle;
 };
 
+// this is just here ATM because older messages have both TimeMS and
+// TimeUS as 32-bit quantities.  I have logs where the TimeUS wraps!
+class LA_MsgHandler_ACC : public LA_MsgHandler {
+public:
+    LA_MsgHandler_ACC(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
+    };
+
+    bool find_T(const uint8_t *msg, uint64_t &T);
+};
+
 class LA_MsgHandler_AHR2 : public LA_MsgHandler {
 public:
-    LA_MsgHandler_AHR2(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(f, analyze, vehicle) {
+    LA_MsgHandler_AHR2(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
         _analyze->add_data_source("ATTITUDE_ESTIMATE_AHR2", "AHR2.Roll");
         _analyze->add_data_source("ATTITUDE_ESTIMATE_AHR2", "AHR2.Pitch");
         _analyze->add_data_source("ATTITUDE_ESTIMATE_AHR2", "AHR2.Yaw");
@@ -49,17 +71,17 @@ public:
         int16_t Pitch = require_field_int16_t(msg, "Pitch");
         float Yaw = require_field_float(msg, "Yaw");
 
-        _vehicle->attitude_estimate("AHR2")->set_roll(T(), Roll/100.0f);
-        _vehicle->attitude_estimate("AHR2")->set_pitch(T(), Pitch/100.0f);
-        _vehicle->attitude_estimate("AHR2")->set_yaw(T(), Yaw-180);
+        attitude_estimate()->set_roll(T(), Roll/100.0f);
+        attitude_estimate()->set_pitch(T(), Pitch/100.0f);
+        attitude_estimate()->set_yaw(T(), Yaw-180);
 
         int32_t Lat = require_field_int32_t(msg, "Lat");
         int32_t Lng = require_field_int32_t(msg, "Lng");
         float Alt = require_field_float(msg, "Alt");
 
-        _vehicle->position_estimate("AHR2")->set_lat(T(), Lat/10000000.0f);
-        _vehicle->position_estimate("AHR2")->set_lon(T(), Lng/10000000.0f);
-        _vehicle->altitude_estimate("AHR2")->set_alt(T(), Alt);
+        position_estimate()->set_lat(T(), Lat/10000000.0f);
+        position_estimate()->set_lon(T(), Lng/10000000.0f);
+        altitude_estimate()->set_alt(T(), Alt);
 
         if (canonical_for_position()) {
             _vehicle->set_lat(Lat/10000000.0f);
@@ -77,8 +99,8 @@ private:
 
 class LA_MsgHandler_ATT : public LA_MsgHandler {
 public:
-    LA_MsgHandler_ATT(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(f, analyze, vehicle) {
+    LA_MsgHandler_ATT(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
         _analyze->add_data_source("ATTITUDE", "ATT.Roll");
         _analyze->add_data_source("ATTITUDE", "ATT.Pitch");
         _analyze->add_data_source("ATTITUDE", "ATT.Yaw");
@@ -116,8 +138,8 @@ public:
 
 class LA_MsgHandler_EKF1 : public LA_MsgHandler {
 public:
-    LA_MsgHandler_EKF1(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(f, analyze, vehicle) {
+    LA_MsgHandler_EKF1(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
         _analyze->add_data_source("ATTITUDE_ESTIMATE_EKF1", "EKF1.Roll");
         _analyze->add_data_source("ATTITUDE_ESTIMATE_EKF1", "EKF1.Pitch");
         _analyze->add_data_source("ATTITUDE_ESTIMATE_EKF1", "EKF1.Yaw");
@@ -146,8 +168,8 @@ public:
 
 class LA_MsgHandler_EKF4 : public LA_MsgHandler {
 public:
-    LA_MsgHandler_EKF4(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(f, analyze, vehicle) {
+    LA_MsgHandler_EKF4(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
         _analyze->add_data_source("EKF_FLAGS", "EKF4.SS");
         _analyze->add_data_source("EKF_VARIANCE_velocity_variance", "EKF4.SV");
         _analyze->add_data_source("EKF_VARIANCE_pos_horiz_variance", "EKF4.SP");
@@ -183,8 +205,8 @@ public:
 
 class LA_MsgHandler_ERR : public LA_MsgHandler {
 public:
-    LA_MsgHandler_ERR(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(f, analyze, vehicle) {
+    LA_MsgHandler_ERR(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
         _analyze->add_data_source("BATTERY_FAILSAFE", "ERR.Subsys");
         _analyze->add_data_source("BATTERY_FAILSAFE", "ERR.ECode");
     };
@@ -200,8 +222,8 @@ public:
 
 class LA_MsgHandler_EV : public LA_MsgHandler {
 public:
-    LA_MsgHandler_EV(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(f, analyze, vehicle) {
+    LA_MsgHandler_EV(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
         _analyze->add_data_source("ARMING", "EV.Id");
     };
 
@@ -220,44 +242,31 @@ public:
 
 class LA_MsgHandler_GPS : public LA_MsgHandler {
 public:
-    LA_MsgHandler_GPS(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(f, analyze, vehicle) {
-        _analyze->add_data_source("POSITION_ESTIMATE_GPS", "GPS.Lat");
-        _analyze->add_data_source("POSITION_ESTIMATE_GPS", "GPS.Lng");
-    };
-    void xprocess(const uint8_t *msg) override {
-        int32_t Lat = require_field_int32_t(msg, "Lat");
-        int32_t Lng = require_field_int32_t(msg, "Lng");
-        int32_t Alt = require_field_int32_t(msg, "Alt");
+    bool find_T(const uint8_t *msg, uint64_t &T);
 
-        _vehicle->position_estimate("GPS")->set_lat(T(), Lat/10000000.0f);
-        _vehicle->position_estimate("GPS")->set_lon(T(), Lng/10000000.0f);
-        _vehicle->altitude_estimate("GPS")->set_alt(T(), Alt/100.0f);
-    }
+    LA_MsgHandler_GPS(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
+        _analyze->add_data_source(string_format("POSITION_ESTIMATE_%s",name.c_str()), string_format("%s.Lat",name.c_str()).c_str());
+        _analyze->add_data_source(string_format("POSITION_ESTIMATE_%s",name.c_str()), string_format("%s.Lng",name.c_str()).c_str());
+    };
+    void xprocess(const uint8_t *msg) override;
 };
 
-class LA_MsgHandler_GPS2 : public LA_MsgHandler {
+// this is just here ATM because older messages have both TimeMS and
+// TimeUS as 32-bit quantities.  I have logs where the TimeUS wraps!
+class LA_MsgHandler_GYR : public LA_MsgHandler {
 public:
-    LA_MsgHandler_GPS2(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(f, analyze, vehicle) {
-        _analyze->add_data_source("POSITION_ESTIMATE_GPS2", "GPS2.Lat");
-        _analyze->add_data_source("POSITION_ESTIMATE_GPS2", "GPS2.Lng");
+    LA_MsgHandler_GYR(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
     };
-    void xprocess(const uint8_t *msg) override {
-        int32_t Lat = require_field_int32_t(msg, "Lat");
-        int32_t Lng = require_field_int32_t(msg, "Lng");
-        int32_t Alt = require_field_int32_t(msg, "Alt");
 
-        _vehicle->position_estimate("GPS2")->set_lat(T(), Lat/10000000.0f);
-        _vehicle->position_estimate("GPS2")->set_lon(T(), Lng/10000000.0f);
-        _vehicle->altitude_estimate("GPS2")->set_alt(T(), Alt/100.0f);
-    }
+    bool find_T(const uint8_t *msg, uint64_t &T);
 };
 
 class LA_MsgHandler_MSG : public LA_MsgHandler {
 public:
-    LA_MsgHandler_MSG(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(f, analyze, vehicle) {
+    LA_MsgHandler_MSG(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
         _analyze->add_data_source("VEHICLE_DEFINITION", "MSG.Message");
     };
 
@@ -294,8 +303,8 @@ public:
 
 class LA_MsgHandler_PARM : public LA_MsgHandler {
 public:
-    LA_MsgHandler_PARM(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(f, analyze, vehicle) {
+    LA_MsgHandler_PARM(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
         _analyze->add_data_source("PARAM", "PARM.Name");
         _analyze->add_data_source("PARAM", "PARM.Value");
     };
@@ -315,8 +324,8 @@ public:
 
 class LA_MsgHandler_POS : public LA_MsgHandler {
 public:
-    LA_MsgHandler_POS(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(f, analyze, vehicle) {
+    LA_MsgHandler_POS(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
         _analyze->add_data_source("POSITION_ESTIMATE_POS", "POS.Lat");
         _analyze->add_data_source("POSITION_ESTIMATE_POS", "POS.Lng");
     };
@@ -337,8 +346,8 @@ public:
 
 class LA_MsgHandler_RCOU : public LA_MsgHandler {
 public:
-    LA_MsgHandler_RCOU(const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(f, analyze, vehicle) {
+    LA_MsgHandler_RCOU(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
         // FIXME:
         if (find_field_info("Ch1")) {
             _analyze->add_data_source("SERVO_OUTPUT", "RCOU.Ch1");

@@ -22,9 +22,9 @@ void Analyzer_Estimate_Divergence::end_of_log(const uint32_t packet_count)
 
 void Analyzer_Estimate_Divergence::update_result_set_status(Analyzer_Estimate_Divergence_Result *result)
 {
-    if (result->max_delta() >= delta_fail()) {
+    if (fabs(result->max_delta()) >= delta_fail()) {
         result->set_status(analyzer_status_fail);
-    } else if (result->max_delta() >= delta_warn()) {
+    } else if (fabs(result->max_delta()) >= delta_warn()) {
         result->set_status(analyzer_status_warn);
     }
  }
@@ -32,7 +32,7 @@ void Analyzer_Estimate_Divergence::update_result_set_status(Analyzer_Estimate_Di
 void Analyzer_Estimate_Divergence::update_result(std::string name, double delta)
 {
     Analyzer_Estimate_Divergence_Result *result = _result[name];
-    if (delta > result->max_delta()) {
+    if (fabs(delta) > fabs(result->max_delta())) {
         result->set_max_delta(delta);
 
         update_result_set_status(result);

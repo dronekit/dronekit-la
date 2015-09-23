@@ -13,6 +13,9 @@ public:
         _vehicle(vehicle) {
 
         _analyze->add_data_source("ALTITUDE", "GLOBAL_POSITION_INT.alt");
+        _analyze->add_data_source("ALTITUDE_ESTIMATE_AHRS2", "AHRS2.alt");
+        _analyze->add_data_source("ALTITUDE_ESTIMATE_GLOBAL_POSITION_INT", "GLOBAL_POSITION_INT.alt");
+        _analyze->add_data_source("ALTITUDE_ESTIMATE_GPS_RAW_INT", "GPS_RAW_INT.alt");
 
         _analyze->add_data_source("ARMING", "HEARBEAT.base_mode");
 

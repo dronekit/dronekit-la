@@ -32,6 +32,7 @@ void Analyzer_Position_Estimate_Divergence::evaluate_estimate(
     double delta = estimate.horizontal_distance_to(position);
 
     bool failing = (delta > position_delta_warn);
+    // ::fprintf(stderr, "%s: delta=%f\n", name.c_str(), delta);
 
     if (_result[name] == NULL) {
         // no current problem
