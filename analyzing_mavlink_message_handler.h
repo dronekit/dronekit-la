@@ -43,6 +43,10 @@ public:
         _analyze->add_data_source("EKF_VARIANCES_compass_variance", "EKF_STATUS_REPORT.compass");
         _analyze->add_data_source("EKF_VARIANCES_terrain_alt_variance", "EKF_STATUS_REPORT.terrain_alt");
 
+        _analyze->add_data_source("SENSORS_HEALTH", "SYS_STATUS.onboard_control_sensors_present");
+        _analyze->add_data_source("SENSORS_HEALTH", "SYS_STATUS.onboard_control_sensors_enabled");
+        _analyze->add_data_source("SENSORS_HEALTH", "SYS_STATUS.onboard_control_sensors_health");
+
         _analyze->add_data_source("SERVO_OUTPUT", "SERVO_OUTPUT_RAW.servo1_raw");
         _analyze->add_data_source("SERVO_OUTPUT", "SERVO_OUTPUT_RAW.servo2_raw");
         _analyze->add_data_source("SERVO_OUTPUT", "SERVO_OUTPUT_RAW.servo3_raw");
@@ -87,6 +91,34 @@ private:
     AnalyzerVehicle::Base *&_vehicle;
 
     void set_vehicle_copter();
+
+    // many of these aren't sensors...
+    const std::map<const std::string, const uint64_t> _sensor_masks = {
+        { "MAV_SYS_STATUS_SENSOR_3D_GYRO", 1 },  /* 0x01 3D gyro | */
+	{ "MAV_SYS_STATUS_SENSOR_3D_ACCEL", 2 },  /* 0x02 3D accelerometer | */
+	{ "MAV_SYS_STATUS_SENSOR_3D_MAG", 4 },  /* 0x04 3D magnetometer | */
+	{ "MAV_SYS_STATUS_SENSOR_ABSOLUTE_PRESSURE", 8 },  /* 0x08 absolute pressure | */
+	{ "MAV_SYS_STATUS_SENSOR_DIFFERENTIAL_PRESSURE", 16 },  /* 0x10 differential pressure | */
+	{ "MAV_SYS_STATUS_SENSOR_GPS", 32 },  /* 0x20 GPS | */
+	{ "MAV_SYS_STATUS_SENSOR_OPTICAL_FLOW", 64 },  /* 0x40 optical flow | */
+	{ "MAV_SYS_STATUS_SENSOR_VISION_POSITION", 128 },  /* 0x80 computer vision position | */
+	{ "MAV_SYS_STATUS_SENSOR_LASER_POSITION", 256 },  /* 0x100 laser based position | */
+	{ "MAV_SYS_STATUS_SENSOR_EXTERNAL_GROUND_TRUTH", 512 },  /* 0x200 external ground truth (Vicon or Leica) | */
+	{ "MAV_SYS_STATUS_SENSOR_ANGULAR_RATE_CONTROL", 1024 },  /* 0x400 3D angular rate control | */
+	{ "MAV_SYS_STATUS_SENSOR_ATTITUDE_STABILIZATION", 2048 },  /* 0x800 attitude stabilization | */
+	{ "MAV_SYS_STATUS_SENSOR_YAW_POSITION", 4096 },  /* 0x1000 yaw position | */
+	{ "MAV_SYS_STATUS_SENSOR_Z_ALTITUDE_CONTROL", 8192 },  /* 0x2000 z/altitude control | */
+	{ "MAV_SYS_STATUS_SENSOR_XY_POSITION_CONTROL", 16384 },  /* 0x4000 x/y position control | */
+	{ "MAV_SYS_STATUS_SENSOR_MOTOR_OUTPUTS", 32768 },  /* 0x8000 motor outputs / control | */
+	{ "MAV_SYS_STATUS_SENSOR_RC_RECEIVER", 65536 },  /* 0x10000 rc receiver | */
+	{ "MAV_SYS_STATUS_SENSOR_3D_GYRO2", 131072 },  /* 0x20000 2nd 3D gyro | */
+	{ "MAV_SYS_STATUS_SENSOR_3D_ACCEL2", 262144 },  /* 0x40000 2nd 3D accelerometer | */
+	{ "MAV_SYS_STATUS_SENSOR_3D_MAG2", 524288 },  /* 0x80000 2nd 3D magnetometer | */
+	{ "MAV_SYS_STATUS_GEOFENCE", 1048576 },  /* 0x100000 geofence | */
+	{ "MAV_SYS_STATUS_AHRS", 2097152 },  /* 0x200000 AHRS subsystem health | */
+	{ "MAV_SYS_STATUS_TERRAIN", 4194304 },  /* 0x400000 Terrain subsystem health | */
+	{ "MAV_SYS_STATUS_SENSOR_ENUM_END", 4194305 }  /*  | */
+    };
 };
 
 

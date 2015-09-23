@@ -247,28 +247,28 @@ namespace AnalyzerVehicle {
     };
 
 
-    template <typename packettype>
-    class PacketHistory {
-    public:
-        PacketHistory() :
-            next(0),
-            count(0)
-            { }
-        void packet(packettype &packet) {
-            memcpy(&packets[next++], &packet, sizeof(packet));
-            if (next >= size) {
-                next = 0;
-            }
-            if (count < size) {
-                count++;
-            }
-        }
-    private:
-        static const uint8_t size = 20;
-        uint8_t next;
-        uint8_t count;
-        packettype packets[size];
-    };
+    // template <typename packettype>
+    // class PacketHistory {
+    // public:
+    //     PacketHistory() :
+    //         next(0),
+    //         count(0)
+    //         { }
+    //     void packet(packettype &packet) {
+    //         memcpy(&packets[next++], &packet, sizeof(packet));
+    //         if (next >= size) {
+    //             next = 0;
+    //         }
+    //         if (count < size) {
+    //             count++;
+    //         }
+    //     }
+    // private:
+    //     static const uint8_t size = 20;
+    //     uint8_t next;
+    //     uint8_t count;
+    //     packettype packets[size];
+    // };
     
 class Base {
 public:
@@ -391,6 +391,13 @@ public:
         return _altitude_estimates[name];
     };
 
+    
+    std::map<const std::string, bool> sensors_health() {
+        return _sensors_health;
+    }
+    void sensor_set_healthy(std::string name, bool value) {
+        _sensors_health[name] = value;
+    }
 
     // battery
     void set_battery_remaining(float percent) {
@@ -435,9 +442,10 @@ protected:
 
     std::map<const std::string, float> _param;
     std::map<const std::string, uint64_t> _param_modtime;
-    std::map<const std::string, float> _param_defaults = {
-    };
+    std::map<const std::string, float> _param_defaults = {};
     
+    std::map<const std::string, bool> _sensors_health = {};
+
     Attitude _att = { };
     Position _pos = { };
     Altitude _alt = { };
@@ -454,9 +462,9 @@ private:
     std::map<const std::string, AttitudeEstimate*> _attitude_estimates;
     std::map<const std::string, AltitudeEstimate*> _altitude_estimates;
     
-    PacketHistory<mavlink_heartbeat_t> history_heartbeat;
-    PacketHistory<mavlink_nav_controller_output_t> history_nav_controller_output;
-    PacketHistory<mavlink_servo_output_raw_t> history_servo_output_raw;
+    // PacketHistory<mavlink_heartbeat_t> history_heartbeat;
+    // PacketHistory<mavlink_nav_controller_output_t> history_nav_controller_output;
+    // PacketHistory<mavlink_servo_output_raw_t> history_servo_output_raw;
 
 }; // end class
 

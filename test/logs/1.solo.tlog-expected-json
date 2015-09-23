@@ -1,14 +1,14 @@
 {
   "duration": "987654321", 
-  "evilness": 582, 
+  "evilness": 772, 
   "format-version": "0.1", 
   "git_version": "some-hash", 
   "packet_count": 41809, 
-  "severity-score": 582, 
+  "severity-score": 772, 
   "tests": {
     "Altitude Estimate Divergence": {
       "description": "This test will FAIL if various craft's Altitude estimates diverge", 
-      "evilness": 30, 
+      "evilness": 180, 
       "name": "Altitude Estimate Divergence", 
       "results": [
         {
@@ -23,12 +23,313 @@
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
-            "GLOBAL_POSITION_INT.alt"
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
           ], 
           "severity-score": 10, 
           "status": "WARN", 
           "timestamp_start": 1434322220900603, 
           "timestamp_stop": 1434326309370671
+        }, 
+        {
+          "duration": 17.44812393188477, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-4.550049 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326384341063, 
+          "timestamp_stop": 1434326401789188
+        }, 
+        {
+          "duration": 5.169850826263428, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-5.000000 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326404652832, 
+          "timestamp_stop": 1434326409822683
+        }, 
+        {
+          "duration": 15.11213302612305, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-6.020020 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326413379866, 
+          "timestamp_stop": 1434326428491999
+        }, 
+        {
+          "duration": 15.63115406036377, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-5.540039 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326469353025, 
+          "timestamp_stop": 1434326484984179
+        }, 
+        {
+          "duration": 6.332455158233643, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-5.270020 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326492209243, 
+          "timestamp_stop": 1434326498541698
+        }, 
+        {
+          "duration": 0.51739501953125, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-4.110107 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326504140956, 
+          "timestamp_stop": 1434326504658351
+        }, 
+        {
+          "duration": 4.521574974060059, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-4.600098 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326505171522, 
+          "timestamp_stop": 1434326509693097
+        }, 
+        {
+          "duration": 23.00064468383789, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-6.080078 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326510387526, 
+          "timestamp_stop": 1434326533388171
+        }, 
+        {
+          "duration": 0.57151198387146, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-4.219971 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326533824995, 
+          "timestamp_stop": 1434326534396507
+        }, 
+        {
+          "duration": 16.64367866516113, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-5.949951 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326547005172, 
+          "timestamp_stop": 1434326563648850
+        }, 
+        {
+          "duration": 4.555910110473633, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-5.750000 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326564658166, 
+          "timestamp_stop": 1434326569214076
+        }, 
+        {
+          "duration": 6.502764225006104, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-5.820068 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326569248533, 
+          "timestamp_stop": 1434326575751297
+        }, 
+        {
+          "duration": 39.85991668701172, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-7.329834 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326585343002, 
+          "timestamp_stop": 1434326625202918
+        }, 
+        {
+          "duration": 3.022603034973145, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-4.360107 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326636777439, 
+          "timestamp_stop": 1434326639800042
+        }, 
+        {
+          "duration": 35.80520629882812, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-25.409912 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326670072955, 
+          "timestamp_stop": 1434326705878161
         }, 
         {
           "duration": 9.721453666687012, 
@@ -42,7 +343,8 @@
           "name": "AHRS2", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
-            "GLOBAL_POSITION_INT.alt"
+            "GLOBAL_POSITION_INT.alt", 
+            "AHRS2.alt"
           ], 
           "severity-score": 10, 
           "status": "WARN", 
@@ -61,7 +363,8 @@
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
-            "GLOBAL_POSITION_INT.alt"
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
           ], 
           "severity-score": 10, 
           "status": "WARN", 
@@ -69,7 +372,7 @@
           "timestamp_stop": 1434326735621225
         }
       ], 
-      "severity-score": 30
+      "severity-score": 180
     }, 
     "Any Parameters Seen": {
       "description": "This test will FAIL if no parameters are seen from the UAV", 
@@ -1174,6 +1477,54 @@
         }
       ], 
       "severity-score": 120
+    }, 
+    "Sensor Health": {
+      "description": "This test will FAIL if any sensor is detected as failed", 
+      "evilness": 40, 
+      "name": "Sensor Health", 
+      "results": [
+        {
+          "duration": 0.5016720294952393, 
+          "duration-units": "seconds", 
+          "evilness": 10, 
+          "sensor-name": "MAV_SYS_STATUS_SENSOR_3D_GYRO", 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326442616817, 
+          "timestamp_stop": 1434326443118489
+        }, 
+        {
+          "duration": 0.4979079961776733, 
+          "duration-units": "seconds", 
+          "evilness": 10, 
+          "sensor-name": "MAV_SYS_STATUS_SENSOR_3D_GYRO", 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326462794998, 
+          "timestamp_stop": 1434326463292906
+        }, 
+        {
+          "duration": 0.5147119760513306, 
+          "duration-units": "seconds", 
+          "evilness": 10, 
+          "sensor-name": "MAV_SYS_STATUS_SENSOR_3D_GYRO", 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326487491438, 
+          "timestamp_stop": 1434326488006150
+        }, 
+        {
+          "duration": 0.5514119863510132, 
+          "duration-units": "seconds", 
+          "evilness": 10, 
+          "sensor-name": "MAV_SYS_STATUS_SENSOR_3D_GYRO", 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326553058228, 
+          "timestamp_stop": 1434326553609640
+        }
+      ], 
+      "severity-score": 40
     }, 
     "Vehicle Defintion": {
       "description": "This test will FAIL if the craft type is never defined", 

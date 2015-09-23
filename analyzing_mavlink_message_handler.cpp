@@ -123,6 +123,21 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
 
     _vehicle->set_battery_remaining(msg.battery_remaining);
 
+    for (std::map<const std::string, const uint64_t>::const_iterator it = _sensor_masks.begin();
+         it != _sensor_masks.end();
+         it++) {
+        std::string name = (*it).first;
+        uint64_t mask = (*it).second;
+        // ::fprintf(stderr, "sensor: %s\n", name.c_str());
+        // _vehicle->sensor_present(name, msg.onboard_control_sensors_present & mask);
+        // _vehicle->sensor_enabled(name, msg.onboard_control_sensors_enabled & mask);
+        // _vehicle->sensor_healthy(name, msg.onboard_control_sensors_health & mask);
+        if (msg.onboard_control_sensors_present & mask &&
+            msg.onboard_control_sensors_enabled & mask) {
+            _vehicle->sensor_set_healthy(name, msg.onboard_control_sensors_health & mask);
+        }
+    }
+    
     _analyze->evaluate_all();
 }
 

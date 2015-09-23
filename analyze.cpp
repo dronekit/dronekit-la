@@ -16,6 +16,7 @@
 #include "analyzer_good_ekf.h"
 #include "analyzer_notcrashed.h"
 #include "analyzer_position_estimate_divergence.h"
+#include "analyzer_sensor_health.h"
 #include "analyzer_vehicle_definition.h"
 
 void Analyze::instantiate_analyzers(INIReader *config)
@@ -133,6 +134,13 @@ void Analyze::instantiate_analyzers(INIReader *config)
         configure_analyzer(config, analyzer_notcrashed, "Analyzer_NotCrashed");
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_not_crashed");
+    }
+
+    Analyzer_Sensor_Health *analyzer_sensor_health = new Analyzer_Sensor_Health(vehicle,_data_sources);
+    if (analyzer_sensor_health != NULL) {
+        configure_analyzer(config, analyzer_sensor_health, "Analyzer_Sensor_Health");
+    } else {
+        syslog(LOG_INFO, "Failed to create analyzer_sensor_health");
     }
 
     Analyzer_Vehicle_Definition *analyzer_vehicle_definition = new Analyzer_Vehicle_Definition(vehicle,_data_sources);
