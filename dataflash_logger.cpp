@@ -249,7 +249,7 @@ void DataFlash_Logger::handle_message(uint64_t timestamp, mavlink_message_t &msg
 void DataFlash_Logger::handle_decoded_message(uint64_t T, mavlink_remote_log_data_block_t &msg)
 {
     if (!logging_started) {
-	if (msg.block_cnt == 0) {
+	if (msg.seqno == 0) {
 	    if (!logging_start(msg)) {
 		return;
 	    }
@@ -266,7 +266,7 @@ void DataFlash_Logger::handle_decoded_message(uint64_t T, mavlink_remote_log_dat
 
     /* send the dataflash data out to the log file */
     lseek(out_fd,
-	  msg.block_cnt*MAVLINK_MSG_REMOTE_LOG_DATA_BLOCK_FIELD_DATA_LEN,
+	  msg.seqno*MAVLINK_MSG_REMOTE_LOG_DATA_BLOCK_FIELD_DATA_LEN,
 	  SEEK_SET);
     if (write(out_fd, msg.data, length) < length) {
 	la_log(LOG_ERR, "Short write: %s", strerror(errno));
@@ -275,13 +275,13 @@ void DataFlash_Logger::handle_decoded_message(uint64_t T, mavlink_remote_log_dat
     }
 
     // queue an ack for this packet
-    queue_ack(msg.block_cnt);
+    queue_ack(msg.seqno);
 
     // queue nacks for gaps
-    queue_gap_nacks(msg.block_cnt);
+    queue_gap_nacks(msg.seqno);
 
-    if (msg.block_cnt > highest_seqno_seen) {
-	highest_seqno_seen = msg.block_cnt;
+    if (msg.seqno > highest_seqno_seen) {
+	highest_seqno_seen = msg.seqno;
     }
 }
 
