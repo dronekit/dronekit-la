@@ -8,7 +8,6 @@
 #include "util.h"
 
 #include "mavlink_message_handler.h"
-#include "analyze.h" // for output_style_option
 
 #include "format_reader.h"
 
@@ -37,8 +36,6 @@ protected:
 private:
     int can_log_error();
 
-    Analyze::output_style_option output_style;
-    
     void handle_message_received(uint64_t timestamp, mavlink_message_t msg);
 
     uint16_t err_skipped;

@@ -22,9 +22,8 @@ void DataFlash_Logger_Program::usage()
     ::printf("Usage:\n");
     ::printf("%s [OPTION] [FILE]\n", program_name());
     ::printf(" -c filepath      use config file filepath\n");
-    ::printf(" -t               connect to telem forwarder to receive data\n");
-    ::printf(" -s style         use output style (plain-text|json)\n");
     ::printf(" -h               display usage information\n");
+    ::printf(" -d               debug mode\n");
     ::printf("\n");
     ::printf("Example: ./dataflash_logger -c /dev/null -s json 1.solo.tlog\n");
     exit(0);
@@ -82,6 +81,10 @@ void DataFlash_Logger_Program::handle_select_fds(fd_set &fds_read, fd_set &fds_w
 
 void DataFlash_Logger_Program::run()
 {
+    if (! debug_mode) {
+        la_log_syslog_open();
+    }
+
     la_log(LOG_INFO, "dataflash_logger starting: built " __DATE__ " " __TIME__);
     signal(SIGHUP, ::sighup_handler);
 
@@ -107,13 +110,16 @@ void DataFlash_Logger_Program::parse_arguments(int argc, char *argv[])
     _argc = argc;
     _argv = argv;
 
-    while ((opt = getopt(argc, argv, "hc:ts:")) != -1) {
+    while ((opt = getopt(argc, argv, "hc:d")) != -1) {
         switch(opt) {
         case 'h':
             usage();
             break;
         case 'c':
             config_filename = optarg;
+            break;
+        case 'd':
+            debug_mode = true;
             break;
         }
     }

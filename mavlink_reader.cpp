@@ -3,7 +3,6 @@
 #include <errno.h>
 #include <stdio.h> // for perror
 #include <stdlib.h> // for abort
-#include "la-log.h"
 
 #include <unistd.h> // for usleep
 
@@ -13,6 +12,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+
+#include "analyzer_util.h"
+#include "la-log.h"
 
 /* This is used to prevent swamping the log with error messages if
    something unexpected happens.

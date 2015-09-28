@@ -31,4 +31,5 @@ private:
     uint8_t _buf[512] = { }; // FIXME constant was TELEM_PKT_MAX
 
     Telem_Forwarder_Client *client = NULL;
+    bool debug_mode = false;
 };
