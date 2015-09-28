@@ -3,6 +3,10 @@
   "evilness": 772, 
   "format-version": "0.1", 
   "git_version": "some-hash", 
+  "maximum-altitude-absolute": 2158.320068359375, 
+  "maximum-altitude-absolute-units": "metres", 
+  "maximum-altitude-relative": 38.550048828125, 
+  "maximum-altitude-relative-units": "metres", 
   "packet_count": 41809, 
   "severity-score": 772, 
   "tests": {
@@ -1541,5 +1545,9 @@
       "severity-score": 0
     }
   }, 
-  "timestamp": "123456789"
+  "timestamp": "123456789", 
+  "total-distance-travelled-units": "metres", 
+  "total-distance-travellled": 1742.552431378827, 
+  "total-flight-time": 338.0690612792969, 
+  "total-flight-time-units": "seconds"
 }

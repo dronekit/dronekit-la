@@ -12,7 +12,6 @@
 #include "analyzer_brownout.h"
 #include "analyzer_compass_offsets.h"
 #include "analyzer_ever_armed.h"
-#include "analyzer_ever_flew.h"
 #include "analyzer_good_ekf.h"
 #include "analyzer_notcrashed.h"
 #include "analyzer_position_estimate_divergence.h"
@@ -40,7 +39,7 @@ void Analyze::instantiate_analyzers(INIReader *config)
         syslog(LOG_INFO, "Failed to create analyzer_arming_checks");
     }
 
-    Analyzer_Altitude_Estimate_Divergence *analyzer_altitude_estimate_divergence = new Analyzer_Altitude_Estimate_Divergence(vehicle,_data_sources);
+    analyzer_altitude_estimate_divergence = new Analyzer_Altitude_Estimate_Divergence(vehicle,_data_sources);
     if (analyzer_altitude_estimate_divergence != NULL) {
         configure_analyzer(config, analyzer_altitude_estimate_divergence, "Analyzer_Altitude_Estimate_Divergence");
     } else {
@@ -86,7 +85,7 @@ void Analyze::instantiate_analyzers(INIReader *config)
         syslog(LOG_INFO, "Failed to create analyzer_ever_armed");
     }
 
-    Analyzer_Ever_Flew *analyzer_ever_flew = new Analyzer_Ever_Flew(vehicle,_data_sources);
+    analyzer_ever_flew = new Analyzer_Ever_Flew(vehicle,_data_sources);
     if (analyzer_ever_flew != NULL) {
         configure_analyzer(config, analyzer_ever_flew, "Analyzer_Ever_Flew");
     } else {
@@ -122,7 +121,7 @@ void Analyze::instantiate_analyzers(INIReader *config)
         syslog(LOG_INFO, "Failed to create analyzer_brownout");
     }
 
-    Analyzer_Position_Estimate_Divergence *analyzer_position_estimate_divergence = new Analyzer_Position_Estimate_Divergence(vehicle,_data_sources);
+    analyzer_position_estimate_divergence = new Analyzer_Position_Estimate_Divergence(vehicle,_data_sources);
     if (analyzer_position_estimate_divergence != NULL) {
         configure_analyzer(config, analyzer_position_estimate_divergence, "Analyzer_Position_Estimate_Divergence");
     } else {
@@ -171,6 +170,25 @@ void results_json_add_version(Json::Value &root)
         root["git_version"] = git_version;
     }
 }
+
+void Analyze::results_json_add_statistics(Json::Value &root)
+{
+    if (analyzer_ever_flew != NULL) {
+        root["total-flight-time"] = analyzer_ever_flew->total_flight_time() / 1000000.0f;
+        root["total-flight-time-units"] = "seconds";
+    }
+    if (analyzer_position_estimate_divergence != NULL) {
+        root["total-distance-travellled"] = analyzer_position_estimate_divergence->total_distance_travelled();
+        root["total-distance-travelled-units"] = "metres";
+    }
+    if (analyzer_altitude_estimate_divergence != NULL) {
+        root["maximum-altitude-absolute"] = analyzer_altitude_estimate_divergence->maximum_altitude();
+        root["maximum-altitude-absolute-units"] = "metres";
+        root["maximum-altitude-relative"] = analyzer_altitude_estimate_divergence->maximum_altitude_relative();
+        root["maximum-altitude-relative-units"] = "metres";
+    }
+}
+
 void Analyze::results_json(Json::Value &root)
 {
     Json::Value tests;
@@ -195,6 +213,8 @@ void Analyze::results_json(Json::Value &root)
     root["severity-score"] = root["evilness"];
     root["tests"] = tests;
     results_json_add_version(root);
+
+    results_json_add_statistics(root);
 }
 
 

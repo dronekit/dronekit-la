@@ -8,6 +8,10 @@
 
 #include "analyzer_util.h"
 
+#include "analyzer_altitude_estimate_divergence.h"
+#include "analyzer_ever_flew.h"
+#include "analyzer_position_estimate_divergence.h"
+
 #include "data_sources.h"
 
 class Analyze {
@@ -36,6 +40,8 @@ public:
         _data_sources.add(type, data_source);
     }
 
+protected:
+
 private:
     uint64_t start_time;
 
@@ -57,11 +63,16 @@ private:
     void set_vehicle_copter();
     void set_copter_frametype(const char *frame_config_string);
 
+    void results_json_add_statistics(Json::Value &root);
     void results_json(Json::Value &root);
 
     void output_plaintext(Json::Value &root);
 
     Data_Sources _data_sources;
+
+    Analyzer_Altitude_Estimate_Divergence *analyzer_altitude_estimate_divergence = NULL;    
+    Analyzer_Ever_Flew *analyzer_ever_flew = NULL;
+    Analyzer_Position_Estimate_Divergence *analyzer_position_estimate_divergence = NULL;    
 };
 
 #endif

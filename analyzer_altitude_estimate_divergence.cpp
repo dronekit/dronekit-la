@@ -2,6 +2,19 @@
 
 #include "analyzer_util.h"
 
+void Analyzer_Altitude_Estimate_Divergence::end_of_log(const uint32_t packet_count)
+{
+    Analyzer_Estimate_Divergence::end_of_log(packet_count);
+
+    AnalyzerVehicle::Altitude alt = _vehicle->alt();
+    if (_vehicle->is_armed()) {
+        double delta = alt.alt() - _altitude_arm;
+        if (delta > _max_alt_rel) {
+            _max_alt_rel = delta;
+        }
+    }
+}
+
 void Analyzer_Altitude_Estimate_Divergence::evaluate_estimate(
     std::string name,
     AnalyzerVehicle::Altitude altitude,
@@ -72,6 +85,26 @@ void Analyzer_Altitude_Estimate_Divergence::evaluate()
         // No craft altitude yet
         return;
     }
+
+    if (_was_armed != _vehicle->is_armed()) {
+        if (_vehicle->is_armed()) {
+            // moved from disarmed -> armed
+            _altitude_arm = alt.alt();
+        } else {
+            // moved from armed -> disarmed
+        }
+    } else if (_vehicle->is_armed()) {
+        double delta = alt.alt() - _altitude_arm;
+        if (delta > _max_alt_rel) {
+            _max_alt_rel = delta;
+        }
+    }
+    _was_armed = _vehicle->is_armed();
+
+    if (alt.alt() > _max_alt) {
+        _max_alt = alt.alt();
+    }
+
     for (std::map<const std::string, AnalyzerVehicle::AltitudeEstimate*>::const_iterator it = estimates.begin();
          it != estimates.end();
          ++it) {

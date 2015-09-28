@@ -112,4 +112,9 @@ void Analyzer_Position_Estimate_Divergence::evaluate()
         AnalyzerVehicle::Position estimate = est->position();
         evaluate_estimate((*it).first, pos, estimate);
     }
+
+    if (prevpos.lat_modtime() != 0) {
+        _total_distance_travelled += prevpos.horizontal_distance_to(pos);
+    }
+    prevpos = pos;
 }

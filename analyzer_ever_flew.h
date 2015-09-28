@@ -47,11 +47,18 @@ public:
     bool configure(INIReader *config) override;
 
     void end_of_log(const uint32_t packet_count) override;
+
+    uint64_t total_flight_time() const { return _total_flight_time; };
+
 private:
 
     Analyzer_Ever_Flew_Result _result;
 
     void evaluate() override;
+
+    uint64_t _total_flight_time = 0;
+    bool _was_flying = false;
+    uint64_t _fly_start_time = 0;
 };
 
 #endif

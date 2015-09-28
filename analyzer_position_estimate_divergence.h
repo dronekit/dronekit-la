@@ -57,6 +57,7 @@ public:
 
     void end_of_log(const uint32_t packet_count) override;
 
+    double total_distance_travelled() { return _total_distance_travelled; }
 private:
 
     const float position_delta_warn = 4.0f;
@@ -65,6 +66,9 @@ private:
     const uint64_t delta_time_threshold = 500000;
 
     std::map<const std::string, Analyzer_Position_Estimate_Divergence_Result*> _result;
+
+    double _total_distance_travelled = 0;
+    AnalyzerVehicle::Position prevpos = { };
 };
 
 #endif
