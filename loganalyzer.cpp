@@ -172,11 +172,19 @@ void LogAnalyzer::run_df(const char *_pathname)
     exit(0);
 }
 
+void LogAnalyzer::show_version_information()
+{
+    ::printf("Version: " GIT_VERSION "\n");
+}
 void LogAnalyzer::run()
 {
     // la_log(LOG_INFO, "loganalyzer starting: built " __DATE__ " " __TIME__);
     // signal(SIGHUP, sighup_handler);
 
+    if (_show_version_information) {
+        show_version_information();
+        exit(0);
+    }
     if (_model_string != NULL) {
         if (streq(_model_string,"copter")) {
             _vehicle = new AnalyzerVehicle::Copter();
@@ -241,8 +249,9 @@ void LogAnalyzer::usage()
     ::printf(" -f frame         set frame; QUAD|Y6\n");
     ::printf(" -s style         use output style (plain-text|json)\n");
     ::printf(" -h               display usage information\n");
+    ::printf(" -V               display version information\n");
     ::printf("\n");
-    ::printf("Example: ./dataflash_logger -c /dev/null -s json 1.solo.tlog\n");
+    ::printf("Example: %s -s json 1.solo.tlog\n", program_name());
     exit(0);
 }
 const char *LogAnalyzer::program_name()
@@ -260,7 +269,7 @@ void LogAnalyzer::parse_arguments(int argc, char *argv[])
     _argc = argc;
     _argv = argv;
 
-    while ((opt = getopt(argc, argv, "hc:ts:m:f:")) != -1) {
+    while ((opt = getopt(argc, argv, "hc:ts:m:f:V")) != -1) {
         switch(opt) {
         case 'h':
             usage();
@@ -279,6 +288,9 @@ void LogAnalyzer::parse_arguments(int argc, char *argv[])
             break;
         case 'f':
             _frame_string = optarg;
+            break;
+        case 'V':
+            _show_version_information = true;
             break;
         }
     }

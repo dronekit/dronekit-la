@@ -25,7 +25,7 @@ void DataFlash_Logger_Program::usage()
     ::printf(" -h               display usage information\n");
     ::printf(" -d               debug mode\n");
     ::printf("\n");
-    ::printf("Example: ./dataflash_logger -c /dev/null -s json 1.solo.tlog\n");
+    ::printf("Example: %s\n", program_name());
     exit(0);
 }
 

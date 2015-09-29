@@ -60,6 +60,9 @@ private:
     void handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds);
 
     int xopen(const char *filepath, uint8_t mode);
+
+    void show_version_information();
+    bool _show_version_information = false;
 };
 
 #endif
