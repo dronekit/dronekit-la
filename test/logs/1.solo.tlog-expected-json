@@ -1537,10 +1537,10 @@
       ], 
       "severity-score": 40
     }, 
-    "Vehicle Defintion": {
+    "Vehicle Definition": {
       "description": "This test will FAIL if the craft type is never defined", 
       "evilness": 0, 
-      "name": "Vehicle Defintion", 
+      "name": "Vehicle Definition", 
       "results": [
         {
           "evilness": 0, 
