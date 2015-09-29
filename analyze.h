@@ -30,6 +30,7 @@ public:
         OUTPUT_JSON = 17,
         OUTPUT_PLAINTEXT,
         OUTPUT_HTML,
+        OUTPUT_BRIEF,
     };
 
     void set_output_style(output_style_option option) { _output_style = option;}

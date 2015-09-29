@@ -338,6 +338,33 @@ namespace Json {
         }
         }
     }
+
+
+    class BriefPlainTextWriter : public Json::Writer {
+    public:
+        BriefPlainTextWriter()
+            { }
+        std::string write( const Value &root );
+    private:
+    };
+
+    std::string BriefPlainTextWriter::write( const Value &root )
+    {
+        std::string document = "";
+        document += "Score=";
+        document += valueToString(root["evilness"].asLargestUInt());
+        if (root["tests"]["Crash Test"]["evilness"].asLargestUInt() != 0) {
+            document += " Crash!";
+        }
+
+        if (root["tests"]["Ever Flew"]["results"][0]["status"] == std::string("PASS")) {
+            document += "Flew";
+        }
+        
+// document += "\n";
+        return document;
+    }
+
 }
 
 
@@ -484,6 +511,9 @@ void Analyze::end_of_log(uint32_t packet_count) {
         break;
     case OUTPUT_HTML:
         writer = new Json::HTMLWriter();
+        break;
+    case OUTPUT_BRIEF:
+        writer = new Json::BriefPlainTextWriter();
         break;
     }
     fprintf(stdout, "%s", writer->write(root).c_str());
