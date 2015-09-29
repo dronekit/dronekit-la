@@ -1043,6 +1043,13 @@
       ], 
       "severity-score": 0
     }, 
+    "GPS Fix": {
+      "description": "This test will FAIL if the quality of the GPS information is poor", 
+      "evilness": 0, 
+      "name": "GPS Fix", 
+      "results": [], 
+      "severity-score": 0
+    }, 
     "Good EKF": {
       "description": "This test will FAIL if EKF variances exceed thresholds, or if the EKF status flags indicate errors", 
       "evilness": 142, 

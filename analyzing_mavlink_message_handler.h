@@ -43,6 +43,9 @@ public:
         _analyze->add_data_source("EKF_VARIANCES_compass_variance", "EKF_STATUS_REPORT.compass");
         _analyze->add_data_source("EKF_VARIANCES_terrain_alt_variance", "EKF_STATUS_REPORT.terrain_alt");
 
+        _analyze->add_data_source("GPSINFO_GPS_RAW_INT", "GPS_RAW_INT.satellites_visible");
+        _analyze->add_data_source("GPSINFO_GPS_RAW_INT", "GPS_RAW_INT.eph");
+
         _analyze->add_data_source("SENSORS_HEALTH", "SYS_STATUS.onboard_control_sensors_present");
         _analyze->add_data_source("SENSORS_HEALTH", "SYS_STATUS.onboard_control_sensors_enabled");
         _analyze->add_data_source("SENSORS_HEALTH", "SYS_STATUS.onboard_control_sensors_health");

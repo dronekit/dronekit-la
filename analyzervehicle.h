@@ -247,6 +247,22 @@ namespace AnalyzerVehicle {
     };
 
 
+    class GPSInfo {
+    public:
+        GPSInfo(std::string name) { _name = name; }
+        double hdop() { return _hdop; }
+        void set_hdop(double hdop) { _hdop = hdop; }
+        uint8_t satellites() { return _satellites_visible; }
+        void set_satellites(uint8_t satellites) { _satellites_visible = satellites; }
+        const std::string name() { return _name; }
+        
+    private:
+        double _hdop;
+        uint8_t _satellites_visible;
+        std::string _name;
+    };
+
+
     // template <typename packettype>
     // class PacketHistory {
     // public:
@@ -431,6 +447,21 @@ public:
         return _altitude_estimates;
     }
 
+    // not really sure this belongs here; possibly move this out if we
+    // ever move to a "state of the universe" object for the analyzers
+    // rather than just a vehicle
+    const std::map<const std::string, GPSInfo*> &gpsinfos() {
+        return _gpsinfo;
+    }
+
+    GPSInfo *gpsinfo(const std::string name) {
+        if (_gpsinfo.count(name) == 0) {
+            _gpsinfo[name] = new GPSInfo(name);
+        }
+        return _gpsinfo[name];
+    };
+
+
     Attitude& att() { return _att; };
     Position& pos() { return _pos; };
     Altitude& alt() { return _alt; };
@@ -461,7 +492,9 @@ private:
     std::map<const std::string, PositionEstimate*> _position_estimates;
     std::map<const std::string, AttitudeEstimate*> _attitude_estimates;
     std::map<const std::string, AltitudeEstimate*> _altitude_estimates;
-    
+
+    std::map<const std::string, GPSInfo*> _gpsinfo;
+
     // PacketHistory<mavlink_heartbeat_t> history_heartbeat;
     // PacketHistory<mavlink_nav_controller_output_t> history_nav_controller_output;
     // PacketHistory<mavlink_servo_output_raw_t> history_servo_output_raw;

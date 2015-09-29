@@ -13,6 +13,7 @@
 #include "analyzer_compass_offsets.h"
 #include "analyzer_ever_armed.h"
 #include "analyzer_good_ekf.h"
+#include "analyzer_gps_fix.h"
 #include "analyzer_notcrashed.h"
 #include "analyzer_position_estimate_divergence.h"
 #include "analyzer_sensor_health.h"
@@ -98,6 +99,13 @@ void Analyze::instantiate_analyzers(INIReader *config)
         configure_analyzer(config, analyzer_good_ekf, "Analyzer_Good_EKF");
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_good_ekf");
+    }
+
+    Analyzer_GPS_Fix *analyzer_gps_fix = new Analyzer_GPS_Fix(vehicle,_data_sources);
+    if (analyzer_gps_fix != NULL) {
+        configure_analyzer(config, analyzer_gps_fix, "Analyzer_GPS_Fix");
+    } else {
+        syslog(LOG_INFO, "Failed to create analyzer_gps_fix");
     }
 
     Analyzer_Attitude_Control *analyzer_attitude_control = new Analyzer_Attitude_Control(vehicle,_data_sources);

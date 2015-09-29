@@ -52,6 +52,9 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
     _vehicle->position_estimate("GPS_RAW_INT")->set_lon(T, msg.lon/10000000.0f);
     _vehicle->altitude_estimate("GPS_RAW_INT")->set_alt(T, msg.alt/1000.0f);
 
+    _vehicle->gpsinfo("GPS_RAW_INT")->set_satellites(msg.satellites_visible);
+    _vehicle->gpsinfo("GPS_RAW_INT")->set_hdop(msg.eph/100.0f);
+
     _analyze->evaluate_all();
 }
 

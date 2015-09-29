@@ -43,6 +43,7 @@ SRCS_CPP += analyzer_compass_offsets.cpp
 SRCS_CPP += analyzer_ever_armed.cpp
 SRCS_CPP += analyzer_ever_flew.cpp
 SRCS_CPP += analyzer_good_ekf.cpp
+SRCS_CPP += analyzer_gps_fix.cpp
 SRCS_CPP += analyzer_notcrashed.cpp
 SRCS_CPP += analyzer_sensor_health.cpp
 SRCS_CPP += analyzer_estimate_divergence.cpp
