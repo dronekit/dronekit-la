@@ -358,9 +358,13 @@ namespace Json {
         }
 
         if (root["tests"]["Ever Flew"]["results"][0]["status"] == std::string("PASS")) {
-            document += "Flew";
+            document += " Flew";
         }
-        
+ 
+         if (root["tests"]["Vehicle Definition"]["results"][0]["status"] != std::string("PASS")) {
+            document += " NoVehicle";
+        }
+      
 // document += "\n";
         return document;
     }

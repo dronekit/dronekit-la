@@ -34,6 +34,7 @@ public:
     };
 
     void set_output_style(output_style_option option) { _output_style = option;}
+    output_style_option output_style() { return _output_style; }
 
     void evaluate_all();
 

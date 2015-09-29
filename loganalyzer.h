@@ -27,7 +27,6 @@ public:
 
     void parse_path(const char *path);
     void parse_filepath(const char *filepath);
-    void parse_directory_full_of_files(const char *dirpath);
     void run();
 
     void parse_arguments(int argc, char *argv[]);
@@ -37,7 +36,9 @@ private:
     Telem_Forwarder_Client *_client = NULL;
     uint8_t _client_buf[512]; // FIXME constant was TELEM_PKT_MAX
 
-    char *_pathname = NULL;
+    char **_paths = NULL;
+    uint8_t _pathcount;
+
     Format_Reader *reader;
     Analyze::output_style_option output_style = Analyze::OUTPUT_JSON;
     long _argc;
@@ -47,6 +48,7 @@ private:
     const char * _frame_string = NULL;
 
     AnalyzerVehicle::Base *_vehicle = NULL;
+    void create_vehicle_from_commandline_arguments();
 
     const char *program_name();
 
@@ -56,6 +58,7 @@ private:
     void run_live_analysis();
     void run_df(const char *_pathname);
     void do_idle_callbacks();
+
     void pack_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds);
     void handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds);
 

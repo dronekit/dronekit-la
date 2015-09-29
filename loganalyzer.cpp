@@ -38,33 +38,8 @@ void LogAnalyzer::parse_path(const char *path)
         parse_filepath(path);
         return;
     case S_IFDIR:
-        return parse_directory_full_of_files(path);
-    default:
-        fprintf(stderr, "Not a file or directory\n");
+        fprintf(stderr, "Not a file (%s)\n", path);
         exit(1);
-    }
-}
-
-void LogAnalyzer::parse_directory_full_of_files(const char *dirpath)
-{
-    DIR *dh = opendir(dirpath);
-    if (dh == NULL) {
-        fprintf(stderr, "Failed to open (%s): %s", dirpath, strerror(errno));
-        exit(1);
-    }
-    struct dirent *ent;
-    for(ent = readdir(dh); ent != NULL; ent = readdir(dh)) {
-        if (streq(ent->d_name, ".") || streq(ent->d_name, "..")) {
-            continue;
-        }
-        // FIXME:
-        std::string tmp = dirpath;
-        tmp += "/";
-        tmp += ent->d_name;
-
-        ::printf("**************** Analyzing (%s)\n", ent->d_name);
-        parse_filepath(tmp.c_str());
-        ::printf("**************** End analysis (%s)\n\n", ent->d_name);
     }
 }
 
@@ -81,16 +56,27 @@ void LogAnalyzer::parse_filepath(const char *filepath)
 {
     int fd = xopen(filepath, O_RDONLY);
 
+    create_vehicle_from_commandline_arguments();
+    if (_vehicle == NULL) { 
+        _vehicle = new AnalyzerVehicle::Base();
+    }
+
     instantiate_message_handlers();
+
+    if (output_style == Analyze::OUTPUT_BRIEF) {
+        printf("%25s: ", filepath);
+    }
     parse_fd(reader, fd);
+    if (output_style == Analyze::OUTPUT_BRIEF) {
+        printf("\n");
+    }
+
     reader->clear_message_handlers();
+    _vehicle = NULL; // leak this memory
 }
 
 void LogAnalyzer::instantiate_message_handlers()
 {
-    if (_vehicle == NULL) { 
-        _vehicle = new AnalyzerVehicle::Base();
-    }
     Analyze *analyze = new Analyze(_vehicle);
     if (analyze != NULL) {
         analyze->set_output_style(output_style);
@@ -154,6 +140,8 @@ void LogAnalyzer::run_df(const char *_pathname)
 
     reader = new DataFlash_Reader(_config);
 
+    create_vehicle_from_commandline_arguments();
+
     if (_vehicle == NULL) {
         _vehicle = new AnalyzerVehicle::Base();
     }
@@ -175,9 +163,16 @@ void LogAnalyzer::run_df(const char *_pathname)
 
     int fd = xopen(_pathname, O_RDONLY);
 
+    if (output_style == Analyze::OUTPUT_BRIEF) {
+        printf("%25s: ", _pathname);
+    }
     parse_fd(reader, fd);
+    if (output_style == Analyze::OUTPUT_BRIEF) {
+        printf("\n");
+    }
+
     reader->clear_message_handlers();
-    exit(0);
+    _vehicle = NULL; // leak this memory
 }
 
 void LogAnalyzer::show_version_information()
@@ -233,22 +228,8 @@ void LogAnalyzer::expand_names_to_run()
     _analyzer_names_to_run = new_names;
 }
 
-void LogAnalyzer::run()
+void LogAnalyzer::create_vehicle_from_commandline_arguments()
 {
-    // la_log(LOG_INFO, "loganalyzer starting: built " __DATE__ " " __TIME__);
-    // signal(SIGHUP, sighup_handler);
-
-    if (_show_version_information) {
-        show_version_information();
-        exit(0);
-    }
-    if (_do_list_analyzers) {
-        list_analyzers();
-        exit(0);
-    }
-
-    expand_names_to_run();
-
     if (_model_string != NULL) {
         if (streq(_model_string,"copter")) {
             _vehicle = new AnalyzerVehicle::Copter();
@@ -265,12 +246,30 @@ void LogAnalyzer::run()
             exit(1);
         }
     }
+}
+
+void LogAnalyzer::run()
+{
+    // la_log(LOG_INFO, "loganalyzer starting: built " __DATE__ " " __TIME__);
+    // signal(SIGHUP, sighup_handler);
+
+    if (_show_version_information) {
+        show_version_information();
+        exit(0);
+    }
+    if (_do_list_analyzers) {
+        list_analyzers();
+        exit(0);
+    }
+
+    expand_names_to_run();
 
     if (_use_telem_forwarder) {
+        create_vehicle_from_commandline_arguments();
         return run_live_analysis();
     }
 
-    if (_pathname == NULL) {
+    if (_paths == NULL) {
         usage();
         exit(1);
     }
@@ -292,23 +291,25 @@ void LogAnalyzer::run()
         }
     }
 
-    if (strstr(_pathname, ".BIN") ||
-        strstr(_pathname, ".bin")) {
-        return run_df(_pathname);
+    for (uint8_t i=0; i<_pathcount; i++) {
+        if (strstr(_paths[i], ".BIN") ||
+            strstr(_paths[i], ".bin")) {
+            run_df(_paths[i]);
+        } else {
+            INIReader *config = get_config();
+
+            reader = new MAVLink_Reader(config);
+            ((MAVLink_Reader*)reader)->set_is_tlog(true);
+
+            parse_path(_paths[i]);
+        }
     }
-    
-    INIReader *config = get_config();
-
-    reader = new MAVLink_Reader(config);
-    ((MAVLink_Reader*)reader)->set_is_tlog(true);
-
-    return parse_path(_pathname);
 }
 
 void LogAnalyzer::usage()
 {
     ::printf("Usage:\n");
-    ::printf("%s [OPTION] [FILE]\n", program_name());
+    ::printf("%s [OPTION] [FILE...]\n", program_name());
     ::printf(" -c filepath      use config file filepath\n");
     ::printf(" -t               connect to telem forwarder to receive data\n");
     ::printf(" -m modeltype     override model; copter|plane|rover\n");
@@ -321,6 +322,7 @@ void LogAnalyzer::usage()
     ::printf("\n");
     ::printf("Example: %s -s json 1.solo.tlog\n", program_name());
     ::printf("Example: %s -a \"Ever Flew, Battery\" 1.solo.tlog\n", program_name());
+    ::printf("Example: %s -s brief 1.solo.tlog 2.solo.tlog logs/*.tlog\n", program_name());
     exit(0);
 }
 const char *LogAnalyzer::program_name()
@@ -370,7 +372,8 @@ void LogAnalyzer::parse_arguments(int argc, char *argv[])
         }
     }
     if (optind < argc) {
-        _pathname = argv[optind++];
+        _paths = &argv[optind];
+        _pathcount = argc-optind;
     }
 }
 
