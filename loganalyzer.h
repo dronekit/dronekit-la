@@ -63,6 +63,11 @@ private:
 
     void show_version_information();
     bool _show_version_information = false;
+    void list_analyzers();
+    bool _do_list_analyzers = false;
+
+    void expand_names_to_run();
+    std::vector<std::string> _analyzer_names_to_run;
 };
 
 #endif

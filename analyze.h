@@ -39,6 +39,10 @@ public:
     void add_data_source(std::string type, const char *data_source) {
         _data_sources.add(type, data_source);
     }
+    
+    std::vector<Analyzer *> analyzers() { return _analyzers; }
+
+    void set_analyzer_names_to_run(const std::vector<std::string> run_these);
 
 protected:
 
@@ -48,17 +52,17 @@ private:
     AnalyzerVehicle::Base *&vehicle;
 
     output_style_option _output_style = OUTPUT_JSON;
-#define MAX_ANALYZERS 128
-    uint8_t next_analyzer = 0;
-    Analyzer *analyzer[MAX_ANALYZERS];
 
+    std::vector<Analyzer*> _analyzers;
+
+    bool _use_names_to_run = false;
+    std::map<std::string,bool> _names_to_run;
+    
     void configure_message_handler(INIReader *config,
                                    MAVLink_Message_Handler *handler,
                                    const char *handler_name);
 
-    void configure_analyzer(INIReader *config,
-                            Analyzer *handler,
-                            const char *handler_name);
+    void configure_analyzer(INIReader *config, Analyzer *handler);
 
     void set_vehicle_copter();
     void set_copter_frametype(const char *frame_config_string);

@@ -19,37 +19,42 @@
 #include "analyzer_sensor_health.h"
 #include "analyzer_vehicle_definition.h"
 
+void Analyze::set_analyzer_names_to_run(const std::vector<std::string> run_these)
+{
+    _use_names_to_run = true;
+    for (std::vector<std::string>::const_iterator it = run_these.begin();
+         it != run_these.end();
+         ++it) {
+        _names_to_run[(*it)] = true;
+    }
+}
+
 void Analyze::instantiate_analyzers(INIReader *config)
 {
-    if (MAX_ANALYZERS - next_analyzer < 2) {
-	syslog(LOG_INFO, "Insufficient analyzer slots (MAX=%d) (next=%d)?!", MAX_ANALYZERS, next_analyzer);
-	exit(1);  // FIXME - throw exception
-    }
-
     Analyzer_Any_Parameters_Seen *analyzer_any_parameters_seen = new Analyzer_Any_Parameters_Seen(vehicle,_data_sources);
     if (analyzer_any_parameters_seen != NULL) {
-        configure_analyzer(config, analyzer_any_parameters_seen, "Analyzer_Any_Parameters_Seen");
+        configure_analyzer(config, analyzer_any_parameters_seen);
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_any_parameters_seen");
     }
 
     Analyzer_Arming_Checks *analyzer_arming_checks = new Analyzer_Arming_Checks(vehicle,_data_sources);
     if (analyzer_arming_checks != NULL) {
-        configure_analyzer(config, analyzer_arming_checks, "Analyzer_Arming_Checks");
+        configure_analyzer(config, analyzer_arming_checks);
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_arming_checks");
     }
 
     analyzer_altitude_estimate_divergence = new Analyzer_Altitude_Estimate_Divergence(vehicle,_data_sources);
     if (analyzer_altitude_estimate_divergence != NULL) {
-        configure_analyzer(config, analyzer_altitude_estimate_divergence, "Analyzer_Altitude_Estimate_Divergence");
+        configure_analyzer(config, analyzer_altitude_estimate_divergence);
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_altitude_estimate_divergence");
     }
 
     Analyzer_Attitude_Estimate_Divergence *analyzer_attitude_estimate_divergence = new Analyzer_Attitude_Estimate_Divergence(vehicle,_data_sources);
     if (analyzer_attitude_estimate_divergence != NULL) {
-        configure_analyzer(config, analyzer_attitude_estimate_divergence, "Analyzer_Attitude_Estimate_Divergence");
+        configure_analyzer(config, analyzer_attitude_estimate_divergence);
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_attitude_estimate_divergence");
     }
@@ -57,7 +62,7 @@ void Analyze::instantiate_analyzers(INIReader *config)
     {
         Analyzer_Compass_Offsets *analyzer_compass_offsets = new Analyzer_Compass_Offsets(vehicle,_data_sources, "");
         if (analyzer_compass_offsets != NULL) {
-            configure_analyzer(config, analyzer_compass_offsets, "Analyzer_Compass_Offsets");
+            configure_analyzer(config, analyzer_compass_offsets);
         } else {
             syslog(LOG_INFO, "Failed to create analyzer_compass_offsets");
         }
@@ -65,7 +70,7 @@ void Analyze::instantiate_analyzers(INIReader *config)
     {
         Analyzer_Compass_Offsets *analyzer_compass_offsets = new Analyzer_Compass_Offsets(vehicle,_data_sources, "2");
         if (analyzer_compass_offsets != NULL) {
-            configure_analyzer(config, analyzer_compass_offsets, "Analyzer_Compass_Offsets");
+            configure_analyzer(config, analyzer_compass_offsets);
         } else {
             syslog(LOG_INFO, "Failed to create analyzer_compass_offsets");
         }
@@ -73,7 +78,7 @@ void Analyze::instantiate_analyzers(INIReader *config)
     {
         Analyzer_Compass_Offsets *analyzer_compass_offsets = new Analyzer_Compass_Offsets(vehicle,_data_sources, "3");
         if (analyzer_compass_offsets != NULL) {
-            configure_analyzer(config, analyzer_compass_offsets, "Analyzer_Compass_Offsets");
+            configure_analyzer(config, analyzer_compass_offsets);
         } else {
             syslog(LOG_INFO, "Failed to create analyzer_compass_offsets");
         }
@@ -81,14 +86,14 @@ void Analyze::instantiate_analyzers(INIReader *config)
 
     Analyzer_Ever_Armed *analyzer_ever_armed = new Analyzer_Ever_Armed(vehicle,_data_sources);
     if (analyzer_ever_armed != NULL) {
-        configure_analyzer(config, analyzer_ever_armed, "Analyzer_Ever_Armed");
+        configure_analyzer(config, analyzer_ever_armed);
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_ever_armed");
     }
 
     analyzer_ever_flew = new Analyzer_Ever_Flew(vehicle,_data_sources);
     if (analyzer_ever_flew != NULL) {
-        configure_analyzer(config, analyzer_ever_flew, "Analyzer_Ever_Flew");
+        configure_analyzer(config, analyzer_ever_flew);
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_ever_flew");
     }
@@ -96,63 +101,63 @@ void Analyze::instantiate_analyzers(INIReader *config)
 
     Analyzer_Good_EKF *analyzer_good_ekf = new Analyzer_Good_EKF(vehicle,_data_sources);
     if (analyzer_good_ekf != NULL) {
-        configure_analyzer(config, analyzer_good_ekf, "Analyzer_Good_EKF");
+        configure_analyzer(config, analyzer_good_ekf);
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_good_ekf");
     }
 
     Analyzer_GPS_Fix *analyzer_gps_fix = new Analyzer_GPS_Fix(vehicle,_data_sources);
     if (analyzer_gps_fix != NULL) {
-        configure_analyzer(config, analyzer_gps_fix, "Analyzer_GPS_Fix");
+        configure_analyzer(config, analyzer_gps_fix);
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_gps_fix");
     }
 
     Analyzer_Attitude_Control *analyzer_attitude_control = new Analyzer_Attitude_Control(vehicle,_data_sources);
     if (analyzer_attitude_control != NULL) {
-        configure_analyzer(config, analyzer_attitude_control, "Analyzer_Attitude_Control");
+        configure_analyzer(config, analyzer_attitude_control);
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_attitude_control");
     }
 
     Analyzer_Battery *analyzer_battery = new Analyzer_Battery(vehicle,_data_sources);
     if (analyzer_battery != NULL) {
-        configure_analyzer(config, analyzer_battery, "Analyzer_Battery");
+        configure_analyzer(config, analyzer_battery);
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_battery");
     }
 
     Analyzer_Brownout *analyzer_brownout = new Analyzer_Brownout(vehicle,_data_sources);
     if (analyzer_brownout != NULL) {
-        configure_analyzer(config, analyzer_brownout, "Analyzer_Brownout");
+        configure_analyzer(config, analyzer_brownout);
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_brownout");
     }
 
     analyzer_position_estimate_divergence = new Analyzer_Position_Estimate_Divergence(vehicle,_data_sources);
     if (analyzer_position_estimate_divergence != NULL) {
-        configure_analyzer(config, analyzer_position_estimate_divergence, "Analyzer_Position_Estimate_Divergence");
+        configure_analyzer(config, analyzer_position_estimate_divergence);
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_position_estimate_divergence");
     }
 
     Analyzer_NotCrashed *analyzer_notcrashed = new Analyzer_NotCrashed(vehicle,_data_sources);
     if (analyzer_notcrashed != NULL) {
-        configure_analyzer(config, analyzer_notcrashed, "Analyzer_NotCrashed");
+        configure_analyzer(config, analyzer_notcrashed);
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_not_crashed");
     }
 
     Analyzer_Sensor_Health *analyzer_sensor_health = new Analyzer_Sensor_Health(vehicle,_data_sources);
     if (analyzer_sensor_health != NULL) {
-        configure_analyzer(config, analyzer_sensor_health, "Analyzer_Sensor_Health");
+        configure_analyzer(config, analyzer_sensor_health);
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_sensor_health");
     }
 
     Analyzer_Vehicle_Definition *analyzer_vehicle_definition = new Analyzer_Vehicle_Definition(vehicle,_data_sources);
     if (analyzer_vehicle_definition != NULL) {
-        configure_analyzer(config, analyzer_vehicle_definition, "Analyzer_Vehicle_Definition");
+        configure_analyzer(config, analyzer_vehicle_definition);
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_vehicle_definition");
     }
@@ -160,14 +165,16 @@ void Analyze::instantiate_analyzers(INIReader *config)
 }
 
 
-void Analyze::configure_analyzer(INIReader *config,
-                                 Analyzer *handler,
-                                 const char *handler_name)
+void Analyze::configure_analyzer(INIReader *config, Analyzer *analyzer)
 {
-    if (handler->configure(config)) {
-        analyzer[next_analyzer++] = handler;
+    if (_use_names_to_run &&
+        !_names_to_run[analyzer->name()]) {
+        return;
+    }
+    if (analyzer->configure(config)) {
+        _analyzers.push_back(analyzer);
     } else {
-        syslog(LOG_INFO, "Failed to configure (%s)", handler_name);
+        syslog(LOG_INFO, "Failed to configure (%s)", analyzer->name().c_str());
     }
 }
 
@@ -201,20 +208,23 @@ void Analyze::results_json(Json::Value &root)
 {
     Json::Value tests;
     uint16_t total_evilness= 0;
-    for(int i=0; i<next_analyzer; i++) {
-        const std::string name = analyzer[i]->name();
+    for (std::vector<Analyzer*>::iterator it = _analyzers.begin();
+         it != _analyzers.end();
+         ++it) {
+        Analyzer *analyzer = *it;
+        const std::string name = analyzer->name();
         if (tests[name].isNull()) {
             Json::Value test_info(Json::objectValue);
-            test_info["description"] = analyzer[i]->description();
+            test_info["description"] = analyzer->description();
             test_info["name"] = name;
             test_info["results"] = Json::Value(Json::arrayValue);
             tests[name] = test_info;
         }
 
-        analyzer[i]->results_json_results(tests[name]["results"]);
-        tests[name]["evilness"] = tests[name]["evilness"].asLargestUInt() + analyzer[i]->evilness();
+        analyzer->results_json_results(tests[name]["results"]);
+        tests[name]["evilness"] = tests[name]["evilness"].asLargestUInt() + analyzer->evilness();
         tests[name]["severity-score"] = tests[name]["evilness"];
-        total_evilness += analyzer[i]->evilness();
+        total_evilness += analyzer->evilness();
     }
     
     root["evilness"] = total_evilness;
@@ -448,8 +458,10 @@ namespace Json {
 }
 
 void Analyze::end_of_log(uint32_t packet_count) {
-    for(int i=0; i<next_analyzer; i++) {
-        analyzer[i]->end_of_log(packet_count);
+    for (std::vector<Analyzer*>::iterator it = _analyzers.begin();
+         it != _analyzers.end();
+         ++it) {
+        (*it)->end_of_log(packet_count);
     }
 
     Json::Value root;
@@ -479,8 +491,10 @@ void Analyze::end_of_log(uint32_t packet_count) {
 
 
 void Analyze::evaluate_all() {
-    for(int i=0; i<next_analyzer; i++) {
-        analyzer[i]->evaluate();
+    for (std::vector<Analyzer*>::iterator it = _analyzers.begin();
+         it != _analyzers.end();
+         ++it) {
+        (*it)->evaluate();
     }
 }
 

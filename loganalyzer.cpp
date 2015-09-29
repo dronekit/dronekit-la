@@ -12,6 +12,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#include <regex>
+
 #include "dataflash_reader.h"
 
 #include "analyzing_dataflash_message_handler.h"
@@ -92,6 +94,9 @@ void LogAnalyzer::instantiate_message_handlers()
     Analyze *analyze = new Analyze(_vehicle);
     if (analyze != NULL) {
         analyze->set_output_style(output_style);
+        if (_analyzer_names_to_run.size()) {
+            analyze->set_analyzer_names_to_run(_analyzer_names_to_run);
+        }
         analyze->instantiate_analyzers(_config);
         // which base class doesn't really matter here:
         Analyzing_MAVLink_Message_Handler *handler = new Analyzing_MAVLink_Message_Handler(analyze, _vehicle);
@@ -156,6 +161,9 @@ void LogAnalyzer::run_df(const char *_pathname)
 
     if (analyze != NULL) {
         analyze->set_output_style(output_style);
+        if (_analyzer_names_to_run.size()) {
+            analyze->set_analyzer_names_to_run(_analyzer_names_to_run);
+        }
         analyze->instantiate_analyzers(_config);
         Analyzing_DataFlash_Message_Handler *handler = new Analyzing_DataFlash_Message_Handler(analyze, _vehicle);
         // Message_Handler *x = static_cast<DataFlash_Message_Handler*>(handler);
@@ -176,6 +184,55 @@ void LogAnalyzer::show_version_information()
 {
     ::printf("Version: " GIT_VERSION "\n");
 }
+
+void LogAnalyzer::list_analyzers()
+{
+    Analyze *analyze = new Analyze(_vehicle);
+
+    analyze->instantiate_analyzers(_config);
+    std::vector<Analyzer *> analyzers = analyze->analyzers();
+    for (std::vector<Analyzer*>::iterator it = analyzers.begin();
+         it != analyzers.end();
+         ++it) {
+        ::printf("%s\n", (*it)->name().c_str());
+    }
+}
+
+// From: http://stackoverflow.com/questions/236129/split-a-string-in-c
+std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
+    std::stringstream ss(s);
+    std::string item;
+    while (std::getline(ss, item, delim)) {
+        elems.push_back(item);
+    }
+    return elems;
+}
+std::vector<std::string> split(const std::string &s, char delim) {
+    std::vector<std::string> elems;
+    split(s, delim, elems);
+    return elems;
+}
+// thanks stackoverflow!
+
+void LogAnalyzer::expand_names_to_run()
+{
+    std::vector<std::string> new_names;
+    for (std::vector<std::string>::const_iterator it = _analyzer_names_to_run.begin();
+         it != _analyzer_names_to_run.end();
+         ++it) {
+        // insert lambda here if you dare.
+        std::vector<std::string> tmp = split((*it),',');
+        
+        for (std::vector<std::string>::const_iterator iy = tmp.begin();
+             iy != tmp.end();
+             ++iy) {
+            std::string value = std::regex_replace(*iy, std::regex("^ +| +$|( ) +"), "$1");
+            new_names.push_back(value);
+        }
+    }
+    _analyzer_names_to_run = new_names;
+}
+
 void LogAnalyzer::run()
 {
     // la_log(LOG_INFO, "loganalyzer starting: built " __DATE__ " " __TIME__);
@@ -185,6 +242,13 @@ void LogAnalyzer::run()
         show_version_information();
         exit(0);
     }
+    if (_do_list_analyzers) {
+        list_analyzers();
+        exit(0);
+    }
+
+    expand_names_to_run();
+
     if (_model_string != NULL) {
         if (streq(_model_string,"copter")) {
             _vehicle = new AnalyzerVehicle::Copter();
@@ -249,9 +313,12 @@ void LogAnalyzer::usage()
     ::printf(" -f frame         set frame; QUAD|Y6\n");
     ::printf(" -s style         use output style (plain-text|json)\n");
     ::printf(" -h               display usage information\n");
+    ::printf(" -l               list analyzers\n");
+    ::printf(" -a               specify analzers to run (comma-separated list)\n");
     ::printf(" -V               display version information\n");
     ::printf("\n");
     ::printf("Example: %s -s json 1.solo.tlog\n", program_name());
+    ::printf("Example: %s -a \"Ever Flew, Battery\" 1.solo.tlog\n", program_name());
     exit(0);
 }
 const char *LogAnalyzer::program_name()
@@ -269,7 +336,7 @@ void LogAnalyzer::parse_arguments(int argc, char *argv[])
     _argc = argc;
     _argv = argv;
 
-    while ((opt = getopt(argc, argv, "hc:ts:m:f:V")) != -1) {
+    while ((opt = getopt(argc, argv, "hc:ts:m:f:Vla:")) != -1) {
         switch(opt) {
         case 'h':
             usage();
@@ -291,6 +358,12 @@ void LogAnalyzer::parse_arguments(int argc, char *argv[])
             break;
         case 'V':
             _show_version_information = true;
+            break;
+        case 'l':
+            _do_list_analyzers = true;
+            break;
+        case 'a':
+            _analyzer_names_to_run.push_back(optarg);
             break;
         }
     }
