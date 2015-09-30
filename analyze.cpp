@@ -222,6 +222,7 @@ void Analyze::results_json(Json::Value &root)
         }
 
         analyzer->results_json_results(tests[name]["results"]);
+        tests[name]["status"] = analyzer->status_as_string();
         tests[name]["evilness"] = tests[name]["evilness"].asLargestUInt() + analyzer->evilness();
         tests[name]["severity-score"] = tests[name]["evilness"];
         total_evilness += analyzer->evilness();

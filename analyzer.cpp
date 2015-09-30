@@ -70,3 +70,40 @@ void Analyzer::results_json_results(Json::Value &root)
         root.append(result);
     }
 }
+
+analyzer_status Analyzer::status()
+{
+    analyzer_status ret = analyzer_status_ok;
+
+    std::vector<Analyzer_Result*> my_results = results();
+    for (std::vector<Analyzer_Result*>::const_iterator it = my_results.begin();
+         it != my_results.end();
+         it++) {
+        switch((*it)->status()) {
+        case analyzer_status_fail:
+            ret = analyzer_status_fail;
+            break;
+        case analyzer_status_warn:
+            if (ret == analyzer_status_ok) {
+                ret = analyzer_status_warn;
+            }
+            break;
+        case analyzer_status_ok:
+            break;
+        }
+    }
+    return ret;
+}
+
+
+const char *_status_as_string(analyzer_status status) {
+    switch(status) {
+    case analyzer_status_fail:
+        return "FAIL";
+    case analyzer_status_warn:
+        return "WARN";
+    case analyzer_status_ok:
+        return "PASS";
+    }
+    return "STRANGE";
+}

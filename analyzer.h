@@ -9,25 +9,21 @@
 
 #include "data_sources.h"
 
+#include "analyzer_util.h"
+
 enum analyzer_status {
     analyzer_status_warn = 17,
     analyzer_status_fail,
     analyzer_status_ok,
 };
 
+const char *_status_as_string(analyzer_status status);
+
 class Analyzer_Result {
 public:
 
     const char *status_as_string() const {
-        switch(_status) {
-        case analyzer_status_fail:
-            return "FAIL";
-        case analyzer_status_warn:
-            return "WARN";
-        case analyzer_status_ok:
-            return "PASS";
-        }
-        return "STRANGE";
+        return _status_as_string(_status);
     }
     analyzer_status status() { return _status; }
     void set_status(analyzer_status status) { _status = status; }
@@ -148,6 +144,9 @@ public:
     virtual void results_json_results(Json::Value &root);
     virtual void end_of_log(uint32_t packet_count) { }
 
+    const char *status_as_string() {
+        return _status_as_string(status());
+    }
 
     std::vector<Analyzer_Result*> results() const {
         return _results;
@@ -163,6 +162,8 @@ public:
     virtual void add_result(Analyzer_Result* result) {
         _results.push_back(result);
     }
+
+    analyzer_status status();
 
 protected:
     std::string to_string(double x);
