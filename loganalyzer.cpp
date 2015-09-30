@@ -314,7 +314,7 @@ void LogAnalyzer::usage()
     ::printf(" -t               connect to telem forwarder to receive data\n");
     ::printf(" -m modeltype     override model; copter|plane|rover\n");
     ::printf(" -f frame         set frame; QUAD|Y6\n");
-    ::printf(" -s style         use output style (plain-text|json)\n");
+    ::printf(" -s style         use output style (plain-text|json|brief)\n");
     ::printf(" -h               display usage information\n");
     ::printf(" -l               list analyzers\n");
     ::printf(" -a               specify analzers to run (comma-separated list)\n");
