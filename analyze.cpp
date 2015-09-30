@@ -521,7 +521,8 @@ void Analyze::end_of_log(uint32_t packet_count) {
         writer = new Json::BriefPlainTextWriter();
         break;
     }
-    fprintf(stdout, "%s", writer->write(root).c_str());
+    std::string document = writer->write(root);
+    fprintf(stdout, "%s", document.c_str());
 }
 
 

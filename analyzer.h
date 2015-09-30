@@ -44,7 +44,7 @@ public:
     // void add_series(const std::string f) {
     //     _series.push_back(f);
     // }
-    void add_series(const std::vector<const char *>&f) {
+    void add_series(std::vector<std::string>f) {
         _series.insert(_series.end(), f.begin(), f.end());
     }
 

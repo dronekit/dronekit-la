@@ -38,11 +38,7 @@ public:
 
     void evaluate_all();
 
-    void add_data_source(std::string type, const char *data_source) {
-        _data_sources.add(type, data_source);
-    }
-
-    void add_data_source(std::string type, const char *data_source) {
+    void add_data_source(std::string type, const std::string data_source) {
         _data_sources.add(type, data_source);
     }
 

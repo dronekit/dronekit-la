@@ -246,15 +246,14 @@ public:
 
     LA_MsgHandler_GPS(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
         LA_MsgHandler(name, f, analyze, vehicle) {
-        const char *cname = name.c_str();
-        _analyze->add_data_source(string_format("POSITION_ESTIMATE_%s",cname), string_format("%s.Lat",cname).c_str());
-        _analyze->add_data_source(string_format("POSITION_ESTIMATE_%s",cname), string_format("%s.Lng",cname).c_str());
+        _analyze->add_data_source(string_format("POSITION_ESTIMATE_%s",name.c_str()), string_format("%s.Lat",name.c_str()));
+        _analyze->add_data_source(string_format("POSITION_ESTIMATE_%s",name.c_str()), string_format("%s.Lng",name.c_str()));
 
-        _analyze->add_data_source(string_format("GPSINFO_%s",cname),
-            string_format("%s.HDop",cname).c_str());
+        _analyze->add_data_source(string_format("GPSINFO_%s",name.c_str()),
+            string_format("%s.HDop",name.c_str()));
         // FIXME: need to take from correct source here!  Move to xprocess?
-        _analyze->add_data_source(string_format("GPSINFO_%s",cname),
-            string_format("%s.NSats",cname).c_str());
+        _analyze->add_data_source(string_format("GPSINFO_%s",name.c_str()),
+            string_format("%s.NSats",name.c_str()));
     };
     void xprocess(const uint8_t *msg) override;
 };
