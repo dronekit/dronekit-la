@@ -27,6 +27,11 @@ LA_MsgHandler::position_estimate() {
     return _vehicle->position_estimate(name());
 }
 
+AnalyzerVehicle::GPSInfo*
+LA_MsgHandler::gpsinfo() {
+    return _vehicle->gpsinfo(name());
+}
+
 bool LA_MsgHandler::process_set_T(const uint8_t *msg)
 {
     uint64_t time_us;
@@ -85,6 +90,17 @@ void LA_MsgHandler_GPS::xprocess(const uint8_t *msg) {
     position_estimate()->set_lat(T(), Lat/10000000.0f);
     position_estimate()->set_lon(T(), Lng/10000000.0f);
     altitude_estimate()->set_alt(T(), Alt/100.0f);
+
+    uint8_t nsats;
+    if (field_value(msg, "NSats", nsats) ||
+        field_value(msg, "NSvv", nsats)) {
+        // we have a value!
+    } else {
+        ::fprintf(stderr, "Unable to extract number of satellites visible from GPS message");
+        abort();
+    }
+    gpsinfo()->set_satellites(nsats);
+    gpsinfo()->set_hdop(require_field_int16_t(msg, "HDop")/100.0f);
 }
 
 

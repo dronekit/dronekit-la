@@ -41,7 +41,11 @@ public:
     void add_data_source(std::string type, const char *data_source) {
         _data_sources.add(type, data_source);
     }
-    
+
+    void add_data_source(std::string type, const char *data_source) {
+        _data_sources.add(type, data_source);
+    }
+
     std::vector<Analyzer *> analyzers() { return _analyzers; }
 
     void set_analyzer_names_to_run(const std::vector<std::string> run_these);
