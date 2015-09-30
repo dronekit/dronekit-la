@@ -928,6 +928,17 @@
           ], 
           "evilness": 0, 
           "reason": "No brownout detected", 
+          "series": [
+            "SERVO_OUTPUT_RAW.servo1_raw", 
+            "SERVO_OUTPUT_RAW.servo2_raw", 
+            "SERVO_OUTPUT_RAW.servo3_raw", 
+            "SERVO_OUTPUT_RAW.servo4_raw", 
+            "SERVO_OUTPUT_RAW.servo5_raw", 
+            "SERVO_OUTPUT_RAW.servo6_raw", 
+            "SERVO_OUTPUT_RAW.servo7_raw", 
+            "SERVO_OUTPUT_RAW.servo8_raw", 
+            "GLOBAL_POSITION_INT.alt"
+          ], 
           "severity-score": 0, 
           "status": "PASS"
         }

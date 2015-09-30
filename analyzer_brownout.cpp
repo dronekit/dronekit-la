@@ -9,9 +9,6 @@ bool Analyzer_Brownout::configure(INIReader *config)
 	return false;
     }
 
-    _result.set_status(analyzer_status_ok);
-    _result.set_reason("No brownout detected");
-    
     return true;
 }
 
@@ -42,6 +39,11 @@ void Analyzer_Brownout::end_of_log(const uint32_t packet_count)
             _result.add_series(_data_sources.get("ALTITUDE"));
             _result.set_reason("Log ended while craft still flying");
             _result.add_evidence("Vehicle still flying");
+        } else {
+            _result.set_status(analyzer_status_ok);
+            _result.add_series(_data_sources.get("SERVO_OUTPUT"));
+            _result.add_series(_data_sources.get("ALTITUDE"));
+            _result.set_reason("No brownout detected");
         }
     } else {
         _result.set_status(analyzer_status_warn);
