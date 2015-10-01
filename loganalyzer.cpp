@@ -323,6 +323,7 @@ void LogAnalyzer::usage()
     ::printf("Example: %s -s json 1.solo.tlog\n", program_name());
     ::printf("Example: %s -a \"Ever Flew, Battery\" 1.solo.tlog\n", program_name());
     ::printf("Example: %s -s brief 1.solo.tlog 2.solo.tlog logs/*.tlog\n", program_name());
+    ::printf("Example: %s - (analyze stdin)\n", program_name());
     exit(0);
 }
 const char *LogAnalyzer::program_name()
