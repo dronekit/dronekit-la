@@ -12,8 +12,6 @@
 #include "Location.h"
 #include "DataFlash/LogMessage.h"
 
-#define uint uint64_t
-
 #define LOGREADER_MAX_FIELDS 30
 
 #ifndef streq

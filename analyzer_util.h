@@ -12,7 +12,7 @@ std::string
 string_format( const char* format, const Args ... args )
 {
     
-    uint32_t size = snprintf( nullptr, 0, format, args ... );
+    int32_t size = snprintf( nullptr, 0, format, args ... );
     if (size < 0) {
         ::fprintf(stderr, "snprintf error (%d): %s\n", size, strerror(errno));
         abort();
