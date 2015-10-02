@@ -25,8 +25,9 @@ public:
         Common_Tool()
         { }
 
-    void parse_path(const char *path);
-    void parse_filepath(const char *filepath);
+    void tlog_parse_path(const char *path);
+    void tlog_parse_filepath(const char *filepath);
+    void tlog_parse_open_filepath(const char *filepath, int fd);
     void run();
 
     void parse_arguments(int argc, char *argv[]);

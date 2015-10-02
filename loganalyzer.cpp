@@ -19,11 +19,15 @@
 #include "analyzing_dataflash_message_handler.h"
 #include "analyzing_mavlink_message_handler.h"
 
-void LogAnalyzer::parse_path(const char *path)
+void LogAnalyzer::tlog_parse_path(const char *path)
 {
+    INIReader *config = get_config();
+
+    reader = new MAVLink_Reader(config);
+    ((MAVLink_Reader*)reader)->set_is_tlog(true);
+
     if (!strcmp(path, "-")) {
-        parse_fd(reader, fileno(stdin));
-        reader->clear_message_handlers();
+        tlog_parse_open_filepath("-", fileno(stdin));
         return;
     }
     
@@ -35,7 +39,7 @@ void LogAnalyzer::parse_path(const char *path)
 
     switch (buf.st_mode & S_IFMT) {
     case S_IFREG:
-        parse_filepath(path);
+        tlog_parse_filepath(path);
         return;
     case S_IFDIR:
         fprintf(stderr, "Not a file (%s)\n", path);
@@ -52,12 +56,17 @@ int LogAnalyzer::xopen(const char *filepath, const uint8_t mode)
     }
     return fd;
 }
-void LogAnalyzer::parse_filepath(const char *filepath)
+void LogAnalyzer::tlog_parse_filepath(const char *filepath)
 {
     int fd = xopen(filepath, O_RDONLY);
 
+    tlog_parse_open_filepath(filepath, fd);
+}
+
+void LogAnalyzer::tlog_parse_open_filepath(const char *filepath, const int fd)
+{
     create_vehicle_from_commandline_arguments();
-    if (_vehicle == NULL) { 
+    if (_vehicle == NULL) {
         _vehicle = new AnalyzerVehicle::Base();
     }
 
@@ -66,7 +75,9 @@ void LogAnalyzer::parse_filepath(const char *filepath)
     if (output_style == Analyze::OUTPUT_BRIEF) {
         printf("%25s: ", filepath);
     }
+
     parse_fd(reader, fd);
+
     if (output_style == Analyze::OUTPUT_BRIEF) {
         printf("\n");
     }
@@ -129,9 +140,16 @@ void LogAnalyzer::run_live_analysis()
         la_log(LOG_INFO, "Failed to create heart");
     }
 
+    create_vehicle_from_commandline_arguments();
+    if (_vehicle == NULL) {
+        _vehicle = new AnalyzerVehicle::Base();
+    }
+
     instantiate_message_handlers();
 
     select_loop();
+
+    _vehicle = NULL; // leak this memory
 }
 
 void LogAnalyzer::run_df(const char *_pathname)
@@ -166,7 +184,9 @@ void LogAnalyzer::run_df(const char *_pathname)
     if (output_style == Analyze::OUTPUT_BRIEF) {
         printf("%25s: ", _pathname);
     }
+
     parse_fd(reader, fd);
+
     if (output_style == Analyze::OUTPUT_BRIEF) {
         printf("\n");
     }
@@ -296,12 +316,7 @@ void LogAnalyzer::run()
             strstr(_paths[i], ".bin")) {
             run_df(_paths[i]);
         } else {
-            INIReader *config = get_config();
-
-            reader = new MAVLink_Reader(config);
-            ((MAVLink_Reader*)reader)->set_is_tlog(true);
-
-            parse_path(_paths[i]);
+            tlog_parse_path(_paths[i]);
         }
     }
 }
