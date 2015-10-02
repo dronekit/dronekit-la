@@ -81,6 +81,8 @@ void DataFlash_Logger_Program::handle_select_fds(fd_set &fds_read, fd_set &fds_w
 
 void DataFlash_Logger_Program::run()
 {
+    init_config();
+
     if (! debug_mode) {
         la_log_syslog_open();
     }
@@ -88,18 +90,16 @@ void DataFlash_Logger_Program::run()
     la_log(LOG_INFO, "dataflash_logger starting: built " __DATE__ " " __TIME__);
     signal(SIGHUP, ::sighup_handler);
 
-    INIReader *config = get_config();
-
-    reader = new MAVLink_Reader(config);
+    reader = new MAVLink_Reader(config());
     if (reader == NULL) {
         la_log(LOG_ERR, "Failed to create reader from (%s)\n", config_filename);
         exit(1);
     }
 
     client = new Telem_Forwarder_Client(_buf, sizeof(_buf));
-    client->configure(config);
+    client->configure(config());
 
-    instantiate_message_handlers(config, client->fd_telem_forwarder, &client->sa_tf);
+    instantiate_message_handlers(config(), client->fd_telem_forwarder, &client->sa_tf);
     return select_loop();
 }
 

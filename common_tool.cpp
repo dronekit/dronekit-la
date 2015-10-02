@@ -6,7 +6,7 @@
 
 #include "la-log.h"
 
-INIReader *Common_Tool::get_config()
+void Common_Tool::init_config()
 {
     if (config_filename == NULL) {
         abort();
@@ -31,7 +31,6 @@ INIReader *Common_Tool::get_config()
     if (_config == NULL) {
         _config = new INIReader("/dev/null");
     }
-    return _config;
 }
 
 

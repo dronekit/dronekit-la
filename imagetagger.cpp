@@ -151,12 +151,12 @@ std::vector<class ImageTagger::Image_Info*> ImageTagger::get_image_info(const ch
 
 void ImageTagger::run()
 {
+    init_config();
+
     la_log(LOG_INFO, "ImageTagger starting: built " __DATE__ " " __TIME__);
     // signal(SIGHUP, sighup_handler);
 
-    INIReader *config = get_config();
-
-    reader = new MAVLink_Reader(config);
+    reader = new MAVLink_Reader(config());
     reader->set_is_tlog(true);
 
     if (_imagedir == NULL) {

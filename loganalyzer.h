@@ -25,6 +25,10 @@ public:
         Common_Tool()
         { }
 
+    Analyze *create_analyze();
+
+    void prep_and_parse_fd(Format_Reader *reader, int fd);
+    void parse_path(const char *path);
     void tlog_parse_path(const char *path);
     void tlog_parse_filepath(const char *filepath);
     void tlog_parse_open_filepath(const char *filepath, int fd);
@@ -47,6 +51,7 @@ private:
     const char * output_style_string = NULL;
     const char * _model_string = NULL;
     const char * _frame_string = NULL;
+    const char * forced_format_string = NULL;
 
     AnalyzerVehicle::Base *_vehicle = NULL;
     void create_vehicle_from_commandline_arguments();
@@ -65,6 +70,11 @@ private:
 
     int xopen(const char *filepath, uint8_t mode);
 
+    void prep_for_df();
+    void prep_for_tlog();
+    void cleanup_after_df();
+    void cleanup_after_tlog();
+    
     void show_version_information();
     bool _show_version_information = false;
     void list_analyzers();
@@ -72,6 +82,14 @@ private:
 
     void expand_names_to_run();
     std::vector<std::string> _analyzer_names_to_run;
+
+    enum log_format_t {
+        log_format_none = 19,
+        log_format_tlog,
+        log_format_df,
+    };
+    log_format_t _force_format = log_format_none;
+    log_format_t force_format() { return _force_format; }
 };
 
 #endif
