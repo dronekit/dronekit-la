@@ -87,6 +87,7 @@ void Copter::set_frame_type(copter_frame_type frame_type)
         _num_motors = 6;
         break;
     case invalid:
+        ::fprintf(stderr, "Invalid frame type");
         abort();
     }
 }

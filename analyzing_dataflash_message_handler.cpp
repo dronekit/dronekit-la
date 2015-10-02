@@ -3,7 +3,7 @@
 void Analyzing_DataFlash_Message_Handler::handle_format_message_received(const char *name, const struct log_Format &format, const char *msg) {
     uint8_t new_msg_type = ((struct log_Format*)(msg))->type;
     if (streq(name, "AHR2")) {
-        LA_MsgHandler_AHR2 *ahr2_handler= new LA_MsgHandler_AHR2(name, format, _analyze, _vehicle);
+        ahr2_handler= new LA_MsgHandler_AHR2(name, format, _analyze, _vehicle);
         handlers[new_msg_type] = ahr2_handler;
         if (have_pos) {
             ahr2_handler->set_canonical_for_position(false);

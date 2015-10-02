@@ -110,6 +110,5 @@ double haversine(double from_lat, double from_lon, double to_lat, double to_lon)
 
 double AnalyzerVehicle::Position::horizontal_distance_to(AnalyzerVehicle::Position otherpos)
 {
-    return 6371000.0f * (haversine(lat(), lon(), otherpos.lat(), otherpos.lon()));
+    return (double)6371000.0f * (haversine(lat(), lon(), otherpos.lat(), otherpos.lon()));
 }
-

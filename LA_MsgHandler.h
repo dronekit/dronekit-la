@@ -71,21 +71,21 @@ public:
         int16_t Pitch = require_field_int16_t(msg, "Pitch");
         float Yaw = require_field_float(msg, "Yaw");
 
-        attitude_estimate()->set_roll(T(), Roll/100.0f);
-        attitude_estimate()->set_pitch(T(), Pitch/100.0f);
+        attitude_estimate()->set_roll(T(), Roll/(double)100.0f);
+        attitude_estimate()->set_pitch(T(), Pitch/(double)100.0f);
         attitude_estimate()->set_yaw(T(), Yaw-180);
 
         int32_t Lat = require_field_int32_t(msg, "Lat");
         int32_t Lng = require_field_int32_t(msg, "Lng");
         float Alt = require_field_float(msg, "Alt");
 
-        position_estimate()->set_lat(T(), Lat/10000000.0f);
-        position_estimate()->set_lon(T(), Lng/10000000.0f);
+        position_estimate()->set_lat(T(), Lat/(double)10000000.0f);
+        position_estimate()->set_lon(T(), Lng/(double)10000000.0f);
         altitude_estimate()->set_alt(T(), Alt);
 
         if (canonical_for_position()) {
-            _vehicle->set_lat(Lat/10000000.0f);
-            _vehicle->set_lon(Lng/10000000.0f);
+            _vehicle->set_lat(Lat/(double)10000000.0f);
+            _vehicle->set_lon(Lng/(double)10000000.0f);
             _vehicle->set_altitude(Alt);
         }
     }
@@ -122,16 +122,16 @@ public:
     
         // _vehicle->set_roll(rad_to_deg(Roll/100.0f));
         // _vehicle->set_pitch(rad_to_deg(Pitch/100.0f));
-        _vehicle->set_roll(Roll/100.0f);
-        _vehicle->set_pitch(Pitch/100.0f);
+        _vehicle->set_roll(Roll/(double)100.0f);
+        _vehicle->set_pitch(Pitch/(double)100.0f);
         _vehicle->set_yaw(Yaw);
 
-        _vehicle->set_desroll((float)DesRoll/100.0f);
-        _vehicle->set_despitch((float)DesPitch/100.0f);
+        _vehicle->set_desroll((float)DesRoll/(double)100.0f);
+        _vehicle->set_despitch((float)DesPitch/(double)100.0f);
         _vehicle->set_desyaw(DesYaw);
 
-        _vehicle->attitude_estimate("ATT")->set_roll(T(), Roll/100.0f);
-        _vehicle->attitude_estimate("ATT")->set_pitch(T(), Pitch/100.0f);
+        _vehicle->attitude_estimate("ATT")->set_roll(T(), Roll/(double)100.0f);
+        _vehicle->attitude_estimate("ATT")->set_pitch(T(), Pitch/(double)100.0f);
         _vehicle->attitude_estimate("ATT")->set_yaw(T(), Yaw);
     }
 };
@@ -155,8 +155,8 @@ public:
         int16_t Pitch = require_field_int16_t(msg, "Pitch");
         float Yaw = require_field_float(msg, "Yaw");
 
-        _vehicle->attitude_estimate("EKF1")->set_roll(T(), Roll/100.0f);
-        _vehicle->attitude_estimate("EKF1")->set_pitch(T(), Pitch/100.0f);
+        _vehicle->attitude_estimate("EKF1")->set_roll(T(), Roll/(double)100.0f);
+        _vehicle->attitude_estimate("EKF1")->set_pitch(T(), Pitch/(double)100.0f);
         _vehicle->attitude_estimate("EKF1")->set_yaw(T(), Yaw-180);
 
         // these are all relative; need to work out an origin:
@@ -180,15 +180,15 @@ public:
         _analyze->add_data_source("EKF_VARIANCES_terrain_alt_variance", "EKF4.SVT");
     };
     void xprocess(const uint8_t *msg) override {
-        _vehicle->ekf_set_variance("velocity", require_field_uint16_t(msg, "SV") / 100.0f);
-        _vehicle->ekf_set_variance("pos_horiz", require_field_uint16_t(msg, "SP") / 100.0f);
-        _vehicle->ekf_set_variance("pos_vert", require_field_uint16_t(msg, "SH") / 100.0f);
-        _vehicle->ekf_set_variance("terrain_alt", require_field_uint16_t(msg, "SVT") / 100.0f);
+        _vehicle->ekf_set_variance("velocity", require_field_uint16_t(msg, "SV") / (double)100.0f);
+        _vehicle->ekf_set_variance("pos_horiz", require_field_uint16_t(msg, "SP") / (double)100.0f);
+        _vehicle->ekf_set_variance("pos_vert", require_field_uint16_t(msg, "SH") / (double)100.0f);
+        _vehicle->ekf_set_variance("terrain_alt", require_field_uint16_t(msg, "SVT") / (double)100.0f);
 
         double m[3];
-        m[0] = require_field_uint16_t(msg, "SMX") / 100.0f;
-        m[1] = require_field_uint16_t(msg, "SMY") / 100.0f;
-        m[2] = require_field_uint16_t(msg, "SMZ") / 100.0f;
+        m[0] = require_field_uint16_t(msg, "SMX") / (double)100.0f;
+        m[1] = require_field_uint16_t(msg, "SMY") / (double)100.0f;
+        m[2] = require_field_uint16_t(msg, "SMZ") / (double)100.0f;
     
         _vehicle->ekf_set_variance("compass", vec_len(m));
 
@@ -290,19 +290,21 @@ public:
         uint8_t msg_message_len = 160;
         require_field(msg, "Message", msg_message, msg_message_len);
 
-        if (strstr(msg_message, "APM:Copter") || strstr(msg_message, "ArduCopter")) {
-            set_vehicle_copter();
-        }
-
-        switch(_vehicle->vehicletype()) {
-        case AnalyzerVehicle::Base::vehicletype_t::copter:
-            if (strstr(msg_message, "Frame")) {
-                ((AnalyzerVehicle::Copter*&)_vehicle)->set_frame(msg_message);
+        if (!_vehicle->vehicletype_is_forced()) {
+            if (strstr(msg_message, "APM:Copter") || strstr(msg_message, "ArduCopter")) {
+                set_vehicle_copter();
             }
-            break;
-        case AnalyzerVehicle::Base::vehicletype_t::invalid:
-            ::fprintf(stderr, "unhandled message (%s)\n", msg_message);
-            // abort();
+
+            switch(_vehicle->vehicletype()) {
+            case AnalyzerVehicle::Base::vehicletype_t::copter:
+                if (strstr(msg_message, "Frame")) {
+                    ((AnalyzerVehicle::Copter*&)_vehicle)->set_frame(msg_message);
+                }
+                break;
+            case AnalyzerVehicle::Base::vehicletype_t::invalid:
+                ::fprintf(stderr, "unhandled message (%s)\n", msg_message);
+                // abort();
+            }
         }
     }
 };
@@ -340,12 +342,12 @@ public:
         int32_t Lng = require_field_int32_t(msg, "Lng");
         float Alt = require_field_float(msg, "Alt");
 
-        _vehicle->position_estimate("POS")->set_lat(T(), Lat/10000000.0f);
-        _vehicle->position_estimate("POS")->set_lon(T(), Lng/10000000.0f);
+        _vehicle->position_estimate("POS")->set_lat(T(), Lat/(double)10000000.0f);
+        _vehicle->position_estimate("POS")->set_lon(T(), Lng/(double)10000000.0f);
         _vehicle->altitude_estimate("POS")->set_alt(T(), Alt);
 
-        _vehicle->set_lat(Lat/10000000.0f);
-        _vehicle->set_lon(Lng/10000000.0f);
+        _vehicle->set_lat(Lat/(double)10000000.0f);
+        _vehicle->set_lon(Lng/(double)10000000.0f);
         _vehicle->set_altitude(Alt);
     }
 };

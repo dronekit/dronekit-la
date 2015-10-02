@@ -87,9 +87,9 @@ void LA_MsgHandler_GPS::xprocess(const uint8_t *msg) {
     int32_t Lng = require_field_int32_t(msg, "Lng");
     int32_t Alt = require_field_int32_t(msg, "Alt");
 
-    position_estimate()->set_lat(T(), Lat/10000000.0f);
-    position_estimate()->set_lon(T(), Lng/10000000.0f);
-    altitude_estimate()->set_alt(T(), Alt/100.0f);
+    position_estimate()->set_lat(T(), Lat/(double)10000000.0f);
+    position_estimate()->set_lon(T(), Lng/(double)10000000.0f);
+    altitude_estimate()->set_alt(T(), Alt/(double)100.0f);
 
     uint8_t nsats;
     if (field_value(msg, "NSats", nsats) ||
@@ -100,7 +100,7 @@ void LA_MsgHandler_GPS::xprocess(const uint8_t *msg) {
         abort();
     }
     gpsinfo()->set_satellites(nsats);
-    gpsinfo()->set_hdop(require_field_int16_t(msg, "HDop")/100.0f);
+    gpsinfo()->set_hdop(require_field_int16_t(msg, "HDop")/(double)100.0f);
 }
 
 

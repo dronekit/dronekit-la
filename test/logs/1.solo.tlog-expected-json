@@ -1,6 +1,6 @@
 {
   "duration": "987654321", 
-  "evilness": 772, 
+  "evilness": 732, 
   "format-version": "0.1", 
   "git_version": "some-hash", 
   "maximum-altitude-absolute": 2158.320068359375, 
@@ -8,7 +8,7 @@
   "maximum-altitude-relative": 38.550048828125, 
   "maximum-altitude-relative-units": "metres", 
   "packet_count": 41809, 
-  "severity-score": 772, 
+  "severity-score": 732, 
   "tests": {
     "Altitude Estimate Divergence": {
       "description": "This test will FAIL if various craft's Altitude estimates diverge", 
@@ -1375,58 +1375,14 @@
     }, 
     "Position Estimate Divergence": {
       "description": "This test will FAIL if various craft's position estimates diverge", 
-      "evilness": 120, 
+      "evilness": 80, 
       "name": "Position Estimate Divergence", 
       "results": [
-        {
-          "duration": 0.7129660248756409, 
-          "duration-units": "seconds", 
-          "evidence": [
-            "max-delta=6.430318 metres", 
-            "delta-threshold=5.000000 metres", 
-            "delta-time-threshold=0.500000 seconds"
-          ], 
-          "evilness": 20, 
-          "name": "GPS_RAW_INT", 
-          "reason": "This position estimate differs from the canonical craft position", 
-          "series": [
-            "GLOBAL_POSITION_INT.lat", 
-            "GLOBAL_POSITION_INT.lon", 
-            "GPS_RAW_INT.lat", 
-            "GPS_RAW_INT.lon"
-          ], 
-          "severity-score": 20, 
-          "status": "FAIL", 
-          "timestamp_start": 1434326594702923, 
-          "timestamp_stop": 1434326595415889
-        }, 
-        {
-          "duration": 0.6511070132255554, 
-          "duration-units": "seconds", 
-          "evidence": [
-            "max-delta=6.744456 metres", 
-            "delta-threshold=5.000000 metres", 
-            "delta-time-threshold=0.500000 seconds"
-          ], 
-          "evilness": 20, 
-          "name": "GPS_RAW_INT", 
-          "reason": "This position estimate differs from the canonical craft position", 
-          "series": [
-            "GLOBAL_POSITION_INT.lat", 
-            "GLOBAL_POSITION_INT.lon", 
-            "GPS_RAW_INT.lat", 
-            "GPS_RAW_INT.lon"
-          ], 
-          "severity-score": 20, 
-          "status": "FAIL", 
-          "timestamp_start": 1434326613932593, 
-          "timestamp_stop": 1434326614583700
-        }, 
         {
           "duration": 10.45837116241455, 
           "duration-units": "seconds", 
           "evidence": [
-            "max-delta=54.108439 metres", 
+            "max-delta=54.084332 metres", 
             "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
@@ -1448,7 +1404,7 @@
           "duration": 10.19213485717773, 
           "duration-units": "seconds", 
           "evidence": [
-            "max-delta=54.108439 metres", 
+            "max-delta=54.084332 metres", 
             "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
@@ -1470,7 +1426,7 @@
           "duration": 29.28837585449219, 
           "duration-units": "seconds", 
           "evidence": [
-            "max-delta=43.832657 metres", 
+            "max-delta=43.811661 metres", 
             "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
@@ -1492,7 +1448,7 @@
           "duration": 29.28837585449219, 
           "duration-units": "seconds", 
           "evidence": [
-            "max-delta=43.832657 metres", 
+            "max-delta=44.226967 metres", 
             "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
@@ -1511,7 +1467,7 @@
           "timestamp_stop": 1434326742523325
         }
       ], 
-      "severity-score": 120, 
+      "severity-score": 80, 
       "status": "FAIL"
     }, 
     "Sensor Health": {
@@ -1581,7 +1537,7 @@
   }, 
   "timestamp": "123456789", 
   "total-distance-travelled-units": "metres", 
-  "total-distance-travellled": 1742.552431378827, 
+  "total-distance-travellled": 1584.37666848388, 
   "total-flight-time": 338.0690612792969, 
   "total-flight-time-units": "seconds"
 }

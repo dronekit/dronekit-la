@@ -7,6 +7,8 @@
 #include "mavlink/c_library/ardupilotmega/mavlink.h"
 #include "mavlink/c_library/common/mavlink.h"
 
+#include "analyzer_util.h"
+
 namespace AnalyzerVehicle {
 
     // Attitude should be the best guess as to what the vehicle's
@@ -113,6 +115,10 @@ namespace AnalyzerVehicle {
 
 //        double distance_to(Position otherpos);
         double horizontal_distance_to(Position otherpos);
+
+        bool is_zero_zero() {
+            return (is_zero(lat()) && is_zero(lon()));
+        }
 
     private:
         double _lat;
@@ -304,6 +310,8 @@ public:
         invalid = 0,
         copter = 17
     };
+    bool vehicletype_is_forced() { return _vehicletype_is_forced; }
+    void set_vehicletype_is_forced(bool value) { _vehicletype_is_forced = value; }
     virtual vehicletype_t vehicletype() {
         return invalid;
     }
@@ -483,6 +491,7 @@ protected:
     AV_Nav _nav = { };
     
 private:
+    bool _vehicletype_is_forced = false;
     uint64_t _T = 0;
 
     vehicletype_t _vehicletype = invalid;

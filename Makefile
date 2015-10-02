@@ -17,7 +17,7 @@ INCS = -I./util -I./ini -I./ini/cpp
 INCS += -I.  # for <DataFlash/DataFlash.h> in MsgHandler
 
 STD=-std=c++11
-STATIC=-static
+STATIC=
 CFLAGS += -Wall $(INCS) -DGIT_VERSION=\"$(GIT_VERSION)\"
 CXXFLAGS += -Wall $(INCS) $(STD) -g -DGIT_VERSION=\"$(GIT_VERSION)\" $(STATIC)
 

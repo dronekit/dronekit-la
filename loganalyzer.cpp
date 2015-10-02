@@ -259,6 +259,10 @@ void LogAnalyzer::create_vehicle_from_commandline_arguments()
             la_log(LOG_ERR, "Unknown model type (%s)", _model_string);
             exit(1);
         }
+        _vehicle->set_vehicletype_is_forced(true);
+    } else if (_frame_string != NULL) {
+        la_log(LOG_ERR, "Can not specify frame type without specifying model type");
+        exit(1);
     }
 }
 
