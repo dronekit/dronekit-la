@@ -15,8 +15,8 @@ void Analyzer_Attitude_Control::open_result(double delta)
     _result = new Analyzer_Attitude_Control_Result();
     _result->set_T_start(_vehicle->T());
     _result->set_reason("Desired attitude not achieved");
-    _result->add_series(_data_sources.get("ATTITUDE"));
-    _result->add_series(_data_sources.get("DESATTITUDE"));
+    _result->add_source(_data_sources.get("ATTITUDE"));
+    _result->add_source(_data_sources.get("DESATTITUDE"));
 
     if (delta > offset_fail) {
         _result->set_status(analyzer_status_fail);
@@ -174,7 +174,7 @@ void Analyzer_Attitude_Control::end_of_log(uint32_t packet_count)
         result->set_status(analyzer_status_warn);
         result->set_reason("Vehicle attitude never set");
         result->set_evilness(5);
-        result->add_series(_data_sources.get("ATTITUDE"));
+        result->add_source(_data_sources.get("ATTITUDE"));
         add_result(result);
     }
 }

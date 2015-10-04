@@ -20,6 +20,7 @@ void Analyzer_NotCrashed::end_of_log(const uint32_t packet_count)
     }
     if (_vehicle->roll_modtime() == 0) {
         _result = new Analyzer_NotCrashed_Result();
+        _result->add_source(_data_sources.get("ATTITUDE"));
         _result->set_reason("Vehicle's attitude never updated");
         _result->set_status(analyzer_status_warn);
         add_result(_result);
@@ -27,6 +28,9 @@ void Analyzer_NotCrashed::end_of_log(const uint32_t packet_count)
     } else if (!result_count()) {
         _result = new Analyzer_NotCrashed_Result();
         _result->set_reason("Never crashed");
+        _result->add_source(_data_sources.get("ATTITUDE"));
+        _result->add_source(_data_sources.get("SERVO_OUTPUT"));
+        _result->add_source(_data_sources.get("PARAM"));
         _result->set_status(analyzer_status_ok);
         add_result(_result);
         _result = NULL;
@@ -69,9 +73,9 @@ void Analyzer_NotCrashed::evaluate()
                 }
             }
 
-            _result->add_series(_data_sources.get("ATTITUDE"));
-            _result->add_series(_data_sources.get("SERVO_OUTPUT"));
-            _result->add_series(_data_sources.get("PARAM"));
+            _result->add_source(_data_sources.get("ATTITUDE"));
+            _result->add_source(_data_sources.get("SERVO_OUTPUT"));
+            _result->add_source(_data_sources.get("PARAM"));
             _result->add_evilness(100);
         }
     } else { // _result is set, incident underway

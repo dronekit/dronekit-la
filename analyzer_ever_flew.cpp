@@ -14,9 +14,6 @@ bool Analyzer_Ever_Flew::configure(INIReader *config)
 	return false;
     }
 
-    _result.set_status(analyzer_status_fail);
-    _result.set_reason("The vehicle never seemed to take off");
-    
     return true;
 }
 

@@ -65,8 +65,8 @@ void Analyzer_Altitude_Estimate_Divergence::open_result(const std::string name,
     result->set_reason("This altitude estimate differs from the canonical craft altitude");
     result->set_T_start(_vehicle->T());
     result->set_max_delta(0);
-    result->add_series(_data_sources.get("ALTITUDE"));
-    result->add_series(_data_sources.get(std::string("ALTITUDE_ESTIMATE_") + name));
+    result->add_source(_data_sources.get("ALTITUDE"));
+    result->add_source(_data_sources.get(std::string("ALTITUDE_ESTIMATE_") + name));
     set_result_for_name(name, result);
     update_result(name, delta);
 }

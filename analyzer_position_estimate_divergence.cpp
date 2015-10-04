@@ -56,8 +56,8 @@ void Analyzer_Position_Estimate_Divergence::open_result(std::string name,
     _result[name]->set_reason("This position estimate differs from the canonical craft position");
     _result[name]->set_T_start(_vehicle->T());
     _result[name]->set_max_delta(0);
-    _result[name]->add_series(_data_sources.get("POSITION"));
-    _result[name]->add_series(_data_sources.get(std::string("POSITION_ESTIMATE_") + name));
+    _result[name]->add_source(_data_sources.get("POSITION"));
+    _result[name]->add_source(_data_sources.get(std::string("POSITION_ESTIMATE_") + name));
     update_result(name, delta);
 }
 

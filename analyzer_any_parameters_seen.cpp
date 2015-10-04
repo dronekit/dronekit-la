@@ -15,11 +15,12 @@ void Analyzer_Any_Parameters_Seen::end_of_log(const uint32_t packet_count)
     if (any_parameters_seen) {
         result->set_status(analyzer_status_ok);
         result->set_reason("Parameters seen");
+        result->add_source(_data_sources.get("PARAM"));
     } else {
         result->set_status(analyzer_status_fail);
         result->set_reason("No parameters seen");
         result->add_evilness(20);
-        result->add_series(_data_sources.get("PARAM"));
+        result->add_source(_data_sources.get("PARAM"));
     }
     add_result(result);
 }

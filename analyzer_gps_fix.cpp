@@ -71,7 +71,7 @@ void Analyzer_GPS_Fix::close_result()
     _result->add_evidence(string_format("satellites-visible-threshold: %d", satellites_visible_threshold()));
     _result->add_evidence(string_format("HDop: %f", hdop_threshold()));
 
-    _result->add_series(_data_sources.get(std::string("GPSINFO_") + _result->name()));
+    _result->add_source(_data_sources.get(std::string("GPSINFO_") + _result->name()));
 
     _result->add_evilness(20);
     add_result(_result);

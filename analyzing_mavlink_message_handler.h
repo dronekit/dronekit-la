@@ -37,8 +37,8 @@ public:
         _analyze->add_data_source("DESATTITUDE", "NAV_CONTROLLER_OUTPUT.nav_bearing");
 
         _analyze->add_data_source("EKF_FLAGS", "EKF_STATUS_REPORT.flags");
-        _analyze->add_data_source("EKF_VARIANCE_velocity_variance", "EKF_STATUS_REPORT.velocity");
-        _analyze->add_data_source("EKF_VARIANCE_pos_horiz_variance", "EKF_STATUS_REPORT.pos_horiz");
+        _analyze->add_data_source("EKF_VARIANCES_velocity_variance", "EKF_STATUS_REPORT.velocity");
+        _analyze->add_data_source("EKF_VARIANCES_pos_horiz_variance", "EKF_STATUS_REPORT.pos_horiz");
         _analyze->add_data_source("EKF_VARIANCES_pos_vert_variance", "EKF_STATUS_REPORT.pos_vert");
         _analyze->add_data_source("EKF_VARIANCES_compass_variance", "EKF_STATUS_REPORT.compass");
         _analyze->add_data_source("EKF_VARIANCES_terrain_alt_variance", "EKF_STATUS_REPORT.terrain_alt");

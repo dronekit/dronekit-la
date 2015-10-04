@@ -37,7 +37,12 @@ public:
 
     Analyzer_Ever_Flew(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
 	Analyzer(vehicle,data_sources)
-    { }
+    {
+        _result.set_status(analyzer_status_fail);
+        _result.set_reason("The vehicle never seemed to take off");
+        _result.add_source(_data_sources.get("ARMING"));
+        _result.add_source(_data_sources.get("SERVO_OUTPUT"));
+    }
 
     const std::string name() const { return "Ever Flew"; }
     const std::string description() const {

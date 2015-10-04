@@ -44,8 +44,11 @@ public:
     // void add_series(const std::string f) {
     //     _series.push_back(f);
     // }
-    void add_series(std::vector<std::string>f) {
-        _series.insert(_series.end(), f.begin(), f.end());
+    void add_source(const Data_Source *f) {
+        if (f == NULL) {
+            abort();
+        }
+        _sources.push_back(f);
     }
 
     void add_evilness(uint32_t evilness) {
@@ -63,7 +66,7 @@ private:
     std::string *_reason = NULL;
 
     std::vector<std::string> _evidence;
-    std::vector<std::string> _series;
+    std::vector<const Data_Source*> _sources;
 
     void to_json_add_array(Json::Value &root,
                            std::string name,
@@ -87,11 +90,9 @@ public:
 
     uint64_t duration() const { return _T_stop - _T_start; }
 
-    // FIXME: scope
+private:
     uint64_t _T_start = 0;
     uint64_t _T_stop;
-
-private:
 };
 
 class Analyzer_Result_Summary : public Analyzer_Result {

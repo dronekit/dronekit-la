@@ -28,7 +28,14 @@ void Analyzer_Result::to_json(Json::Value &root) const
         root["reason"] = *my_reason;
     }
 
-    to_json_add_array(root, "series", _series);
+    std::vector<std::string> some_series;
+    for (std::vector<const Data_Source*>::const_iterator it = _sources.begin();
+         it != _sources.end();
+         it++) {
+        std::vector<std::string> source_series = (*it)->series();
+        some_series.insert(some_series.end(), source_series.begin(), source_series.end());
+    }
+    to_json_add_array(root, "series", some_series);
     to_json_add_array(root, "evidence", _evidence);
 }
 
@@ -67,6 +74,9 @@ void Analyzer::results_json_results(Json::Value &root)
          it++) {
         Json::Value result(Json::objectValue);
         (*it)->to_json(result);
+        if (result["series"].type() == Json::nullValue) {
+            ::fprintf(stderr, "No series in (%s)\n", name().c_str());
+        }
         root.append(result);
     }
 }

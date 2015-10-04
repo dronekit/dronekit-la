@@ -13,10 +13,10 @@ void Analyzer_Vehicle_Definition::evaluate()
 void Analyzer_Vehicle_Definition::end_of_log(const uint32_t packet_count)
 {
     Analyzer_Vehicle_Definition_Result *result = new Analyzer_Vehicle_Definition_Result();
+    result->add_source(_data_sources.get("VEHICLE_DEFINITION"));
     if (vehicle_invalid) {
         result->set_reason("No information provided defined what type of vehicle was being analysed");
         result->set_status(analyzer_status_fail);
-        result->add_series(_data_sources.get("VEHICLE_DEFINITION"));
         result->add_evilness(50);
     } else {
         result->set_reason("Vehicle was appropriately defined");

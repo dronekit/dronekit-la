@@ -35,7 +35,7 @@ void Analyzer_Good_EKF::end_of_log(uint32_t packet_count)
             Analyzer_Result_Summary *summary = new Analyzer_Result_Summary();
             summary->set_status(analyzer_status_warn);
             summary->set_reason(string_format("%s was never updated", name.c_str()));
-            summary->add_series(_data_sources.get(string_format("EKF_VARIANCES_%s", name.c_str())));
+            summary->add_source(_data_sources.get(string_format("EKF_VARIANCES_%s", name.c_str())));
             add_result(summary);
         }
     }
@@ -44,7 +44,7 @@ void Analyzer_Good_EKF::end_of_log(uint32_t packet_count)
         Analyzer_Result_Summary *summary = new Analyzer_Result_Summary();
         summary->set_status(analyzer_status_warn);
         summary->set_reason("EKF flags were never updated");
-        summary->add_series(_data_sources.get("EKF_FLAGS"));
+        summary->add_source(_data_sources.get("EKF_FLAGS"));
         add_result(summary);
     }
 
@@ -66,7 +66,6 @@ void Analyzer_Good_EKF::close_variance_result(const std::string name)
     ekf_variance *variance = result->variance();
 
     result->set_T_stop(_vehicle->T());
-    result->add_series(_data_sources.get(string_format("EKF_VARIANCES_%s", name.c_str())));
     result->add_evidence(string_format("max-variance=%f", result->max()));
     if (result->max() > variance->threshold_fail) {
         result->set_status(analyzer_status_fail);
@@ -95,8 +94,8 @@ void Analyzer_Good_EKF::evaluate_variance(ekf_variance &variance, double value)
         if (value > variance.threshold_warn) {
             // we have exceeeded a threshold
             result = new Analyzer_Good_EKF_Result_Variance();
+            result->add_source(_data_sources.get(string_format("EKF_VARIANCES_%s", variance.name)));
             result->set_variance(&variance);
-            result->add_series(_data_sources.get("EKF_VARIANCES"));
             result->set_T_start(_vehicle->T());
             result->set_max(value);
             _results[variance.name] = result;
@@ -146,7 +145,7 @@ void Analyzer_Good_EKF::open_result_flags(uint16_t flags)
     _result_flags->set_T_start(_vehicle->T()); 
     _result_flags->set_status(analyzer_status_fail);
     _result_flags->set_flags(flags);
-    _result_flags->add_series(_data_sources.get("EKF_FLAGS"));
+    _result_flags->add_source(_data_sources.get("EKF_FLAGS"));
     _result_flags->set_reason("The EKF status report indicates a problem with the EKF");
     _result_flags->set_flags(_vehicle->ekf_flags());
 

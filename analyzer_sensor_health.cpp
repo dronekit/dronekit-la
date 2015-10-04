@@ -36,7 +36,7 @@ void Analyzer_Sensor_Health::end_of_log(uint32_t packet_count)
         Analyzer_Result_Summary *summary = new Analyzer_Result_Summary();
         summary->set_status(analyzer_status_warn);
         summary->set_reason("Sensor health never updated");
-        summary->add_series(_data_sources.get("SENSOR_HEALTH"));
+        summary->add_source(_data_sources.get("SENSORS_HEALTH"));
         add_result(summary);
     }
 
@@ -47,7 +47,7 @@ void Analyzer_Sensor_Health::close_result(const std::string name)
     Analyzer_Sensor_Health_Result *result = _results[name];
 
     result->set_T_stop(_vehicle->T());
-    // result->add_series(_data_sources.get(string_format("EKF_VARIANCES_%s", name.c_str())));
+    // result->add_source(_data_sources.get(string_format("EKF_VARIANCES_%s", name.c_str())));
     // result->add_evidence(string_format("max-variance=%f", result->max()));
     add_result(result);
     _results[name] = NULL;
@@ -58,11 +58,7 @@ void Analyzer_Sensor_Health::open_result(const std::string name)
     _results[name] = new Analyzer_Sensor_Health_Result(name);
     _results[name]->set_T_start(_vehicle->T()); 
     _results[name]->set_status(analyzer_status_fail);
-    // _result_flags->add_series(_data_sources.get("EKF_FLAGS"));
-    // _result_flags->set_reason("The EKF status report indicates a problem with the EKF");
-
-    // _result_flags->add_evidence(string_format("flags=%d", flags));
-    // TODO: put the flags and the "bad" descrption into a structure
+    _results[name]->add_source(_data_sources.get("SENSORS_HEALTH"));
     _results[name]->add_evilness(10);
 }
 

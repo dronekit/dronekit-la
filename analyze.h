@@ -39,7 +39,7 @@ public:
     void evaluate_all();
 
     void add_data_source(std::string type, const std::string data_source) {
-        _data_sources.add(type, data_source);
+        _data_sources.add_series(type, data_source);
     }
 
     std::vector<Analyzer *> analyzers() { return _analyzers; }

@@ -22,7 +22,10 @@ public:
 
     Analyzer_Battery(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
 	Analyzer(vehicle,data_sources)
-    { }
+    {
+        result = new Analyzer_Battery_Result();
+        result->add_source(_data_sources.get("BATTERY_REMAINING"));
+    }
 
     void evaluate() override;
 
@@ -35,6 +38,7 @@ public:
     void end_of_log(const uint32_t packet_count) override;
 
 private:
+    Analyzer_Battery_Result *result;
     double lowest_battery_remaining_seen = 999999999.0f;
     uint64_t lowest_battery_remaining_seen_T = 0;
 

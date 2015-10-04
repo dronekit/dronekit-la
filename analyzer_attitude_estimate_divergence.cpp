@@ -28,8 +28,8 @@ void Analyzer_Attitude_Estimate_Divergence::open_result(std::string name,
     _result[name]->set_reason("This attitude estimate differs from the canonical craft attitude");
     _result[name]->set_T_start(_vehicle->T());
     _result[name]->set_max_delta(0);
-    _result[name]->add_series(_data_sources.get("ATTITUDE"));
-    _result[name]->add_series(_data_sources.get(std::string("ATTITUDE_ESTIMATE_") + name));
+    _result[name]->add_source(_data_sources.get("ATTITUDE"));
+    _result[name]->add_source(_data_sources.get(std::string("ATTITUDE_ESTIMATE_") + name));
     update_result(name, delta);
 }
 

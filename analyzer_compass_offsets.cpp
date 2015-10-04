@@ -82,7 +82,7 @@ void Analyzer_Compass_Offsets::evaluate()
     result->add_evidence(string_format(p_y + "=%f", result->lens()[1]));
     result->add_evidence(string_format(p_z + "=%f", result->lens()[2]));
 
-    result->add_series(_data_sources.get("PARAM"));
+    result->add_source(_data_sources.get("PARAM"));
 
     double len = result->lens().len();
     if (len >= fail_offset) {
@@ -122,7 +122,7 @@ void Analyzer_Compass_Offsets::end_of_log(uint32_t packet_count)
     if (! _vehicle->param_seen("COMPASS_OFS" + _param_extra_string + "_X")) {
         Analyzer_Compass_Offsets_Result *result = new Analyzer_Compass_Offsets_Result();
         result->set_status(analyzer_status_fail);
-        result->add_series(_data_sources.get("PARAM"));
+        result->add_source(_data_sources.get("PARAM"));
         result->set_reason("No compass offset parameter set seen");
         result->add_evilness(5);
         add_result(result);

@@ -20,10 +20,10 @@ void Analyzer_Battery::evaluate()
     }
 }
 
+/* FIXME: this result should be opened as soon as the event happens! */
 void Analyzer_Battery::end_of_log(const uint32_t packet_count)
 {
     if (lowest_battery_remaining_seen_T) {
-        Analyzer_Battery_Result *result = new Analyzer_Battery_Result();
         result->add_evidence(string_format("battery-remaining=%f%%", lowest_battery_remaining_seen));
         result->add_evidence(string_format("failsafe=%f%%", low_battery_threshold));
         if (lowest_battery_remaining_seen < low_battery_threshold) {
@@ -31,7 +31,6 @@ void Analyzer_Battery::end_of_log(const uint32_t packet_count)
             result->set_reason("Battery fell below failsafe threshold");
             result->add_evidence(string_format("Battery below failsafe (%.0f%% < %.0f%%)",
                                                lowest_battery_remaining_seen, low_battery_threshold));
-            result->add_series(_data_sources.get("BATTERY_REMAINING"));
             result->add_evilness(20);
         } else {
             result->set_status(analyzer_status_ok);
@@ -41,12 +40,10 @@ void Analyzer_Battery::end_of_log(const uint32_t packet_count)
     }
 
     if (seen_failsafe_battery_event_T) {
-        Analyzer_Battery_Result *result = new Analyzer_Battery_Result();
         result->set_status(analyzer_status_fail);
         result->set_reason("Battery failsafe event received");
         result->add_evidence(string_format("Failsafe set at %u",
                                            seen_failsafe_battery_event_T));
-        result->add_series(_data_sources.get("BATTERY_FAILSAFE"));
         result->add_evilness(20);
         add_result(result);
     }
