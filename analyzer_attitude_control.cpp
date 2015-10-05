@@ -7,6 +7,14 @@
 #include "analyzervehicle_copter.h"
 
 bool Analyzer_Attitude_Control::configure(INIReader *config) {
+    if (!Analyzer::configure(config)) {
+        return false;
+    }
+
+    offset_warn = config->GetReal("loganalyzer", "attitude_control::delta_warn", 5.0f);
+    offset_fail = config->GetReal("loganalyzer", "attitude_control::delta_fail", 10.0f);
+    duration_min = config->GetReal("loganalyzer", "attitude_control::duration_min", 250000);
+
     return true;
 }
 

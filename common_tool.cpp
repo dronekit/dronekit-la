@@ -22,11 +22,11 @@ void Common_Tool::init_config()
             la_log(LOG_CRIT, "Failed to stat (%s): %s\n", config_filename, strerror(errno));
             exit(1);
         }
-        _config = new INIReader(config_filename);
-        if (_config == NULL) {
-            la_log(LOG_CRIT, "Failed to create config from (%s)\n", config_filename);
-            exit(1);
-        }
+    }
+    _config = new INIReader(config_filename);
+    if (_config == NULL) {
+        la_log(LOG_CRIT, "Failed to create config from (%s)\n", config_filename);
+        exit(1);
     }
     if (_config == NULL) {
         _config = new INIReader("/dev/null");

@@ -34,8 +34,6 @@ public:
 private:
     bool _armed = false;
 
-    #define MAX_RESULTS 100
-
     void results_json_results_do_result(Json::Value &root, const struct result result);
 
     // from AP_Arming.h:

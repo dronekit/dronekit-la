@@ -6,44 +6,32 @@
  *
  */
 
-#include "analyzer.h"
+#include "analyzer_estimate_divergence.h"
 
-class Analyzer_Position_Estimate_Divergence_Result : public Analyzer_Result_Period {
+class Analyzer_Position_Estimate_Divergence_Result : public Analyzer_Estimate_Divergence_Result {
 public:
-    Analyzer_Position_Estimate_Divergence_Result(std::string name) :
-        Analyzer_Result_Period()
-        {
-            set_name(name);
-        }
-
-    void set_name(const std::string name) { _name = name; }
-    std::string name() { return _name; }
-
-    void set_max_delta(const double delta) { _max_delta = delta; }
-    const double max_delta() { return _max_delta; }
-
-    void set_delta_threshold(const double delta) { _delta_threshold = delta; }
-    const double delta_threshold() { return _delta_threshold; }
-
-    void to_json(Json::Value &root) const override;
+    Analyzer_Position_Estimate_Divergence_Result(const std::string name) :
+        Analyzer_Estimate_Divergence_Result(name)
+        { }
 private:
-    std::string _name = "";
-    double _max_delta;
-    double _delta_threshold;
 };
 
-class Analyzer_Position_Estimate_Divergence : public Analyzer {
+class Analyzer_Position_Estimate_Divergence : public Analyzer_Estimate_Divergence {
 
 public:
 
     Analyzer_Position_Estimate_Divergence(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
-	Analyzer(vehicle,data_sources)
+	Analyzer_Estimate_Divergence(vehicle,data_sources)
     { }
 
     const std::string name() const override { return "Position Estimate Divergence"; }
     const std::string description() const override {
         return "This test will FAIL if various craft's position estimates diverge";
     }
+
+    const std::string estimate_name() const {
+        return "Position";
+    };
 
     void evaluate_estimate(
         std::string name,
@@ -58,14 +46,18 @@ public:
     void end_of_log(const uint32_t packet_count) override;
 
     double total_distance_travelled() { return _total_distance_travelled; }
+
+    const std::string _config_tag() {
+        return std::string("position_estimate_divergence");
+    }
+
+    const double default_delta_warn() const override { return 4.0f; }
+    const double default_delta_fail() const override { return 5.0f; }
+    const uint64_t default_duration_min() const override { return 500000; }
+
 private:
 
-    const float position_delta_warn = 4.0f;
-    const float position_delta_fail = 5.0f;
-
-    const uint64_t delta_time_threshold = 500000;
-
-    std::map<const std::string, Analyzer_Position_Estimate_Divergence_Result*> _result;
+    std::map<const std::string, Analyzer_Position_Estimate_Divergence_Result*> _result = { };
 
     double _total_distance_travelled = 0;
     AnalyzerVehicle::Position prevpos = { };

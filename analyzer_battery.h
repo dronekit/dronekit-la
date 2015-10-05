@@ -42,7 +42,7 @@ private:
     double lowest_battery_remaining_seen = 999999999.0f;
     uint64_t lowest_battery_remaining_seen_T = 0;
 
-    const double low_battery_threshold = 15;
+    double low_battery_threshold = 15.0f;
 
     bool seen_failsafe_battery_event = false;
     uint64_t seen_failsafe_battery_event_T = 0;

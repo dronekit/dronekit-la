@@ -7,6 +7,16 @@ bool Analyzer_Good_EKF::configure(INIReader *config) {
     if (!Analyzer::configure(config)) {
 	return false;
     }
+
+    for (std::map<const std::string, ekf_variance>::const_iterator it = _variances.begin();
+         it != _variances.end();
+         ++it) {
+        std::string name = (*it).first;
+
+        _variances[name].threshold_warn = config->GetReal("loganalyzer", string_format("ekf::variance::%s::threshold_warn", name.c_str()), 0.5f);
+        _variances[name].threshold_fail = config->GetReal("loganalyzer", string_format("ekf::variance::%s::threshold_fail", name.c_str()), 1.0f);
+    }
+
     return true;
 }
 

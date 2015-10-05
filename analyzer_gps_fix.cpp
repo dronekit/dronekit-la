@@ -7,6 +7,11 @@ bool Analyzer_GPS_Fix::configure(INIReader *config) {
     if (!Analyzer::configure(config)) {
 	return false;
     }
+
+    _satellites_min = config->GetInteger("loganalyzer", "gpsfix::satellites_min", 5);
+    _hdop_min = config->GetReal("loganalyzer", "gpsfix::hdop_min", 5.0f);
+    
+
     return true;
 }
 

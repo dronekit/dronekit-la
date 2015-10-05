@@ -44,9 +44,9 @@ public:
 
 private:
 
-    const float offset_warn = 5.0f;
-    const float offset_fail = 10.0f;
-    const uint32_t duration_min = 250000; // microseconds
+    float offset_warn = 5.0f;
+    float offset_fail = 10.0f;
+    uint32_t duration_min = 250000; // microseconds
 
     void end_of_log(uint32_t packet_count);
 

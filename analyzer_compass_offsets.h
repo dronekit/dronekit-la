@@ -39,7 +39,7 @@ public:
     }
 
     bool configure(INIReader *config) override;
-    // void handle_decoded_message(uint64_t T, mavlink_param_value_t &param) override;
+
     void evaluate() override;
 
     void end_of_log(uint32_t packet_count) override;
@@ -62,8 +62,8 @@ private:
 
     const std::string _param_extra_string;
 
-    const double warn_offset = 100.0f;
-    const double fail_offset = 200.0f;
+    double warn_offset = 100.0f;
+    double fail_offset = 200.0f;
 };
 
 #endif

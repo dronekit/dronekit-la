@@ -48,7 +48,7 @@ private:
 
     bool _old_is_flying = false;
 
-    const double max_last_relative_altitude = 5.0f; // metres
+    double max_last_relative_altitude = 5.0f; // metres
 
     Analyzer_Brownout_Result _result;
 };

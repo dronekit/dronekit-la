@@ -2,6 +2,17 @@
 
 #include "analyzer_util.h"
 
+bool Analyzer_Estimate_Divergence::configure(INIReader *config) {
+    if (!Analyzer::configure(config)) {
+        return false;
+    }
+    _delta_warn = config->GetReal("loganalyzer", string_format("%s::delta_warn", _config_tag().c_str()), default_delta_warn());
+    _delta_fail = config->GetReal("loganalyzer", string_format("%s::delta_fail", _config_tag().c_str()), default_delta_fail());
+    _delta_time_threshold = config->GetReal("loganalyzer", string_format("%s::duration_min", _config_tag().c_str()), default_duration_min());
+
+    return true;
+}
+
 void Analyzer_Estimate_Divergence_Result::to_json(Json::Value &root) const
 {
     Analyzer_Result_Period::to_json(root);

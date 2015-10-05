@@ -2,12 +2,6 @@
 
 #include "analyzer_util.h"
 
-void Analyzer_Attitude_Estimate_Divergence_Result::to_json(Json::Value &root) const
-{
-    Analyzer_Result_Period::to_json(root);
-    root["name"] = _name;
-}
-
 void Analyzer_Attitude_Estimate_Divergence::end_of_log(const uint32_t packet_count)
 {
     for (std::map<const std::string, Analyzer_Attitude_Estimate_Divergence_Result*>::iterator it = _result.begin();
@@ -23,8 +17,7 @@ void Analyzer_Attitude_Estimate_Divergence::end_of_log(const uint32_t packet_cou
 void Analyzer_Attitude_Estimate_Divergence::open_result(std::string name,
                                                         double delta)
 {
-    _result[name] = new Analyzer_Attitude_Estimate_Divergence_Result();
-    _result[name]->set_name(name);
+    _result[name] = new Analyzer_Attitude_Estimate_Divergence_Result(name);
     _result[name]->set_reason("This attitude estimate differs from the canonical craft attitude");
     _result[name]->set_T_start(_vehicle->T());
     _result[name]->set_max_delta(0);
@@ -38,12 +31,12 @@ void Analyzer_Attitude_Estimate_Divergence::update_result(std::string name,
 {
     if (delta > _result[name]->max_delta()) {
         _result[name]->set_max_delta(delta);
-        if (delta >= attitude_max_delta_roll_pitch_fail) {
-            _result[name]->set_delta_threshold(attitude_max_delta_roll_pitch_fail);
+        if (delta >= delta_fail()) {
+            _result[name]->set_delta_threshold(delta_fail());
             _result[name]->set_status(analyzer_status_fail);
-        } else if (delta >= attitude_max_delta_roll_pitch_warn) {
+        } else if (delta >= delta_warn()) {
             _result[name]->set_status(analyzer_status_warn);
-            _result[name]->set_delta_threshold(attitude_max_delta_roll_pitch_warn);
+            _result[name]->set_delta_threshold(delta_warn());
         }
     }
 }
@@ -51,7 +44,7 @@ void Analyzer_Attitude_Estimate_Divergence::update_result(std::string name,
 void Analyzer_Attitude_Estimate_Divergence::close_result(std::string name)
 {
     _result[name]->set_T_stop(_vehicle->T());
-    if (_result[name]->duration() < delta_time_threshold) {
+    if (_result[name]->duration() < delta_time_threshold()) {
         // event was too short; ignore it
         delete _result[name];
         _result[name] = NULL;
@@ -60,7 +53,7 @@ void Analyzer_Attitude_Estimate_Divergence::close_result(std::string name)
     
     _result[name]->add_evidence(string_format("max-delta=%f degrees", _result[name]->max_delta()));
     _result[name]->add_evidence(string_format("delta-threshold=%f degrees", _result[name]->delta_threshold()));
-    _result[name]->add_evidence(string_format("delta-time-threshold=%f seconds", delta_time_threshold / 1000000.0f));
+    _result[name]->add_evidence(string_format("delta-time-threshold=%f seconds", delta_time_threshold() / 1000000.0f));
     _result[name]->set_evilness(10);
 
     add_result(_result[name]);
@@ -95,7 +88,7 @@ void Analyzer_Attitude_Estimate_Divergence::evaluate_estimate(
 
     double delta = delta_roll > delta_pitch ? delta_roll : delta_pitch;
 
-    bool failing = (delta >= attitude_max_delta_roll_pitch_warn);
+    bool failing = (delta >= delta_warn());
     if (_result[name] == NULL) {
         if (failing) {
             open_result(name, delta);

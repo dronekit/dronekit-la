@@ -16,6 +16,8 @@ bool Copter::param_default(const char *name, float &ret) {
     return Base::param_default(name, ret);
 }
 
+/* I think there's an argument for moving the following into Analyzer: */
+
 bool Copter::is_flying() {
     if (! is_armed()) {
         // we hope we're not flying, anyway!

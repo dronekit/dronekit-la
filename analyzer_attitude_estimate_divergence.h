@@ -6,43 +6,37 @@
  *
  */
 
-#include "analyzer.h"
+#include "analyzer_estimate_divergence.h"
 
-class Analyzer_Attitude_Estimate_Divergence_Result : public Analyzer_Result_Period {
+class Analyzer_Attitude_Estimate_Divergence_Result : public Analyzer_Estimate_Divergence_Result {
 public:
-    Analyzer_Attitude_Estimate_Divergence_Result() :
-        Analyzer_Result_Period()
+    Analyzer_Attitude_Estimate_Divergence_Result(const std::string name) :
+        Analyzer_Estimate_Divergence_Result(name)
         { }
 
-    void set_name(const std::string name) { _name = name; }
-    std::string name() { return _name; }
-
-    void set_max_delta(const double delta) { _max_delta = delta; }
-    const double max_delta() { return _max_delta; }
-
-    void set_delta_threshold(const double delta) { _delta_threshold = delta; }
-    const double delta_threshold() { return _delta_threshold; }
-
-    void to_json(Json::Value &root) const override;
 private:
-    std::string _name = "";
-
-    double _max_delta;
-    double _delta_threshold;
 };
 
-class Analyzer_Attitude_Estimate_Divergence : public Analyzer {
+class Analyzer_Attitude_Estimate_Divergence : public Analyzer_Estimate_Divergence {
 
 public:
 
     Analyzer_Attitude_Estimate_Divergence(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
-	Analyzer(vehicle,data_sources)
+	Analyzer_Estimate_Divergence(vehicle,data_sources)
     { }
 
     const std::string name() const override { return "Attitude Estimate Divergence"; }
     const std::string description() const override {
         return "This test will FAIL if various craft's attitude estimates diverge";
     }
+
+    const std::string estimate_name() const {
+        return "Attitude";
+    };
+
+    const double default_delta_warn() const override { return 5.0f; }
+    const double default_delta_fail() const override { return 10.0f; }
+    virtual const uint64_t default_duration_min() const override { return 500000; }
 
     void evaluate_estimate(
         std::string name,
@@ -52,12 +46,11 @@ public:
 
     void end_of_log(const uint32_t packet_count);
 
-private:
+    const std::string _config_tag() {
+        return std::string("attitude_estimate_divergence");
+    }
 
-    // FIXME: magic numbers!
-    const double attitude_max_delta_roll_pitch_fail = 10.0f;
-    const double attitude_max_delta_roll_pitch_warn = 5.0f;
-    const uint64_t delta_time_threshold = 500000;
+private:
 
     void open_result(std::string name, double delta);
     void update_result(std::string name, double delta);

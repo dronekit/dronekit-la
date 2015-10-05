@@ -13,13 +13,11 @@
 class Analyzer_Estimate_Divergence_Result : public Analyzer_Result_Period {
 public:
     Analyzer_Estimate_Divergence_Result(std::string name) :
-        Analyzer_Result_Period()
-        {
-            set_name(name);
-        }
+        Analyzer_Result_Period(),
+        _name(name)
+        { }
 
-    void set_name(const std::string name) { _name = name; }
-    std::string name() { return _name; }
+    const std::string name() const { return _name; }
 
     void set_max_delta(const double delta) { _max_delta = delta; }
     const double max_delta() { return _max_delta; }
@@ -60,6 +58,10 @@ public:
     virtual void close_result_add_evidence(Analyzer_Estimate_Divergence_Result *result);
     void end_of_log(const uint32_t packet_count) override;
 
+    virtual const double default_delta_warn() const { return 0.0f; }
+    virtual const double default_delta_fail() const { return 0.0f; }
+    virtual const uint64_t default_duration_min() const { return 0; }
+
 protected:
 
     double delta_fail() {
@@ -72,10 +74,13 @@ protected:
         return _delta_time_threshold;
     }
 
-    const float _delta_warn = 4.0f;
-    const float _delta_fail = 5.0f;
+    // defaults here make little sense....
+    float _delta_warn = default_delta_warn();
+    float _delta_fail = default_delta_fail();
+    uint64_t _delta_time_threshold = default_duration_min();
 
-    const uint64_t _delta_time_threshold = 500000;
+    virtual const std::string _config_tag() = 0;
+    bool configure(INIReader *config);
 
     Analyzer_Estimate_Divergence_Result *result_for_name(std::string name) {
         return _result[name];

@@ -9,6 +9,8 @@ bool Analyzer_Brownout::configure(INIReader *config)
 	return false;
     }
 
+    max_last_relative_altitude = config->GetReal("loganalyzer", "brownout::max_last_relative_altitude", 15.0f);
+
     return true;
 }
 

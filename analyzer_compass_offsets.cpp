@@ -6,6 +6,11 @@
 #include "analyzer_util.h"
 
 bool Analyzer_Compass_Offsets::configure(INIReader *config) {
+    if (!Analyzer::configure(config)) {
+        return false;
+    }
+    warn_offset = config->GetReal("loganalyzer", "compass_offsets::length_warn", 100.0f);
+    fail_offset = config->GetReal("loganalyzer", "compass_offsets::length_fail", 200.0f);
     return true;
 }
 

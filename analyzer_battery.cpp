@@ -4,6 +4,10 @@
 #include "analyzer_util.h"
 
 bool Analyzer_Battery::configure(INIReader *config) {
+    if (!Analyzer::configure(config)) {
+        return false;
+    }
+    low_battery_threshold = config->GetReal("loganalyzer", "battery::low_battery_threshold", 15.0f);
     return true;
 }
 
