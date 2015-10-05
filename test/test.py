@@ -5,6 +5,7 @@ import os
 import json
 import difflib
 import subprocess
+import string
 
 def filter_analysis_json(json_stuff, depth):
     if isinstance(json_stuff, dict):
@@ -49,17 +50,19 @@ def test_log(filepath_log):
         filter_analysis_json(analysis_json, 0) # modifies in place
         correctish_json_filepath = filepath_log + "-expected-json"
         correctish_json = json_from_filepath(correctish_json_filepath)
-        new_json_filepath = "/tmp/" + os.path.basename(filepath_log) + "-new-json"
+        
+        new_json_filepath = "/tmp/" + string.replace(filepath_log,"/","-") + "-new-json"
         spew_string_to_file(json.dumps(analysis_json, indent=2, sort_keys=True), new_json_filepath)
         mydiff = diff_json(correctish_json, analysis_json)
         if len(mydiff):
+            (correctish_json_dirpath,correctish_json_filename) = os.path.split(correctish_json_filepath)
             print("""
 FAIL: %s
 ---------diff-----------------
 %s
 ---------diff-----------------
-Accept new result: cp %s %s; git add %s
-""" % (filepath_log, mydiff, new_json_filepath, correctish_json_filepath, correctish_json_filepath))
+Accept new result: cp '%s' '%s'; pushd '%s'; git add '%s'; popd
+""" % (filepath_log, mydiff, new_json_filepath, correctish_json_filepath, correctish_json_dirpath, correctish_json_filename))
         else:
             print("PASS: %s" % (filepath_log,))
 
