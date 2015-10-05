@@ -72,6 +72,44 @@ bool LA_MsgHandler_ACC::find_T(const uint8_t *msg, uint64_t &T) {
     return false;
 }
 
+LA_MsgHandler_ATT::LA_MsgHandler_ATT(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+    LA_MsgHandler(name, f, analyze, vehicle) {
+    _analyze->add_data_source("ATTITUDE", "ATT.Roll");
+    _analyze->add_data_source("ATTITUDE", "ATT.Pitch");
+    _analyze->add_data_source("ATTITUDE", "ATT.Yaw");
+    _analyze->add_data_source("DESATTITUDE", "ATT.DesRoll");
+    _analyze->add_data_source("DESATTITUDE", "ATT.DesPitch");
+    _analyze->add_data_source("DESATTITUDE", "ATT.DesYaw");
+
+    _analyze->add_data_source("ATTITUDE_ESTIMATE_ATTITUDE", "ATT.Roll");
+    _analyze->add_data_source("ATTITUDE_ESTIMATE_ATTITUDE", "ATT.Pitch");
+    _analyze->add_data_source("ATTITUDE_ESTIMATE_ATTITUDE", "ATT.Yaw");
+};
+
+void LA_MsgHandler_ATT::xprocess(const uint8_t *msg) {
+    int16_t DesRoll = require_field_int16_t(msg, "DesRoll");
+    int16_t Roll = require_field_int16_t(msg, "Roll");
+    int16_t DesPitch = require_field_int16_t(msg, "DesPitch");
+    int16_t Pitch = require_field_int16_t(msg, "Pitch");
+    uint16_t DesYaw = require_field_uint16_t(msg, "DesYaw");
+    uint16_t Yaw = require_field_uint16_t(msg, "Yaw");
+
+    // _vehicle->set_roll(rad_to_deg(Roll/100.0f));
+    // _vehicle->set_pitch(rad_to_deg(Pitch/100.0f));
+    _vehicle->set_roll(Roll/(double)100.0f);
+    _vehicle->set_pitch(Pitch/(double)100.0f);
+    _vehicle->set_yaw(Yaw);
+
+    _vehicle->set_desroll((float)DesRoll/(double)100.0f);
+    _vehicle->set_despitch((float)DesPitch/(double)100.0f);
+    _vehicle->set_desyaw(DesYaw);
+
+    _vehicle->attitude_estimate("ATT")->set_roll(T(), Roll/(double)100.0f);
+    _vehicle->attitude_estimate("ATT")->set_pitch(T(), Pitch/(double)100.0f);
+    _vehicle->attitude_estimate("ATT")->set_yaw(T(), Yaw);
+}
+
+
 bool LA_MsgHandler_GPS::find_T(const uint8_t *msg, uint64_t &T) {
     if (field_value(msg, "TimeUS", T)) {
         return true;

@@ -48,6 +48,7 @@ void Analyzer_Battery::end_of_log(const uint32_t packet_count)
         result->set_reason("Battery failsafe event received");
         result->add_evidence(string_format("Failsafe set at %u",
                                            seen_failsafe_battery_event_T));
+        result->add_source(_data_sources.get("BATTERY_FAILSAFE"));
         result->add_evilness(20);
         add_result(result);
     }

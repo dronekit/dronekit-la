@@ -26,9 +26,9 @@ void Analyzer_Altitude_Estimate_Divergence::evaluate_estimate(
     }
 
     double delta = estimate.alt() - altitude.alt();
-    // ::fprintf(stderr, "%s: delta=%f\n", name.c_str(), delta);
 
     bool failing = (fabs(delta) > delta_warn());
+    // ::fprintf(stderr, "%s: delta=%f (%s)\n", name.c_str(), delta, (failing ? "FAILING" : ""));
 
     Analyzer_Altitude_Estimate_Divergence_Result *result =
         (Analyzer_Altitude_Estimate_Divergence_Result*)result_for_name(name);

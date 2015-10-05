@@ -76,6 +76,8 @@ void Analyzer::results_json_results(Json::Value &root)
         (*it)->to_json(result);
         if (result["series"].type() == Json::nullValue) {
             ::fprintf(stderr, "No series in (%s)\n", name().c_str());
+            // that appears to autovivify :-/
+            result["series"] = Json::Value(Json::arrayValue);
         }
         root.append(result);
     }

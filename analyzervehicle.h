@@ -59,10 +59,10 @@ namespace AnalyzerVehicle {
             _alt = alt;
             _alt_modtime = T;
         }
-        double alt() {
+        double alt() const {
             return _alt;
         }
-        double alt_modtime() {
+        double alt_modtime() const {
             return _alt_modtime;
         }
 
@@ -484,6 +484,10 @@ public:
         
     Position& origin() { return _origin; }
 
+    void set_origin_altitude(double value) { _origin_altitude.set_alt(T(),value); }
+    double origin_altitude() { return _origin_altitude.alt(); }
+    uint64_t origin_altitude_T() const { return _origin_altitude.alt_modtime(); }
+
 protected:
     AV_Nav& nav() { return _nav; };
 
@@ -501,7 +505,7 @@ protected:
     AV_Nav _nav = { };
 
     Position _origin = { };
-
+    Altitude _origin_altitude = { };
 private:
     bool _vehicletype_is_forced = false;
     uint64_t _T = 0;
