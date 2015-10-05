@@ -41,6 +41,7 @@ private:
 
     // FIXME: find a general way to do this:
     bool have_pos = false;
+    bool have_orgn = false;
     LA_MsgHandler_AHR2 *ahr2_handler = NULL;
 };
 

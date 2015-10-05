@@ -103,18 +103,18 @@ namespace AnalyzerVehicle {
             _lat = lat;
             _lat_modtime = T;
         }
-        double lat() { return _lat; };
-        uint64_t lat_modtime() { return _lat_modtime; };
+        double lat() const { return _lat; };
+        uint64_t lat_modtime() const { return _lat_modtime; };
 
         void set_lon(uint64_t T, double lon) {
             _lon = lon;
             _lon_modtime = T;
         }
-        double lon() { return _lon; };
-        uint64_t lon_modtime() { return _lon_modtime; };
+        double lon() const { return _lon; };
+        uint64_t lon_modtime() const { return _lon_modtime; };
 
 //        double distance_to(Position otherpos);
-        double horizontal_distance_to(Position otherpos);
+        double horizontal_distance_to(Position otherpos) const;
 
         bool is_zero_zero() {
             return (is_zero(lat()) && is_zero(lon()));
@@ -474,6 +474,16 @@ public:
     Position& pos() { return _pos; };
     Altitude& alt() { return _alt; };
 
+    const Position &origin() const { return _origin; }
+    double origin_lat() const { return _origin.lat(); }
+    uint64_t origin_lat_T() const { return _origin.lat_modtime(); }
+    double origin_lon() const { return _origin.lon(); }
+    uint64_t origin_lon_T() const { return _origin.lon_modtime(); }
+    void set_origin_lat(double value) { _origin.set_lat(T(),value); }
+    void set_origin_lon(double value) { _origin.set_lon(T(),value); }
+        
+    Position& origin() { return _origin; }
+
 protected:
     AV_Nav& nav() { return _nav; };
 
@@ -489,7 +499,9 @@ protected:
     Position _pos = { };
     Altitude _alt = { };
     AV_Nav _nav = { };
-    
+
+    Position _origin = { };
+
 private:
     bool _vehicletype_is_forced = false;
     uint64_t _T = 0;

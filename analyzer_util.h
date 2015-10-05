@@ -7,6 +7,22 @@
 // from: http://stackoverflow.com/questions/2342162/stdstring-formatting-like-sprintf
 #include <memory>
 
+double earthradius();
+
+double wrap_valid_longitude(const double longitude);
+
+// http://www.movable-type.co.uk/scripts/latlong.html
+void gps_newpos(const double orig_lat, const double orig_lon, const double bearing, const double distance, double &dest_lat, double &dest_lon);
+
+// origin_lat in degrees
+// origin_lon in degrees
+// bearing in degrees
+// distance in metres
+void gps_offset(double orig_lat, double orig_lon, double east, double north, double &dest_lat, double &dest_lon);
+
+
+
+
 template<typename ... Args>
 std::string
 string_format( const char* format, const Args ... args )

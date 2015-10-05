@@ -108,7 +108,7 @@ double haversine(double from_lat, double from_lon, double to_lat, double to_lon)
                            cos(deg_to_rad(from_lat)) * cos(deg_to_rad(to_lat))*sin_lon_delta_radians));
 }
 
-double AnalyzerVehicle::Position::horizontal_distance_to(AnalyzerVehicle::Position otherpos)
+double AnalyzerVehicle::Position::horizontal_distance_to(AnalyzerVehicle::Position otherpos) const
 {
-    return (double)6371000.0f * (haversine(lat(), lon(), otherpos.lat(), otherpos.lon()));
+    return (double)earthradius() * (haversine(lat(), lon(), otherpos.lat(), otherpos.lon()));
 }
