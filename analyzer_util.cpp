@@ -65,3 +65,12 @@ void gps_offset(double orig_lat, double orig_lon, double east, double north, dou
 }
 
 
+double altitude_from_pressure_delta(
+    double gnd_abs_press,
+    double gnd_temp,
+    double press_abs,
+    double temp)
+{
+    double scaling = press_abs/gnd_abs_press;
+    return 153.8462 * (gnd_temp + 273.15) * (1.0 - exp(0.190259 * log(scaling)));
+}

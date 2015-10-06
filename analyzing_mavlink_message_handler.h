@@ -17,6 +17,11 @@ public:
         _analyze->add_data_source("ALTITUDE_ESTIMATE_GLOBAL_POSITION_INT", "GLOBAL_POSITION_INT.alt");
         _analyze->add_data_source("ALTITUDE_ESTIMATE_GPS_RAW_INT", "GPS_RAW_INT.alt");
 
+        _analyze->add_data_source("ALTITUDE_ESTIMATE_SCALED_PRESSURE", "SCALED_PRESSURE.temperature");
+        _analyze->add_data_source("ALTITUDE_ESTIMATE_SCALED_PRESSURE", "SCALED_PRESSURE.press_abs");
+        _analyze->add_data_source("ALTITUDE_ESTIMATE_SCALED_PRESSURE2", "SCALED_PRESSURE2.temperature");
+        _analyze->add_data_source("ALTITUDE_ESTIMATE_SCALED_PRESSURE2", "SCALED_PRESSURE2.press_abs");
+
         _analyze->add_data_source("ARMING", "HEARBEAT.base_mode");
 
         _analyze->add_data_source("ATTITUDE", "ATTITUDE.roll");
@@ -75,6 +80,8 @@ public:
     }
 
 private:
+    virtual void handle_decoded_message_scaled_pressure(uint64_t T, const char *name, double press_abs, double temperature);
+
     virtual void handle_decoded_message(uint64_t T, mavlink_ahrs2_t &msg) override;
     virtual void handle_decoded_message(uint64_t T, mavlink_attitude_t &msg) override;
     virtual void handle_decoded_message(uint64_t T, mavlink_ekf_status_report_t &msg) override;
@@ -83,6 +90,8 @@ private:
     virtual void handle_decoded_message(uint64_t T, mavlink_heartbeat_t &msg) override;
     virtual void handle_decoded_message(uint64_t T, mavlink_nav_controller_output_t &msg) override;
     virtual void handle_decoded_message(uint64_t T, mavlink_param_value_t &msg) override;    
+    virtual void handle_decoded_message(uint64_t T, mavlink_scaled_pressure_t &msg) override;
+    virtual void handle_decoded_message(uint64_t T, mavlink_scaled_pressure2_t &msg) override;
     virtual void handle_decoded_message(uint64_t T, mavlink_servo_output_raw_t &msg) override;
     virtual void handle_decoded_message(uint64_t T, mavlink_statustext_t &msg) override;
     virtual void handle_decoded_message(uint64_t T, mavlink_sys_status_t &msg) override;

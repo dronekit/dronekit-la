@@ -6,6 +6,11 @@ import json
 import difflib
 import subprocess
 import string
+import argparse;
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--accept-all', help='accept all new results', dest='accept_all', action="store_true")
+args = parser.parse_args()
 
 def filter_analysis_json(json_stuff, depth):
     if isinstance(json_stuff, dict):
@@ -50,19 +55,24 @@ def test_log(filepath_log):
         filter_analysis_json(analysis_json, 0) # modifies in place
         correctish_json_filepath = filepath_log + "-expected-json"
         correctish_json = json_from_filepath(correctish_json_filepath)
-        
+
         new_json_filepath = "/tmp/" + string.replace(filepath_log,"/","-") + "-new-json"
         spew_string_to_file(json.dumps(analysis_json, indent=2, sort_keys=True), new_json_filepath)
         mydiff = diff_json(correctish_json, analysis_json)
         if len(mydiff):
             (correctish_json_dirpath,correctish_json_filename) = os.path.split(correctish_json_filepath)
+            accept_command = "cp '%s' '%s'; pushd '%s'; git add '%s'; popd" % (new_json_filepath, correctish_json_filepath, correctish_json_dirpath, correctish_json_filename)
             print("""
 FAIL: %s
 ---------diff-----------------
 %s
 ---------diff-----------------
-Accept new result: cp '%s' '%s'; pushd '%s'; git add '%s'; popd
-""" % (filepath_log, mydiff, new_json_filepath, correctish_json_filepath, correctish_json_dirpath, correctish_json_filename))
+Accept new result: %s
+""" % (filepath_log, mydiff, accept_command))
+            if args.accept_all:
+                print("Accepting automatically")
+                check_me = subprocess.check_output(accept_command, shell=True, executable='/bin/bash');
+
         else:
             print("PASS: %s" % (filepath_log,))
 

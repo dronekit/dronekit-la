@@ -79,6 +79,18 @@ void MAVLink_Message_Handler::handle_message(uint64_t timestamp, mavlink_message
         handle_decoded_message(timestamp, decoded);
         break;
     }
+    case MAVLINK_MSG_ID_SCALED_PRESSURE: {
+        mavlink_scaled_pressure_t decoded;
+        mavlink_msg_scaled_pressure_decode(&msg, &decoded);
+        handle_decoded_message(timestamp, decoded);
+        break;
+    }
+    case MAVLINK_MSG_ID_SCALED_PRESSURE2: {
+        mavlink_scaled_pressure2_t decoded;
+        mavlink_msg_scaled_pressure2_decode(&msg, &decoded);
+        handle_decoded_message(timestamp, decoded);
+        break;
+    }
     case MAVLINK_MSG_ID_SERVO_OUTPUT_RAW: {
         mavlink_servo_output_raw_t decoded;
         mavlink_msg_servo_output_raw_decode(&msg, &decoded);

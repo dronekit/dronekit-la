@@ -21,6 +21,12 @@ void gps_newpos(const double orig_lat, const double orig_lon, const double beari
 void gps_offset(double orig_lat, double orig_lon, double east, double north, double &dest_lat, double &dest_lon);
 
 
+double altitude_from_pressure_delta(
+    double gnd_abs_press,
+    double gnd_temp,
+    double press_abs,
+    double temp);
+    
 
 
 template<typename ... Args>

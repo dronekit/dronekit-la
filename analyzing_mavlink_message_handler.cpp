@@ -44,7 +44,11 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
     _vehicle->set_lat(lat);
     _vehicle->set_lon(lon);
     // and I'm assuming for ALT as well:
-    _vehicle->set_altitude(msg.alt/(double)1000.0f);
+    double alt = msg.alt/(double)1000.0f;
+    _vehicle->set_altitude(alt);
+    if (_vehicle->origin_altitude_T() == 0) {
+        _vehicle->set_origin_altitude(alt);
+    }
 
     _analyze->evaluate_all();
 }
@@ -92,6 +96,41 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
     _vehicle->param_set(buf, msg.param_value);
 
     _analyze->evaluate_all();
+}
+
+void Analyzing_MAVLink_Message_Handler::handle_decoded_message_scaled_pressure(uint64_t T, const char *name, double press_abs, double temperature) {
+    _vehicle->set_T(T);
+
+    float gnd_abs_press;
+    float gnd_temp;
+    if (_vehicle->param("GND_ABS_PRESS", gnd_abs_press) &&
+        _vehicle->param("GND_TEMP", gnd_temp) &&
+        _vehicle->origin_altitude_T()) {
+
+        double relalt = altitude_from_pressure_delta(
+            gnd_abs_press/(double)100.0f,
+            gnd_temp,
+            press_abs,
+            temperature);
+        
+        double alt = _vehicle->origin_altitude() + relalt;
+        // ::fprintf(stderr, "SCALED_PRESSURE alt=%f\n", alt);
+        _vehicle->altitude_estimate(name)->set_alt(T, alt);
+    }
+
+    _analyze->evaluate_all();
+}
+
+void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_scaled_pressure_t &msg) {
+    handle_decoded_message_scaled_pressure(T, "SCALED_PRESSURE",
+                                           msg.press_abs,
+                                           msg.temperature);
+}
+
+void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_scaled_pressure2_t &msg) {
+    handle_decoded_message_scaled_pressure(T, "SCALED_PRESSURE2",
+                                           msg.press_abs,
+                                           msg.temperature);
 }
 
 void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_servo_output_raw_t &msg) {
