@@ -71,8 +71,10 @@ private:
     int xopen(const char *filepath, uint8_t mode);
 
     void prep_for_df();
+    void prep_for_log();
     void prep_for_tlog();
     void cleanup_after_df();
+    void cleanup_after_log();
     void cleanup_after_tlog();
     
     void show_version_information();
@@ -86,6 +88,7 @@ private:
     enum log_format_t {
         log_format_none = 19,
         log_format_tlog,
+        log_format_log, // text dump of dflog
         log_format_df,
     };
     log_format_t _force_format = log_format_none;

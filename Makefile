@@ -31,6 +31,7 @@ SRCS_CPP += message_handler.cpp
 SRCS_CPP += MsgHandler.cpp
 SRCS_CPP += format_reader.cpp
 SRCS_CPP += dataflash_reader.cpp
+SRCS_CPP += dataflash_textdump_reader.cpp
 SRCS_CPP += mavlink_reader.cpp
 SRCS_CPP += analyze.cpp
 SRCS_CPP += analyzer.cpp

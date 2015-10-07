@@ -19,7 +19,7 @@ public:
 
     uint32_t feed(const uint8_t *buf, const uint32_t len) override;
 
-private:
+protected:
     ssize_t count_bytes_skipped = 0;
 #define MAX_FORMATS 256
     struct log_Format formats[MAX_FORMATS] = { };

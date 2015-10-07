@@ -15,6 +15,7 @@
 #include <regex>
 
 #include "dataflash_reader.h"
+#include "dataflash_textdump_reader.h"
 
 #include "analyzing_dataflash_message_handler.h"
 #include "analyzing_mavlink_message_handler.h"
@@ -26,36 +27,48 @@ void LogAnalyzer::parse_path(const char *path)
         _vehicle = new AnalyzerVehicle::Base();
     }
 
-    bool is_dataflash_log = false;
     bool do_stdin = false;
 
+    log_format_t log_format = log_format_none;
     if (!strcmp(path, "-")) {
         do_stdin = true;
     } else if (strstr(path, ".BIN") ||
                strstr(path, ".bin")) {
-        is_dataflash_log = true;
+        log_format = log_format_df;
+    } else if (strstr(path, ".log") ||
+               strstr(path, ".LOG")) {
+        log_format = log_format_log;
+    } else if (strstr(path, ".tlog") ||
+               strstr(path, ".TLOG")) {
+        log_format = log_format_tlog;
     }
 
-    switch (force_format()) {
-    case log_format_tlog:
-        break;
-    case log_format_df:
-        is_dataflash_log = true;
-        break;
-    default:
-        break;
+    if (force_format() != log_format_none) {
+        log_format = force_format();
     }
     
-    if (do_stdin && force_format() == log_format_none) {
-        ::fprintf(stderr, "You asked to parse stdin but did not force a format type\n");
+    if (log_format == log_format_none) {
+        if (do_stdin) {
+            ::fprintf(stderr, "You asked to parse stdin but did not force a format type\n");
+        } else {
+            ::fprintf(stderr, "Unable to determine log type from filename; try -i?\n");
+        }
         usage();
         exit(1);
     }
 
-    if (is_dataflash_log) {
-        prep_for_df();
-    } else {
+    switch (log_format) {
+    case log_format_tlog:
         prep_for_tlog();
+        break;
+    case log_format_df:
+        prep_for_df();
+        break;
+    case log_format_log:
+        prep_for_log();
+        break;
+    default:
+        abort();
     }
 
     int fd;
@@ -75,10 +88,18 @@ void LogAnalyzer::parse_path(const char *path)
         printf("\n");
     }
 
-    if (is_dataflash_log) {
-        cleanup_after_df();
-    } else {
+    switch (log_format) {
+    case log_format_tlog:
         cleanup_after_tlog();
+        break;
+    case log_format_df:
+        cleanup_after_df();
+        break;
+    case log_format_log:
+        cleanup_after_log();
+        break;
+    default:
+        abort();
     }
     
     delete _vehicle;
@@ -111,6 +132,10 @@ void LogAnalyzer::cleanup_after_tlog()
     reader->clear_message_handlers();
 }
 void LogAnalyzer::cleanup_after_df()
+{
+    reader->clear_message_handlers();
+}
+void LogAnalyzer::cleanup_after_log()
 {
     reader->clear_message_handlers();
 }
@@ -182,6 +207,16 @@ Analyze *LogAnalyzer::create_analyze()
 void LogAnalyzer::prep_for_df()
 {
     reader = new DataFlash_Reader(config());
+
+    Analyze *analyze = create_analyze();
+
+    Analyzing_DataFlash_Message_Handler *handler = new Analyzing_DataFlash_Message_Handler(analyze, _vehicle);
+    reader->add_message_handler(handler, "Analyze");
+}
+
+void LogAnalyzer::prep_for_log()
+{
+    reader = new DataFlash_TextDump_Reader(config());
 
     Analyze *analyze = create_analyze();
 
@@ -314,6 +349,8 @@ void LogAnalyzer::run()
             _force_format = log_format_tlog;
         } else if(streq(forced_format_string, "df")) {
             _force_format = log_format_df;
+        } else if(streq(forced_format_string, "log")) {
+            _force_format = log_format_log;
         } else {
             usage();
             exit(1);
@@ -337,13 +374,14 @@ void LogAnalyzer::usage()
     ::printf(" -h               display usage information\n");
     ::printf(" -l               list analyzers\n");
     ::printf(" -a               specify analzers to run (comma-separated list)\n");
-    ::printf(" -i format        specify format (tlog|df)\n");
+    ::printf(" -i format        specify format (tlog|df|log)\n");
     ::printf(" -V               display version information\n");
     ::printf("\n");
     ::printf("Example: %s -s json 1.solo.tlog\n", program_name());
     ::printf("Example: %s -a \"Ever Flew, Battery\" 1.solo.tlog\n", program_name());
     ::printf("Example: %s -s brief 1.solo.tlog 2.solo.tlog logs/*.tlog\n", program_name());
     ::printf("Example: %s - (analyze stdin)\n", program_name());
+    ::printf("Example: %s x.log (analyze text-dumped dataflash log)\n", program_name());
     exit(0);
 }
 const char *LogAnalyzer::program_name()
