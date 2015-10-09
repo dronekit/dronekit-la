@@ -37,23 +37,23 @@ SRCS_CPP += mavlink_writer.cpp
 SRCS_CPP += analyze.cpp
 SRCS_CPP += analyzer.cpp
 SRCS_CPP += heart.cpp
-SRCS_CPP += analyzer_any_parameters_seen.cpp
-SRCS_CPP += analyzer_arming_checks.cpp
-SRCS_CPP += analyzer_attitude_control.cpp
-SRCS_CPP += analyzer_battery.cpp
-SRCS_CPP += analyzer_brownout.cpp
-SRCS_CPP += analyzer_compass_offsets.cpp
-SRCS_CPP += analyzer_ever_armed.cpp
-SRCS_CPP += analyzer_ever_flew.cpp
-SRCS_CPP += analyzer_good_ekf.cpp
-SRCS_CPP += analyzer_gps_fix.cpp
-SRCS_CPP += analyzer_notcrashed.cpp
-SRCS_CPP += analyzer_sensor_health.cpp
-SRCS_CPP += analyzer_estimate_divergence.cpp
-SRCS_CPP += analyzer_altitude_estimate_divergence.cpp
-SRCS_CPP += analyzer_attitude_estimate_divergence.cpp
-SRCS_CPP += analyzer_position_estimate_divergence.cpp
-SRCS_CPP += analyzer_vehicle_definition.cpp
+SRCS_CPP += analyzer/analyzer_any_parameters_seen.cpp
+SRCS_CPP += analyzer/analyzer_arming_checks.cpp
+SRCS_CPP += analyzer/analyzer_attitude_control.cpp
+SRCS_CPP += analyzer/analyzer_battery.cpp
+SRCS_CPP += analyzer/analyzer_brownout.cpp
+SRCS_CPP += analyzer/analyzer_compass_offsets.cpp
+SRCS_CPP += analyzer/analyzer_ever_armed.cpp
+SRCS_CPP += analyzer/analyzer_ever_flew.cpp
+SRCS_CPP += analyzer/analyzer_good_ekf.cpp
+SRCS_CPP += analyzer/analyzer_gps_fix.cpp
+SRCS_CPP += analyzer/analyzer_notcrashed.cpp
+SRCS_CPP += analyzer/analyzer_sensor_health.cpp
+SRCS_CPP += analyzer/analyzer_estimate_divergence.cpp
+SRCS_CPP += analyzer/analyzer_altitude_estimate_divergence.cpp
+SRCS_CPP += analyzer/analyzer_attitude_estimate_divergence.cpp
+SRCS_CPP += analyzer/analyzer_position_estimate_divergence.cpp
+SRCS_CPP += analyzer/analyzer_vehicle_definition.cpp
 SRCS_CPP += analyzervehicle_copter.cpp
 SRCS_CPP += analyzervehicle.cpp
 SRCS_CPP += la-log.cpp
@@ -85,7 +85,7 @@ $(IMAGETAGGER): $(OBJS) imagetagger.cpp mh_imagetagger.cpp
 	$(LINK.cpp) -o $(IMAGETAGGER) imagetagger.cpp mh_imagetagger.cpp $(OBJS) $(LIBS) $(DLIBS)
 
 clean:
-	$(RM) *.o *~ $(DATAFLASH_LOGGER) $(LOG_ANALYZER) $(IMAGETAGGER)
+	$(RM) *.o *~ $(DATAFLASH_LOGGER) $(LOG_ANALYZER) $(IMAGETAGGER) analyzer/*.o
 
 test: clean all
 	cd test; ./test.sh

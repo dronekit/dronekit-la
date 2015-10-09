@@ -8,9 +8,9 @@
 
 #include "analyzer_util.h"
 
-#include "analyzer_altitude_estimate_divergence.h"
-#include "analyzer_ever_flew.h"
-#include "analyzer_position_estimate_divergence.h"
+#include "analyzer/analyzer_altitude_estimate_divergence.h"
+#include "analyzer/analyzer_ever_flew.h"
+#include "analyzer/analyzer_position_estimate_divergence.h"
 
 #include "data_sources.h"
 

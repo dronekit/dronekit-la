@@ -3,21 +3,21 @@
 #include <syslog.h>
 #include <stdlib.h> // for exit() (fixme)
 
-#include "analyzer_any_parameters_seen.h"
-#include "analyzer_arming_checks.h"
-#include "analyzer_altitude_estimate_divergence.h"
-#include "analyzer_attitude_estimate_divergence.h"
-#include "analyzer_attitude_control.h"
-#include "analyzer_battery.h"
-#include "analyzer_brownout.h"
-#include "analyzer_compass_offsets.h"
-#include "analyzer_ever_armed.h"
-#include "analyzer_good_ekf.h"
-#include "analyzer_gps_fix.h"
-#include "analyzer_notcrashed.h"
-#include "analyzer_position_estimate_divergence.h"
-#include "analyzer_sensor_health.h"
-#include "analyzer_vehicle_definition.h"
+#include "analyzer/analyzer_any_parameters_seen.h"
+#include "analyzer/analyzer_arming_checks.h"
+#include "analyzer/analyzer_altitude_estimate_divergence.h"
+#include "analyzer/analyzer_attitude_estimate_divergence.h"
+#include "analyzer/analyzer_attitude_control.h"
+#include "analyzer/analyzer_battery.h"
+#include "analyzer/analyzer_brownout.h"
+#include "analyzer/analyzer_compass_offsets.h"
+#include "analyzer/analyzer_ever_armed.h"
+#include "analyzer/analyzer_good_ekf.h"
+#include "analyzer/analyzer_gps_fix.h"
+#include "analyzer/analyzer_notcrashed.h"
+#include "analyzer/analyzer_position_estimate_divergence.h"
+#include "analyzer/analyzer_sensor_health.h"
+#include "analyzer/analyzer_vehicle_definition.h"
 
 void Analyze::set_analyzer_names_to_run(const std::vector<std::string> run_these)
 {
