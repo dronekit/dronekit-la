@@ -23,7 +23,7 @@
   log structures common to all vehicle types
  */
 struct PACKED log_Format {
-    LOG_PACKET_HEADER;
+    LOG_PACKET_HEADER
     uint8_t type;
     uint8_t length;
     char name[4];

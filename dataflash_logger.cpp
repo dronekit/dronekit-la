@@ -220,7 +220,7 @@ void DataFlash_Logger::queue_gap_nacks(uint32_t seqno)
     }
 }
 
-bool DataFlash_Logger::logging_start(mavlink_remote_log_data_block_t &msg)
+bool DataFlash_Logger::logging_start(mavlink_remote_log_data_block_t &msg UNUSED)
 {
     sender_system_id = most_recent_sender_system_id;
     sender_component_id = most_recent_sender_component_id;
@@ -246,7 +246,7 @@ void DataFlash_Logger::handle_message(uint64_t timestamp, mavlink_message_t &msg
     MAVLink_Message_Handler::handle_message(timestamp, msg);
 }
 
-void DataFlash_Logger::handle_decoded_message(uint64_t T, mavlink_remote_log_data_block_t &msg)
+void DataFlash_Logger::handle_decoded_message(uint64_t T UNUSED, mavlink_remote_log_data_block_t &msg)
 {
     if (!logging_started) {
 	if (msg.seqno == 0) {

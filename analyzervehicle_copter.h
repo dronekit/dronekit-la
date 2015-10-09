@@ -61,6 +61,6 @@ namespace AnalyzerVehicle {
         uint8_t _num_motors = 0; // e.g. 4 for a quad...
     };
 
-}; // end namepsace
+} // end namepsace
 
 #endif

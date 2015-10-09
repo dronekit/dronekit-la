@@ -15,7 +15,7 @@ bool Analyzer_GPS_Fix::configure(INIReader *config) {
     return true;
 }
 
-void Analyzer_GPS_Fix::end_of_log(uint32_t packet_count)
+void Analyzer_GPS_Fix::end_of_log(uint32_t packet_count UNUSED)
 {
     if (_result != NULL) {
         close_result();

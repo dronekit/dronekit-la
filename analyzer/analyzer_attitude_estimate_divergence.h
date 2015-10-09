@@ -34,9 +34,9 @@ public:
         return "Attitude";
     };
 
-    const double default_delta_warn() const override { return 5.0f; }
-    const double default_delta_fail() const override { return 10.0f; }
-    virtual const uint64_t default_duration_min() const override { return 500000; }
+    double default_delta_warn() const override { return 5.0f; }
+    double default_delta_fail() const override { return 10.0f; }
+    virtual uint64_t default_duration_min() const override { return 500000; }
 
     void evaluate_estimate(
         std::string name,
@@ -46,7 +46,7 @@ public:
 
     void end_of_log(const uint32_t packet_count);
 
-    const std::string _config_tag() {
+    const std::string _config_tag() const {
         return std::string("attitude_estimate_divergence");
     }
 

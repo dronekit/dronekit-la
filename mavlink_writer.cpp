@@ -12,6 +12,7 @@ bool MAVLink_Writer::handle_message(const mavlink_message_t &msg)
     if (_buf_stop >= _buf_start) {
         uint16_t to_copy = _buf_stop - _buf_start;
         memcpy(&sendbuf[_buf_start], sendbuf, to_copy);
+        _buf_start += to_copy;
     } else {
         uint16_t to_copy = _buf_len - _buf_start;
         memcpy(&sendbuf[_buf_start], sendbuf, to_copy);

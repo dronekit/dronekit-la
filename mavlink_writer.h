@@ -4,10 +4,12 @@
 #include "mavlink/c_library/ardupilotmega/mavlink.h"
 #include "INIReader.h"
 
+#define UNUSED __attribute__ ((unused))
+
 class MAVLink_Writer {
 public:
 
-    MAVLink_Writer(INIReader *config, uint8_t *buf, const uint32_t buf_len,
+    MAVLink_Writer(INIReader *config UNUSED, uint8_t *buf, const uint32_t buf_len,
                    uint32_t &buf_start, uint32_t &buf_stop) :
         _buf(buf),
         _buf_len(buf_len),

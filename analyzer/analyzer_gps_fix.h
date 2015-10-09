@@ -54,8 +54,8 @@ private:
 
     void end_of_log(uint32_t packet_count) override;
 
-    const uint8_t satellites_visible_threshold() const { return _satellites_min; }
-    const double hdop_threshold() const { return _hdop_min; }
+    uint8_t satellites_visible_threshold() const { return _satellites_min; }
+    double hdop_threshold() const { return _hdop_min; }
 
     bool gpsinfo_bad(AnalyzerVehicle::GPSInfo *gpsinfo);
 

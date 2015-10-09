@@ -25,7 +25,7 @@ void Analyzer_Brownout::evaluate()
     }
 }
 
-void Analyzer_Brownout::end_of_log(const uint32_t packet_count)
+void Analyzer_Brownout::end_of_log(const uint32_t packet_count UNUSED)
 {
     double last_altitude = _vehicle->altitude();
     _result.set_last_altitude(last_altitude);

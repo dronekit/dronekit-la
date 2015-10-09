@@ -44,7 +44,7 @@ bool Analyzer_Compass_Offsets::new_compass_results()
     return true;
 }
 
-bool Analyzer_Compass_Offsets::compass_use(const std::string param_extra_string)
+bool Analyzer_Compass_Offsets::compass_use()
 {
     if (! _vehicle->param_seen("COMPASS_USE" + _param_extra_string)) {
         return false;
@@ -63,7 +63,7 @@ void Analyzer_Compass_Offsets::evaluate()
         return;
     }
 
-    bool _compass_use = compass_use(_param_extra_string);
+    bool _compass_use = compass_use();
     bool _new_compass_results = new_compass_results();
     if (! _compass_use) {
         _old_compass_use = false;
@@ -117,9 +117,9 @@ void Analyzer_Compass_Offsets::evaluate()
     add_result(result);
 }
 
-void Analyzer_Compass_Offsets::end_of_log(uint32_t packet_count)
+void Analyzer_Compass_Offsets::end_of_log(uint32_t packet_count UNUSED)
 {
-    if (! compass_use(_param_extra_string)) {
+    if (! compass_use()) {
         // note that this means that if a compass gets turned off
         // half-way through the log then we won't get any results...
         return;

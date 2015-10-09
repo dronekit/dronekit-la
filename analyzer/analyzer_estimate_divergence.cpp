@@ -19,7 +19,7 @@ void Analyzer_Estimate_Divergence_Result::to_json(Json::Value &root) const
     root["name"] = _name;
 }
 
-void Analyzer_Estimate_Divergence::end_of_log(const uint32_t packet_count)
+void Analyzer_Estimate_Divergence::end_of_log(const uint32_t packet_count UNUSED)
 {
     for (std::map<const std::string, Analyzer_Estimate_Divergence_Result*>::iterator it = _result.begin();
          it != _result.end();

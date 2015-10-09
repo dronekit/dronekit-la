@@ -35,7 +35,7 @@ void Analyzer_Ever_Armed::evaluate()
     }
 }
 
-void Analyzer_Ever_Armed::end_of_log(const uint32_t packet_count)
+void Analyzer_Ever_Armed::end_of_log(const uint32_t packet_count UNUSED)
 {
     _result.add_source(_data_sources.get("ARMING"));
     add_result(&_result);

@@ -10,7 +10,7 @@ void Analyzer_Vehicle_Definition::evaluate()
     }
 }
 
-void Analyzer_Vehicle_Definition::end_of_log(const uint32_t packet_count)
+void Analyzer_Vehicle_Definition::end_of_log(const uint32_t packet_count UNUSED)
 {
     Analyzer_Vehicle_Definition_Result *result = new Analyzer_Vehicle_Definition_Result();
     result->add_source(_data_sources.get("VEHICLE_DEFINITION"));

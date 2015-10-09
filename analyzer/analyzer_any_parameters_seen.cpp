@@ -9,7 +9,7 @@ void Analyzer_Any_Parameters_Seen::evaluate()
     }
 }
 
-void Analyzer_Any_Parameters_Seen::end_of_log(const uint32_t packet_count)
+void Analyzer_Any_Parameters_Seen::end_of_log(const uint32_t packet_count UNUSED)
 {
     Analyzer_Any_Parameters_Seen_Result *result = new Analyzer_Any_Parameters_Seen_Result();
     if (any_parameters_seen) {

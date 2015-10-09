@@ -20,7 +20,7 @@ bool Analyzer_Good_EKF::configure(INIReader *config) {
     return true;
 }
 
-void Analyzer_Good_EKF::end_of_log(uint32_t packet_count)
+void Analyzer_Good_EKF::end_of_log(uint32_t packet_count UNUSED)
 {
     std::map<const std::string, double> variances = _vehicle->ekf_variances();
     

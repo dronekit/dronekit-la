@@ -21,6 +21,7 @@ const char *_status_as_string(analyzer_status status);
 
 class Analyzer_Result {
 public:
+    virtual ~Analyzer_Result() { }
 
     const char *status_as_string() const {
         return _status_as_string(_status);
@@ -136,14 +137,14 @@ public:
         _data_sources(data_sources)
         { }
 
-    virtual bool configure(INIReader *config) {
+    virtual bool configure(INIReader *config UNUSED) {
         return true;
     }
 
     virtual const std::string name() const = 0;
     virtual const std::string description() const = 0;
     virtual void results_json_results(Json::Value &root);
-    virtual void end_of_log(uint32_t packet_count) { }
+    virtual void end_of_log(uint32_t packet_count UNUSED) { }
 
     const char *status_as_string() {
         return _status_as_string(status());

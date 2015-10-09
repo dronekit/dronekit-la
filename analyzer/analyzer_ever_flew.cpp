@@ -53,7 +53,7 @@ void Analyzer_Ever_Flew::evaluate()
     }
 }
 
-void Analyzer_Ever_Flew::end_of_log(const uint32_t packet_count)
+void Analyzer_Ever_Flew::end_of_log(const uint32_t packet_count UNUSED)
 {
     if (_vehicle->is_flying()) {
         _total_flight_time += _vehicle->T() - _fly_start_time;

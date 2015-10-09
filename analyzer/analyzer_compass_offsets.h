@@ -52,7 +52,7 @@ private:
         (uint64_t)-1
     };
     
-    bool compass_use(const std::string param_extra_string);
+    bool compass_use();
     bool new_compass_results();
 
 #define MAX_COMPASS_OFFSET_RESULTS 100

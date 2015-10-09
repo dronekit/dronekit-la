@@ -185,7 +185,7 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
     _analyze->evaluate_all();
 }
 
-void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_vfr_hud_t &msg) {
+void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_vfr_hud_t &msg UNUSED) {
     _vehicle->set_T(T);
 
     // vfr_hud is a relative altitude, set_alt sets absolute altitude

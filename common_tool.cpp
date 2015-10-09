@@ -53,18 +53,24 @@ void Common_Tool::check_fds_are_empty_after_select(fd_set &fds_read, fd_set &fds
     }
 }
 
-void Common_Tool::pack_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds)
+void Common_Tool::pack_select_fds(fd_set &fds_read UNUSED,
+                                  fd_set &fds_write UNUSED,
+                                  fd_set &fds_err UNUSED,
+                                  uint8_t &nfds UNUSED)
 {
 }
 
-void Common_Tool::handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds)
+void Common_Tool::handle_select_fds(fd_set &fds_read UNUSED,
+                                    fd_set &fds_write UNUSED,
+                                    fd_set &fds_err UNUSED,
+                                    uint8_t &nfds UNUSED)
 {
 }
 
 void Common_Tool::sighup_received_tophalf()
 {
 }
-void Common_Tool::sighup_handler(int signal)
+void Common_Tool::sighup_handler(int signal UNUSED)
 {
     _sighup_received = true;
 }

@@ -526,6 +526,6 @@ private:
 
 }; // end class
 
-}; // end namespace
+} // end namespace
 
 #endif

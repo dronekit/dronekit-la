@@ -28,9 +28,9 @@ public:
         return "Altitude";
     };
 
-    const double default_delta_warn() const override { return 4.0f; }
-    const double default_delta_fail() const override { return 5.0f; }
-    virtual const uint64_t default_duration_min() const override { return 500000; }
+    double default_delta_warn() const override { return 4.0f; }
+    double default_delta_fail() const override { return 5.0f; }
+    virtual uint64_t default_duration_min() const override { return 500000; }
 
     void end_of_log(const uint32_t packet_count);
 
@@ -46,7 +46,7 @@ public:
     double maximum_altitude() { return _max_alt; }
     double maximum_altitude_relative() { return _max_alt_rel; }
 
-    const std::string _config_tag() {
+    const std::string _config_tag() const {
         return std::string("altitude_estimate_divergence");
     }
     

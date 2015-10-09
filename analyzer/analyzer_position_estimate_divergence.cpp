@@ -2,7 +2,7 @@
 
 #include "analyzer_util.h"
 
-void Analyzer_Position_Estimate_Divergence::end_of_log(const uint32_t packet_count)
+void Analyzer_Position_Estimate_Divergence::end_of_log(const uint32_t packet_count UNUSED)
 {
     for (std::map<const std::string, Analyzer_Position_Estimate_Divergence_Result*>::iterator it = _result.begin();
          it != _result.end();
@@ -110,7 +110,6 @@ void Analyzer_Position_Estimate_Divergence::evaluate()
 
     if (!prevpos.is_zero_zero() &&
         !pos.is_zero_zero()) {
-        double travelled = prevpos.horizontal_distance_to(pos);
         _total_distance_travelled += prevpos.horizontal_distance_to(pos);
     }
     prevpos = pos;

@@ -2,7 +2,7 @@
 
 #include "analyzer_util.h"
 
-void Analyzer_Attitude_Estimate_Divergence::end_of_log(const uint32_t packet_count)
+void Analyzer_Attitude_Estimate_Divergence::end_of_log(const uint32_t packet_count UNUSED)
 {
     for (std::map<const std::string, Analyzer_Attitude_Estimate_Divergence_Result*>::iterator it = _result.begin();
          it != _result.end();

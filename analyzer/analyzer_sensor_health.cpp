@@ -16,7 +16,7 @@ bool Analyzer_Sensor_Health::configure(INIReader *config) {
     return true;
 }
 
-void Analyzer_Sensor_Health::end_of_log(uint32_t packet_count)
+void Analyzer_Sensor_Health::end_of_log(uint32_t packet_count UNUSED)
 {
     std::map<const std::string, bool> sensors_health = _vehicle->sensors_health();
 

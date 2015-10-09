@@ -8,15 +8,12 @@
 
 #include "la-log.h"
 
-/*
-* create_and_bind - create a socket and bind it to a local UDP port
-*
-* Used to create the socket on the upstream side that receives from and sends
-* to telem_forwarder
-*
-* Returns fd on success, -1 on error.
-*/
-void Telem_Forwarder_Client::pack_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds)
+#define UNUSED __attribute__ ((unused))
+
+void Telem_Forwarder_Client::pack_select_fds(fd_set &fds_read UNUSED,
+                                             fd_set &fds_write UNUSED,
+                                             fd_set &fds_err UNUSED,
+                                             uint8_t &nfds UNUSED)
 {
     FD_SET(fd_telem_forwarder, &fds_read);
     FD_SET(fd_telem_forwarder, &fds_err);
@@ -27,14 +24,15 @@ void Telem_Forwarder_Client::pack_select_fds(fd_set &fds_read, fd_set &fds_write
 }
 
         
-void Telem_Forwarder_Client::handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds)
+void Telem_Forwarder_Client::handle_select_fds(fd_set &fds_read UNUSED,
+                                               fd_set &fds_write UNUSED,
+                                               fd_set &fds_err UNUSED,
+                                               uint8_t &nfds UNUSED)
 {
     /* check for packets from telem_forwarder */
     if (FD_ISSET(fd_telem_forwarder, &fds_err)) {
         FD_CLR(fd_telem_forwarder, &fds_err);
-        unsigned skipped = 0;
-        // if ((skipped = can_log_error()) >= 0)
-        la_log(LOG_ERR, "[%u] select(fd_telem_forwarder): %s", skipped, strerror(errno));
+        la_log(LOG_ERR, "select(fd_telem_forwarder): %s", strerror(errno));
     }
 
     if (FD_ISSET(fd_telem_forwarder, &fds_read)) {
@@ -45,6 +43,14 @@ void Telem_Forwarder_Client::handle_select_fds(fd_set &fds_read, fd_set &fds_wri
 }
 
 
+/*
+* create_and_bind - create a socket and bind it to a local UDP port
+*
+* Used to create the socket on the upstream side that receives from and sends
+* to telem_forwarder
+*
+* Returns fd on success, -1 on error.
+*/
 void Telem_Forwarder_Client::create_and_bind()
 {
     int fd;
@@ -91,31 +97,19 @@ bool can_log_error() {
 bool Telem_Forwarder_Client::sane_telem_forwarder_packet(uint8_t *pkt, uint16_t pktlen)
 {
     if (sa.sin_addr.s_addr != sa_tf.sin_addr.s_addr) {
-	unsigned skipped = 0;
-	// if ((skipped = can_log_error()) >= 0)
-	    la_log(LOG_ERR, "[%u] received packet not from solo (0x%08x)",
-		   skipped, sa.sin_addr.s_addr);
+        la_log(LOG_ERR, "received packet not from solo (0x%08x)", sa.sin_addr.s_addr);
 	return false;
     }
     if (pktlen < 8) { 
-	unsigned skipped;
-	if ((skipped = can_log_error()) >= 0)
-	    la_log(LOG_ERR, "[%u] received runt packet (%d bytes)",
-		   skipped, pktlen);
+        la_log(LOG_ERR, "received runt packet (%d bytes)", pktlen);
 	return false;
     }
     if (pkt[0] != 254) {
-	unsigned skipped;
-	if ((skipped = can_log_error()) >= 0)
-	    la_log(LOG_ERR, "[%u] received bad magic (0x%02x)",
-		   skipped, pkt[0]);
+        la_log(LOG_ERR, "received bad magic (0x%02x)", pkt[0]);
 	return false;
     }
     if (pkt[1] != (pktlen - 8)) {
-	unsigned skipped;
-	if ((skipped = can_log_error()) >= 0)
-	    la_log(LOG_ERR, "[%u] inconsistent length (%u, %u)",
-		   skipped, pkt[1], pktlen);
+        la_log(LOG_ERR, "inconsistent length (%u, %u)", pkt[1], pktlen);
 	return false;
     }
     return true;

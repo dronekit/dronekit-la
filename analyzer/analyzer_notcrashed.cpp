@@ -12,7 +12,7 @@ public:
         { }
 };
 
-void Analyzer_NotCrashed::end_of_log(const uint32_t packet_count)
+void Analyzer_NotCrashed::end_of_log(const uint32_t packet_count UNUSED)
 {
     if (_result != NULL) {
         add_result(_result);

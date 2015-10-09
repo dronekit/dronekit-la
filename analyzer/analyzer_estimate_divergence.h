@@ -20,10 +20,10 @@ public:
     const std::string name() const { return _name; }
 
     void set_max_delta(const double delta) { _max_delta = delta; }
-    const double max_delta() { return _max_delta; }
+    double max_delta() const { return _max_delta; }
 
     void set_delta_threshold(const double delta) { _delta_threshold = delta; }
-    const double delta_threshold() { return _delta_threshold; }
+    double delta_threshold() const { return _delta_threshold; }
 
     virtual void to_json(Json::Value &root) const override;
 private:
@@ -58,9 +58,9 @@ public:
     virtual void close_result_add_evidence(Analyzer_Estimate_Divergence_Result *result);
     void end_of_log(const uint32_t packet_count) override;
 
-    virtual const double default_delta_warn() const { return 0.0f; }
-    virtual const double default_delta_fail() const { return 0.0f; }
-    virtual const uint64_t default_duration_min() const { return 0; }
+    virtual double default_delta_warn() const { return 0.0f; }
+    virtual double default_delta_fail() const { return 0.0f; }
+    virtual uint64_t default_duration_min() const { return 0; }
 
 protected:
 
@@ -79,7 +79,7 @@ protected:
     float _delta_fail = default_delta_fail();
     uint64_t _delta_time_threshold = default_duration_min();
 
-    virtual const std::string _config_tag() = 0;
+    virtual const std::string _config_tag() const = 0;
     bool configure(INIReader *config);
 
     Analyzer_Estimate_Divergence_Result *result_for_name(std::string name) {

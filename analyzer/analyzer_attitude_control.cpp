@@ -171,7 +171,7 @@ void Analyzer_Attitude_Control::evaluate()
     }
 }
 
-void Analyzer_Attitude_Control::end_of_log(uint32_t packet_count)
+void Analyzer_Attitude_Control::end_of_log(uint32_t packet_count UNUSED)
 {
     if (_result != NULL) {
         close_result();

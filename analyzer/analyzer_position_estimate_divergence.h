@@ -47,13 +47,13 @@ public:
 
     double total_distance_travelled() { return _total_distance_travelled; }
 
-    const std::string _config_tag() {
+    const std::string _config_tag() const {
         return std::string("position_estimate_divergence");
     }
 
-    const double default_delta_warn() const override { return 4.0f; }
-    const double default_delta_fail() const override { return 5.0f; }
-    const uint64_t default_duration_min() const override { return 500000; }
+    double default_delta_warn() const override { return 4.0f; }
+    double default_delta_fail() const override { return 5.0f; }
+    uint64_t default_duration_min() const override { return 500000; }
 
 private:
 

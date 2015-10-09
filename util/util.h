@@ -24,7 +24,7 @@ extern char* mac_ntoa(uint8_t* mac_bytes, char* mac_string);
 extern uint8_t* mac_aton(const char* mac_string, uint8_t* mac_bytes);
 
 #ifdef __cplusplus
-};
+}
 #endif
 
 #endif /* UTIL_H */

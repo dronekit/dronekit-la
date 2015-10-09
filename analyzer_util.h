@@ -77,4 +77,6 @@ uint64_t now();
 
 double vec_len(double vec[3]);
 
-#endif
+#define UNUSED __attribute__ ((unused))
+
+#endif // _ANALYZER_UTIL

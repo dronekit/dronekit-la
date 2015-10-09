@@ -25,7 +25,7 @@ void Analyzer_Battery::evaluate()
 }
 
 /* FIXME: this result should be opened as soon as the event happens! */
-void Analyzer_Battery::end_of_log(const uint32_t packet_count)
+void Analyzer_Battery::end_of_log(const uint32_t packet_count UNUSED)
 {
     if (lowest_battery_remaining_seen_T) {
         result->add_evidence(string_format("battery-remaining=%f%%", lowest_battery_remaining_seen));

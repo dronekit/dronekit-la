@@ -18,8 +18,9 @@ INCS += -I.  # for <DataFlash/DataFlash.h> in MsgHandler
 
 STD=-std=c++11
 STATIC=-static
-CFLAGS += -Wall $(INCS) -DGIT_VERSION=\"$(GIT_VERSION)\"
-CXXFLAGS += -Wall $(INCS) $(STD) -g -DGIT_VERSION=\"$(GIT_VERSION)\" $(STATIC)
+WARNFLAGS= -Wall -Werror -Wextra -Wunused
+CFLAGS += $(INCS) -DGIT_VERSION=\"$(GIT_VERSION)\" $(WARNFLAGS)
+CXXFLAGS += $(INCS) $(STD) -g -DGIT_VERSION=\"$(GIT_VERSION)\" $(STATIC) $(WARNFLAGS)
 
 DLIBS += -ljsoncpp
 
