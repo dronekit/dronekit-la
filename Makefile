@@ -17,14 +17,13 @@ INCS = -I./util -I./ini -I./ini/cpp
 INCS += -I.  # for <DataFlash/DataFlash.h> in MsgHandler
 
 STD=-std=c++11
-STATIC=-static
+#STATIC=-static
 WARNFLAGS= -Wall -Werror -Wextra -Wunused
 CFLAGS += $(INCS) -DGIT_VERSION=\"$(GIT_VERSION)\" $(WARNFLAGS)
 CXXFLAGS += $(INCS) $(STD) -g -DGIT_VERSION=\"$(GIT_VERSION)\" $(STATIC) $(WARNFLAGS)
 
 DLIBS += -ljsoncpp
 
-# SRCS_CPP = dataflash_logger.cpp
 SRCS_CPP += INIReader.cpp
 SRCS_CPP += analyzer_util.cpp
 SRCS_CPP += mavlink_message_handler.cpp

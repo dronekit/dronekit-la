@@ -40,7 +40,7 @@ public:
     }
 private:
 
-    uint8_t *&_buf;
+    uint8_t *_buf;
     uint32_t _buf_len = 0;
     uint32_t &_buf_start;
     uint32_t &_buf_stop;

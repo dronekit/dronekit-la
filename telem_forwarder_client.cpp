@@ -10,10 +10,10 @@
 
 #define UNUSED __attribute__ ((unused))
 
-void Telem_Forwarder_Client::pack_select_fds(fd_set &fds_read UNUSED,
+void Telem_Forwarder_Client::pack_select_fds(fd_set &fds_read,
                                              fd_set &fds_write UNUSED,
-                                             fd_set &fds_err UNUSED,
-                                             uint8_t &nfds UNUSED)
+                                             fd_set &fds_err,
+                                             uint8_t &nfds)
 {
     FD_SET(fd_telem_forwarder, &fds_read);
     FD_SET(fd_telem_forwarder, &fds_err);
@@ -24,9 +24,9 @@ void Telem_Forwarder_Client::pack_select_fds(fd_set &fds_read UNUSED,
 }
 
         
-void Telem_Forwarder_Client::handle_select_fds(fd_set &fds_read UNUSED,
+void Telem_Forwarder_Client::handle_select_fds(fd_set &fds_read,
                                                fd_set &fds_write UNUSED,
-                                               fd_set &fds_err UNUSED,
+                                               fd_set &fds_err,
                                                uint8_t &nfds UNUSED)
 {
     /* check for packets from telem_forwarder */
@@ -137,7 +137,7 @@ int32_t Telem_Forwarder_Client::do_send(const char *buf, const uint32_t buflen)
 {
     int32_t bytes_sent =
         sendto(fd_telem_forwarder, buf, buflen, 0,
-               (struct sockaddr *)&sa, sizeof(struct sockaddr));
+               (struct sockaddr *)&sa_tf, sizeof(struct sockaddr));
     if (bytes_sent == -1) {
         la_log(LOG_INFO, "Failed sendto: %s", strerror(errno));
     }

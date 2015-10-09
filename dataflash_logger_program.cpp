@@ -58,6 +58,7 @@ void DataFlash_Logger_Program::pack_select_fds(fd_set &fds_read, fd_set &fds_wri
     client->pack_select_fds(fds_read, fds_write, fds_err, nfds);
 }
 
+// FIXME: move this up?!
 void DataFlash_Logger_Program::do_writer_sends()
 {
     while (_writer_buflen_start != _writer_buflen_stop) { // FIXME: use file descriptors!

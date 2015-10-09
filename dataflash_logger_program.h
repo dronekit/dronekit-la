@@ -34,11 +34,12 @@ private:
 
     uint8_t _buf[512] = { }; // FIXME constant was TELEM_PKT_MAX
 
-    static const uint32_t _writer_buflen = 65536;
-    uint8_t _writer_buf[_writer_buflen] = { }; // FIXME constant
+    static const uint32_t _writer_buflen = 65536; // FIXME constant
     uint32_t _writer_buflen_start = 0;
     uint32_t _writer_buflen_stop = 0;
 
     Telem_Forwarder_Client *client = NULL;
     bool debug_mode = false;
+    uint8_t _writer_buf[_writer_buflen] = { };
+    uint32_t canary = 9876543;
 };

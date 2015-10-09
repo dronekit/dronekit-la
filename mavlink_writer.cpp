@@ -10,14 +10,29 @@ bool MAVLink_Writer::handle_message(const mavlink_message_t &msg)
         return false;
     }
     if (_buf_stop >= _buf_start) {
-        uint16_t to_copy = _buf_stop - _buf_start;
-        memcpy(&sendbuf[_buf_start], sendbuf, to_copy);
-        _buf_start += to_copy;
-    } else {
-        uint16_t to_copy = _buf_len - _buf_start;
-        memcpy(&sendbuf[_buf_start], sendbuf, to_copy);
+        uint16_t to_copy = _buf_len - _buf_stop;
+        if (to_copy > messageLen) {
+            to_copy = messageLen;
+        }
+        memcpy(&_buf[_buf_stop], sendbuf, to_copy);
+        _buf_stop += to_copy;
+        if (_buf_stop >= _buf_len) {
+            _buf_stop = 0;
+        }
         to_copy = messageLen - to_copy;
-        memcpy(&sendbuf[0], sendbuf, to_copy);
+        if (to_copy) {
+            memcpy(&_buf[_buf_stop], &sendbuf[messageLen-to_copy], to_copy);
+            _buf_stop += to_copy;
+            if (_buf_stop >= _buf_len) {
+                _buf_stop = 0;
+            }
+        }
+    } else {
+        memcpy(&_buf[_buf_stop], &sendbuf[0], messageLen);
+        _buf_stop += messageLen;
+        if (_buf_stop >= _buf_len) {
+            _buf_stop = 0;
+        }
     }
     return true;
 }

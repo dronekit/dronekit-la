@@ -84,6 +84,10 @@ uint32_t Common_Tool::select_timeout_us() {
 
 void Common_Tool::select_loop()
 {
+    fd_set fds_read;
+    fd_set fds_write;
+    fd_set fds_err;
+    uint8_t nfds;
     while (1) {
 	if (_sighup_received) {
             sighup_received_tophalf();
@@ -98,13 +102,10 @@ void Common_Tool::select_loop()
 
 	struct timeval timeout;
 
-        fd_set fds_read;
-        fd_set fds_write;
-        fd_set fds_err;
-        uint8_t nfds = 0;
         FD_ZERO(&fds_read);
         FD_ZERO(&fds_write);
         FD_ZERO(&fds_err);
+        nfds = 0;
         pack_select_fds(fds_read, fds_write, fds_err, nfds);
 
         timeout.tv_sec = 0;

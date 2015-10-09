@@ -78,8 +78,8 @@ private:
     uint8_t response_queue_head = 0;
     uint8_t response_queue_tail = 0;
 
-    uint32_t highest_seqno_seen;
-    uint64_t _last_data_packet_time;
+    uint32_t highest_seqno_seen = 0;
+    uint64_t _last_data_packet_time = 0;
 
     /* if we lose > this many packets we do not nack anything in that gap: */
     uint8_t seqno_gap_nack_threshold;
