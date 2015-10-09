@@ -12,12 +12,14 @@
 #include "INIReader.h"
 
 #include "mavlink_message_handler.h"
+#include "mavlink_writer.h"
 
 class DataFlash_Logger : public MAVLink_Message_Handler {
 
 public:
-    DataFlash_Logger(int fd, struct sockaddr_in *sa) :
-	MAVLink_Message_Handler(fd, sa),
+    DataFlash_Logger(MAVLink_Writer *mavlink_writer) :
+	MAVLink_Message_Handler(),
+        _mavlink_writer(mavlink_writer),
         target_system_id(target_system_id_default),
         target_component_id(target_component_id_default),
 	seqno_gap_nack_threshold(20)
@@ -40,6 +42,7 @@ private:
     bool output_file_open();
     void output_file_close();
 
+    MAVLink_Writer *_mavlink_writer = NULL;
     uint8_t this_system_id = 57;
     uint8_t this_component_id = 57;
     

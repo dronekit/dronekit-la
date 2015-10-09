@@ -24,6 +24,7 @@ protected:
 
     bool _sighup_received = false; // FIXME: scope
 
+    virtual uint32_t select_timeout_us();
     void select_loop();
 
     virtual void pack_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds);

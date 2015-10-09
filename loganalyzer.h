@@ -13,6 +13,7 @@
 
 #include "mavlink_message_handler.h"
 #include "mavlink_reader.h"
+#include "mavlink_writer.h"
 #include "telem_forwarder_client.h"
 
 #include "analyze.h"
@@ -45,6 +46,8 @@ private:
     uint8_t _pathcount;
 
     Format_Reader *reader;
+    MAVLink_Writer *writer;
+
     Analyze::output_style_option output_style = Analyze::OUTPUT_JSON;
     long _argc;
     char **_argv;
@@ -93,6 +96,11 @@ private:
     };
     log_format_t _force_format = log_format_none;
     log_format_t force_format() { return _force_format; }
+
+    static const uint32_t _writer_buflen = 65536;
+    uint8_t _writer_buf[_writer_buflen] = { }; // FIXME constant
+    uint32_t _writer_buf_start = 0;
+    uint32_t _writer_buf_stop = 0;
 };
 
 #endif

@@ -71,6 +71,11 @@ void Common_Tool::sighup_handler(int signal)
 void Common_Tool::do_idle_callbacks()
 {
 }
+
+uint32_t Common_Tool::select_timeout_us() {
+    return 200000;
+}
+
 void Common_Tool::select_loop()
 {
     while (1) {
@@ -97,7 +102,7 @@ void Common_Tool::select_loop()
         pack_select_fds(fds_read, fds_write, fds_err, nfds);
 
         timeout.tv_sec = 0;
-        timeout.tv_usec = 200000;
+        timeout.tv_usec = select_timeout_us();
         int res = select(nfds, &fds_read, &fds_write, &fds_err, &timeout);
 
         if (res < 0) {

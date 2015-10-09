@@ -17,7 +17,7 @@ INCS = -I./util -I./ini -I./ini/cpp
 INCS += -I.  # for <DataFlash/DataFlash.h> in MsgHandler
 
 STD=-std=c++11
-STATIC=
+STATIC=-static
 CFLAGS += -Wall $(INCS) -DGIT_VERSION=\"$(GIT_VERSION)\"
 CXXFLAGS += -Wall $(INCS) $(STD) -g -DGIT_VERSION=\"$(GIT_VERSION)\" $(STATIC)
 
@@ -33,6 +33,7 @@ SRCS_CPP += format_reader.cpp
 SRCS_CPP += dataflash_reader.cpp
 SRCS_CPP += dataflash_textdump_reader.cpp
 SRCS_CPP += mavlink_reader.cpp
+SRCS_CPP += mavlink_writer.cpp
 SRCS_CPP += analyze.cpp
 SRCS_CPP += analyzer.cpp
 SRCS_CPP += heart.cpp

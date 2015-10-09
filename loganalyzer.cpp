@@ -165,7 +165,13 @@ void LogAnalyzer::run_live_analysis()
     _client = new Telem_Forwarder_Client(_client_buf, sizeof(_client_buf));
     _client->configure(config());
 
-    Heart *heart= new Heart(_client->fd_telem_forwarder, &_client->sa_tf);
+    writer = new MAVLink_Writer(config(), _writer_buf, _writer_buflen, _writer_buf_start, _writer_buf_stop);
+    if (writer == NULL) {
+        la_log(LOG_ERR, "Failed to create writer from (%s)\n", config_filename);
+        exit(1);
+    }
+
+    Heart *heart= new Heart(writer);
     if (heart != NULL) {
         reader->add_message_handler(heart, "Heart");
     } else {

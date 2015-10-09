@@ -4,7 +4,9 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-class Telem_Forwarder_Client {
+#include "telem_client.h"
+
+class Telem_Forwarder_Client : public Telem_Client {
 public:
     Telem_Forwarder_Client(uint8_t *buf, uint32_t buflen) :
         fd_telem_forwarder(-1),
@@ -26,12 +28,15 @@ public:
     // FIXME: scope
     uint32_t _buflen_content;
 
+    int32_t do_send(const char *buf, const uint32_t buflen);
+
 private:
     struct sockaddr_in sa;
     void telem_forwarder_loop();
     void create_and_bind();
     void pack_telem_forwarder_sockaddr(INIReader *config);
     bool sane_telem_forwarder_packet(uint8_t *pkt, uint16_t bpktlen);
-    uint8_t *_buf;
-    uint32_t _buflen;
+    uint8_t *_buf; // receive buffer
+    uint32_t _buflen; // receive buffer len
+
 };

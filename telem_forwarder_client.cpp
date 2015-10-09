@@ -1,6 +1,10 @@
 #include "telem_forwarder_client.h"
 
 #include <string.h>
+// #include <sys/socket.h>
+// #include <netinet/in.h>
+// #include <arpa/inet.h>
+
 
 #include "la-log.h"
 
@@ -135,6 +139,17 @@ uint32_t Telem_Forwarder_Client::handle_recv()
     return res;
 }
 
+int32_t Telem_Forwarder_Client::do_send(const char *buf, const uint32_t buflen)
+{
+    int32_t bytes_sent =
+        sendto(fd_telem_forwarder, buf, buflen, 0,
+               (struct sockaddr *)&sa, sizeof(struct sockaddr));
+    if (bytes_sent == -1) {
+        la_log(LOG_INFO, "Failed sendto: %s", strerror(errno));
+    }
+
+    return bytes_sent;
+}
 
 void Telem_Forwarder_Client::configure(INIReader *config)
 {

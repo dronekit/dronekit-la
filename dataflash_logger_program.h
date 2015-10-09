@@ -1,6 +1,7 @@
 #include "common_tool.h"
 
 #include "mavlink_reader.h"
+#include "mavlink_writer.h"
 #include "telem_forwarder_client.h"
 
 class DataFlash_Logger_Program : public Common_Tool {
@@ -8,10 +9,9 @@ public:
     DataFlash_Logger_Program() :
         Common_Tool()
         { }
-    void instantiate_message_handlers(INIReader *config,
-                                      int fd_telem_forwarder,
-                                      struct sockaddr_in *sa_tf);
+
     void run();
+
     void parse_arguments(int argc, char *argv[]);
     const char *program_name();
 
@@ -22,13 +22,22 @@ private:
     void usage();
     void sighup_received_tophalf() override;
     void do_idle_callbacks() override;
+    uint32_t select_timeout_us() override;
+
+    void do_writer_sends();
 
     MAVLink_Reader *reader;
+    MAVLink_Writer *_writer;
 
     long _argc = 0;
     char **_argv = NULL;
 
     uint8_t _buf[512] = { }; // FIXME constant was TELEM_PKT_MAX
+
+    static const uint32_t _writer_buflen = 65536;
+    uint8_t _writer_buf[_writer_buflen] = { }; // FIXME constant
+    uint32_t _writer_buflen_start = 0;
+    uint32_t _writer_buflen_stop = 0;
 
     Telem_Forwarder_Client *client = NULL;
     bool debug_mode = false;

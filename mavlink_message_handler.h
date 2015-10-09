@@ -1,8 +1,6 @@
 #ifndef MAVLINK_MESSAGE_HANDLER_H
 #define MAVLINK_MESSAGE_HANDLER_H
 
-#include <stdio.h>
-
 /*
  * mavlink_message_handler
  *
@@ -23,16 +21,9 @@
 
 class MAVLink_Message_Handler : public Message_Handler {
 public:
-    MAVLink_Message_Handler(int fd, struct sockaddr_in *sa) :
-        Message_Handler(),
-	_fd_telem_forwarder(fd),
-	_sa_telemetry_forwarder(sa)
-    { }
     MAVLink_Message_Handler() :
-        Message_Handler(),
-	_fd_telem_forwarder(-1),
-	_sa_telemetry_forwarder(NULL)
-    { }
+        Message_Handler()
+        { }
 
     virtual bool configure(INIReader *config) {
 	system_id = config->GetInteger("dflogger", "system_id", 254);
@@ -58,13 +49,11 @@ public:
     virtual void handle_decoded_message(uint64_t T, mavlink_statustext_t &msg) { }
     virtual void handle_decoded_message(uint64_t T, mavlink_vfr_hud_t &msg) { }
 
+
 protected:
-    void send_message_to_telem_forwarder(mavlink_message_t &msg);
     uint8_t system_id;
     uint8_t component_id;
 
-    int _fd_telem_forwarder;
-    struct sockaddr_in *_sa_telemetry_forwarder;
 private:
 };
 

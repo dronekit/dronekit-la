@@ -29,12 +29,9 @@ void Heart::beat()
     uint32_t custom_mode = 0;
     uint8_t system_status = 0;
 
-    mavlink_msg_heartbeat_pack(system_id, component_id, &msg, type, autopilot, base_mode, custom_mode, system_status);
-
     la_log(LOG_INFO, "mh-h: sending heartbeat");
 
-    send_message_to_telem_forwarder(msg);
+    mavlink_msg_heartbeat_pack(system_id, component_id, &msg, type, autopilot, base_mode, custom_mode, system_status);
+
+    _mavlink_writer->handle_message(msg);
 }
-
-
-

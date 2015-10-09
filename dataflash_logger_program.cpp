@@ -29,25 +29,6 @@ void DataFlash_Logger_Program::usage()
     exit(0);
 }
 
-void DataFlash_Logger_Program::instantiate_message_handlers(INIReader *config,
-                                               int fd_telem_forwarder,
-                                               struct sockaddr_in *sa_tf)
-{
-    DataFlash_Logger *dataflash_logger = new DataFlash_Logger(fd_telem_forwarder, sa_tf);
-    if (dataflash_logger != NULL) {
-        reader->add_message_handler(dataflash_logger, "DataFlash_Logger");
-    } else {
-        la_log(LOG_INFO, "Failed to create dataflash logger");
-    }
-
-    Heart *heart= new Heart(fd_telem_forwarder, sa_tf);
-    if (heart != NULL) {
-        reader->add_message_handler(heart, "Heart");
-    } else {
-        la_log(LOG_INFO, "Failed to create heart");
-    }
-}
-
 DataFlash_Logger_Program logger;
 
 void sighup_handler(int signal)
@@ -65,9 +46,40 @@ void DataFlash_Logger_Program::sighup_received_tophalf()
     reader->sighup_handler();
 }
 
+uint32_t DataFlash_Logger_Program::select_timeout_us() {
+    if (_writer->buf_used()) {
+        return 0;
+    }
+    return Common_Tool::select_timeout_us();
+}
+
 void DataFlash_Logger_Program::pack_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds)
 {
     client->pack_select_fds(fds_read, fds_write, fds_err, nfds);
+}
+
+void DataFlash_Logger_Program::do_writer_sends()
+{
+    while (_writer_buflen_start != _writer_buflen_stop) { // FIXME: use file descriptors!
+        bool tail_first = false;
+        if (_writer_buflen_stop < _writer_buflen_start) {
+            tail_first = true;
+        }
+        uint32_t bytes_to_send = tail_first ? (_writer_buflen - _writer_buflen_start) : (_writer_buflen_stop - _writer_buflen_start);
+
+        int32_t sent = client->do_send((const char *)&_writer_buf[_writer_buflen_start], bytes_to_send);
+        if (sent < 0) {
+            // cry
+            break;
+        } else if (sent == 0) {
+            break;
+        } else {
+            _writer_buflen_start += sent;
+            if (_writer_buflen_start == _writer_buflen) {
+                _writer_buflen_start = 0;
+            }
+        }
+    }
 }
 
 void DataFlash_Logger_Program::handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds)
@@ -75,8 +87,12 @@ void DataFlash_Logger_Program::handle_select_fds(fd_set &fds_read, fd_set &fds_w
     client->handle_select_fds(fds_read, fds_write, fds_err, nfds);
 
     // FIXME: find a more interesting way of doing this...
+    // handle data *from* e.g. telem_forwarder
     reader->feed(_buf, client->_buflen_content);
     client->_buflen_content = 0;
+
+    // handle data *to* e.g. telem_forwarder
+    do_writer_sends();
 }
 
 void DataFlash_Logger_Program::run()
@@ -99,7 +115,27 @@ void DataFlash_Logger_Program::run()
     client = new Telem_Forwarder_Client(_buf, sizeof(_buf));
     client->configure(config());
 
-    instantiate_message_handlers(config(), client->fd_telem_forwarder, &client->sa_tf);
+    _writer = new MAVLink_Writer(config(), _writer_buf, _writer_buflen, _writer_buflen_start, _writer_buflen_stop);
+    if (_writer == NULL) {
+        la_log(LOG_ERR, "Failed to create writer from (%s)\n", config_filename);
+        exit(1);
+    }
+    
+    // instantiate message handlers:
+    DataFlash_Logger *dataflash_logger = new DataFlash_Logger(_writer);
+    if (dataflash_logger != NULL) {
+        reader->add_message_handler(dataflash_logger, "DataFlash_Logger");
+    } else {
+        la_log(LOG_INFO, "Failed to create dataflash logger");
+    }
+
+    Heart *heart= new Heart(_writer);
+    if (heart != NULL) {
+        reader->add_message_handler(heart, "Heart");
+    } else {
+        la_log(LOG_INFO, "Failed to create heart");
+    }
+
     return select_loop();
 }
 
