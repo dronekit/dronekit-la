@@ -40,7 +40,7 @@ void Telem_Serial::handle_select_fds(fd_set &fds_read,
 
     if (FD_ISSET(fd, &fds_read)) {
         FD_CLR(fd, &fds_read);
-        _buflen_content = handle_read();
+        _recv_buflen_content = handle_read();
         // ::fprintf(stderr, "received %u bytes\n", _buflen_content);
     }
 }
@@ -124,7 +124,7 @@ void Telem_Serial::open_serial_port()
 
 uint32_t Telem_Serial::handle_read()
 {
-    ssize_t res = read(fd, _buf, _buflen );
+    ssize_t res = read(fd, _recv_buf, _recv_buflen );
     if (res == -1) {
         la_log(LOG_INFO, "Failed read: %s", strerror(errno));
     }
@@ -132,19 +132,73 @@ uint32_t Telem_Serial::handle_read()
     return res;
 }
 
-int32_t Telem_Serial::write(const char *buf, uint32_t buflen)
-{
-    int32_t bytes_sent = ::write(fd, buf, buflen);
-    if (bytes_sent == -1) {
-        la_log(LOG_INFO, "Failed write: %s", strerror(errno));
-    }
-
-    return bytes_sent;
-}
-
 void Telem_Serial::configure(INIReader *config)
 {
     serialPortName = config->Get("solo","telemDev","/dev/ttymxc1");
     serialBaud = config->GetInteger("solo", "telemBaud", 57600);
     serialFlow = config->GetBoolean("solo", "telemFlow", true);
+}
+
+
+void Telem_Serial::do_writer_sends()
+{
+    while (_send_buf_start != _send_buf_stop) { // FIXME: use file descriptors!
+        bool tail_first = false;
+        if (_send_buf_stop < _send_buf_start) {
+            tail_first = true;
+        }
+        uint32_t bytes_to_send = tail_first ? (send_buf_size() - _send_buf_start) : (_send_buf_stop - _send_buf_start);
+
+        int32_t sent = ::write(fd, (const char *)&_send_buf[_send_buf_start], bytes_to_send);
+        if (sent < 0) {
+            // cry
+            break;
+        } else if (sent == 0) {
+            break;
+        } else {
+            _send_buf_start += sent;
+            if (_send_buf_start == send_buf_size()) {
+                _send_buf_start = 0;
+            }
+        }
+    }
+}
+
+
+
+bool Telem_Serial::send_message(const mavlink_message_t &msg)
+{
+    char sendbuf[1024]; // large enough...
+
+    uint16_t messageLen = mavlink_msg_to_send_buffer((uint8_t*)sendbuf,&msg);
+    if (send_buffer_space_free() < messageLen) {
+        // dropped_packets++;
+        return false;
+    }
+    if (_send_buf_stop >= _send_buf_start) {
+        uint16_t to_copy = send_buf_size() - _send_buf_stop;
+        if (to_copy > messageLen) {
+            to_copy = messageLen;
+        }
+        memcpy(&_send_buf[_send_buf_stop], sendbuf, to_copy);
+        _send_buf_stop += to_copy;
+        if (_send_buf_stop >= send_buf_size()) {
+            _send_buf_stop = 0;
+        }
+        to_copy = messageLen - to_copy;
+        if (to_copy) {
+            memcpy(&_send_buf[_send_buf_stop], &sendbuf[messageLen-to_copy], to_copy);
+            _send_buf_stop += to_copy;
+            if (_send_buf_stop >= send_buf_size()) {
+                _send_buf_stop = 0;
+            }
+        }
+    } else {
+        memcpy(&_send_buf[_send_buf_stop], &sendbuf[0], messageLen);
+        _send_buf_stop += messageLen;
+        if (_send_buf_stop >= send_buf_size()) {
+            _send_buf_stop = 0;
+        }
+    }
+    return true;
 }

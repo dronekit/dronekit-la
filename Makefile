@@ -58,6 +58,7 @@ SRCS_CPP += analyzervehicle_copter.cpp
 SRCS_CPP += analyzervehicle.cpp
 SRCS_CPP += la-log.cpp
 SRCS_CPP += common_tool.cpp
+SRCS_CPP += telem_client.cpp
 SRCS_CPP += telem_forwarder_client.cpp
 SRCS_CPP += telem_serial.cpp
 SRCS_CPP += dataflash_logger.cpp 

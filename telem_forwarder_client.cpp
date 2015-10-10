@@ -37,7 +37,7 @@ void Telem_Forwarder_Client::handle_select_fds(fd_set &fds_read,
 
     if (FD_ISSET(fd_telem_forwarder, &fds_read)) {
         FD_CLR(fd_telem_forwarder, &fds_read);
-        _buflen_content = handle_recv();
+        _recv_buflen_content = handle_recv();
         // ::fprintf(stderr, "received %u bytes\n", _buflen_content);
     }
 }
@@ -117,29 +117,55 @@ uint32_t Telem_Forwarder_Client::handle_recv()
     // ::printf("Receiving packet into position %u\n", _buflen_content);
     /* packet from telem_forwarder */
     socklen_t sa_len = sizeof(sa);
-    uint16_t res = recvfrom(fd_telem_forwarder, &_buf[_buflen_content], _buflen-_buflen_content, 0, (struct sockaddr*)&sa, &sa_len);
+    uint16_t res = recvfrom(fd_telem_forwarder, &_recv_buf[_recv_buflen_content], _recv_buflen-_recv_buflen_content, 0, (struct sockaddr*)&sa, &sa_len);
 
     /* We get one mavlink packet per udp datagram. Sanity checks here
        are: must be from solo's IP and have a valid mavlink header. */
     // FIXME: we don't necessarily get just one packet/buffer!
     // ::fprintf(stderr, "handle_recv\n");
-    if (!sane_telem_forwarder_packet(_buf, res)) {
+    if (!sane_telem_forwarder_packet(_recv_buf, res)) {
 	return 0;
     }
 
     return res;
 }
 
-int32_t Telem_Forwarder_Client::write(const char *buf, const uint32_t buflen)
+bool Telem_Forwarder_Client::send_message(const mavlink_message_t &msg)
 {
-    int32_t bytes_sent =
-        sendto(fd_telem_forwarder, buf, buflen, 0,
-               (struct sockaddr *)&sa_tf, sizeof(struct sockaddr));
-    if (bytes_sent == -1) {
-        la_log(LOG_INFO, "Failed sendto: %s", strerror(errno));
+    if (send_buffer_space_free() < 1) {
+        // dropped_packets++;
+        return false;
+    }
+    memcpy(&_send_buf[_send_buf_stop++], (char*)&msg, sizeof(msg));
+    if (_send_buf_stop > send_buf_size()) {
+        _send_buf_stop = 0;
+    }
+    return true;
+}
+
+
+void Telem_Forwarder_Client::do_writer_sends()
+{
+    char buf[1024]; // large enough...
+
+    while (_send_buf_start != _send_buf_stop) {
+        mavlink_message_t &msg = _send_buf[_send_buf_start];
+        uint16_t messageLen = mavlink_msg_to_send_buffer((uint8_t*)buf,&msg);
+
+        int32_t bytes_sent =
+            sendto(fd_telem_forwarder, buf, messageLen, 0,
+                   (struct sockaddr *)&sa_tf, sizeof(struct sockaddr));
+        if (bytes_sent == -1) {
+            la_log(LOG_INFO, "Failed sendto: %s", strerror(errno));
+            // we drop the message anyway!
+        }
+        _send_buf_start++;
+        if (_send_buf_start >= send_buf_size()) {
+            _send_buf_start = 0;
+        }
     }
 
-    return bytes_sent;
+    return;
 }
 
 void Telem_Forwarder_Client::configure(INIReader *config)

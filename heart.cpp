@@ -33,5 +33,5 @@ void Heart::beat()
 
     mavlink_msg_heartbeat_pack(system_id, component_id, &msg, type, autopilot, base_mode, custom_mode, system_status);
 
-    _mavlink_writer->handle_message(msg);
+    _mavlink_writer->send_message(msg);
 }

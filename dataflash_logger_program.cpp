@@ -49,7 +49,7 @@ void DataFlash_Logger_Program::sighup_received_tophalf()
 }
 
 uint32_t DataFlash_Logger_Program::select_timeout_us() {
-    if (_writer->buf_used()) {
+    if (_writer->any_data_to_send()) {
         return 0;
     }
     return Common_Tool::select_timeout_us();
@@ -60,29 +60,9 @@ void DataFlash_Logger_Program::pack_select_fds(fd_set &fds_read, fd_set &fds_wri
     client->pack_select_fds(fds_read, fds_write, fds_err, nfds);
 }
 
-// FIXME: move this up?!
 void DataFlash_Logger_Program::do_writer_sends()
 {
-    while (_writer_buflen_start != _writer_buflen_stop) { // FIXME: use file descriptors!
-        bool tail_first = false;
-        if (_writer_buflen_stop < _writer_buflen_start) {
-            tail_first = true;
-        }
-        uint32_t bytes_to_send = tail_first ? (_writer_buflen - _writer_buflen_start) : (_writer_buflen_stop - _writer_buflen_start);
-
-        int32_t sent = client->write((const char *)&_writer_buf[_writer_buflen_start], bytes_to_send);
-        if (sent < 0) {
-            // cry
-            break;
-        } else if (sent == 0) {
-            break;
-        } else {
-            _writer_buflen_start += sent;
-            if (_writer_buflen_start == _writer_buflen) {
-                _writer_buflen_start = 0;
-            }
-        }
-    }
+    client->do_writer_sends();
 }
 
 void DataFlash_Logger_Program::handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds)
@@ -91,8 +71,8 @@ void DataFlash_Logger_Program::handle_select_fds(fd_set &fds_read, fd_set &fds_w
 
     // FIXME: find a more interesting way of doing this...
     // handle data *from* e.g. telem_forwarder
-    reader->feed(_buf, client->_buflen_content);
-    client->_buflen_content = 0;
+    reader->feed(client->_recv_buf, client->_recv_buflen_content);
+    client->_recv_buflen_content = 0;
 
     // handle data *to* e.g. telem_forwarder
     do_writer_sends();
@@ -115,17 +95,18 @@ void DataFlash_Logger_Program::run()
         exit(1);
     }
 
-    client = new Telem_Forwarder_Client(_buf, sizeof(_buf));
-    // client = new Telem_Serial(_buf, sizeof(_buf));
+    // client = new Telem_Forwarder_Client(_client_recv_buf, sizeof(_client_recv_buf));
+    client = new Telem_Serial(_client_recv_buf, sizeof(_client_recv_buf));
     client->configure(config());
     client->init();
 
-    _writer = new MAVLink_Writer(config(), _writer_buf, _writer_buflen, _writer_buflen_start, _writer_buflen_stop);
+    _writer = new MAVLink_Writer(config());
+    _writer->add_client(client);
     if (_writer == NULL) {
         la_log(LOG_ERR, "Failed to create writer from (%s)\n", config_filename);
         exit(1);
     }
-    
+
     // instantiate message handlers:
     DataFlash_Logger *dataflash_logger = new DataFlash_Logger(_writer);
     if (dataflash_logger != NULL) {

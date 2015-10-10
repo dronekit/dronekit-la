@@ -54,7 +54,7 @@ void DataFlash_Logger::idle_100Hz()
 void DataFlash_Logger::send_response(uint32_t seqno, bool status) {
     mavlink_message_t msg;
     mavlink_msg_remote_log_block_status_pack(system_id, component_id, &msg, sender_system_id, sender_component_id, seqno, status);
-    _mavlink_writer->handle_message(msg);
+    _mavlink_writer->send_message(msg);
 }
 
 void DataFlash_Logger::push_response_queue()
@@ -312,5 +312,5 @@ void DataFlash_Logger::send_start_or_stop_logging_packet(bool is_start)
     mavlink_msg_remote_log_block_status_pack
 	(this_system_id, this_component_id, &msg, system_id, component_id, magic_number, 1);
 
-    _mavlink_writer->handle_message(msg);
+    _mavlink_writer->send_message(msg);
 }
