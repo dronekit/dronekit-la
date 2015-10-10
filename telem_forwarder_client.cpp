@@ -91,9 +91,6 @@ void Telem_Forwarder_Client::pack_telem_forwarder_sockaddr(INIReader *config)
     sa_tf.sin_port = htons(tf_port);
 }
 
-bool can_log_error() {
-    return true;
-}
 bool Telem_Forwarder_Client::sane_telem_forwarder_packet(uint8_t *pkt, uint16_t pktlen)
 {
     if (sa.sin_addr.s_addr != sa_tf.sin_addr.s_addr) {
@@ -133,7 +130,7 @@ uint32_t Telem_Forwarder_Client::handle_recv()
     return res;
 }
 
-int32_t Telem_Forwarder_Client::do_send(const char *buf, const uint32_t buflen)
+int32_t Telem_Forwarder_Client::write(const char *buf, const uint32_t buflen)
 {
     int32_t bytes_sent =
         sendto(fd_telem_forwarder, buf, buflen, 0,
@@ -150,6 +147,9 @@ void Telem_Forwarder_Client::configure(INIReader *config)
     /* prepare sockaddr used to contact telem_forwarder */
     pack_telem_forwarder_sockaddr(config);
 
+}
+
+void Telem_Forwarder_Client::init() {
     /* Prepare a port to receive and send data to/from telem_forwarder */
     /* does not return on failure */
     create_and_bind();

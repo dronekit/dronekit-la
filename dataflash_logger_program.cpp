@@ -3,6 +3,8 @@
 #include "dataflash_logger.h"
 #include "heart.h"
 #include "mavlink_reader.h"
+#include "telem_forwarder_client.h"
+#include "telem_serial.h"
 
 #include "la-log.h"
 
@@ -68,7 +70,7 @@ void DataFlash_Logger_Program::do_writer_sends()
         }
         uint32_t bytes_to_send = tail_first ? (_writer_buflen - _writer_buflen_start) : (_writer_buflen_stop - _writer_buflen_start);
 
-        int32_t sent = client->do_send((const char *)&_writer_buf[_writer_buflen_start], bytes_to_send);
+        int32_t sent = client->write((const char *)&_writer_buf[_writer_buflen_start], bytes_to_send);
         if (sent < 0) {
             // cry
             break;
@@ -114,7 +116,9 @@ void DataFlash_Logger_Program::run()
     }
 
     client = new Telem_Forwarder_Client(_buf, sizeof(_buf));
+    // client = new Telem_Serial(_buf, sizeof(_buf));
     client->configure(config());
+    client->init();
 
     _writer = new MAVLink_Writer(config(), _writer_buf, _writer_buflen, _writer_buflen_start, _writer_buflen_stop);
     if (_writer == NULL) {

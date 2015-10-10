@@ -2,7 +2,7 @@
 
 #include "mavlink_reader.h"
 #include "mavlink_writer.h"
-#include "telem_forwarder_client.h"
+#include "telem_client.h"
 
 class DataFlash_Logger_Program : public Common_Tool {
 public:
@@ -38,7 +38,7 @@ private:
     uint32_t _writer_buflen_start = 0;
     uint32_t _writer_buflen_stop = 0;
 
-    Telem_Forwarder_Client *client = NULL;
+    Telem_Client *client = NULL;
     bool debug_mode = false;
     uint8_t _writer_buf[_writer_buflen] = { };
     uint32_t canary = 9876543;
