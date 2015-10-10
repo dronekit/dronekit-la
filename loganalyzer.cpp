@@ -154,18 +154,18 @@ void LogAnalyzer::handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set 
     _client->handle_select_fds(fds_read, fds_write, fds_err, nfds);
 
     // FIXME: find a more interesting way of doing this...
-    reader->feed(_client_buf, _client->_buflen_content);
-    _client->_buflen_content = 0;
+    reader->feed(_client->_recv_buf, _client->_recv_buflen_content);
+    _client->_recv_buflen_content = 0;
 }
 
 void LogAnalyzer::run_live_analysis()
 {
     reader = new MAVLink_Reader(config());
 
-    _client = new Telem_Forwarder_Client(_client_buf, sizeof(_client_buf));
+    _client = new Telem_Forwarder_Client(_client_recv_buf, sizeof(_client_recv_buf));
     _client->configure(config());
 
-    writer = new MAVLink_Writer(config(), _writer_buf, _writer_buflen, _writer_buf_start, _writer_buf_stop);
+    writer = new MAVLink_Writer(config());
     if (writer == NULL) {
         la_log(LOG_ERR, "Failed to create writer from (%s)\n", config_filename);
         exit(1);

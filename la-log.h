@@ -9,6 +9,7 @@
 
 void la_log_syslog_open();
 void la_log(int priority, const char *format, ...);
+void la_log_unsuppress();
 
 class LALog {
 public:
@@ -20,6 +21,7 @@ public:
     void log(int priority, const char *format, ...);
     void log_ap(int priority, const char *format, va_list ap);
 
+    void unsupress();
     bool should_suppress();
     bool suppressing() {return _suppressing; }
     
@@ -28,7 +30,7 @@ private:
     // hash here of formats and selectively supress based on format.
     bool _suppressing = false;
     const uint8_t _time_period = 5; // seconds
-    const uint8_t _max_messages_per_time_period = 5;
+    const uint8_t _max_messages_per_time_period = 10;
     uint32_t _suppressed_message_count = 0;
     uint8_t _message_count_this_time_period = 0;
     time_t _time_period_start;

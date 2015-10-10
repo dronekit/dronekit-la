@@ -224,6 +224,7 @@ bool DataFlash_Logger::logging_start(mavlink_remote_log_data_block_t &msg UNUSED
 {
     sender_system_id = most_recent_sender_system_id;
     sender_component_id = most_recent_sender_component_id;
+    la_log_unsuppress();
     la_log(LOG_INFO, "mh-dfl: Starting log, target is (%d/%d)",
 	   sender_system_id, sender_component_id);
     if (!output_file_open()) {

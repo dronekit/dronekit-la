@@ -40,7 +40,7 @@ public:
 private:
     bool _use_telem_forwarder = false;
     Telem_Forwarder_Client *_client = NULL;
-    uint8_t _client_buf[512]; // FIXME constant was TELEM_PKT_MAX
+    uint8_t _client_recv_buf[512]; // FIXME constant was TELEM_PKT_MAX
 
     char **_paths = NULL;
     uint8_t _pathcount;

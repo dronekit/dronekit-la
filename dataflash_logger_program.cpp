@@ -69,8 +69,10 @@ void DataFlash_Logger_Program::handle_select_fds(fd_set &fds_read, fd_set &fds_w
 {
     client->handle_select_fds(fds_read, fds_write, fds_err, nfds);
 
-    // FIXME: find a more interesting way of doing this...
-    // handle data *from* e.g. telem_forwarder
+    // FIXME: find a more interesting way of doing this...  we should
+    // probably rejig things so that the client is a mavlink_reader
+    // and simply produces mavlink_message_t's itself, rather than us
+    // handing off the a dedicated parser object here.
     reader->feed(client->_recv_buf, client->_recv_buflen_content);
     client->_recv_buflen_content = 0;
 
@@ -95,8 +97,11 @@ void DataFlash_Logger_Program::run()
         exit(1);
     }
 
-    // client = new Telem_Forwarder_Client(_client_recv_buf, sizeof(_client_recv_buf));
-    client = new Telem_Serial(_client_recv_buf, sizeof(_client_recv_buf));
+    if (serial_port) {
+        client = new Telem_Serial(_client_recv_buf, sizeof(_client_recv_buf));
+    } else {
+        client = new Telem_Forwarder_Client(_client_recv_buf, sizeof(_client_recv_buf));
+    }
     client->configure(config());
     client->init();
 
@@ -132,7 +137,7 @@ void DataFlash_Logger_Program::parse_arguments(int argc, char *argv[])
     _argc = argc;
     _argv = argv;
 
-    while ((opt = getopt(argc, argv, "hc:d")) != -1) {
+    while ((opt = getopt(argc, argv, "hc:ds")) != -1) {
         switch(opt) {
         case 'h':
             usage();
@@ -142,6 +147,9 @@ void DataFlash_Logger_Program::parse_arguments(int argc, char *argv[])
             break;
         case 'd':
             debug_mode = true;
+            break;
+        case 's':
+            serial_port = true;
             break;
         }
     }

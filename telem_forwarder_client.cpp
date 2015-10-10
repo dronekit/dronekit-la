@@ -137,7 +137,7 @@ bool Telem_Forwarder_Client::send_message(const mavlink_message_t &msg)
         return false;
     }
     memcpy(&_send_buf[_send_buf_stop++], (char*)&msg, sizeof(msg));
-    if (_send_buf_stop > send_buf_size()) {
+    if (_send_buf_stop >= send_buf_size()) {
         _send_buf_stop = 0;
     }
     return true;
