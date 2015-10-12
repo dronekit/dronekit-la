@@ -8,7 +8,7 @@
 
 #include "la-log.h"
 #include "util.h"
-#include "mavlink/c_library/common/mavlink.h"
+#include "../mavlink/c_library/common/mavlink.h"
 
 void DataFlash_Logger::sighup_received()
 {
@@ -19,7 +19,7 @@ void DataFlash_Logger::idle_tenthHz()
 {
     // the following isn't quite right given we seek around...
     if (logging_started) {
-	la_log(LOG_INFO, "mh-dfl: Current log size: %ld", lseek(out_fd, 0, SEEK_CUR));
+	la_log(LOG_INFO, "mh-dfl: Current log size: %lu", lseek(out_fd, 0, SEEK_CUR));
     }
 }
 
@@ -40,7 +40,7 @@ void DataFlash_Logger::idle_10Hz()
 	// if no data packet in 10 seconds then close log
         uint64_t now_us = clock_gettime_us(CLOCK_MONOTONIC);
 	if (now_us - _last_data_packet_time > 10000000) {
-	    la_log(LOG_INFO, "mh-dfl: No data packets received for some time (%ld/%ld).  Closing log.  Final log size: %ld", now_us,_last_data_packet_time, lseek(out_fd, 0, SEEK_CUR));
+	    la_log(LOG_INFO, "mh-dfl: No data packets received for some time (now=%llu last=%llu).  Closing log.  Final log size: %lu", now_us,_last_data_packet_time, lseek(out_fd, 0, SEEK_CUR));
 	    logging_stop();
 	}
     }
@@ -225,8 +225,8 @@ bool DataFlash_Logger::logging_start(mavlink_remote_log_data_block_t &msg UNUSED
     sender_system_id = most_recent_sender_system_id;
     sender_component_id = most_recent_sender_component_id;
     la_log_unsuppress();
-    la_log(LOG_INFO, "mh-dfl: Starting log, target is (%d/%d)",
-	   sender_system_id, sender_component_id);
+    la_log(LOG_INFO, "mh-dfl: Starting log, target is (%d/%d), I am (%d/%d)",
+	   sender_system_id, sender_component_id, this_system_id, this_component_id);
     if (!output_file_open()) {
 	return false;
     }
@@ -262,7 +262,7 @@ void DataFlash_Logger::handle_decoded_message(uint64_t T UNUSED, mavlink_remote_
     // we could move this down to the end; that wold mean short-writes
     // would end up closing this log...
     _last_data_packet_time = clock_gettime_us(CLOCK_MONOTONIC);
-
+    
     const uint8_t length = MAVLINK_MSG_REMOTE_LOG_DATA_BLOCK_FIELD_DATA_LEN;
 
     /* send the dataflash data out to the log file */
@@ -282,6 +282,9 @@ void DataFlash_Logger::handle_decoded_message(uint64_t T UNUSED, mavlink_remote_
     queue_gap_nacks(msg.seqno);
 
     if (msg.seqno > highest_seqno_seen) {
+        if (msg.seqno - highest_seqno_seen > 100) {
+            la_log(LOG_ERR, "large seqno gap: %ld", msg.seqno - highest_seqno_seen);
+        }
 	highest_seqno_seen = msg.seqno;
     }
 }
