@@ -38,6 +38,11 @@ private:
 
     #define MAX_FORMATS 256
     struct LA_MsgHandler *handlers[MAX_FORMATS] = { };
+
+    // FIXME: find a general way to do this:
+    bool have_pos = false;
+    bool have_orgn = false;
+    LA_MsgHandler_AHR2 *ahr2_handler = NULL;
 };
 
 #endif

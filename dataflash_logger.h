@@ -12,55 +12,58 @@
 #include "INIReader.h"
 
 #include "mavlink_message_handler.h"
+#include "mavlink_writer.h"
 
 class DataFlash_Logger : public MAVLink_Message_Handler {
 
 public:
-    DataFlash_Logger(int fd, struct sockaddr_in *sa) :
-	MAVLink_Message_Handler(fd, sa),
+    DataFlash_Logger(MAVLink_Writer *mavlink_writer) :
+	MAVLink_Message_Handler(),
+        _mavlink_writer(mavlink_writer),
         target_system_id(target_system_id_default),
         target_component_id(target_component_id_default),
-	sender_system_id(0),
-	sender_component_id(0),
-	logging_started(false),
-	response_queue_head(0),
-	response_queue_tail(0),
 	seqno_gap_nack_threshold(20)
     {  }
 
-    // this may change to handle_message(mavlink_message_t):
-    // void handle_packet(uint8_t *pkt, uint16_t pktlen);
+private:
+
     bool configure(INIReader *config);
 
     void sighup_received();
-
-    void send_stop_logging_packet();
 
     void idle_tenthHz();
     void idle_1Hz();
     void idle_10Hz();
     void idle_100Hz();
-
-private:
-    bool logging_start(uint8_t *pkt, uint16_t pktlen);
+    bool logging_start(mavlink_remote_log_data_block_t &msg);
     void logging_stop();
+    void send_stop_logging_packet();
+
     bool output_file_open();
     void output_file_close();
 
+    MAVLink_Writer *_mavlink_writer = NULL;
+    uint8_t this_system_id = 57;
+    uint8_t this_component_id = 57;
+    
     const uint8_t target_system_id_default = 0;
     const uint8_t target_component_id_default = 0;
-    
+    uint8_t most_recent_sender_system_id;
+    uint8_t most_recent_sender_component_id;
     uint8_t target_system_id;     // who to send our request-for-logs to
     uint8_t target_component_id;  // who to send our request-for-logs to
-    uint8_t sender_system_id;     // who the logs areactually coming from
-    uint8_t sender_component_id;  // who the logs areactually coming from
+    uint8_t sender_system_id = 0;     // who the logs areactually coming from
+    uint8_t sender_component_id = 0;  // who the logs areactually coming from
+
     void send_start_logging_packet();
     void send_start_or_stop_logging_packet(bool is_start);
     const char *_log_directory_path;
     int out_fd;
-    bool logging_started;
+    bool logging_started = false;
 
-    void handle_decoded_message(uint64_t T, mavlink_remote_log_data_block_t);
+    
+    void handle_message(uint64_t timestamp, mavlink_message_t &msg);
+    void handle_decoded_message(uint64_t T, mavlink_remote_log_data_block_t &msg);
 
     bool make_new_log_filename(char *buffer, uint8_t bufferlen);
 
@@ -72,11 +75,11 @@ private:
 	uint32_t seqno;
 	bool status; // ack == true
     } responses[RESPONSE_QUEUE_LENGTH];
-    uint8_t response_queue_head;
-    uint8_t response_queue_tail;
+    uint8_t response_queue_head = 0;
+    uint8_t response_queue_tail = 0;
 
-    uint32_t highest_seqno_seen;
-    uint64_t _last_data_packet_time;
+    uint32_t highest_seqno_seen = 0;
+    uint64_t _last_data_packet_time = 0;
 
     /* if we lose > this many packets we do not nack anything in that gap: */
     uint8_t seqno_gap_nack_threshold;

@@ -1,8 +1,6 @@
 #ifndef MAVLINK_MESSAGE_HANDLER_H
 #define MAVLINK_MESSAGE_HANDLER_H
 
-#include <stdio.h>
-
 /*
  * mavlink_message_handler
  *
@@ -21,18 +19,13 @@
 
 #include "message_handler.h"
 
+#define UNUSED __attribute__ ((unused))
+
 class MAVLink_Message_Handler : public Message_Handler {
 public:
-    MAVLink_Message_Handler(int fd, struct sockaddr_in *sa) :
-        Message_Handler(),
-	_fd_telem_forwarder(fd),
-	_sa_telemetry_forwarder(sa)
-    { }
     MAVLink_Message_Handler() :
-        Message_Handler(),
-	_fd_telem_forwarder(-1),
-	_sa_telemetry_forwarder(NULL)
-    { }
+        Message_Handler()
+        { }
 
     virtual bool configure(INIReader *config) {
 	system_id = config->GetInteger("dflogger", "system_id", 254);
@@ -40,32 +33,29 @@ public:
 	return true;
     }
 
-    virtual void handle_packet(uint8_t *pkt, uint16_t pktlen) { }
+    virtual void handle_message(uint64_t timestamp, mavlink_message_t &msg);
+    virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_ahrs2_t &msg UNUSED) { }
+    virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_attitude_t &msg UNUSED) { }
+    virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_ekf_status_report_t &msg UNUSED) { }
+    virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_gps_raw_int_t &msg UNUSED) { }
+    virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_global_position_int_t &msg UNUSED) { }
+    virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_heartbeat_t &msg UNUSED) { }
+    virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_mount_status_t &msg UNUSED) { }
+    virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_nav_controller_output_t &msg UNUSED) { }
+    virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_param_value_t &msg UNUSED) { }
+    virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_remote_log_data_block_t &msg UNUSED) { }
+    virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_scaled_pressure_t &msg UNUSED) { }
+    virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_scaled_pressure2_t &msg UNUSED) { }
+    virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_servo_output_raw_t &msg UNUSED) { }
+    virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_sys_status_t &msg UNUSED) { }
+    virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_statustext_t &msg UNUSED) { }
+    virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_vfr_hud_t &msg UNUSED) { }
 
-    // template <typename msgtype>
-    // virtual void handle_decoded_message(msgtype &msg) { }
-
-    virtual void handle_decoded_message(uint64_t T, mavlink_ahrs2_t &msg) { }
-    virtual void handle_decoded_message(uint64_t T, mavlink_attitude_t &msg) { }
-    virtual void handle_decoded_message(uint64_t T, mavlink_ekf_status_report_t &msg) { }
-    virtual void handle_decoded_message(uint64_t T, mavlink_gps_raw_int_t &msg) { }
-    virtual void handle_decoded_message(uint64_t T, mavlink_heartbeat_t &msg) { }
-    virtual void handle_decoded_message(uint64_t T, mavlink_mount_status_t &msg) { }
-    virtual void handle_decoded_message(uint64_t T, mavlink_nav_controller_output_t &msg) { }
-    virtual void handle_decoded_message(uint64_t T, mavlink_param_value_t &msg) { }
-    virtual void handle_decoded_message(uint64_t T, mavlink_remote_log_data_block_t &msg) { }
-    virtual void handle_decoded_message(uint64_t T, mavlink_servo_output_raw_t &msg) { }
-    virtual void handle_decoded_message(uint64_t T, mavlink_sys_status_t &msg) { }
-    virtual void handle_decoded_message(uint64_t T, mavlink_statustext_t &msg) { }
-    virtual void handle_decoded_message(uint64_t T, mavlink_vfr_hud_t &msg) { }
 
 protected:
-    void send_message_to_telem_forwarder(mavlink_message_t &msg);
     uint8_t system_id;
     uint8_t component_id;
 
-    int _fd_telem_forwarder;
-    struct sockaddr_in *_sa_telemetry_forwarder;
 private:
 };
 

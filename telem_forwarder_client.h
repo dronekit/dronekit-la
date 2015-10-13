@@ -4,34 +4,40 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-class Telem_Forwarder_Client {
+#include "telem_client.h"
+
+class Telem_Forwarder_Client : public Telem_Client {
 public:
-    Telem_Forwarder_Client(uint8_t *buf, uint32_t buflen) :
-        fd_telem_forwarder(-1),
-        _buflen_content(0),
-        _buf(buf),
-        _buflen(buflen)
+    Telem_Forwarder_Client(uint8_t *recv_buf, uint32_t recv_buflen) :
+        Telem_Client(recv_buf, recv_buflen)
         { }
 
-    // FIXME: scope
-    int fd_telem_forwarder;
     uint32_t handle_recv();
-    bool telem_forwarder_packet(uint8_t *pkt, uint16_t bpktlen);
-    struct sockaddr_in sa_tf; /* solo's address */
+    void init() override;
 
     void configure(INIReader *config);
     void pack_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds);
     void handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds);
 
-    // FIXME: scope
-    uint32_t _buflen_content;
+    void do_writer_sends();
+    bool send_message(const mavlink_message_t &msg);
+    bool any_data_to_send() {
+        return _send_buf_start != _send_buf_stop;
+    }
 
 private:
-    struct sockaddr_in sa;
-    void telem_forwarder_loop();
+    int fd_telem_forwarder = -1;
+
+    struct sockaddr_in sa; // our send-from address
+    struct sockaddr_in sa_tf; /* telem_forwarder's address */
+
     void create_and_bind();
     void pack_telem_forwarder_sockaddr(INIReader *config);
     bool sane_telem_forwarder_packet(uint8_t *pkt, uint16_t bpktlen);
-    uint8_t *_buf;
-    uint32_t _buflen;
+
+    /* send buffer stuff: */
+    mavlink_message_t _send_buf[256]; // way too bug?
+    uint32_t send_buf_size() const {
+        return 256;
+    }
 };

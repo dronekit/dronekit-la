@@ -8,6 +8,12 @@
 
 #include "analyzer_util.h"
 
+#include "analyzer/analyzer_altitude_estimate_divergence.h"
+#include "analyzer/analyzer_ever_flew.h"
+#include "analyzer/analyzer_position_estimate_divergence.h"
+
+#include "data_sources.h"
+
 class Analyze {
 
 public:
@@ -24,11 +30,23 @@ public:
         OUTPUT_JSON = 17,
         OUTPUT_PLAINTEXT,
         OUTPUT_HTML,
+        OUTPUT_BRIEF,
     };
 
     void set_output_style(output_style_option option) { _output_style = option;}
+    output_style_option output_style() { return _output_style; }
 
     void evaluate_all();
+
+    void add_data_source(std::string type, const std::string data_source) {
+        _data_sources.add_series(type, data_source);
+    }
+
+    std::vector<Analyzer *> analyzers() { return _analyzers; }
+
+    void set_analyzer_names_to_run(const std::vector<std::string> run_these);
+
+protected:
 
 private:
     uint64_t start_time;
@@ -36,24 +54,31 @@ private:
     AnalyzerVehicle::Base *&vehicle;
 
     output_style_option _output_style = OUTPUT_JSON;
-#define MAX_ANALYZERS 10
-    uint8_t next_analyzer = 0;
-    Analyzer *analyzer[MAX_ANALYZERS];
 
+    std::vector<Analyzer*> _analyzers;
+
+    bool _use_names_to_run = false;
+    std::map<std::string,bool> _names_to_run;
+    
     void configure_message_handler(INIReader *config,
                                    MAVLink_Message_Handler *handler,
                                    const char *handler_name);
 
-    void configure_analyzer(INIReader *config,
-                            Analyzer *handler,
-                            const char *handler_name);
+    void configure_analyzer(INIReader *config, Analyzer *handler);
 
     void set_vehicle_copter();
     void set_copter_frametype(const char *frame_config_string);
 
+    void results_json_add_statistics(Json::Value &root);
     void results_json(Json::Value &root);
 
     void output_plaintext(Json::Value &root);
+
+    Data_Sources _data_sources;
+
+    Analyzer_Altitude_Estimate_Divergence *analyzer_altitude_estimate_divergence = NULL;    
+    Analyzer_Ever_Flew *analyzer_ever_flew = NULL;
+    Analyzer_Position_Estimate_Divergence *analyzer_position_estimate_divergence = NULL;    
 };
 
 #endif

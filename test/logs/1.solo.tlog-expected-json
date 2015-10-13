@@ -1,69 +1,586 @@
 {
   "duration": "987654321", 
-  "evilness": 185, 
+  "evilness": 732, 
   "format-version": "0.1", 
   "git_version": "some-hash", 
+  "maximum-altitude-absolute": 2158.320068359375, 
+  "maximum-altitude-absolute-units": "metres", 
+  "maximum-altitude-relative": 38.550048828125, 
+  "maximum-altitude-relative-units": "metres", 
   "packet_count": 41809, 
+  "severity-score": 732, 
   "tests": {
+    "Altitude Estimate Divergence": {
+      "description": "This test will FAIL if various craft's Altitude estimates diverge", 
+      "evilness": 180, 
+      "name": "Altitude Estimate Divergence", 
+      "results": [
+        {
+          "duration": 4088.469970703125, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=2118.850098 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434322220900603, 
+          "timestamp_stop": 1434326309370671
+        }, 
+        {
+          "duration": 17.44812393188477, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-4.550049 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326384341063, 
+          "timestamp_stop": 1434326401789188
+        }, 
+        {
+          "duration": 5.169850826263428, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-5.000000 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326404652832, 
+          "timestamp_stop": 1434326409822683
+        }, 
+        {
+          "duration": 15.11213302612305, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-6.020020 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326413379866, 
+          "timestamp_stop": 1434326428491999
+        }, 
+        {
+          "duration": 15.63115406036377, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-5.540039 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326469353025, 
+          "timestamp_stop": 1434326484984179
+        }, 
+        {
+          "duration": 6.332455158233643, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-5.270020 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326492209243, 
+          "timestamp_stop": 1434326498541698
+        }, 
+        {
+          "duration": 0.51739501953125, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-4.110107 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326504140956, 
+          "timestamp_stop": 1434326504658351
+        }, 
+        {
+          "duration": 4.521574974060059, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-4.600098 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326505171522, 
+          "timestamp_stop": 1434326509693097
+        }, 
+        {
+          "duration": 23.00064468383789, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-6.080078 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326510387526, 
+          "timestamp_stop": 1434326533388171
+        }, 
+        {
+          "duration": 0.57151198387146, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-4.219971 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326533824995, 
+          "timestamp_stop": 1434326534396507
+        }, 
+        {
+          "duration": 16.64367866516113, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-5.949951 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326547005172, 
+          "timestamp_stop": 1434326563648850
+        }, 
+        {
+          "duration": 4.555910110473633, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-5.750000 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326564658166, 
+          "timestamp_stop": 1434326569214076
+        }, 
+        {
+          "duration": 6.502764225006104, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-5.820068 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326569248533, 
+          "timestamp_stop": 1434326575751297
+        }, 
+        {
+          "duration": 39.85991668701172, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-7.329834 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326585343002, 
+          "timestamp_stop": 1434326625202918
+        }, 
+        {
+          "duration": 3.022603034973145, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-4.360107 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326636777439, 
+          "timestamp_stop": 1434326639800042
+        }, 
+        {
+          "duration": 35.80520629882812, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-25.409912 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326670072955, 
+          "timestamp_stop": 1434326705878161
+        }, 
+        {
+          "duration": 9.721453666687012, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=8.359863 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "AHRS2.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326705149057, 
+          "timestamp_stop": 1434326714870511
+        }, 
+        {
+          "duration": 28.74438095092773, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=28.599854 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "GPS_RAW_INT.alt"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326706876845, 
+          "timestamp_stop": 1434326735621225
+        }
+      ], 
+      "severity-score": 180, 
+      "status": "WARN"
+    }, 
+    "Any Parameters Seen": {
+      "description": "This test will FAIL if no parameters are seen from the UAV", 
+      "evilness": 0, 
+      "name": "Any Parameters Seen", 
+      "results": [
+        {
+          "evilness": 0, 
+          "reason": "Parameters seen", 
+          "series": [
+            "PARAM.param_id", 
+            "PARAM.value"
+          ], 
+          "severity-score": 0, 
+          "status": "PASS"
+        }
+      ], 
+      "severity-score": 0, 
+      "status": "PASS"
+    }, 
     "Arming Checks": {
       "description": "This test will FAIL if the craft ever arms when some arming checks are disabled", 
       "evilness": 0, 
       "name": "Arming Checks", 
-      "results": []
+      "results": [], 
+      "severity-score": 0, 
+      "status": "PASS"
     }, 
     "Attitude Control": {
       "description": "This test will FAIL if the craft's desired attitudes and achieved attitudes do not match for more than a threshold time", 
-      "evilness": 30, 
+      "evilness": 60, 
       "name": "Attitude Control", 
       "results": [
         {
+          "duration": 0.2863810062408447, 
+          "duration-units": "seconds", 
           "evidence": [
-            "Max-Delta=8.310314 degrees", 
-            "Roll-at-Max-Delta=3.650314 degrees", 
-            "Desired-Roll-at-Max-Delta=-4.660000 degrees", 
-            "Pitch-at-Max-Delta=11.818577 degrees", 
-            "Desired-Pitch-at-Max-Delta=15.540000 degrees", 
-            "duration=0.270912 seconds", 
-            "threshold-duration=0.250000 seconds"
+            "threshold=10.000000", 
+            "threshold-duration=0.250000 seconds", 
+            "Max-Delta=12.980427 degrees", 
+            "Roll-at-Max-Delta=2.398818 degrees", 
+            "Desired-Roll-at-Max-Delta=4.180000 degrees", 
+            "Pitch-at-Max-Delta=-13.170426 degrees", 
+            "Desired-Pitch-at-Max-Delta=-0.190000 degrees"
           ], 
           "evilness": 10, 
           "reason": "Desired attitude not achieved", 
           "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
             "NAV_CONTROLLER_OUTPUT.nav_roll", 
             "NAV_CONTROLLER_OUTPUT.nav_pitch", 
-            "ATTITUDE.roll", 
-            "ATTITUDE.pitch"
+            "NAV_CONTROLLER_OUTPUT.nav_bearing"
           ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326670779655, 
+          "timestamp_stop": 1434326671066036
+        }, 
+        {
+          "duration": 0.3214679956436157, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "threshold=10.000000", 
+            "threshold-duration=0.250000 seconds", 
+            "Max-Delta=17.396271 degrees", 
+            "Roll-at-Max-Delta=-7.196270 degrees", 
+            "Desired-Roll-at-Max-Delta=10.200000 degrees", 
+            "Pitch-at-Max-Delta=-3.895659 degrees", 
+            "Desired-Pitch-at-Max-Delta=-11.550000 degrees"
+          ], 
+          "evilness": 10, 
+          "reason": "Desired attitude not achieved", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "NAV_CONTROLLER_OUTPUT.nav_roll", 
+            "NAV_CONTROLLER_OUTPUT.nav_pitch", 
+            "NAV_CONTROLLER_OUTPUT.nav_bearing"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326693993164, 
+          "timestamp_stop": 1434326694314632
+        }, 
+        {
+          "duration": 0.3206770122051239, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "threshold=10.000000", 
+            "threshold-duration=0.250000 seconds", 
+            "Max-Delta=13.818441 degrees", 
+            "Roll-at-Max-Delta=-14.932710 degrees", 
+            "Desired-Roll-at-Max-Delta=-12.559999 degrees", 
+            "Pitch-at-Max-Delta=12.918442 degrees", 
+            "Desired-Pitch-at-Max-Delta=-0.900000 degrees"
+          ], 
+          "evilness": 10, 
+          "reason": "Desired attitude not achieved", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "NAV_CONTROLLER_OUTPUT.nav_roll", 
+            "NAV_CONTROLLER_OUTPUT.nav_pitch", 
+            "NAV_CONTROLLER_OUTPUT.nav_bearing"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326694518642, 
+          "timestamp_stop": 1434326694839319
+        }, 
+        {
+          "duration": 0.2709119915962219, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "threshold=5.000000", 
+            "threshold-duration=0.250000 seconds", 
+            "Max-Delta=8.310314 degrees", 
+            "Roll-at-Max-Delta=3.650314 degrees", 
+            "Desired-Roll-at-Max-Delta=-4.660000 degrees", 
+            "Pitch-at-Max-Delta=11.818577 degrees", 
+            "Desired-Pitch-at-Max-Delta=15.540000 degrees"
+          ], 
+          "evilness": 5, 
+          "reason": "Desired attitude not achieved", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "NAV_CONTROLLER_OUTPUT.nav_roll", 
+            "NAV_CONTROLLER_OUTPUT.nav_pitch", 
+            "NAV_CONTROLLER_OUTPUT.nav_bearing"
+          ], 
+          "severity-score": 5, 
           "status": "WARN", 
           "timestamp_start": 1434326699541394, 
           "timestamp_stop": 1434326699812306
         }, 
         {
+          "duration": 0.255048006772995, 
+          "duration-units": "seconds", 
           "evidence": [
+            "threshold=5.000000", 
+            "threshold-duration=0.250000 seconds", 
             "Max-Delta=7.607708 degrees", 
             "Roll-at-Max-Delta=-2.625914 degrees", 
             "Desired-Roll-at-Max-Delta=0.350000 degrees", 
             "Pitch-at-Max-Delta=-0.937708 degrees", 
-            "Desired-Pitch-at-Max-Delta=6.670000 degrees", 
-            "duration=0.255048 seconds", 
-            "threshold-duration=0.250000 seconds"
+            "Desired-Pitch-at-Max-Delta=6.670000 degrees"
           ], 
-          "evilness": 10, 
+          "evilness": 5, 
           "reason": "Desired attitude not achieved", 
           "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
             "NAV_CONTROLLER_OUTPUT.nav_roll", 
             "NAV_CONTROLLER_OUTPUT.nav_pitch", 
-            "ATTITUDE.roll", 
-            "ATTITUDE.pitch"
+            "NAV_CONTROLLER_OUTPUT.nav_bearing"
           ], 
+          "severity-score": 5, 
           "status": "WARN", 
           "timestamp_start": 1434326700062613, 
           "timestamp_stop": 1434326700317661
         }, 
         {
+          "duration": 0.302049994468689, 
+          "duration-units": "seconds", 
           "evidence": [
-            "Max-Delta=198.267700 degrees", 
-            "Roll-at-Max-Delta=-171.777695 degrees", 
+            "threshold=10.000000", 
+            "threshold-duration=0.250000 seconds", 
+            "Max-Delta=10.187236 degrees", 
+            "Roll-at-Max-Delta=-3.395468 degrees", 
+            "Desired-Roll-at-Max-Delta=-3.600000 degrees", 
+            "Pitch-at-Max-Delta=11.427236 degrees", 
+            "Desired-Pitch-at-Max-Delta=1.240000 degrees"
+          ], 
+          "evilness": 10, 
+          "reason": "Desired attitude not achieved", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "NAV_CONTROLLER_OUTPUT.nav_roll", 
+            "NAV_CONTROLLER_OUTPUT.nav_pitch", 
+            "NAV_CONTROLLER_OUTPUT.nav_bearing"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326700588374, 
+          "timestamp_stop": 1434326700890424
+        }, 
+        {
+          "duration": 38.92656326293945, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "threshold=10.000000", 
+            "threshold-duration=0.250000 seconds", 
+            "Max-Delta=198.267715 degrees", 
+            "Roll-at-Max-Delta=-171.777710 degrees", 
             "Desired-Roll-at-Max-Delta=26.490000 degrees", 
             "Pitch-at-Max-Delta=7.252589 degrees", 
             "Desired-Pitch-at-Max-Delta=26.490000 degrees", 
@@ -72,15 +589,318 @@
           "evilness": 10, 
           "reason": "Desired attitude not achieved", 
           "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
             "NAV_CONTROLLER_OUTPUT.nav_roll", 
             "NAV_CONTROLLER_OUTPUT.nav_pitch", 
-            "ATTITUDE.roll", 
-            "ATTITUDE.pitch"
+            "NAV_CONTROLLER_OUTPUT.nav_bearing"
           ], 
+          "severity-score": 10, 
           "status": "FAIL", 
-          "timestamp_start": 1434326705062324
+          "timestamp_start": 1434326703596762, 
+          "timestamp_stop": 1434326742523325
         }
-      ]
+      ], 
+      "severity-score": 60, 
+      "status": "FAIL"
+    }, 
+    "Attitude Estimate Divergence": {
+      "description": "This test will FAIL if various craft's attitude estimates diverge", 
+      "evilness": 120, 
+      "name": "Attitude Estimate Divergence", 
+      "results": [
+        {
+          "duration": 0.6359279751777649, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=5.905668 degrees", 
+            "delta-threshold=5.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326569815394, 
+          "timestamp_stop": 1434326570451322
+        }, 
+        {
+          "duration": 0.6474840044975281, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=6.285734 degrees", 
+            "delta-threshold=5.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326577722808, 
+          "timestamp_stop": 1434326578370292
+        }, 
+        {
+          "duration": 0.5133829712867737, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=6.713810 degrees", 
+            "delta-threshold=5.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326578370292, 
+          "timestamp_stop": 1434326578883675
+        }, 
+        {
+          "duration": 1.433122038841248, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=8.144611 degrees", 
+            "delta-threshold=5.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326578883675, 
+          "timestamp_stop": 1434326580316797
+        }, 
+        {
+          "duration": 3.241332054138184, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=8.646156 degrees", 
+            "delta-threshold=5.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326581474768, 
+          "timestamp_stop": 1434326584716100
+        }, 
+        {
+          "duration": 1.247601985931396, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=6.584295 degrees", 
+            "delta-threshold=5.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326585474100, 
+          "timestamp_stop": 1434326586721702
+        }, 
+        {
+          "duration": 1.255604982376099, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=5.989949 degrees", 
+            "delta-threshold=5.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1434326587883997, 
+          "timestamp_stop": 1434326589139602
+        }, 
+        {
+          "duration": 1.341125965118408, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=138.039230 degrees", 
+            "delta-threshold=10.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326702467582, 
+          "timestamp_stop": 1434326703808708
+        }, 
+        {
+          "duration": 1.476848006248474, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=86.778847 degrees", 
+            "delta-threshold=10.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326704622558, 
+          "timestamp_stop": 1434326706099406
+        }, 
+        {
+          "duration": 0.7458040118217468, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=139.012902 degrees", 
+            "delta-threshold=10.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326706197252, 
+          "timestamp_stop": 1434326706943056
+        }, 
+        {
+          "duration": 1.373325943946838, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=128.150679 degrees", 
+            "delta-threshold=10.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326707044816, 
+          "timestamp_stop": 1434326708418142
+        }, 
+        {
+          "duration": 10.28797912597656, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=23.681101 degrees", 
+            "delta-threshold=10.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326708418142, 
+          "timestamp_stop": 1434326718706121
+        }
+      ], 
+      "severity-score": 120, 
+      "status": "FAIL"
     }, 
     "Battery": {
       "description": "This test will FAIL if the battery level remaining falls below a threshold level", 
@@ -92,11 +912,17 @@
             "battery-remaining=67.000000%", 
             "failsafe=15.000000%"
           ], 
+          "evilness": 0, 
           "reason": "Battery never below failsafe", 
-          "status": "OK", 
-          "timestamp": 1434326733112682
+          "series": [
+            "SYS_STATUS.battery_remaining"
+          ], 
+          "severity-score": 0, 
+          "status": "PASS"
         }
-      ]
+      ], 
+      "severity-score": 0, 
+      "status": "PASS"
     }, 
     "Brownout": {
       "description": "This test will FAIL if the craft appears to lose onboard power during a flight", 
@@ -105,57 +931,108 @@
       "results": [
         {
           "evidence": [
-            "Final altitude 0.650000 metres"
+            "Final altitude 2120.429932 metres"
           ], 
+          "evilness": 0, 
           "reason": "No brownout detected", 
-          "status": "OK", 
-          "timestamp": 0
+          "series": [
+            "SERVO_OUTPUT_RAW.servo1_raw", 
+            "SERVO_OUTPUT_RAW.servo2_raw", 
+            "SERVO_OUTPUT_RAW.servo3_raw", 
+            "SERVO_OUTPUT_RAW.servo4_raw", 
+            "SERVO_OUTPUT_RAW.servo5_raw", 
+            "SERVO_OUTPUT_RAW.servo6_raw", 
+            "SERVO_OUTPUT_RAW.servo7_raw", 
+            "SERVO_OUTPUT_RAW.servo8_raw", 
+            "GLOBAL_POSITION_INT.alt"
+          ], 
+          "severity-score": 0, 
+          "status": "PASS"
         }
-      ]
+      ], 
+      "severity-score": 0, 
+      "status": "PASS"
     }, 
     "Compass Offsets": {
       "description": "This test will FAIL if the compass offset parameters exceed thresholds", 
-      "evilness": 5, 
+      "evilness": 10, 
       "name": "Compass Offsets", 
       "results": [
         {
           "evidence": [
-            "COMPASS_OFS 315.754636 > 200.000000"
+            "COMPASS_OFS_X=-87.583405", 
+            "COMPASS_OFS_Y=160.725479", 
+            "COMPASS_OFS_Z=257.288666", 
+            "COMPASS_OFS 315.754639 >= 200.000000"
           ], 
+          "evilness": 5, 
           "reason": "Compass offsets in parameters are out of bounds", 
           "series": [
-            "PARM"
+            "PARAM.param_id", 
+            "PARAM.value"
           ], 
+          "severity-score": 5, 
           "status": "FAIL", 
-          "timestamp": 1434322219950713
+          "timestamp": 1434322219952336
+        }, 
+        {
+          "evidence": [
+            "COMPASS_OFS2_X=68.603691", 
+            "COMPASS_OFS2_Y=62.510509", 
+            "COMPASS_OFS2_Z=-242.777222", 
+            "COMPASS_OFS2 259.913086 >= 200.000000"
+          ], 
+          "evilness": 5, 
+          "reason": "Compass offsets in parameters are out of bounds", 
+          "series": [
+            "PARAM.param_id", 
+            "PARAM.value"
+          ], 
+          "severity-score": 5, 
+          "status": "FAIL", 
+          "timestamp": 1434322220048425
         }
-      ]
+      ], 
+      "severity-score": 10, 
+      "status": "PASS"
     }, 
     "Crash Test": {
       "description": "This test will FAIL if the vehicle appears to crash", 
-      "evilness": 10, 
+      "evilness": 100, 
       "name": "Crash Test", 
       "results": [
         {
           "evidence": [
-            "ANGLE_MAX (179.658707 > 26.490000)", 
-            "SERVO_OUTPUT_RAW.servo1_raw=1502.000000", 
-            "SERVO_OUTPUT_RAW.servo2_raw=1292.000000", 
-            "SERVO_OUTPUT_RAW.servo4_raw=1709.000000"
+            "ANGLE_MAX (fabs(34.780518) > 26.490000)", 
+            "SERVO_OUTPUT_RAW.servo1_raw=1528.000000", 
+            "SERVO_OUTPUT_RAW.servo2_raw=1801.000000", 
+            "SERVO_OUTPUT_RAW.servo3_raw=1853.000000", 
+            "SERVO_OUTPUT_RAW.servo4_raw=1298.000000"
           ], 
-          "evilness": 10, 
+          "evilness": 100, 
           "reason": "Vehicle is past maximum allowed angle and running its motors", 
           "series": [
-            "PARAM", 
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
             "SERVO_OUTPUT_RAW.servo1_raw", 
             "SERVO_OUTPUT_RAW.servo2_raw", 
             "SERVO_OUTPUT_RAW.servo3_raw", 
-            "SERVO_OUTPUT_RAW.servo4_raw"
+            "SERVO_OUTPUT_RAW.servo4_raw", 
+            "SERVO_OUTPUT_RAW.servo5_raw", 
+            "SERVO_OUTPUT_RAW.servo6_raw", 
+            "SERVO_OUTPUT_RAW.servo7_raw", 
+            "SERVO_OUTPUT_RAW.servo8_raw", 
+            "PARAM.param_id", 
+            "PARAM.value"
           ], 
+          "severity-score": 100, 
           "status": "FAIL", 
-          "timestamp_start": 1434326741537645
+          "timestamp": 1434326707890326
         }
-      ]
+      ], 
+      "severity-score": 100, 
+      "status": "FAIL"
     }, 
     "Ever Armed": {
       "description": "This test will FAIL if the craft never armed during the log", 
@@ -163,11 +1040,21 @@
       "name": "Ever Armed", 
       "results": [
         {
+          "evidence": [
+            "Armed at 1434326396966924"
+          ], 
+          "evilness": 0, 
           "reason": "The vehicle armed", 
-          "status": "OK", 
-          "timestamp": 1434326742510502
+          "series": [
+            "HEARBEAT.base_mode"
+          ], 
+          "severity-score": 0, 
+          "status": "PASS", 
+          "timestamp-first-armed": 1434326396966924
         }
-      ]
+      ], 
+      "severity-score": 0, 
+      "status": "PASS"
     }, 
     "Ever Flew": {
       "description": "This test will FAIL if the craft did not ever seem to fly", 
@@ -175,199 +1062,45 @@
       "name": "Ever Flew", 
       "results": [
         {
+          "evilness": 0, 
           "reason": "The vehicle appeared to fly", 
-          "status": "OK", 
-          "timestamp": 1434326404251548
+          "series": [
+            "HEARBEAT.base_mode", 
+            "SERVO_OUTPUT_RAW.servo1_raw", 
+            "SERVO_OUTPUT_RAW.servo2_raw", 
+            "SERVO_OUTPUT_RAW.servo3_raw", 
+            "SERVO_OUTPUT_RAW.servo4_raw", 
+            "SERVO_OUTPUT_RAW.servo5_raw", 
+            "SERVO_OUTPUT_RAW.servo6_raw", 
+            "SERVO_OUTPUT_RAW.servo7_raw", 
+            "SERVO_OUTPUT_RAW.servo8_raw"
+          ], 
+          "severity-score": 0, 
+          "status": "PASS", 
+          "timestamp-first-flying": 1434326404251548
         }
-      ]
+      ], 
+      "severity-score": 0, 
+      "status": "PASS"
+    }, 
+    "GPS Fix": {
+      "description": "This test will FAIL if the quality of the GPS information is poor", 
+      "evilness": 0, 
+      "name": "GPS Fix", 
+      "results": [], 
+      "severity-score": 0, 
+      "status": "PASS"
     }, 
     "Good EKF": {
       "description": "This test will FAIL if EKF variances exceed thresholds, or if the EKF status flags indicate errors", 
-      "evilness": 140, 
+      "evilness": 142, 
       "name": "Good EKF", 
       "results": [
         {
+          "duration": 4085.215576171875, 
+          "duration-units": "seconds", 
           "evidence": [
-            "max=0.586537", 
-            "threshold=0.500000"
-          ], 
-          "evilness": 4, 
-          "reason": "pos_horiz_variance exceeds warn threshold", 
-          "series": "EKF_STATUS_REPORT.pos_horiz_variance", 
-          "status": "WARN", 
-          "timestamp_start": 1434326613751675, 
-          "timestamp_stop": 1434326614777980
-        }, 
-        {
-          "evidence": [
-            "max=0.569607", 
-            "threshold=0.500000"
-          ], 
-          "evilness": 4, 
-          "reason": "pos_horiz_variance exceeds warn threshold", 
-          "series": "EKF_STATUS_REPORT.pos_horiz_variance", 
-          "status": "WARN", 
-          "timestamp_start": 1434326617374681, 
-          "timestamp_stop": 1434326618425890
-        }, 
-        {
-          "evidence": [
-            "max=0.837287", 
-            "threshold=0.500000"
-          ], 
-          "evilness": 4, 
-          "reason": "pos_horiz_variance exceeds warn threshold", 
-          "series": "EKF_STATUS_REPORT.pos_horiz_variance", 
-          "status": "WARN", 
-          "timestamp_start": 1434326698071503, 
-          "timestamp_stop": 1434326701711361
-        }, 
-        {
-          "evidence": [
-            "max-variance=1.227308", 
-            "threshold=1.000000"
-          ], 
-          "evilness": 10, 
-          "reason": "velocity_variance exceeds fail threshold", 
-          "series": "EKF_STATUS_REPORT.velocity_variance", 
-          "status": "FAIL", 
-          "timestamp_start": 1434326703802242, 
-          "timestamp_stop": 1434326706416664
-        }, 
-        {
-          "evidence": [
-            "max=0.599691", 
-            "threshold=0.500000"
-          ], 
-          "evilness": 4, 
-          "reason": "compass_variance exceeds warn threshold", 
-          "series": "EKF_STATUS_REPORT.compass_variance", 
-          "status": "WARN", 
-          "timestamp_start": 1434326706935792, 
-          "timestamp_stop": 1434326707458313
-        }, 
-        {
-          "evidence": [
-            "max-variance=5.714452", 
-            "threshold=1.000000"
-          ], 
-          "evilness": 10, 
-          "reason": "pos_horiz_variance exceeds fail threshold", 
-          "series": "EKF_STATUS_REPORT.pos_horiz_variance", 
-          "status": "FAIL", 
-          "timestamp_start": 1434326702256849, 
-          "timestamp_stop": 1434326713188969
-        }, 
-        {
-          "evidence": [
-            "max=0.530743", 
-            "threshold=0.500000"
-          ], 
-          "evilness": 4, 
-          "reason": "compass_variance exceeds warn threshold", 
-          "series": "EKF_STATUS_REPORT.compass_variance", 
-          "status": "WARN", 
-          "timestamp_start": 1434326722609030, 
-          "timestamp_stop": 1434326723151062
-        }, 
-        {
-          "evidence": [
-            "max=0.515186", 
-            "threshold=0.500000"
-          ], 
-          "evilness": 4, 
-          "reason": "compass_variance exceeds warn threshold", 
-          "series": "EKF_STATUS_REPORT.compass_variance", 
-          "status": "WARN", 
-          "timestamp_start": 1434326728386148, 
-          "timestamp_stop": 1434326728915250
-        }, 
-        {
-          "evidence": [
-            "max-variance=1.414812", 
-            "threshold=1.000000"
-          ], 
-          "evilness": 10, 
-          "reason": "velocity_variance exceeds fail threshold", 
-          "series": "EKF_STATUS_REPORT.velocity_variance", 
-          "status": "FAIL", 
-          "timestamp_start": 1434326727854056, 
-          "timestamp_stop": 1434326728915250
-        }, 
-        {
-          "evidence": [
-            "max-variance=4.043245", 
-            "threshold=1.000000"
-          ], 
-          "evilness": 10, 
-          "reason": "pos_horiz_variance exceeds fail threshold", 
-          "series": "EKF_STATUS_REPORT.pos_horiz_variance", 
-          "status": "FAIL", 
-          "timestamp_start": 1434326727854056, 
-          "timestamp_stop": 1434326734639194
-        }, 
-        {
-          "evidence": [
-            "max=0.526657", 
-            "threshold=0.500000"
-          ], 
-          "evilness": 4, 
-          "reason": "velocity_variance exceeds warn threshold", 
-          "series": "EKF_STATUS_REPORT.velocity_variance", 
-          "status": "WARN", 
-          "timestamp_start": 1434326735165674, 
-          "timestamp_stop": 1434326735710806
-        }, 
-        {
-          "evidence": [
-            "max=0.846526", 
-            "threshold=0.500000"
-          ], 
-          "evilness": 4, 
-          "reason": "pos_horiz_variance exceeds warn threshold", 
-          "series": "EKF_STATUS_REPORT.pos_horiz_variance", 
-          "status": "WARN", 
-          "timestamp_start": 1434326735165674, 
-          "timestamp_stop": 1434326736737647
-        }, 
-        {
-          "evidence": [
-            "max=0.557990", 
-            "threshold=0.500000"
-          ], 
-          "evilness": 4, 
-          "reason": "velocity_variance exceeds warn threshold", 
-          "series": "EKF_STATUS_REPORT.velocity_variance", 
-          "status": "WARN", 
-          "timestamp_start": 1434326740356540, 
-          "timestamp_stop": 1434326740880062
-        }, 
-        {
-          "evidence": [
-            "max=0.838248", 
-            "threshold=0.500000"
-          ], 
-          "evilness": 4, 
-          "reason": "velocity_variance exceeds warn threshold", 
-          "series": "EKF_STATUS_REPORT.velocity_variance", 
-          "status": "WARN", 
-          "timestamp_start": 1434326741408100, 
-          "timestamp_stop": 1434326741953598
-        }, 
-        {
-          "evidence": [
-            "max-variance=2.114971", 
-            "threshold=1.000000"
-          ], 
-          "evilness": 10, 
-          "reason": "pos_horiz_variance exceeds fail threshold", 
-          "series": "EKF_STATUS_REPORT.pos_horiz_variance", 
-          "status": "FAIL", 
-          "timestamp_start": 1434326739856068, 
-          "timestamp_stop": 1434326736737647
-        }, 
-        {
-          "evidence": [
+            "flags=0", 
             "attitude estimate bad", 
             "horizontal velocity estimate bad", 
             "vertical velocity estimate bad", 
@@ -381,13 +1114,19 @@
           ], 
           "evilness": 20, 
           "reason": "The EKF status report indicates a problem with the EKF", 
-          "series": "EKF_STATUS_REPORT.flags", 
+          "series": [
+            "EKF_STATUS_REPORT.flags"
+          ], 
+          "severity-score": 20, 
           "status": "FAIL", 
-          "timestamp_start": 1434322219026185, 
+          "timestamp_start": 1434322218982966, 
           "timestamp_stop": 1434326304198476
         }, 
         {
+          "duration": 5.533998966217041, 
+          "duration-units": "seconds", 
           "evidence": [
+            "flags=165", 
             "horizontal velocity estimate bad", 
             "horizontal position (relative) estimate bad", 
             "horizontal position (absolute) estimate bad", 
@@ -397,13 +1136,19 @@
           ], 
           "evilness": 16, 
           "reason": "The EKF status report indicates a problem with the EKF", 
-          "series": "EKF_STATUS_REPORT.flags", 
+          "series": [
+            "EKF_STATUS_REPORT.flags"
+          ], 
+          "severity-score": 16, 
           "status": "FAIL", 
           "timestamp_start": 1434326304198476, 
           "timestamp_stop": 1434326309732475
         }, 
         {
+          "duration": 87.05667114257812, 
+          "duration-units": "seconds", 
           "evidence": [
+            "flags=933", 
             "horizontal velocity estimate bad", 
             "horizontal position (relative) estimate bad", 
             "horizontal position (absolute) estimate bad", 
@@ -411,13 +1156,462 @@
           ], 
           "evilness": 14, 
           "reason": "The EKF status report indicates a problem with the EKF", 
-          "series": "EKF_STATUS_REPORT.flags", 
+          "series": [
+            "EKF_STATUS_REPORT.flags"
+          ], 
+          "severity-score": 14, 
           "status": "FAIL", 
           "timestamp_start": 1434326309732475, 
           "timestamp_stop": 1434326396789150
+        }, 
+        {
+          "duration": 1.026304960250854, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-variance=0.586537", 
+            "threshold=0.500000"
+          ], 
+          "evilness": 4, 
+          "reason": "pos_horiz_variance exceeds warn threshold", 
+          "series": [
+            "EKF_STATUS_REPORT.pos_horiz"
+          ], 
+          "severity-score": 4, 
+          "status": "WARN", 
+          "timestamp_start": 1434326613751675, 
+          "timestamp_stop": 1434326614777980
+        }, 
+        {
+          "duration": 1.051208972930908, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-variance=0.569607", 
+            "threshold=0.500000"
+          ], 
+          "evilness": 4, 
+          "reason": "pos_horiz_variance exceeds warn threshold", 
+          "series": [
+            "EKF_STATUS_REPORT.pos_horiz"
+          ], 
+          "severity-score": 4, 
+          "status": "WARN", 
+          "timestamp_start": 1434326617374681, 
+          "timestamp_stop": 1434326618425890
+        }, 
+        {
+          "duration": 3.63985800743103, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-variance=0.837287", 
+            "threshold=0.500000"
+          ], 
+          "evilness": 4, 
+          "reason": "pos_horiz_variance exceeds warn threshold", 
+          "series": [
+            "EKF_STATUS_REPORT.pos_horiz"
+          ], 
+          "severity-score": 4, 
+          "status": "WARN", 
+          "timestamp_start": 1434326698071503, 
+          "timestamp_stop": 1434326701711361
+        }, 
+        {
+          "duration": 2.614422082901001, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-variance=1.227308", 
+            "threshold=1.000000"
+          ], 
+          "evilness": 10, 
+          "reason": "velocity_variance exceeds fail threshold", 
+          "series": [
+            "EKF_STATUS_REPORT.velocity"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326703802242, 
+          "timestamp_stop": 1434326706416664
+        }, 
+        {
+          "duration": 0.5225210189819336, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-variance=0.599691", 
+            "threshold=0.500000"
+          ], 
+          "evilness": 4, 
+          "reason": "compass_variance exceeds warn threshold", 
+          "series": [
+            "EKF_STATUS_REPORT.compass"
+          ], 
+          "severity-score": 4, 
+          "status": "WARN", 
+          "timestamp_start": 1434326706935792, 
+          "timestamp_stop": 1434326707458313
+        }, 
+        {
+          "duration": 10.93212032318115, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-variance=5.714452", 
+            "threshold=1.000000"
+          ], 
+          "evilness": 10, 
+          "reason": "pos_horiz_variance exceeds fail threshold", 
+          "series": [
+            "EKF_STATUS_REPORT.pos_horiz"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326702256849, 
+          "timestamp_stop": 1434326713188969
+        }, 
+        {
+          "duration": 0.54203200340271, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-variance=0.530743", 
+            "threshold=0.500000"
+          ], 
+          "evilness": 4, 
+          "reason": "compass_variance exceeds warn threshold", 
+          "series": [
+            "EKF_STATUS_REPORT.compass"
+          ], 
+          "severity-score": 4, 
+          "status": "WARN", 
+          "timestamp_start": 1434326722609030, 
+          "timestamp_stop": 1434326723151062
+        }, 
+        {
+          "duration": 0.5291020274162292, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-variance=0.515186", 
+            "threshold=0.500000"
+          ], 
+          "evilness": 4, 
+          "reason": "compass_variance exceeds warn threshold", 
+          "series": [
+            "EKF_STATUS_REPORT.compass"
+          ], 
+          "severity-score": 4, 
+          "status": "WARN", 
+          "timestamp_start": 1434326728386148, 
+          "timestamp_stop": 1434326728915250
+        }, 
+        {
+          "duration": 1.061193943023682, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-variance=1.414812", 
+            "threshold=1.000000"
+          ], 
+          "evilness": 10, 
+          "reason": "velocity_variance exceeds fail threshold", 
+          "series": [
+            "EKF_STATUS_REPORT.velocity"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326727854056, 
+          "timestamp_stop": 1434326728915250
+        }, 
+        {
+          "duration": 6.785138130187988, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-variance=4.043245", 
+            "threshold=1.000000"
+          ], 
+          "evilness": 10, 
+          "reason": "pos_horiz_variance exceeds fail threshold", 
+          "series": [
+            "EKF_STATUS_REPORT.pos_horiz"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326727854056, 
+          "timestamp_stop": 1434326734639194
+        }, 
+        {
+          "duration": 0.5451319813728333, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-variance=0.526657", 
+            "threshold=0.500000"
+          ], 
+          "evilness": 4, 
+          "reason": "velocity_variance exceeds warn threshold", 
+          "series": [
+            "EKF_STATUS_REPORT.velocity"
+          ], 
+          "severity-score": 4, 
+          "status": "WARN", 
+          "timestamp_start": 1434326735165674, 
+          "timestamp_stop": 1434326735710806
+        }, 
+        {
+          "duration": 1.571972966194153, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-variance=0.846526", 
+            "threshold=0.500000"
+          ], 
+          "evilness": 4, 
+          "reason": "pos_horiz_variance exceeds warn threshold", 
+          "series": [
+            "EKF_STATUS_REPORT.pos_horiz"
+          ], 
+          "severity-score": 4, 
+          "status": "WARN", 
+          "timestamp_start": 1434326735165674, 
+          "timestamp_stop": 1434326736737647
+        }, 
+        {
+          "duration": 0.5235220193862915, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-variance=0.557990", 
+            "threshold=0.500000"
+          ], 
+          "evilness": 4, 
+          "reason": "velocity_variance exceeds warn threshold", 
+          "series": [
+            "EKF_STATUS_REPORT.velocity"
+          ], 
+          "severity-score": 4, 
+          "status": "WARN", 
+          "timestamp_start": 1434326740356540, 
+          "timestamp_stop": 1434326740880062
+        }, 
+        {
+          "duration": 0.5454980134963989, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-variance=0.838248", 
+            "threshold=0.500000"
+          ], 
+          "evilness": 4, 
+          "reason": "velocity_variance exceeds warn threshold", 
+          "series": [
+            "EKF_STATUS_REPORT.velocity"
+          ], 
+          "severity-score": 4, 
+          "status": "WARN", 
+          "timestamp_start": 1434326741408100, 
+          "timestamp_stop": 1434326741953598
+        }, 
+        {
+          "duration": 345.7341613769531, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "flags=831", 
+            "vertical position (above ground) estimate bad", 
+            "In constant position mode (no abs or rel position)"
+          ], 
+          "evilness": 12, 
+          "reason": "The EKF status report indicates a problem with the EKF", 
+          "series": [
+            "EKF_STATUS_REPORT.flags"
+          ], 
+          "severity-score": 12, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326396789150, 
+          "timestamp_stop": 1434326742523325
         }
-      ]
+      ], 
+      "severity-score": 142, 
+      "status": "FAIL"
+    }, 
+    "Position Estimate Divergence": {
+      "description": "This test will FAIL if various craft's position estimates diverge", 
+      "evilness": 80, 
+      "name": "Position Estimate Divergence", 
+      "results": [
+        {
+          "duration": 10.45837116241455, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=54.084332 metres", 
+            "delta-threshold=5.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 20, 
+          "name": "AHRS2", 
+          "reason": "This position estimate differs from the canonical craft position", 
+          "series": [
+            "GLOBAL_POSITION_INT.lat", 
+            "GLOBAL_POSITION_INT.lon", 
+            "AHRS2.lat", 
+            "AHRS2.lng"
+          ], 
+          "severity-score": 20, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326702571061, 
+          "timestamp_stop": 1434326713029432
+        }, 
+        {
+          "duration": 10.19213485717773, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=54.084332 metres", 
+            "delta-threshold=5.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 20, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This position estimate differs from the canonical craft position", 
+          "series": [
+            "GLOBAL_POSITION_INT.lat", 
+            "GLOBAL_POSITION_INT.lon", 
+            "GPS_RAW_INT.lat", 
+            "GPS_RAW_INT.lon"
+          ], 
+          "severity-score": 20, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326702837297, 
+          "timestamp_stop": 1434326713029432
+        }, 
+        {
+          "duration": 29.28837585449219, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=43.811661 metres", 
+            "delta-threshold=5.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 20, 
+          "name": "AHRS2", 
+          "reason": "This position estimate differs from the canonical craft position", 
+          "series": [
+            "GLOBAL_POSITION_INT.lat", 
+            "GLOBAL_POSITION_INT.lon", 
+            "AHRS2.lat", 
+            "AHRS2.lng"
+          ], 
+          "severity-score": 20, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326713234950, 
+          "timestamp_stop": 1434326742523325
+        }, 
+        {
+          "duration": 29.28837585449219, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=44.226967 metres", 
+            "delta-threshold=5.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 20, 
+          "name": "GPS_RAW_INT", 
+          "reason": "This position estimate differs from the canonical craft position", 
+          "series": [
+            "GLOBAL_POSITION_INT.lat", 
+            "GLOBAL_POSITION_INT.lon", 
+            "GPS_RAW_INT.lat", 
+            "GPS_RAW_INT.lon"
+          ], 
+          "severity-score": 20, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326713234950, 
+          "timestamp_stop": 1434326742523325
+        }
+      ], 
+      "severity-score": 80, 
+      "status": "FAIL"
+    }, 
+    "Sensor Health": {
+      "description": "This test will FAIL if any sensor is detected as failed", 
+      "evilness": 40, 
+      "name": "Sensor Health", 
+      "results": [
+        {
+          "duration": 0.5016720294952393, 
+          "duration-units": "seconds", 
+          "evilness": 10, 
+          "sensor-name": "MAV_SYS_STATUS_SENSOR_3D_GYRO", 
+          "series": [
+            "SYS_STATUS.onboard_control_sensors_present", 
+            "SYS_STATUS.onboard_control_sensors_enabled", 
+            "SYS_STATUS.onboard_control_sensors_health"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326442616817, 
+          "timestamp_stop": 1434326443118489
+        }, 
+        {
+          "duration": 0.4979079961776733, 
+          "duration-units": "seconds", 
+          "evilness": 10, 
+          "sensor-name": "MAV_SYS_STATUS_SENSOR_3D_GYRO", 
+          "series": [
+            "SYS_STATUS.onboard_control_sensors_present", 
+            "SYS_STATUS.onboard_control_sensors_enabled", 
+            "SYS_STATUS.onboard_control_sensors_health"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326462794998, 
+          "timestamp_stop": 1434326463292906
+        }, 
+        {
+          "duration": 0.5147119760513306, 
+          "duration-units": "seconds", 
+          "evilness": 10, 
+          "sensor-name": "MAV_SYS_STATUS_SENSOR_3D_GYRO", 
+          "series": [
+            "SYS_STATUS.onboard_control_sensors_present", 
+            "SYS_STATUS.onboard_control_sensors_enabled", 
+            "SYS_STATUS.onboard_control_sensors_health"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326487491438, 
+          "timestamp_stop": 1434326488006150
+        }, 
+        {
+          "duration": 0.5514119863510132, 
+          "duration-units": "seconds", 
+          "evilness": 10, 
+          "sensor-name": "MAV_SYS_STATUS_SENSOR_3D_GYRO", 
+          "series": [
+            "SYS_STATUS.onboard_control_sensors_present", 
+            "SYS_STATUS.onboard_control_sensors_enabled", 
+            "SYS_STATUS.onboard_control_sensors_health"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1434326553058228, 
+          "timestamp_stop": 1434326553609640
+        }
+      ], 
+      "severity-score": 40, 
+      "status": "FAIL"
+    }, 
+    "Vehicle Definition": {
+      "description": "This test will FAIL if the craft type is never defined", 
+      "evilness": 0, 
+      "name": "Vehicle Definition", 
+      "results": [
+        {
+          "evilness": 0, 
+          "reason": "Vehicle was appropriately defined", 
+          "series": [
+            "STATUSTEXT.text"
+          ], 
+          "severity-score": 0, 
+          "status": "PASS"
+        }
+      ], 
+      "severity-score": 0, 
+      "status": "PASS"
     }
   }, 
-  "timestamp": "123456789"
+  "timestamp": "123456789", 
+  "total-distance-travelled-units": "metres", 
+  "total-distance-travellled": 1584.37666848388, 
+  "total-flight-time": 338.0690612792969, 
+  "total-flight-time-units": "seconds"
 }

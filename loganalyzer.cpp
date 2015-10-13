@@ -12,58 +12,98 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#include <regex>
+
 #include "dataflash_reader.h"
+#include "dataflash_textdump_reader.h"
 
 #include "analyzing_dataflash_message_handler.h"
 #include "analyzing_mavlink_message_handler.h"
 
 void LogAnalyzer::parse_path(const char *path)
 {
+    create_vehicle_from_commandline_arguments();
+    if (_vehicle == NULL) {
+        _vehicle = new AnalyzerVehicle::Base();
+    }
+
+    bool do_stdin = false;
+
+    log_format_t log_format = log_format_none;
     if (!strcmp(path, "-")) {
-        parse_fd(reader, fileno(stdin));
-        reader->clear_message_handlers();
-        return;
+        do_stdin = true;
+    } else if (strstr(path, ".BIN") ||
+               strstr(path, ".bin")) {
+        log_format = log_format_df;
+    } else if (strstr(path, ".log") ||
+               strstr(path, ".LOG")) {
+        log_format = log_format_log;
+    } else if (strstr(path, ".tlog") ||
+               strstr(path, ".TLOG")) {
+        log_format = log_format_tlog;
+    }
+
+    if (force_format() != log_format_none) {
+        log_format = force_format();
     }
     
-    struct stat buf;
-    if (stat(path, &buf) == -1) {
-        fprintf(stderr, "Failed to stat (%s): %s\n", path, strerror(errno));
-        exit(1);
-    }
-
-    switch (buf.st_mode & S_IFMT) {
-    case S_IFREG:
-        parse_filepath(path);
-        return;
-    case S_IFDIR:
-        return parse_directory_full_of_files(path);
-    default:
-        fprintf(stderr, "Not a file or directory\n");
-        exit(1);
-    }
-}
-
-void LogAnalyzer::parse_directory_full_of_files(const char *dirpath)
-{
-    DIR *dh = opendir(dirpath);
-    if (dh == NULL) {
-        fprintf(stderr, "Failed to open (%s): %s", dirpath, strerror(errno));
-        exit(1);
-    }
-    struct dirent *ent;
-    for(ent = readdir(dh); ent != NULL; ent = readdir(dh)) {
-        if (streq(ent->d_name, ".") || streq(ent->d_name, "..")) {
-            continue;
+    if (log_format == log_format_none) {
+        if (do_stdin) {
+            ::fprintf(stderr, "You asked to parse stdin but did not force a format type\n");
+        } else {
+            ::fprintf(stderr, "Unable to determine log type from filename; try -i?\n");
         }
-        // FIXME:
-        std::string tmp = dirpath;
-        tmp += "/";
-        tmp += ent->d_name;
-
-        ::printf("**************** Analyzing (%s)\n", ent->d_name);
-        parse_filepath(tmp.c_str());
-        ::printf("**************** End analysis (%s)\n\n", ent->d_name);
+        usage();
+        exit(1);
     }
+
+    switch (log_format) {
+    case log_format_tlog:
+        prep_for_tlog();
+        break;
+    case log_format_df:
+        prep_for_df();
+        break;
+    case log_format_log:
+        prep_for_log();
+        break;
+    default:
+        abort();
+    }
+
+    int fd;
+    if (!strcmp(path, "-")) {
+        fd = fileno(stdin);
+    } else {
+        fd = xopen(path, O_RDONLY);
+    }
+
+    if (output_style == Analyze::OUTPUT_BRIEF) {
+        printf("%25s: ", path);
+    }
+
+    parse_fd(reader, fd);
+
+    if (output_style == Analyze::OUTPUT_BRIEF) {
+        printf("\n");
+    }
+
+    switch (log_format) {
+    case log_format_tlog:
+        cleanup_after_tlog();
+        break;
+    case log_format_df:
+        cleanup_after_df();
+        break;
+    case log_format_log:
+        cleanup_after_log();
+        break;
+    default:
+        abort();
+    }
+    
+    delete _vehicle;
+    _vehicle = NULL;
 }
 
 int LogAnalyzer::xopen(const char *filepath, const uint8_t mode)
@@ -75,34 +115,30 @@ int LogAnalyzer::xopen(const char *filepath, const uint8_t mode)
     }
     return fd;
 }
-void LogAnalyzer::parse_filepath(const char *filepath)
-{
-    int fd = xopen(filepath, O_RDONLY);
 
-    instantiate_message_handlers();
-    parse_fd(reader, fd);
+void LogAnalyzer::prep_for_tlog()
+{
+    reader = new MAVLink_Reader(config());
+    ((MAVLink_Reader*)reader)->set_is_tlog(true);
+
+    Analyze *analyze = create_analyze();
+
+    Analyzing_MAVLink_Message_Handler *handler = new Analyzing_MAVLink_Message_Handler(analyze, _vehicle);
+    reader->add_message_handler(handler, "Analyze");
+}
+
+void LogAnalyzer::cleanup_after_tlog()
+{
     reader->clear_message_handlers();
 }
-
-void LogAnalyzer::instantiate_message_handlers()
+void LogAnalyzer::cleanup_after_df()
 {
-    if (_vehicle == NULL) { 
-        _vehicle = new AnalyzerVehicle::Base();
-    }
-    Analyze *analyze = new Analyze(_vehicle);
-    if (analyze != NULL) {
-        analyze->set_output_style(output_style);
-        analyze->instantiate_analyzers(_config);
-        // which base class doesn't really matter here:
-        Analyzing_MAVLink_Message_Handler *handler = new Analyzing_MAVLink_Message_Handler(analyze, _vehicle);
-        // Message_Handler *x = static_cast<MAVLink_Message_Handler*>(analyze);
-        reader->add_message_handler(handler, "Analyze");
-    } else {
-        la_log(LOG_ERR, "Failed to create analyze");
-        abort();
-    }
+    reader->clear_message_handlers();
 }
-
+void LogAnalyzer::cleanup_after_log()
+{
+    reader->clear_message_handlers();
+}
 
 void LogAnalyzer::do_idle_callbacks()
 {
@@ -118,68 +154,144 @@ void LogAnalyzer::handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set 
     _client->handle_select_fds(fds_read, fds_write, fds_err, nfds);
 
     // FIXME: find a more interesting way of doing this...
-    reader->feed(_client_buf, _client->_buflen_content);
-    _client->_buflen_content = 0;
+    reader->feed(_client->_recv_buf, _client->_recv_buflen_content);
+    _client->_recv_buflen_content = 0;
 }
 
 void LogAnalyzer::run_live_analysis()
 {
-    INIReader *config = get_config();
+    reader = new MAVLink_Reader(config());
 
-    reader = new MAVLink_Reader(config);
+    _client = new Telem_Forwarder_Client(_client_recv_buf, sizeof(_client_recv_buf));
+    _client->configure(config());
 
-    _client = new Telem_Forwarder_Client(_client_buf, sizeof(_client_buf));
-    _client->configure(config);
+    writer = new MAVLink_Writer(config());
+    if (writer == NULL) {
+        la_log(LOG_ERR, "Failed to create writer from (%s)\n", config_filename);
+        exit(1);
+    }
 
-    Heart *heart= new Heart(_client->fd_telem_forwarder, &_client->sa_tf);
+    Heart *heart= new Heart(writer);
     if (heart != NULL) {
         reader->add_message_handler(heart, "Heart");
     } else {
         la_log(LOG_INFO, "Failed to create heart");
     }
 
-    instantiate_message_handlers();
-
-    select_loop();
-}
-
-void LogAnalyzer::run_df(const char *_pathname)
-{
-    get_config();
-
-    reader = new DataFlash_Reader(_config);
-
+    create_vehicle_from_commandline_arguments();
     if (_vehicle == NULL) {
         _vehicle = new AnalyzerVehicle::Base();
     }
-    Analyze *analyze = new Analyze(_vehicle);
 
-    if (analyze != NULL) {
-        analyze->set_output_style(output_style);
-        analyze->instantiate_analyzers(_config);
-        Analyzing_DataFlash_Message_Handler *handler = new Analyzing_DataFlash_Message_Handler(analyze, _vehicle);
-        // Message_Handler *x = static_cast<DataFlash_Message_Handler*>(handler);
-        reader->add_message_handler(handler, "Analyze");
-    } else {
+    Analyze *analyze = create_analyze();
+
+    Analyzing_MAVLink_Message_Handler *handler = new Analyzing_MAVLink_Message_Handler(analyze, _vehicle);
+    reader->add_message_handler(handler, "Analyze");
+
+    select_loop();
+
+    _vehicle = NULL; // leak this memory
+}
+
+Analyze *LogAnalyzer::create_analyze()
+{
+    Analyze *analyze = new Analyze(_vehicle);
+    if (analyze == NULL) {
         la_log(LOG_ERR, "Failed to create analyze");
         abort();
     }
 
-    int fd = xopen(_pathname, O_RDONLY);
+    analyze->set_output_style(output_style);
+    if (_analyzer_names_to_run.size()) {
+        analyze->set_analyzer_names_to_run(_analyzer_names_to_run);
+    }
+    analyze->instantiate_analyzers(config());
 
-    parse_fd(reader, fd);
-    reader->clear_message_handlers();
-    exit(0);
+    return analyze;
 }
 
-void LogAnalyzer::run()
+void LogAnalyzer::prep_for_df()
 {
-    // la_log(LOG_INFO, "loganalyzer starting: built " __DATE__ " " __TIME__);
-    // signal(SIGHUP, sighup_handler);
+    reader = new DataFlash_Reader(config());
 
+    Analyze *analyze = create_analyze();
+
+    Analyzing_DataFlash_Message_Handler *handler = new Analyzing_DataFlash_Message_Handler(analyze, _vehicle);
+    reader->add_message_handler(handler, "Analyze");
+}
+
+void LogAnalyzer::prep_for_log()
+{
+    reader = new DataFlash_TextDump_Reader(config());
+
+    Analyze *analyze = create_analyze();
+
+    Analyzing_DataFlash_Message_Handler *handler = new Analyzing_DataFlash_Message_Handler(analyze, _vehicle);
+    reader->add_message_handler(handler, "Analyze");
+}
+
+void LogAnalyzer::show_version_information()
+{
+    ::printf("Version: " GIT_VERSION "\n");
+}
+
+void LogAnalyzer::list_analyzers()
+{
+    Analyze *analyze = new Analyze(_vehicle);
+
+    analyze->instantiate_analyzers(config());
+    std::vector<Analyzer *> analyzers = analyze->analyzers();
+    for (std::vector<Analyzer*>::iterator it = analyzers.begin();
+         it != analyzers.end();
+         ++it) {
+        ::printf("%s\n", (*it)->name().c_str());
+    }
+}
+
+// From: http://stackoverflow.com/questions/236129/split-a-string-in-c
+std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
+    std::stringstream ss(s);
+    std::string item;
+    while (std::getline(ss, item, delim)) {
+        elems.push_back(item);
+    }
+    return elems;
+}
+std::vector<std::string> split(const std::string &s, char delim) {
+    std::vector<std::string> elems;
+    split(s, delim, elems);
+    return elems;
+}
+// thanks stackoverflow!
+
+void LogAnalyzer::expand_names_to_run()
+{
+    std::vector<std::string> new_names;
+    for (std::vector<std::string>::const_iterator it = _analyzer_names_to_run.begin();
+         it != _analyzer_names_to_run.end();
+         ++it) {
+        // insert lambda here if you dare.
+        std::vector<std::string> tmp = split((*it),',');
+        
+        for (std::vector<std::string>::const_iterator iy = tmp.begin();
+             iy != tmp.end();
+             ++iy) {
+            std::string value = std::regex_replace(*iy, std::regex("^ +| +$|( ) +"), "$1");
+            new_names.push_back(value);
+        }
+    }
+    _analyzer_names_to_run = new_names;
+}
+
+void LogAnalyzer::create_vehicle_from_commandline_arguments()
+{
     if (_model_string != NULL) {
         if (streq(_model_string,"copter")) {
             _vehicle = new AnalyzerVehicle::Copter();
+//            _analyze->set_vehicle_copter();
+            if (_frame_string != NULL) {
+                ((AnalyzerVehicle::Copter*)_vehicle)->set_frame(_frame_string);
+            }
         // } else if (streq(model_string,"plane")) {
         //     model = new AnalyzerVehicle::Plane();
         // } else if (streq(model_string,"rover")) {
@@ -188,13 +300,35 @@ void LogAnalyzer::run()
             la_log(LOG_ERR, "Unknown model type (%s)", _model_string);
             exit(1);
         }
+        _vehicle->set_vehicletype_is_forced(true);
+    } else if (_frame_string != NULL) {
+        la_log(LOG_ERR, "Can not specify frame type without specifying model type");
+        exit(1);
     }
+}
+
+void LogAnalyzer::run()
+{
+    // la_log(LOG_INFO, "loganalyzer starting: built " __DATE__ " " __TIME__);
+    // signal(SIGHUP, sighup_handler);
+    init_config();
+
+    if (_show_version_information) {
+        show_version_information();
+        exit(0);
+    }
+    if (_do_list_analyzers) {
+        list_analyzers();
+        exit(0);
+    }
+
+    expand_names_to_run();
 
     if (_use_telem_forwarder) {
         return run_live_analysis();
     }
 
-    if (_pathname == NULL) {
+    if (_paths == NULL) {
         usage();
         exit(1);
     }
@@ -206,6 +340,8 @@ void LogAnalyzer::run()
             output_style = Analyze::OUTPUT_JSON;
         } else if(streq(output_style_string, "plain-text")) {
             output_style = Analyze::OUTPUT_PLAINTEXT;
+        } else if(streq(output_style_string, "brief")) {
+            output_style = Analyze::OUTPUT_BRIEF;
         } else if(streq(output_style_string, "html")) {
             output_style = Analyze::OUTPUT_HTML;
         } else {
@@ -214,30 +350,44 @@ void LogAnalyzer::run()
         }
     }
 
-    if (strstr(_pathname, ".BIN") ||
-        strstr(_pathname, ".bin")) {
-        return run_df(_pathname);
+    if (forced_format_string != NULL) {
+        if (streq(forced_format_string, "tlog")) {
+            _force_format = log_format_tlog;
+        } else if(streq(forced_format_string, "df")) {
+            _force_format = log_format_df;
+        } else if(streq(forced_format_string, "log")) {
+            _force_format = log_format_log;
+        } else {
+            usage();
+            exit(1);
+        }
     }
-    
-    INIReader *config = get_config();
 
-    reader = new MAVLink_Reader(config);
-    ((MAVLink_Reader*)reader)->set_is_tlog(true);
-
-    return parse_path(_pathname);
+    for (uint8_t i=0; i<_pathcount; i++) {
+        parse_path(_paths[i]);
+    }
 }
 
 void LogAnalyzer::usage()
 {
     ::printf("Usage:\n");
-    ::printf("%s [OPTION] [FILE]\n", program_name());
+    ::printf("%s [OPTION] [FILE...]\n", program_name());
     ::printf(" -c filepath      use config file filepath\n");
     ::printf(" -t               connect to telem forwarder to receive data\n");
     ::printf(" -m modeltype     override model; copter|plane|rover\n");
-    ::printf(" -s style         use output style (plain-text|json)\n");
+    ::printf(" -f frame         set frame; QUAD|Y6\n");
+    ::printf(" -s style         use output style (plain-text|json|brief)\n");
     ::printf(" -h               display usage information\n");
+    ::printf(" -l               list analyzers\n");
+    ::printf(" -a               specify analzers to run (comma-separated list)\n");
+    ::printf(" -i format        specify format (tlog|df|log)\n");
+    ::printf(" -V               display version information\n");
     ::printf("\n");
-    ::printf("Example: ./dataflash_logger -c /dev/null -s json 1.solo.tlog\n");
+    ::printf("Example: %s -s json 1.solo.tlog\n", program_name());
+    ::printf("Example: %s -a \"Ever Flew, Battery\" 1.solo.tlog\n", program_name());
+    ::printf("Example: %s -s brief 1.solo.tlog 2.solo.tlog logs/*.tlog\n", program_name());
+    ::printf("Example: %s - (analyze stdin)\n", program_name());
+    ::printf("Example: %s x.log (analyze text-dumped dataflash log)\n", program_name());
     exit(0);
 }
 const char *LogAnalyzer::program_name()
@@ -255,13 +405,16 @@ void LogAnalyzer::parse_arguments(int argc, char *argv[])
     _argc = argc;
     _argv = argv;
 
-    while ((opt = getopt(argc, argv, "hc:ts:m:")) != -1) {
+    while ((opt = getopt(argc, argv, "hc:ts:m:f:Vla:i:")) != -1) {
         switch(opt) {
         case 'h':
             usage();
             break;
         case 'c':
             config_filename = optarg;
+            break;
+        case 'i':
+            forced_format_string = optarg;
             break;
         case 't':
             _use_telem_forwarder = true;
@@ -272,10 +425,23 @@ void LogAnalyzer::parse_arguments(int argc, char *argv[])
         case 'm':
             _model_string = optarg;
             break;
+        case 'f':
+            _frame_string = optarg;
+            break;
+        case 'V':
+            _show_version_information = true;
+            break;
+        case 'l':
+            _do_list_analyzers = true;
+            break;
+        case 'a':
+            _analyzer_names_to_run.push_back(optarg);
+            break;
         }
     }
     if (optind < argc) {
-        _pathname = argv[optind++];
+        _paths = &argv[optind];
+        _pathcount = argc-optind;
     }
 }
 

@@ -2,20 +2,49 @@
 
 void Analyzing_DataFlash_Message_Handler::handle_format_message_received(const char *name, const struct log_Format &format, const char *msg) {
     uint8_t new_msg_type = ((struct log_Format*)(msg))->type;
-    if (streq(name, "ATT")) {
-        handlers[new_msg_type] = new LA_MsgHandler_ATT(format, _analyze, _vehicle);
+    if (streq(name, "AHR2")) {
+        ahr2_handler= new LA_MsgHandler_AHR2(name, format, _analyze, _vehicle);
+        handlers[new_msg_type] = ahr2_handler;
+        if (have_pos) {
+            ahr2_handler->set_canonical_for_position(false);
+        }
+        if (have_orgn) {
+            ahr2_handler->set_canonical_for_origin(false);
+        }
+    } else if (streq(name, "ATT")) {
+        handlers[new_msg_type] = new LA_MsgHandler_ATT(name, format, _analyze, _vehicle);
+    } else if (streq(name, "BARO")) {
+        handlers[new_msg_type] = new LA_MsgHandler_BARO(name, format, _analyze, _vehicle);
+    } else if (streq(name, "EKF1")) {
+        handlers[new_msg_type] = new LA_MsgHandler_EKF1(name, format, _analyze, _vehicle);
     } else if (streq(name, "EKF4")) {
-        handlers[new_msg_type] = new LA_MsgHandler_EKF4(format, _analyze, _vehicle);
+        handlers[new_msg_type] = new LA_MsgHandler_EKF4(name, format, _analyze, _vehicle);
     } else if (streq(name, "ERR")) {
-        handlers[new_msg_type] = new LA_MsgHandler_ERR(format, _analyze, _vehicle);
+        handlers[new_msg_type] = new LA_MsgHandler_ERR(name, format, _analyze, _vehicle);
     } else if (streq(name, "EV")) {
-        handlers[new_msg_type] = new LA_MsgHandler_EV(format, _analyze, _vehicle);
+        handlers[new_msg_type] = new LA_MsgHandler_EV(name, format, _analyze, _vehicle);
+    } else if (streq(name, "GPS")) {
+        handlers[new_msg_type] = new LA_MsgHandler_GPS(name, format, _analyze, _vehicle);
+    } else if (streq(name, "GPS2")) {
+        handlers[new_msg_type] = new LA_MsgHandler_GPS(name, format, _analyze, _vehicle);
     } else if (streq(name, "MSG")) {
-        handlers[new_msg_type] = new LA_MsgHandler_MSG(format, _analyze, _vehicle);
+        handlers[new_msg_type] = new LA_MsgHandler_MSG(name, format, _analyze, _vehicle);
+    } else if (streq(name, "ORGN")) {
+        have_orgn = true;
+        handlers[new_msg_type] = new LA_MsgHandler_ORGN(name, format, _analyze, _vehicle);
+        if (ahr2_handler != NULL) {
+            ahr2_handler->set_canonical_for_origin(false);
+        }
     } else if (streq(name, "PARM")) {
-        handlers[new_msg_type] = new LA_MsgHandler_PARM(format, _analyze, _vehicle);
+        handlers[new_msg_type] = new LA_MsgHandler_PARM(name, format, _analyze, _vehicle);
+    } else if (streq(name, "POS")) {
+        handlers[new_msg_type] = new LA_MsgHandler_POS(name, format, _analyze, _vehicle);
+        have_pos = true;
+        if (ahr2_handler != NULL) {
+            ahr2_handler->set_canonical_for_position(false);
+        }
     } else if (streq(name, "RCOU")) {
-        handlers[new_msg_type] = new LA_MsgHandler_RCOU(format, _analyze, _vehicle);
+        handlers[new_msg_type] = new LA_MsgHandler_RCOU(name, format, _analyze, _vehicle);
     } else {
         return;
     }

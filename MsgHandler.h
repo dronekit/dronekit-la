@@ -12,8 +12,6 @@
 #include "Location.h"
 #include "DataFlash/LogMessage.h"
 
-#define uint uint64_t
-
 #define LOGREADER_MAX_FIELDS 30
 
 #ifndef streq
@@ -47,7 +45,7 @@ public:
     void require_field(const uint8_t *msg, const char *label, char *buffer, uint8_t bufferlen);
     float require_field_float(const uint8_t *msg, const char *label);
     uint8_t require_field_uint8_t(const uint8_t *msg, const char *label);
-    int32_t require_field_int32_t(uint8_t *msg, const char *label);
+    int32_t require_field_int32_t(const uint8_t *msg, const char *label);
     uint16_t require_field_uint16_t(const uint8_t *msg, const char *label);
     int16_t require_field_int16_t(const uint8_t *msg, const char *label);
 
@@ -71,14 +69,14 @@ private:
     uint8_t next_field;
     size_t size_for_type_table[52]; // maps field type (e.g. 'f') to e.g 4 bytes
 
-    struct format_field_info *find_field_info(const char *label);
-
     void parse_format_fields();
     void init_field_types();
     void add_field_type(char type, size_t size);
     uint8_t size_for_type(char type);
 
 protected:
+    struct format_field_info *find_field_info(const char *label);
+
     struct log_Format f; // the format we are a parser for
     ~MsgHandler();
 

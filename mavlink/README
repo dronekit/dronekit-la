@@ -1,27 +1,7 @@
-Updating is still a manual process.
+Update this directory from the ardupilot-solo tree like this:
 
-1.  Clone 3drobotics/mavlink-solo somewhere and cd to it
-2.  make a c_library subdir
-3.  ./mavgenerate.py
-    Out=(browse to c_library), Language=C, Protocol=1.0, Validate=yes
-    Select each xml file in message_definitions/v1.0 in turn and Generate:
-        ardupilotmega.xml
-        ASLUAV.xml
-        autoquad.xml
-        common.xml
-        matrixpilot.xml
-        minimal.xml
-        pixhawk.xml
-        slugs.xml
-        test.xml
-        ualberta.xml
-4.  Delete the existing SoloLink/flightcode/mavlink/c_library and copy the new
-    one there.
+e.g:
 
-The problem I was having with command-line generation was that when starting
-pymavlink/tools/mavgen.py, it would end up using the version of itself
-installed on my host and something would go awry. There is probably an easy
-fix.
-
-The ultimate goal is for bitbake to do this, install the headers in the
-sysroot, then have the flight code build against that.
+ARDUPILOT_SOLO=/home/pbarker/rc/solo/ardupilot-solo
+ARDUPILOT_SOLO_MAVLINK_1_0=$ARDUPILOT_SOLO/libraries/GCS_MAVLink/include/mavlink/v1.0
+rsync -aP --delete $ARDUPILOT_SOLO_MAVLINK_1_0/ c_library

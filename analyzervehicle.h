@@ -7,12 +7,14 @@
 #include "mavlink/c_library/ardupilotmega/mavlink.h"
 #include "mavlink/c_library/common/mavlink.h"
 
+#include "analyzer_util.h"
+
 namespace AnalyzerVehicle {
 
-    // AV_Attitude should be the best guess as to what the vehicle's
+    // Attitude should be the best guess as to what the vehicle's
     // status is - typicall the POS message from dataflash, for
     // example
-    class AV_Attitude {
+    class Attitude {
     public:
        
         float roll() const { return _att[0]; };
@@ -51,20 +53,80 @@ namespace AnalyzerVehicle {
         }
 };
 
-    class AV_Position {
+    class Altitude {
     public:
-        void set_alt(uint64_t T, float alt) {
+        void set_alt(uint64_t T, double alt) {
             _alt = alt;
             _alt_modtime = T;
         }
-        float alt() { return _alt; };
-        uint64_t alt_modtime() { return _alt_modtime; };
+        double alt() const {
+            return _alt;
+        }
+        double alt_modtime() const {
+            return _alt_modtime;
+        }
 
     private:
-        float _lat;
-        float _lon;
-        float _alt; // relative
-        uint64_t _alt_modtime;
+        double _alt;
+        double _alt_modtime;
+    };
+
+    class AltitudeEstimate {
+    public:
+        AltitudeEstimate(const std::string name) :
+            _name(name)
+            { }
+        AltitudeEstimate() :
+            _name(NULL),
+            _altitude({})
+            { }
+        const std::string name() { return _name; }
+        const Altitude altitude() { return _altitude; }
+        void set_alt(uint64_t T, float alt) { _altitude.set_alt(T, alt); }
+        float alt() { return _altitude.alt(); }
+
+    private:
+        const std::string _name;
+        Altitude _altitude = { };
+    };
+
+    class Position {
+    public:
+        // void set_alt(uint64_t T, float alt) {
+        //     _alt = alt;
+        //     _alt_modtime = T;
+        // }
+        // float alt() { return _alt; };
+        // uint64_t alt_modtime() { return _alt_modtime; };
+
+        void set_lat(uint64_t T, double lat) {
+            _lat = lat;
+            _lat_modtime = T;
+        }
+        double lat() const { return _lat; };
+        uint64_t lat_modtime() const { return _lat_modtime; };
+
+        void set_lon(uint64_t T, double lon) {
+            _lon = lon;
+            _lon_modtime = T;
+        }
+        double lon() const { return _lon; };
+        uint64_t lon_modtime() const { return _lon_modtime; };
+
+//        double distance_to(Position otherpos);
+        double horizontal_distance_to(Position otherpos) const;
+
+        bool is_zero_zero() {
+            return (is_zero(lat()) && is_zero(lon()));
+        }
+
+    private:
+        double _lat;
+        double _lon;
+        float _alt; // relative, in metres
+        // uint64_t _alt_modtime;
+        uint64_t _lat_modtime;
+        uint64_t _lon_modtime;
     };
 
     class EKF {
@@ -105,6 +167,54 @@ namespace AnalyzerVehicle {
     //     uint16_t D;
     // };
 
+    class AttitudeEstimate {
+    public:
+        AttitudeEstimate(const std::string name) :
+            _name(name)
+            { }
+        AttitudeEstimate() :
+            _name(NULL),
+            _attitude({})
+            { }
+        const std::string name() { return _name; }
+        const Attitude attitude() { return _attitude; }
+        void set_roll(uint64_t T, double roll) { _attitude.set_roll(T, roll); }
+        void set_pitch(uint64_t T, double pitch) { _attitude.set_pitch(T, pitch); }
+        void set_yaw(uint64_t T, double yaw) { _attitude.set_yaw(T, yaw); }
+        double roll() { return _attitude.roll(); }
+        double pitch() { return _attitude.pitch(); }
+        double yaw() { return _attitude.yaw(); }
+
+    private:
+        const std::string _name;
+        Attitude _attitude;
+    };
+
+    class PositionEstimate {
+    public:
+        PositionEstimate(const std::string name) :
+            _name(name)
+            { }
+        PositionEstimate() :
+            _name(NULL),
+            _position({})
+            { }
+        const std::string name() { return _name; }
+        const Position position() { return _position; }
+        // void set_alt(uint64_t T, float alt) {
+        //     _position.set_alt(T, alt);
+        // }
+        void set_lat(uint64_t T, double lat) { _position.set_lat(T, lat); }
+        void set_lon(uint64_t T, double lon) { _position.set_lon(T, lon); }
+        // float alt() { return _position.alt(); }
+        double lat() { return _position.lat(); }
+        double lon() { return _position.lon(); }
+
+    private:
+        const std::string _name;
+        Position _position = { };
+    };
+
     class Battery {
     public:
         float _remaining = 0; // percent
@@ -143,32 +253,49 @@ namespace AnalyzerVehicle {
     };
 
 
-    template <typename packettype>
-    class PacketHistory {
+    class GPSInfo {
     public:
-        PacketHistory() :
-            next(0),
-            count(0)
-            { }
-        void packet(packettype &packet) {
-            memcpy(&packets[next++], &packet, sizeof(packet));
-            if (next >= size) {
-                next = 0;
-            }
-            if (count < size) {
-                count++;
-            }
-        }
+        GPSInfo(std::string name) { _name = name; }
+        double hdop() { return _hdop; }
+        void set_hdop(double hdop) { _hdop = hdop; }
+        uint8_t satellites() { return _satellites_visible; }
+        void set_satellites(uint8_t satellites) { _satellites_visible = satellites; }
+        const std::string name() { return _name; }
+        
     private:
-        static const uint8_t size = 20;
-        uint8_t next;
-        uint8_t count;
-        packettype packets[size];
+        double _hdop;
+        uint8_t _satellites_visible;
+        std::string _name;
     };
+
+
+    // template <typename packettype>
+    // class PacketHistory {
+    // public:
+    //     PacketHistory() :
+    //         next(0),
+    //         count(0)
+    //         { }
+    //     void packet(packettype &packet) {
+    //         memcpy(&packets[next++], &packet, sizeof(packet));
+    //         if (next >= size) {
+    //             next = 0;
+    //         }
+    //         if (count < size) {
+    //             count++;
+    //         }
+    //     }
+    // private:
+    //     static const uint8_t size = 20;
+    //     uint8_t next;
+    //     uint8_t count;
+    //     packettype packets[size];
+    // };
     
 class Base {
 public:
     Base() { }
+    virtual ~Base() { }
 
     // vehicle state information
     virtual bool is_flying() { return false; }
@@ -183,11 +310,10 @@ public:
         invalid = 0,
         copter = 17
     };
-    vehicletype_t vehicletype() {
-        return _vehicletype;
-    }
-    void set_vehicletype(vehicletype_t vehicletype) {
-        _vehicletype = vehicletype;
+    bool vehicletype_is_forced() { return _vehicletype_is_forced; }
+    void set_vehicletype_is_forced(bool value) { _vehicletype_is_forced = value; }
+    virtual vehicletype_t vehicletype() {
+        return invalid;
     }
 
     // EKF
@@ -214,11 +340,14 @@ public:
     void take_state(Base *old);
     
     // Parameters
-    float param(const char *name) { return _param[name]; };
+    float param(const std::string name) { return _param[name]; };
+    uint16_t param_count() { return _param.size(); };
     bool param(const char *name, float &ret);
-    bool param_seen(const char *name) const;
-    uint64_t param_modtime(const char *name) { return _param_modtime[name]; }
+    bool param_seen(const std::string name) const;
+    uint64_t param_modtime(const std::string name) { return _param_modtime[name]; }
     void param_set(const char *name, const float value);
+    virtual bool param_default(const char *name, float &ret);
+    bool param_with_defaults(const char *name, float &ret);
 
     // servo output
     void set_servo_output(uint16_t ch1, uint16_t ch2, uint16_t ch3, uint16_t ch4, uint16_t ch5, uint16_t ch6, uint16_t ch7, uint16_t ch8);
@@ -253,9 +382,46 @@ public:
     float despitch() { return nav().despitch(); }
     float desyaw() { return nav().desyaw(); }
 
-    void set_alt(float alt) { pos().set_alt(T(), alt); }
-    float alt() { return pos().alt(); };
-    uint64_t alt_modtime() { return pos().alt_modtime(); }
+    void set_altitude(float value) {
+        // pos().set_alt(T(), value);
+        alt().set_alt(T(), value);
+    }
+    float altitude() { return alt().alt(); };
+    uint64_t alt_modtime() { return alt().alt_modtime(); }
+
+    void set_lat(double lat) { pos().set_lat(T(), lat); }
+    void set_lon(double lon) { pos().set_lon(T(), lon); }
+    double lat() { return pos().lat(); }
+    double lon() { return pos().lon(); }
+
+    PositionEstimate *position_estimate(const std::string name) {
+        if (_position_estimates.count(name) == 0) {
+            _position_estimates[name] = new PositionEstimate(name);
+        }
+        return _position_estimates[name];
+    };
+
+    AttitudeEstimate *attitude_estimate(const std::string name) {
+        if (_attitude_estimates.count(name) == 0) {
+            _attitude_estimates[name] = new AttitudeEstimate(name);
+        }
+        return _attitude_estimates[name];
+    };
+
+    AltitudeEstimate *altitude_estimate(const std::string name) {
+        if (_altitude_estimates.count(name) == 0) {
+            _altitude_estimates[name] = new AltitudeEstimate(name);
+        }
+        return _altitude_estimates[name];
+    };
+
+    
+    std::map<const std::string, bool> sensors_health() {
+        return _sensors_health;
+    }
+    void sensor_set_healthy(std::string name, bool value) {
+        _sensors_health[name] = value;
+    }
 
     // battery
     void set_battery_remaining(float percent) {
@@ -279,32 +445,87 @@ public:
         return _battery._failsafe_event_T;
     }
 
+    const std::map<const std::string, AttitudeEstimate*> &attitude_estimates() {
+        return _attitude_estimates;
+    }
+    const std::map<const std::string, PositionEstimate*> &position_estimates() {
+        return _position_estimates;
+    }
+    const std::map<const std::string, AltitudeEstimate*> &altitude_estimates() {
+        return _altitude_estimates;
+    }
+
+    // not really sure this belongs here; possibly move this out if we
+    // ever move to a "state of the universe" object for the analyzers
+    // rather than just a vehicle
+    const std::map<const std::string, GPSInfo*> &gpsinfos() {
+        return _gpsinfo;
+    }
+
+    GPSInfo *gpsinfo(const std::string name) {
+        if (_gpsinfo.count(name) == 0) {
+            _gpsinfo[name] = new GPSInfo(name);
+        }
+        return _gpsinfo[name];
+    };
+
+
+    Attitude& att() { return _att; };
+    Position& pos() { return _pos; };
+    Altitude& alt() { return _alt; };
+
+    const Position &origin() const { return _origin; }
+    double origin_lat() const { return _origin.lat(); }
+    uint64_t origin_lat_T() const { return _origin.lat_modtime(); }
+    double origin_lon() const { return _origin.lon(); }
+    uint64_t origin_lon_T() const { return _origin.lon_modtime(); }
+    void set_origin_lat(double value) { _origin.set_lat(T(),value); }
+    void set_origin_lon(double value) { _origin.set_lon(T(),value); }
+        
+    Position& origin() { return _origin; }
+
+    void set_origin_altitude(double value) { _origin_altitude.set_alt(T(),value); }
+    double origin_altitude() { return _origin_altitude.alt(); }
+    uint64_t origin_altitude_T() const { return _origin_altitude.alt_modtime(); }
+
 protected:
-    AV_Attitude& att() { return _att; };
-    AV_Position& pos() { return _pos; };
     AV_Nav& nav() { return _nav; };
 
     bool _armed = false;
 
     std::map<const std::string, float> _param;
     std::map<const std::string, uint64_t> _param_modtime;
-    AV_Attitude _att = { };
-    AV_Position _pos = { };
-    AV_Nav _nav = { };
+    std::map<const std::string, float> _param_defaults = {};
     
+    std::map<const std::string, bool> _sensors_health = {};
+
+    Attitude _att = { };
+    Position _pos = { };
+    Altitude _alt = { };
+    AV_Nav _nav = { };
+
+    Position _origin = { };
+    Altitude _origin_altitude = { };
 private:
+    bool _vehicletype_is_forced = false;
     uint64_t _T = 0;
 
     vehicletype_t _vehicletype = invalid;
 
     Battery _battery;
 
-    PacketHistory<mavlink_heartbeat_t> history_heartbeat;
-    PacketHistory<mavlink_nav_controller_output_t> history_nav_controller_output;
-    PacketHistory<mavlink_servo_output_raw_t> history_servo_output_raw;
+    std::map<const std::string, PositionEstimate*> _position_estimates;
+    std::map<const std::string, AttitudeEstimate*> _attitude_estimates;
+    std::map<const std::string, AltitudeEstimate*> _altitude_estimates;
+
+    std::map<const std::string, GPSInfo*> _gpsinfo;
+
+    // PacketHistory<mavlink_heartbeat_t> history_heartbeat;
+    // PacketHistory<mavlink_nav_controller_output_t> history_nav_controller_output;
+    // PacketHistory<mavlink_servo_output_raw_t> history_servo_output_raw;
 
 }; // end class
 
-}; // end namespace
+} // end namespace
 
 #endif

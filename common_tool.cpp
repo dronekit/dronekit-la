@@ -6,7 +6,7 @@
 
 #include "la-log.h"
 
-INIReader *Common_Tool::get_config()
+void Common_Tool::init_config()
 {
     if (config_filename == NULL) {
         abort();
@@ -22,16 +22,15 @@ INIReader *Common_Tool::get_config()
             la_log(LOG_CRIT, "Failed to stat (%s): %s\n", config_filename, strerror(errno));
             exit(1);
         }
-        _config = new INIReader(config_filename);
-        if (_config == NULL) {
-            la_log(LOG_CRIT, "Failed to create config from (%s)\n", config_filename);
-            exit(1);
-        }
+    }
+    _config = new INIReader(config_filename);
+    if (_config == NULL) {
+        la_log(LOG_CRIT, "Failed to create config from (%s)\n", config_filename);
+        exit(1);
     }
     if (_config == NULL) {
         _config = new INIReader("/dev/null");
     }
-    return _config;
 }
 
 
@@ -54,26 +53,41 @@ void Common_Tool::check_fds_are_empty_after_select(fd_set &fds_read, fd_set &fds
     }
 }
 
-void Common_Tool::pack_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds)
+void Common_Tool::pack_select_fds(fd_set &fds_read UNUSED,
+                                  fd_set &fds_write UNUSED,
+                                  fd_set &fds_err UNUSED,
+                                  uint8_t &nfds UNUSED)
 {
 }
 
-void Common_Tool::handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds)
+void Common_Tool::handle_select_fds(fd_set &fds_read UNUSED,
+                                    fd_set &fds_write UNUSED,
+                                    fd_set &fds_err UNUSED,
+                                    uint8_t &nfds UNUSED)
 {
 }
 
 void Common_Tool::sighup_received_tophalf()
 {
 }
-void Common_Tool::sighup_handler(int signal)
+void Common_Tool::sighup_handler(int signal UNUSED)
 {
     _sighup_received = true;
 }
 void Common_Tool::do_idle_callbacks()
 {
 }
+
+uint32_t Common_Tool::select_timeout_us() {
+    return 200000;
+}
+
 void Common_Tool::select_loop()
 {
+    fd_set fds_read;
+    fd_set fds_write;
+    fd_set fds_err;
+    uint8_t nfds;
     while (1) {
 	if (_sighup_received) {
             sighup_received_tophalf();
@@ -88,17 +102,14 @@ void Common_Tool::select_loop()
 
 	struct timeval timeout;
 
-        fd_set fds_read;
-        fd_set fds_write;
-        fd_set fds_err;
-        uint8_t nfds = 0;
         FD_ZERO(&fds_read);
         FD_ZERO(&fds_write);
         FD_ZERO(&fds_err);
+        nfds = 0;
         pack_select_fds(fds_read, fds_write, fds_err, nfds);
 
         timeout.tv_sec = 0;
-        timeout.tv_usec = 200000;
+        timeout.tv_usec = select_timeout_us();
         int res = select(nfds, &fds_read, &fds_write, &fds_err, &timeout);
 
         if (res < 0) {
