@@ -35,7 +35,16 @@ Analyzers to Write:
    - fails if any two BAROs drift from each other
  - vehicle detected
    - fails hard if we never detect a vehicle type
- 
+
+ - plane trims:
+  - here's an example of bad trims:
+RC1_MAX 1773.000000
+RC1_MIN 1078.000000
+RC1_REV -1.000000
+RC1_TRIM 1527.000000
+ (there's ~500 to the left, ~250 to the right - that's probably a very bad thing)
+
+
 
 *NOTE*
  - why are tlogs coming in with no parameters?!

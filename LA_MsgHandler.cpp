@@ -153,3 +153,45 @@ bool LA_MsgHandler_GYR::find_T(const uint8_t *msg, uint64_t &T) {
     }
     return false;
 }
+
+void LA_MsgHandler_MSG::xprocess(const uint8_t *msg) {
+    char msg_message[160];
+    require_field(msg, "Message", msg_message, sizeof(msg_message));
+
+    if (!_vehicle->vehicletype_is_forced()) {
+        AnalyzerVehicle::Base::vehicletype_t newtype = AnalyzerVehicle::Base::vehicletype_t::invalid;
+        if (strstr(msg_message, "APM:Copter") || strstr(msg_message, "ArduCopter")) {
+            newtype = AnalyzerVehicle::Base::vehicletype_t::copter;
+        } else if (strstr(msg_message, "ArduPlane")) {
+            newtype = AnalyzerVehicle::Base::vehicletype_t::plane;
+        }
+        if (newtype != AnalyzerVehicle::Base::vehicletype_t::invalid) {
+            AnalyzerVehicle::Base::switch_vehicletype(_vehicle, newtype);
+        }
+
+        switch(_vehicle->vehicletype()) {
+        case AnalyzerVehicle::Base::vehicletype_t::copter:
+            if (strstr(msg_message, "Frame")) {
+                ((AnalyzerVehicle::Copter*&)_vehicle)->set_frame(msg_message);
+            }
+            break;
+        case AnalyzerVehicle::Base::vehicletype_t::plane:
+            break;
+        case AnalyzerVehicle::Base::vehicletype_t::invalid:
+            ::fprintf(stderr, "unhandled message (%s)\n", msg_message);
+            // abort();
+        }
+    }
+}
+
+void LA_MsgHandler_STAT::xprocess(const uint8_t *msg)
+{
+    if (!have_added_STAT) {
+        _analyze->add_data_source("ARMING", "STAT.Armed");
+        have_added_STAT = true;
+    }
+    bool armed;
+    if (field_value(msg, "Armed", armed)) {
+        _vehicle->set_armed(armed);
+    }
+}

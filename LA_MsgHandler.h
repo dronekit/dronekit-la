@@ -6,6 +6,7 @@
 #include "analyze.h"
 #include "analyzervehicle.h"
 #include "analyzervehicle_copter.h"
+#include "analyzervehicle_plane.h"
 
 #include <string.h>
 
@@ -96,6 +97,7 @@ public:
             if (_vehicle->origin_lat_T() == 0) {
                 _vehicle->set_origin_lat(lat);
                 _vehicle->set_origin_lon(lng);
+                _vehicle->set_origin_altitude(Alt);
             }
         }
     }
@@ -290,37 +292,7 @@ public:
         _analyze->add_data_source("VEHICLE_DEFINITION", "MSG.Message");
     };
 
-    void set_vehicle_copter()
-        {
-            AnalyzerVehicle::Base *vehicle_old = _vehicle;
-            AnalyzerVehicle::Copter *vehicle_new = new AnalyzerVehicle::Copter();
-            vehicle_new->take_state(vehicle_old);
-            _vehicle = vehicle_new;
-            delete vehicle_old;
-        }
-
-    void xprocess(const uint8_t *msg) override {
-        char msg_message[160];
-        uint8_t msg_message_len = 160;
-        require_field(msg, "Message", msg_message, msg_message_len);
-
-        if (!_vehicle->vehicletype_is_forced()) {
-            if (strstr(msg_message, "APM:Copter") || strstr(msg_message, "ArduCopter")) {
-                set_vehicle_copter();
-            }
-
-            switch(_vehicle->vehicletype()) {
-            case AnalyzerVehicle::Base::vehicletype_t::copter:
-                if (strstr(msg_message, "Frame")) {
-                    ((AnalyzerVehicle::Copter*&)_vehicle)->set_frame(msg_message);
-                }
-                break;
-            case AnalyzerVehicle::Base::vehicletype_t::invalid:
-                ::fprintf(stderr, "unhandled message (%s)\n", msg_message);
-                // abort();
-            }
-        }
-    }
+    void xprocess(const uint8_t *msg) override;
 };
 
 class LA_MsgHandler_ORGN : public LA_MsgHandler {
@@ -437,6 +409,18 @@ public:
             _vehicle->set_servo_output(i, value);
         }
     }
+};
+
+class LA_MsgHandler_STAT : public LA_MsgHandler {
+public:
+    LA_MsgHandler_STAT(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
+    }
+
+    void xprocess(const uint8_t *msg) override;
+
+private:
+    bool have_added_STAT = false;
 };
 
 #endif

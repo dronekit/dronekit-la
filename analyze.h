@@ -66,9 +66,6 @@ private:
 
     void configure_analyzer(INIReader *config, Analyzer *handler);
 
-    void set_vehicle_copter();
-    void set_copter_frametype(const char *frame_config_string);
-
     void results_json_add_statistics(Json::Value &root);
     void results_json(Json::Value &root);
 

@@ -194,30 +194,30 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
     // _analyze->evaluate_all();
 }
 
-// something like this is in analyzing_dataflash_mavlink_message_handler
-void Analyzing_MAVLink_Message_Handler::set_vehicle_copter()
-{
-    AnalyzerVehicle::Base *vehicle_old = _vehicle;
-    AnalyzerVehicle::Copter *vehicle_new = new AnalyzerVehicle::Copter();
-    vehicle_new->take_state(vehicle_old);
-    _vehicle = vehicle_new;
-    delete vehicle_old;
-}
-
 void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_statustext_t &msg) {
     _vehicle->set_T(T);
 
-    if (strstr(msg.text, "APM:Copter") || strstr(msg.text, "ArduCopter")) {
-        set_vehicle_copter();
-    }
-
-    switch (_vehicle->vehicletype()) {
-    case AnalyzerVehicle::Base::vehicletype_t::copter:
-        if (strstr(msg.text, "Frame")) {
-            ((AnalyzerVehicle::Copter*&)_vehicle)->set_frame(msg.text);
+    if (!_vehicle->vehicletype_is_forced()) {
+        AnalyzerVehicle::Base::vehicletype_t newtype = AnalyzerVehicle::Base::vehicletype_t::invalid;
+        if (strstr(msg.text, "APM:Copter") || strstr(msg.text, "ArduCopter")) {
+            newtype = AnalyzerVehicle::Base::vehicletype_t::copter;
+        } else if (strstr(msg.text, "ArduPlane")) {
+            newtype = AnalyzerVehicle::Base::vehicletype_t::plane;
         }
-        break;
-    case AnalyzerVehicle::Base::vehicletype_t::invalid:
-        break;
+        if (newtype != AnalyzerVehicle::Base::vehicletype_t::invalid) {
+            AnalyzerVehicle::Base::switch_vehicletype(_vehicle, newtype);
+        }
+
+        switch (_vehicle->vehicletype()) {
+        case AnalyzerVehicle::Base::vehicletype_t::copter:
+            if (strstr(msg.text, "Frame")) {
+                ((AnalyzerVehicle::Copter*&)_vehicle)->set_frame(msg.text);
+            }
+            break;
+        case AnalyzerVehicle::Base::vehicletype_t::plane:
+            break;
+        case AnalyzerVehicle::Base::vehicletype_t::invalid:
+            break;
+        }
     }
 }

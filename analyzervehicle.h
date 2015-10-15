@@ -92,13 +92,6 @@ namespace AnalyzerVehicle {
 
     class Position {
     public:
-        // void set_alt(uint64_t T, float alt) {
-        //     _alt = alt;
-        //     _alt_modtime = T;
-        // }
-        // float alt() { return _alt; };
-        // uint64_t alt_modtime() { return _alt_modtime; };
-
         void set_lat(uint64_t T, double lat) {
             _lat = lat;
             _lat_modtime = T;
@@ -123,8 +116,6 @@ namespace AnalyzerVehicle {
     private:
         double _lat;
         double _lon;
-        float _alt; // relative, in metres
-        // uint64_t _alt_modtime;
         uint64_t _lat_modtime;
         uint64_t _lon_modtime;
     };
@@ -201,12 +192,8 @@ namespace AnalyzerVehicle {
             { }
         const std::string name() { return _name; }
         const Position position() { return _position; }
-        // void set_alt(uint64_t T, float alt) {
-        //     _position.set_alt(T, alt);
-        // }
         void set_lat(uint64_t T, double lat) { _position.set_lat(T, lat); }
         void set_lon(uint64_t T, double lon) { _position.set_lon(T, lon); }
-        // float alt() { return _position.alt(); }
         double lat() { return _position.lat(); }
         double lon() { return _position.lon(); }
 
@@ -297,6 +284,8 @@ public:
     Base() { }
     virtual ~Base() { }
 
+    virtual const std::string typeString() const { return "Base"; }
+
     // vehicle state information
     virtual bool is_flying() { return false; }
     void exceeding_angle_max() const;
@@ -308,13 +297,16 @@ public:
     // vehicle type
     enum vehicletype_t {
         invalid = 0,
-        copter = 17
+        copter = 17,
+        plane = 19,
     };
     bool vehicletype_is_forced() { return _vehicletype_is_forced; }
     void set_vehicletype_is_forced(bool value) { _vehicletype_is_forced = value; }
     virtual vehicletype_t vehicletype() {
         return invalid;
     }
+
+    static void switch_vehicletype(Base *&_vehicle, vehicletype_t newtype);
 
     // EKF
     void ekf_set_variance(const char *name, double value) {
@@ -472,7 +464,7 @@ public:
 
     Attitude& att() { return _att; };
     Position& pos() { return _pos; };
-    Altitude& alt() { return _alt; };
+    Altitude& alt() { return _alt; }; // absolute
 
     const Position &origin() const { return _origin; }
     double origin_lat() const { return _origin.lat(); }
@@ -483,10 +475,13 @@ public:
     void set_origin_lon(double value) { _origin.set_lon(T(),value); }
         
     Position& origin() { return _origin; }
+    Altitude &origin_alt() { return _origin_altitude; }
 
     void set_origin_altitude(double value) { _origin_altitude.set_alt(T(),value); }
     double origin_altitude() { return _origin_altitude.alt(); }
     uint64_t origin_altitude_T() const { return _origin_altitude.alt_modtime(); }
+
+    bool relative_alt(double &relative); // returns true if relative alt could be calculated
 
 protected:
     AV_Nav& nav() { return _nav; };

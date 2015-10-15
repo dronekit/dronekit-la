@@ -12,6 +12,9 @@ namespace AnalyzerVehicle {
         Copter() :
             Base()
             { }
+
+        const std::string typeString() const { return "Copter"; }
+
         bool is_flying();
         
         uint8_t num_motors() { return _num_motors; }

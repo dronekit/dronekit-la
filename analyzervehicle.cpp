@@ -3,6 +3,8 @@
 using namespace AnalyzerVehicle;
 
 #include "analyzer_util.h"
+#include "analyzervehicle_copter.h"
+#include "analyzervehicle_plane.h"
 
 char *
 xcalloc(size_t size)
@@ -14,6 +16,26 @@ xcalloc(size_t size)
     }
     return ret;
 }
+
+void Base::switch_vehicletype(Base *&_vehicle, vehicletype_t newtype) {
+    AnalyzerVehicle::Base *vehicle_new;
+    switch (newtype) {
+    case copter:
+        vehicle_new = new AnalyzerVehicle::Copter();
+        break;
+    case plane:
+        vehicle_new = new AnalyzerVehicle::Plane();
+        break;
+    default:
+        ::fprintf(stderr, "unknown type");
+        abort();
+    }
+    AnalyzerVehicle::Base *vehicle_old = _vehicle;
+    vehicle_new->take_state(vehicle_old);
+    _vehicle = vehicle_new;
+    delete vehicle_old;
+}
+
 
 void Base::set_T(const uint64_t time_us)
 {
@@ -88,6 +110,19 @@ void Base::set_servo_output(uint16_t ch1, uint16_t ch2, uint16_t ch3, uint16_t c
     _servo_output[6] = (float)ch6;
     _servo_output[7] = (float)ch7;
     _servo_output[8] = (float)ch8;
+}
+
+bool Base::relative_alt(double &relative)
+{
+    if (origin_altitude_T() == 0) {
+        return false;
+    }
+    if (alt().alt_modtime() == 0) {
+        return false;
+    }
+
+    relative = alt().alt() - origin_altitude();
+    return true;
 }
 
 void Base::set_servo_output(const uint8_t channel_number, const uint16_t value)

@@ -41,6 +41,11 @@ void Analyzer_Ever_Flew::evaluate()
     }
 
     if (_vehicle->vehicletype() == AnalyzerVehicle::Base::vehicletype_t::copter) {
+        if (!_added_servo_output) {
+            _result.add_source(_data_sources.get("SERVO_OUTPUT"));
+            _added_servo_output = true;
+        }
+
         if (((AnalyzerVehicle::Copter*&)_vehicle)->any_motor_running_fast()) {
             _result.set_servos_past_threshold(true);
         }
@@ -62,8 +67,17 @@ void Analyzer_Ever_Flew::end_of_log(const uint32_t packet_count UNUSED)
         if (!_result.ever_armed()) {
             _result.add_evidence("Never Armed");
         }
-        if (!_result.servos_past_threshold()) {
-            _result.add_evidence("Servos never passed takeoff threshold");
+        switch (_vehicle->vehicletype()) {
+        case AnalyzerVehicle::Base::vehicletype_t::copter:
+            if (!_result.servos_past_threshold()) {
+                _result.add_evidence("Servos never passed takeoff threshold");
+            }
+            break;
+        case AnalyzerVehicle::Base::vehicletype_t::plane:
+            break;
+        case AnalyzerVehicle::Base::vehicletype_t::invalid:
+            _result.add_evidence("Vehicle type was never defined");
+            break;
         }
     }
 

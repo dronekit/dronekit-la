@@ -41,7 +41,6 @@ public:
         _result.set_status(analyzer_status_fail);
         _result.set_reason("The vehicle never seemed to take off");
         _result.add_source(_data_sources.get("ARMING"));
-        _result.add_source(_data_sources.get("SERVO_OUTPUT"));
     }
 
     const std::string name() const { return "Ever Flew"; }
@@ -64,6 +63,8 @@ private:
     uint64_t _total_flight_time = 0;
     bool _was_flying = false;
     uint64_t _fly_start_time = 0;
+
+    bool _added_servo_output = false;
 };
 
 #endif
