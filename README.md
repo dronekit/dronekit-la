@@ -37,3 +37,9 @@ RC1_MIN 1078.000000
 RC1_REV -1.000000
 RC1_TRIM 1527.000000
  (there's ~500 to the left, ~250 to the right - that's probably a very bad thing)
+
+
+## FIXMEs
+ - the attitude control tests should ignore periods where the craft is not armed
+ - the brownout report should give relative, not absolute, height at end of flight
+ 

@@ -289,6 +289,19 @@ public:
     bool find_T(const uint8_t *msg, uint64_t &T);
 };
 
+class LA_MsgHandler_MAG : public LA_MsgHandler {
+public:
+    LA_MsgHandler_MAG(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
+        const char * cname = name.c_str();
+        _analyze->add_data_source(string_format("MAGNETIC_FIELD_STRENGTH_%s", cname), string_format("%s.MagX", cname));
+        _analyze->add_data_source(string_format("MAGNETIC_FIELD_STRENGTH_%s", cname), string_format("%s.MagY", cname));
+        _analyze->add_data_source(string_format("MAGNETIC_FIELD_STRENGTH_%s", cname), string_format("%s.MagZ", cname));
+    };
+
+    void xprocess(const uint8_t *msg) override;
+};
+
 class LA_MsgHandler_MSG : public LA_MsgHandler {
 public:
     LA_MsgHandler_MSG(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :

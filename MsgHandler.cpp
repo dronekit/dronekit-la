@@ -128,7 +128,7 @@ bool MsgHandler::field_value(const uint8_t *msg, const char *label, char *ret, u
 }
 
 
-bool MsgHandler::field_value(uint8_t *msg, const char *label, Vector3f &ret)
+bool MsgHandler::field_value(const uint8_t *msg, const char *label, Vector3f &ret)
 {
     const char *axes = "XYZ";
     uint8_t i;

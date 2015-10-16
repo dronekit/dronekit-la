@@ -32,7 +32,7 @@ public:
     double default_delta_fail() const override { return 5.0f; }
     virtual uint64_t default_duration_min() const override { return 500000; }
 
-    void end_of_log(const uint32_t packet_count);
+    void end_of_log(const uint32_t packet_count) override;
 
     void evaluate_estimate(
         std::string name,

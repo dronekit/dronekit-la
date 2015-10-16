@@ -201,3 +201,12 @@ void LA_MsgHandler_STAT::xprocess(const uint8_t *msg)
         _vehicle->set_armed(armed);
     }
 }
+
+void LA_MsgHandler_MAG::xprocess(const uint8_t *msg) {
+    AnalyzerVehicle::Base::Compass *compass = _vehicle->compass(_name);
+    if (!field_value(msg, "Mag", compass->field())) {
+        ::fprintf(stderr, "Failed to extract Mag fields from MAG message");
+        abort();
+    }
+    compass->set_field_T(_vehicle->T());
+}

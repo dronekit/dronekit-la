@@ -27,12 +27,13 @@ public:
     // retrieve a comma-separated list of all labels
     void string_for_labels(char *buffer, uint bufferlen);
 
+    bool field_value(const uint8_t *msg, const char *label, Vector3f &ret);
+
     // field_value - retrieve the value of a field from the supplied message
     // these return false if the field was not found
     template<typename R>
     bool field_value(const uint8_t *msg, const char *label, R &ret);
 
-    bool field_value(uint8_t *msg, const char *label, Vector3f &ret);
     bool field_value(const uint8_t *msg, const char *label,
 		     char *buffer, uint8_t bufferlen);
     

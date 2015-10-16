@@ -12,6 +12,7 @@
 #include "analyzer/analyzer_battery.h"
 #include "analyzer/analyzer_brownout.h"
 #include "analyzer/analyzer_compass_offsets.h"
+#include "analyzer/analyzer_compass_vector_length.h"
 #include "analyzer/analyzer_ever_armed.h"
 #include "analyzer/analyzer_good_ekf.h"
 #include "analyzer/analyzer_gps_fix.h"
@@ -66,6 +67,14 @@ void Analyze::instantiate_analyzers(INIReader *config)
             configure_analyzer(config, analyzer_compass_offsets);
         } else {
             syslog(LOG_INFO, "Failed to create analyzer_compass_offsets");
+        }
+    }
+    {
+        Analyzer_Compass_Vector_Length *analyzer_compass_vector_length = new Analyzer_Compass_Vector_Length(vehicle,_data_sources);
+        if (analyzer_compass_vector_length != NULL) {
+            configure_analyzer(config, analyzer_compass_vector_length);
+        } else {
+            syslog(LOG_INFO, "Failed to create analyzer_compass_vector_length1");
         }
     }
     {

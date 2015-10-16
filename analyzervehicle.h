@@ -8,6 +8,7 @@
 #include "mavlink/c_library/common/mavlink.h"
 
 #include "analyzer_util.h"
+#include "Vector3f.h"
 
 namespace AnalyzerVehicle {
 
@@ -479,6 +480,36 @@ public:
         return _gpsinfo[name];
     };
 
+    // again, not sure if this Compass object should be in the vehicle
+    // class here.
+    class Compass {
+    public:
+        Compass(const std::string name) :
+            _name(name)
+            { }
+        const std::string name() const { return _name; }
+        Vector3f &field() { return _field; }
+        uint64_t field_T() { // most recent timestamp of all components
+            return _field_T;
+        }
+        void set_field_T(uint64_t field_T) { _field_T = field_T; }
+    private:
+        const std::string _name; // do we really want this?!
+        Vector3f _field = { };
+        uint64_t _field_T = 0;
+    };
+
+    const std::map<const std::string, Compass*> &compasses() {
+        return _compasses;
+    }
+
+    Compass *compass(const std::string name) {
+        if (_compasses.count(name) == 0) {
+            _compasses[name] = new Compass(name);
+        }
+        return _compasses[name];
+    };
+
 
     Attitude& att() { return _att; };
     Position& pos() { return _pos; };
@@ -535,6 +566,7 @@ private:
     std::map<const std::string, AltitudeEstimate*> _altitude_estimates;
 
     std::map<const std::string, GPSInfo*> _gpsinfo;
+    std::map<const std::string, Compass*> _compasses;
 
     // PacketHistory<mavlink_heartbeat_t> history_heartbeat;
     // PacketHistory<mavlink_nav_controller_output_t> history_nav_controller_output;

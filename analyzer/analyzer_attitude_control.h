@@ -48,9 +48,7 @@ private:
     float offset_fail = 10.0f;
     uint32_t duration_min = 250000; // microseconds
 
-    void end_of_log(uint32_t packet_count);
-
-    void do_add_evilness(struct compass_offset_result result);
+    void end_of_log(uint32_t packet_count) override;
 
     Analyzer_Attitude_Control_Result *_result = NULL;
     void open_result(double delta);
