@@ -22,7 +22,7 @@ void Analyzer_GPS_Fix::end_of_log(uint32_t packet_count UNUSED)
     }
 }
 
-bool Analyzer_GPS_Fix::gpsinfo_bad(AnalyzerVehicle::GPSInfo *gpsinfo)
+bool Analyzer_GPS_Fix::gpsinfo_bad(AnalyzerVehicle::GPSInfo *gpsinfo) const
 {
    if (gpsinfo->satellites() <= satellites_visible_threshold()) {
         return true;
@@ -33,6 +33,21 @@ bool Analyzer_GPS_Fix::gpsinfo_bad(AnalyzerVehicle::GPSInfo *gpsinfo)
     return false;
 }
 
+void Analyzer_GPS_Fix::add_firstfixtime_result(AnalyzerVehicle::GPSInfo *gpsinfo,
+                                               uint64_t time_taken)
+{
+    Analyzer_GPS_FirstFixTime_Result *result =
+        new Analyzer_GPS_FirstFixTime_Result(gpsinfo->name());
+    result->set_reason("First 3D GPS Fix Acquired");
+    result->add_evidence(string_format("first-fix-time=%f", (float)time_taken/1000000.0f));
+    result->add_evidence(string_format("first-fix-time-units=seconds", time_taken));
+    result->set_time_taken(time_taken);
+    result->set_status(analyzer_status_ok);
+    result->add_source(_data_sources.get(std::string("GPSINFO_FIXTYPE_") + result->name()));
+    result->add_source(_data_sources.get(std::string("SYSTEM_TIME") + result->name()));
+    result->set_T(_vehicle->T());
+    add_result(result);
+}
 void Analyzer_GPS_Fix::evaluate_gps(AnalyzerVehicle::GPSInfo *gpsinfo)
 {
     bool results_bad = gpsinfo_bad(gpsinfo);
@@ -45,6 +60,36 @@ void Analyzer_GPS_Fix::evaluate_gps(AnalyzerVehicle::GPSInfo *gpsinfo)
             update_result(gpsinfo);
         } else {
             close_result();
+        }
+    }
+
+    if (!_first_3D_fix_found) {
+        if (gpsinfo->fix_type() >= 3) {
+            // new fix!
+            if (_vehicle->time_since_boot_T() == 0) {
+                // we have a fix, but no system boot time.  This can
+                // happen on a tlog when you connect to a system which
+                // has been up for some time; you can receive your GPS
+                // messages before your system_time messages.
+            } else {
+                if (!_non_3dfix_seen) { // 
+                    // we probably came in when the UAV had already
+                    // been running for some time.  Ignore this
+                    // result.
+                    _first_3D_fix_found = true;
+                } else {
+                    _first_3D_fix_found = true;
+                    _first_3D_fix_T = _vehicle->time_since_boot();
+                    add_firstfixtime_result(gpsinfo, _vehicle->time_since_boot());
+                }
+            }
+        } else {
+            _non_3dfix_seen = true;
+        }
+    } else {
+        if (_vehicle->time_since_boot() < _first_3D_fix_T) {
+            // reboot; chance of getting another result:
+            _first_3D_fix_found = false;
         }
     }
 }
@@ -74,7 +119,7 @@ void Analyzer_GPS_Fix::close_result()
     _result->add_evidence(string_format("satellites-visible: %d", _result->satellites()));
     _result->add_evidence(string_format("HDop: %.2f", _result->hdop()));
     _result->add_evidence(string_format("satellites-visible-threshold: %d", satellites_visible_threshold()));
-    _result->add_evidence(string_format("HDop: %f", hdop_threshold()));
+    _result->add_evidence(string_format("HDop-threshold: %f", hdop_threshold()));
 
     _result->add_source(_data_sources.get(std::string("GPSINFO_") + _result->name()));
 

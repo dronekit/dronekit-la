@@ -60,6 +60,7 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
 
     _vehicle->gpsinfo("GPS_RAW_INT")->set_satellites(msg.satellites_visible);
     _vehicle->gpsinfo("GPS_RAW_INT")->set_hdop(msg.eph/(double)100.0f);
+    _vehicle->gpsinfo("GPS_RAW_INT")->set_fix_type(msg.fix_type);
 
     _analyze->evaluate_all();
 }
@@ -183,6 +184,13 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
     }
     
     _analyze->evaluate_all();
+}
+
+void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_system_time_t &msg) {
+    _vehicle->set_T(T);
+
+    _vehicle->set_time_since_boot(msg.time_boot_ms * 1000);
+    // _analyze->evaluate_all();
 }
 
 void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_vfr_hud_t &msg UNUSED) {

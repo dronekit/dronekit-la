@@ -243,16 +243,23 @@ namespace AnalyzerVehicle {
     class GPSInfo {
     public:
         GPSInfo(std::string name) { _name = name; }
+        const std::string name() { return _name; }
+
+        uint8_t fix_type() { return _fix_type; }
+        void set_fix_type(uint8_t fix_type) { _fix_type = fix_type; }
+
         double hdop() { return _hdop; }
         void set_hdop(double hdop) { _hdop = hdop; }
+
         uint8_t satellites() { return _satellites_visible; }
         void set_satellites(uint8_t satellites) { _satellites_visible = satellites; }
-        const std::string name() { return _name; }
         
     private:
-        double _hdop;
-        uint8_t _satellites_visible;
         std::string _name;
+
+        double _hdop = 0;
+        uint8_t _satellites_visible = 0;
+        uint8_t _fix_type = 0;        
     };
 
 
@@ -286,6 +293,17 @@ public:
 
     virtual const std::string typeString() const { return "Base"; }
 
+    uint64_t time_since_boot() {
+        return _time_since_boot;
+    }
+    uint64_t time_since_boot_T() {
+        return _time_since_boot_T;
+    }
+    void set_time_since_boot(const uint64_t time_since_boot) {
+        _time_since_boot = time_since_boot;
+        _time_since_boot_T = T();
+    }
+    
     // vehicle state information
     virtual bool is_flying() { return false; }
     void exceeding_angle_max() const;
@@ -504,6 +522,9 @@ protected:
 private:
     bool _vehicletype_is_forced = false;
     uint64_t _T = 0;
+
+    uint64_t _time_since_boot;
+    uint64_t _time_since_boot_T = 0;
 
     vehicletype_t _vehicletype = invalid;
 

@@ -57,6 +57,7 @@ bool LA_MsgHandler::process_set_T(const uint8_t *msg)
         }
     }
     _vehicle->set_T(time_us);
+    _vehicle->set_time_since_boot(time_us);
     return true;
 }
 
@@ -139,6 +140,7 @@ void LA_MsgHandler_GPS::xprocess(const uint8_t *msg) {
     }
     gpsinfo()->set_satellites(nsats);
     gpsinfo()->set_hdop(require_field_int16_t(msg, "HDop")/(double)100.0f);
+    gpsinfo()->set_fix_type(require_field_uint8_t(msg, "Status"));
 }
 
 

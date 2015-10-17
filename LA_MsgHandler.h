@@ -17,7 +17,9 @@ public:
         _name(name),
         _analyze(analyze),
         _vehicle(vehicle)
-        { };
+        {
+            _analyze->add_data_source("SYSTEM_TIME", "SYSTEM_TIME.boot_time_ms");
+        };
 
     virtual bool find_T(const uint8_t *msg, uint64_t &T);
     bool process_set_T(const uint8_t *msg);
@@ -270,6 +272,8 @@ public:
         // FIXME: need to take from correct source here!  Move to xprocess?
         _analyze->add_data_source(string_format("GPSINFO_%s",name.c_str()),
             string_format("%s.NSats",name.c_str()));
+        _analyze->add_data_source(string_format("GPSINFO_FIXTYPE_%s",name.c_str()),
+            string_format("%s.Status",name.c_str()));
     };
     void xprocess(const uint8_t *msg) override;
 };

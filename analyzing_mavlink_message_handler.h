@@ -50,6 +50,8 @@ public:
 
         _analyze->add_data_source("GPSINFO_GPS_RAW_INT", "GPS_RAW_INT.satellites_visible");
         _analyze->add_data_source("GPSINFO_GPS_RAW_INT", "GPS_RAW_INT.eph");
+        _analyze->add_data_source("GPSINFO_FIXTYPE_GPS_RAW_INT", "GPS_RAW_INT.fix_type");
+        _analyze->add_data_source("GPSINFO_FIXTYPE_GPS_RAW_INT", "SYSTEM_TIME.boot_time_ms");
 
         _analyze->add_data_source("SENSORS_HEALTH", "SYS_STATUS.onboard_control_sensors_present");
         _analyze->add_data_source("SENSORS_HEALTH", "SYS_STATUS.onboard_control_sensors_enabled");
@@ -77,6 +79,7 @@ public:
         _analyze->add_data_source("POSITION_ESTIMATE_GPS_RAW_INT", "GPS_RAW_INT.lon");
         
         _analyze->add_data_source("VEHICLE_DEFINITION", "STATUSTEXT.text");
+        _analyze->add_data_source("SYSTEM_TIME", "SYSTEM_TIME.boot_time_ms");
     }
 
 private:
@@ -95,6 +98,7 @@ private:
     virtual void handle_decoded_message(uint64_t T, mavlink_servo_output_raw_t &msg) override;
     virtual void handle_decoded_message(uint64_t T, mavlink_statustext_t &msg) override;
     virtual void handle_decoded_message(uint64_t T, mavlink_sys_status_t &msg) override;
+    virtual void handle_decoded_message(uint64_t T, mavlink_system_time_t &msg) override;
     virtual void handle_decoded_message(uint64_t T, mavlink_vfr_hud_t &msg) override;
 
     void end_of_log(uint32_t packet_count) override;
