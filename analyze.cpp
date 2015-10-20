@@ -2,6 +2,7 @@
 
 #include <syslog.h>
 #include <stdlib.h> // for exit() (fixme)
+#include <algorithm> // for for_each
 
 #include "analyzer/analyzer_any_parameters_seen.h"
 #include "analyzer/analyzer_arming_checks.h"
@@ -489,12 +490,11 @@ namespace Json {
     }
 }
 
-void Analyze::end_of_log(uint32_t packet_count) {
-    for (std::vector<Analyzer*>::iterator it = _analyzers.begin();
-         it != _analyzers.end();
-         ++it) {
-        (*it)->end_of_log(packet_count);
-    }
+void Analyze::end_of_log(uint32_t packet_count, uint64_t bytes_dropped) {
+
+    std::for_each(_analyzers.begin(),
+                  _analyzers.end(),
+                  [packet_count](Analyzer* c){c->end_of_log(packet_count); });
 
     Json::Value root;
     root["format-version"] = "0.1";
@@ -504,6 +504,8 @@ void Analyze::end_of_log(uint32_t packet_count) {
     results_json(root);
 
     root["packet_count"] = packet_count;
+    root["packet-count"] = packet_count;
+    root["bytes-dropped"] = (Json::UInt64)bytes_dropped;
 
     Json::Writer *writer;
     switch(_output_style) {
@@ -527,11 +529,9 @@ void Analyze::end_of_log(uint32_t packet_count) {
 
 
 void Analyze::evaluate_all() {
-    for (std::vector<Analyzer*>::iterator it = _analyzers.begin();
-         it != _analyzers.end();
-         ++it) {
-        (*it)->evaluate();
-    }
+    std::for_each(_analyzers.begin(),
+                  _analyzers.end(),
+                  [](Analyzer* c){c->evaluate(); });
 }
 
 

@@ -49,7 +49,7 @@ void Base::set_T(const uint64_t time_us)
 
 bool Base::param_default(const char *name, float &ret)
 {
-    if (_param_defaults[name]) {
+    if (_param_defaults.count(name)) {
         ret = _param_defaults[name];
         return true;
     }

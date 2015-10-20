@@ -46,7 +46,11 @@ bool LA_MsgHandler::process_set_T(const uint8_t *msg)
     // ::fprintf(stderr, "type=%s T=%lu\n", name, time_us);
 
     if (_vehicle->T()) {
-        uint64_t timestamp_max_delta = 100000000;
+        // if log-when-disarmed is not set then you may end up with
+        // large gaps in your dataflash data.  We *could* check for
+        // whether we're armed or not before discarding messages, but depending on LOG_BITMASK and lost data we could end up discarding vast amounts of data.
+        // uint64_t timestamp_max_delta = 100000000;
+        uint64_t timestamp_max_delta = 1e010; // 1e10 ~= 167 minutes
         if (time_us < _vehicle->T()) {
             ::fprintf(stderr, "Time going backwards? (%lu < %lu); skipping packet\n", time_us, _vehicle->T());
             return false;

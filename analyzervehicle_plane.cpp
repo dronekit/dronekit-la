@@ -3,7 +3,7 @@
 using namespace AnalyzerVehicle;
 
 bool Plane::param_default(const char *name, float &ret) {
-    if (_param_defaults[name]) {
+    if (_param_defaults.count(name)) {
         ret = _param_defaults[name];
         return true;
     }

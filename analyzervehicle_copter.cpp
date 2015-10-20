@@ -4,12 +4,12 @@ using namespace AnalyzerVehicle;
 
 bool Copter::param_default(const char *name, float &ret) {
     if (_frame_type == frame_type_quad) {
-        if (_param_defaults_quad[name]) {
+        if (_param_defaults_quad.count(name)) {
             ret = _param_defaults_quad[name];
             return true;
         }
     }
-    if (_param_defaults[name]) {
+    if (_param_defaults.count(name)) {
         ret = _param_defaults[name];
         return true;
     }

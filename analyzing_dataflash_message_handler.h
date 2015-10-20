@@ -29,7 +29,7 @@ public:
     void handle_format_message_received(const char *name, const struct log_Format &format, const char *msg);
     void handle_message_received(const struct log_Format &format, const uint8_t *msg);
 
-    void end_of_log(uint32_t packet_count) override;
+    void end_of_log(uint32_t packet_count, uint64_t bytes_dropped = 0) override;
 
 protected:
 private:

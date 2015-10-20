@@ -69,7 +69,7 @@ void Analyzing_DataFlash_Message_Handler::handle_message_received(const struct l
     handler->process(msg);
 }
 
-void Analyzing_DataFlash_Message_Handler::end_of_log(uint32_t packet_count)
+void Analyzing_DataFlash_Message_Handler::end_of_log(uint32_t packet_count, uint64_t bytes_dropped UNUSED)
 {
     _analyze->end_of_log(packet_count);
 }

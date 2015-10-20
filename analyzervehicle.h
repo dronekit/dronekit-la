@@ -62,13 +62,13 @@ namespace AnalyzerVehicle {
         double alt() const {
             return _alt;
         }
-        double alt_modtime() const {
+        uint64_t alt_modtime() const {
             return _alt_modtime;
         }
 
     private:
         double _alt;
-        double _alt_modtime;
+        uint64_t _alt_modtime;
     };
 
     class AltitudeEstimate {

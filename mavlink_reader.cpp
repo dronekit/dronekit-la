@@ -16,28 +16,6 @@
 #include "analyzer_util.h"
 #include "la-log.h"
 
-/* This is used to prevent swamping the log with error messages if
-   something unexpected happens.
-   Returns -1 if we cannot log an error now, or returns the number of
-   messages skipped due to rate limiting if we can, i.e. a return of
-   2 means log, and we have skipped 2 messages due to rate limiting. */
-int MAVLink_Reader::can_log_error()
-{
-    unsigned ret_val;
-    uint64_t now_us = clock_gettime_us(CLOCK_MONOTONIC);
-    if ((now_us - err_time_us) < err_interval_us) {
-        /* can't log */
-        err_skipped++;
-        return -1;
-    }
-    /* yes; say we can and set err_time_us assuming we do log something */
-    err_time_us = now_us;
-    ret_val = err_skipped;
-    err_skipped = 0;
-    return ret_val;
-}
-
-
 void MAVLink_Reader::handle_message_received(uint64_t timestamp, mavlink_message_t msg)
 {
     for(int i=0; i<next_message_handler; i++) {
@@ -78,6 +56,6 @@ uint32_t MAVLink_Reader::feed(const uint8_t *buf, const uint32_t len)
 void MAVLink_Reader::end_of_log()
 {
     for(int i=0; i<next_message_handler; i++) {
-        message_handler[i]->end_of_log(packet_count);
+        message_handler[i]->end_of_log(packet_count, 0);
     }
 }

@@ -101,7 +101,7 @@ private:
     virtual void handle_decoded_message(uint64_t T, mavlink_system_time_t &msg) override;
     virtual void handle_decoded_message(uint64_t T, mavlink_vfr_hud_t &msg) override;
 
-    void end_of_log(uint32_t packet_count) override;
+    void end_of_log(uint32_t packet_count, uint64_t bytes_dropped = 0) override;
     
     Analyze *_analyze;
     AnalyzerVehicle::Base *&_vehicle;

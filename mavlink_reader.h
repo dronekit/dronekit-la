@@ -34,8 +34,6 @@ protected:
     void end_of_log() override;
 
 private:
-    int can_log_error();
-
     void handle_message_received(uint64_t timestamp, mavlink_message_t msg);
 
     uint16_t err_skipped;

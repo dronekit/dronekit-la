@@ -114,7 +114,6 @@ void Common_Tool::select_loop()
 
         if (res < 0) {
             unsigned skipped = 0;
-            // if ((skipped = can_log_error()) >= 0)
             la_log(LOG_ERR, "[%u] select: %s", skipped, strerror(errno));
             /* this sleep is to avoid soaking the CPU if select starts
                returning immediately for some reason */
