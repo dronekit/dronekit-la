@@ -6,4 +6,7 @@ dependencies:
     - sudo apt-get install -y libjsoncpp-dev libjsoncpp0
 test:
   override:
-    - make
+    - git clone ssh://git@github.com/dronekit/dronekit-la-testdata-3dr.git
+    - ./test/test.py:
+      environment:
+        LOGANALYZE_DIRPATH_LOG: dronekit-la-testdata-3dr
