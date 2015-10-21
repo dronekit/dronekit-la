@@ -6,7 +6,8 @@ import json
 import difflib
 import subprocess
 import string
-import argparse;
+import argparse
+import sys
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--accept-all',
@@ -56,6 +57,7 @@ def json_from_filepath(filepath):
     return json.loads(contents)
 
 def test_log(filepath_log):
+    test_success = True
     try:
         command = ["./dronekit-la", filepath_log]
         if args.valgrind:
@@ -76,6 +78,7 @@ def test_log(filepath_log):
         spew_string_to_file(json.dumps(analysis_json, indent=2, sort_keys=True), new_json_filepath)
         mydiff = diff_json(correctish_json, analysis_json)
         if len(mydiff):
+            test_success = False
             (correctish_json_dirpath,correctish_json_filename) = os.path.split(correctish_json_filepath)
             accept_command = "cp '%s' '%s'; pushd '%s'; git add '%s'; popd" % (new_json_filepath, correctish_json_filepath, correctish_json_dirpath, correctish_json_filename)
             print("""
@@ -93,18 +96,26 @@ Accept new result: %s
             print("PASS: %s" % (filepath_log,))
 
     except subprocess.CalledProcessError as E:
+        test_success = False
         print("""
 FAIL: %s 
 subprocess exception (%s)
 """ % (filepath_log, str(E),))
 
+    return test_success
 
 log_dirpath = os.getenv("LOGANALYZE_DIRPATH_LOG", "test/logs");
 
 # print("Log dirpath: " + log_dirpath);
+success = True
 for dirname, dirnames, filenames in os.walk(log_dirpath):
     for filename in filenames:
         if filename.endswith(".tlog") or filename.endswith(".BIN"):
             filepath = os.path.join(dirname, filename)
-            test_log(filepath)
-        
+            if not test_log(filepath):
+                success = False
+
+if not success:
+    sys.exit(1)
+
+sys.exit(0)
