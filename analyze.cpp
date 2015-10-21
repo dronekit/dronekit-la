@@ -522,6 +522,9 @@ void Analyze::end_of_log(uint32_t packet_count, uint64_t bytes_dropped) {
     case OUTPUT_BRIEF:
         writer = new Json::BriefPlainTextWriter();
         break;
+    default:
+        ::fprintf(stderr, "Writer not set for output style");
+        abort();
     }
     std::string document = writer->write(root);
     fprintf(stdout, "%s", document.c_str());

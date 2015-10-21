@@ -24,6 +24,11 @@ std::vector<std::string> split_line(const uint8_t *line, uint32_t len)
     return ret;
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+// is everything we do here kosher?  Can we really legally assign a
+// float into an un-aligned memory location?
+
 void DataFlash_TextDump_Reader::handle_line(const uint8_t *line, uint32_t len)
 {
     std::vector<std::string> items = split_line(line, len);
@@ -134,6 +139,7 @@ void DataFlash_TextDump_Reader::handle_line(const uint8_t *line, uint32_t len)
     }
     handle_message_received(f, buf);
 }
+#pragma GCC diagnostic pop
 
 uint32_t DataFlash_TextDump_Reader::feed(const uint8_t *buf, const uint32_t len)
 {

@@ -137,14 +137,17 @@ bool DataFlash_Logger::make_new_log_filename(char *buffer, uint8_t bufferlen)
         num++;
     }
 
-    if ((fd = open(lastlog_buf, O_WRONLY|O_TRUNC|O_CREAT)) == -1) {
+    if ((fd = open(lastlog_buf, O_WRONLY|O_TRUNC|O_CREAT, 0777)) == -1) {
         // *shrug*  We will continue to overwrite, I guess...
+        la_log(LOG_ERR, "mh-dfl: failed to open (%s): %s", lastlog_buf, strerror(errno));
     } else {
         const uint8_t outsize = 16;
         char out[outsize];
         memset(out, '\0', outsize);
         int towrite = snprintf(out, outsize, "%d\r\n", num);
-        write(fd, out, towrite); // ignore return...
+        if (write(fd, out, towrite) != towrite) {
+            la_log(LOG_ERR, "mh-dfl: failed to write to (%s): %s", lastlog_buf, strerror(errno));
+        }
         close(fd);
     }
 

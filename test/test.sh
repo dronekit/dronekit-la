@@ -12,5 +12,6 @@ $ANALYZER -h
 $ANALYZER -s bad_output_format logs/1.solo.tlog
 $ANALYZER logs/this-log-does-not-exist
 $ANALYZER -s json logs/1.solo.tlog >/dev/null
-$ANALYZER -c very_unlikely_to_exist json logs/1.solo.tlog >/dev/null
+$ANALYZER -c very_unlikely_to_exist json logs/1.solo.tlog >/dev/null && exit 1
 
+exit 0

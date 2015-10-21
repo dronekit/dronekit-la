@@ -72,7 +72,7 @@ OBJS = $(SRCS_CPP:.cpp=.o) $(SRCS_C:.c=.o)
 
 DATAFLASH_LOGGER = dataflash_logger
 
-LOG_ANALYZER = loganalyzer
+LOG_ANALYZER = dronekit-la
 
 IMAGETAGGER = imagetagger
 
@@ -94,3 +94,8 @@ test: clean all
 	cd test; ./test.sh
 
 .PHONY: clean
+
+install-dronekit-la: dronekit-la
+	install -D dronekit-la $(DESTDIR)/usr/bin/dronekit-la
+
+install: install-dronekit-la
