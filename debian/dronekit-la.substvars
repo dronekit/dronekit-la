@@ -1,0 +1,2 @@
+shlibs:Depends=libc6 (>= 2.17), libgcc1 (>= 1:4.1.1), libjsoncpp0 (>= 0.6.0~rc2), libstdc++6 (>= 4.9)
+misc:Depends=

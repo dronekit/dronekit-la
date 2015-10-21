@@ -1,0 +1,22 @@
+Source: dronekit-la
+Section: misc
+Priority: optional
+Maintainer: Peter Barker <peter.barker@3drobotics.com>
+Build-Depends: debhelper (>= 9), libjsoncpp-dev (>= 0.6), g++ (>= 4.8)
+Standards-Version: 3.9.5
+Homepage: http://github.com/dronekit/dronekit-la
+#Vcs-Git: git://anonscm.debian.org/collab-maint/dronekit-la.git
+#Vcs-Browser: http://anonscm.debian.org/?p=collab-maint/dronekit-la.git;a=summary
+
+Package: dronekit-la
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends} libjsoncpp0 (>= 0.6)
+Description: Analyze Drone dataflash and tlog files
+ The DroneKit log analyzer reads dataflash and tlog files and emits
+ reports indicating possible issues affecting the flights contained
+ within those log files
+ .
+ Examples of issues which the log analyzer can detect:
+    - attitude control failure
+    - poor GPS fixes and positions
+    - craft self-reported failures (e.g. sensor failures)
