@@ -77,6 +77,7 @@ void Analyzer_GPS_Fix::evaluate_gps(AnalyzerVehicle::GPSInfo *gpsinfo)
                     // been running for some time.  Ignore this
                     // result.
                     _first_3D_fix_found = true;
+                    _first_3D_fix_T = 0; // avoids warning in comparison, below
                 } else {
                     _first_3D_fix_found = true;
                     _first_3D_fix_T = _vehicle->time_since_boot();
@@ -87,7 +88,8 @@ void Analyzer_GPS_Fix::evaluate_gps(AnalyzerVehicle::GPSInfo *gpsinfo)
             _non_3dfix_seen = true;
         }
     } else {
-        if (_vehicle->time_since_boot() < _first_3D_fix_T) {
+        if (_vehicle->time_since_boot_T() &&
+            _vehicle->time_since_boot() < _first_3D_fix_T) {
             // reboot; chance of getting another result:
             _first_3D_fix_found = false;
         }

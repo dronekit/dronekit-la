@@ -9,7 +9,14 @@ import string
 import argparse;
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--accept-all', help='accept all new results', dest='accept_all', action="store_true")
+parser.add_argument('--accept-all',
+                    help='accept all new results',
+                    dest='accept_all',
+                    action="store_true")
+parser.add_argument('--valgrind',
+                    help='run analyzer through valgrind',
+                    dest='valgrind',
+                    action="store_true")
 args = parser.parse_args()
 
 def filter_analysis_json(json_stuff, depth):
@@ -50,7 +57,16 @@ def json_from_filepath(filepath):
 
 def test_log(filepath_log):
     try:
-        analysis_string = subprocess.check_output(["./loganalyzer", filepath_log]);
+        command = ["./dronekit-la", filepath_log]
+        if args.valgrind:
+            correctish_valgrind_logpath = filepath_log + "-memcheck"
+            command[:0] = ['valgrind',
+                           '--track-fds=yes',
+                           '--read-inline-info=yes',
+                           '--read-var-info=yes',
+                           '--track-origins=yes',
+                           '--log-file=%s' % (correctish_valgrind_logpath,)]
+        analysis_string = subprocess.check_output(command);
         analysis_json = json.loads(analysis_string)
         filter_analysis_json(analysis_json, 0) # modifies in place
         correctish_json_filepath = filepath_log + "-expected-json"

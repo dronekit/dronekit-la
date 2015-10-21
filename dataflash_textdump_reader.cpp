@@ -75,9 +75,9 @@ void DataFlash_TextDump_Reader::handle_line(const uint8_t *line, uint32_t len)
     buf[buf_offset++] = typenum;
     for (uint8_t i=0; i< strlen(format_types); i++) {
         char format_char = format_types[i];
-        uint32_t value_integer = atoi(items[1+i].c_str());
+        uint64_t value_integer = atoi(items[1+i].c_str());
         float value_float = atof(items[1+i].c_str());
-            int32_t xvalue = value_float * 10000000.0f;
+        int32_t xvalue = value_float * 10000000.0f;
         switch(format_char) {
         case 'f':
             *((float*)&buf[buf_offset]) = value_float;
@@ -119,6 +119,14 @@ void DataFlash_TextDump_Reader::handle_line(const uint8_t *line, uint32_t len)
         case 'b':
             *((int8_t*)&buf[buf_offset]) = value_integer; // FIXME
             buf_offset += sizeof(int8_t);
+            break;
+        case 'q':
+            *((int64_t*)&buf[buf_offset]) = value_integer; // FIXME
+            buf_offset += sizeof(int64_t);
+            break;
+        case 'Q':
+            *((uint64_t*)&buf[buf_offset]) = value_integer; // FIXME
+            buf_offset += sizeof(uint64_t);
             break;
         case 'N':
             strncpy(((char*)&buf[buf_offset]), items[1+i].c_str(), 16); // FIXME
