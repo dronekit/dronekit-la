@@ -1,17 +1,21 @@
 #!/bin/sh
 
-ANALYZER=../loganalyzer
+ANALYZER=./dronekit-la
+TLOG=test/logs/flight.tlog
+TESTPY=test/test.py
 
 set -e
 set -x
 
-$ANALYZER logs/1.solo.tlog >/dev/null
-$ANALYZER -c /dev/null logs/1.solo.tlog >/dev/null
-$ANALYZER -c /dev/null -s json logs/1.solo.tlog >/dev/null
+$ANALYZER $TLOG >/dev/null
+$ANALYZER -c /dev/null $TLOG >/dev/null
+$ANALYZER -c /dev/null -s json $TLOG >/dev/null
 $ANALYZER -h
-$ANALYZER -s bad_output_format logs/1.solo.tlog
+$ANALYZER -s bad_output_format $TLOG
 $ANALYZER logs/this-log-does-not-exist
-$ANALYZER -s json logs/1.solo.tlog >/dev/null
-$ANALYZER -c very_unlikely_to_exist json logs/1.solo.tlog >/dev/null && exit 1
+$ANALYZER -s json $TLOG >/dev/null
+$ANALYZER -c very_unlikely_to_exist json $TLOG >/dev/null && exit 1
+
+$TESTPY
 
 exit 0

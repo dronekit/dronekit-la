@@ -1,6 +1,5 @@
 .vagrant
 *.o
 dataflash_logger
-*.tlog
 imagetagger
 dronekit-la
