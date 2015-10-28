@@ -147,3 +147,12 @@ double AnalyzerVehicle::Position::horizontal_distance_to(AnalyzerVehicle::Positi
 {
     return (double)earthradius() * (haversine(lat(), lon(), otherpos.lat(), otherpos.lon()));
 }
+
+double AnalyzerVehicle::Base::distance_from_origin()
+{
+    if (pos().is_zero_zero() || origin().is_zero_zero()) {
+        return -1;
+    }
+    // ::fprintf(stderr, "distance: %f\n", pos().horizontal_distance_to(origin()));
+    return pos().horizontal_distance_to(origin());
+}

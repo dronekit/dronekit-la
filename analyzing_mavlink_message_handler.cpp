@@ -7,13 +7,36 @@ void Analyzing_MAVLink_Message_Handler::end_of_log(uint32_t packet_count, uint64
 
 
 void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_ahrs2_t &msg) {
-    _vehicle->position_estimate("AHRS2")->set_lat(T, msg.lat/(double)10000000.0f);
-    _vehicle->position_estimate("AHRS2")->set_lon(T, msg.lng/(double)10000000.0f);
-    _vehicle->altitude_estimate("AHRS2")->set_alt(T, msg.altitude);
+
+    double lat = msg.lat/(double)10000000.0f;
+    double lng = msg.lng/(double)10000000.0f;
+    double alt = msg.altitude;
+
+    _vehicle->position_estimate("AHRS2")->set_lat(T, lat);
+    _vehicle->position_estimate("AHRS2")->set_lon(T, lng);
+    _vehicle->altitude_estimate("AHRS2")->set_alt(T, alt);
 
     _vehicle->attitude_estimate("AHRS2")->set_roll(T, rad_to_deg(msg.roll));
     _vehicle->attitude_estimate("AHRS2")->set_pitch(T, rad_to_deg(msg.pitch));
     _vehicle->attitude_estimate("AHRS2")->set_yaw(T, rad_to_deg(msg.yaw));
+
+
+    // we fake up the vehicle origin by setting it whenever the
+    // vehicle moves from disarmed to armed
+    bool is_armed = _vehicle->is_armed();
+    if (is_armed) {
+        if (!set_origin_was_armed) {
+            _vehicle->set_origin_lat(lat);
+            _vehicle->set_origin_lon(lng);
+            _vehicle->set_origin_altitude(alt);
+            set_origin_was_armed = true;
+        }
+    } else {
+        _vehicle->set_origin_lat(0);
+        _vehicle->set_origin_lon(0);
+        _vehicle->set_origin_altitude(0);
+        set_origin_was_armed = false;
+    }
 
     _analyze->evaluate_all();
 }

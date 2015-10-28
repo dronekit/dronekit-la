@@ -205,7 +205,13 @@ void Analyze::results_json_add_statistics(Json::Value &root)
     if (analyzer_position_estimate_divergence != NULL) {
         root["total-distance-travellled"] = analyzer_position_estimate_divergence->total_distance_travelled();
         root["total-distance-travelled-units"] = "metres";
+        double dfh = analyzer_position_estimate_divergence->maximum_distance_from_origin();;
+        if (!is_equal(dfh, -1.0f)) {
+            root["maximum-distance-from-origin"] = dfh;
+            root["maximum-distance-from-origin-units"] = "metres";
+        }
     }
+
     if (analyzer_altitude_estimate_divergence != NULL) {
         root["maximum-altitude-absolute"] = analyzer_altitude_estimate_divergence->maximum_altitude();
         root["maximum-altitude-absolute-units"] = "metres";

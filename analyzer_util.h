@@ -4,7 +4,6 @@
 #include <string>
 #include <string.h>
 
-// from: http://stackoverflow.com/questions/2342162/stdstring-formatting-like-sprintf
 #include <memory>
 
 double earthradius();
@@ -29,6 +28,7 @@ double altitude_from_pressure_delta(
     
 
 
+// from: http://stackoverflow.com/questions/2342162/stdstring-formatting-like-sprintf
 template<typename ... Args>
 std::string
 string_format( const char* format, const Args ... args )

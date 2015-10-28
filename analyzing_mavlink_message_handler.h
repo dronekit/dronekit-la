@@ -66,6 +66,10 @@ public:
         _analyze->add_data_source("SERVO_OUTPUT", "SERVO_OUTPUT_RAW.servo7_raw");
         _analyze->add_data_source("SERVO_OUTPUT", "SERVO_OUTPUT_RAW.servo8_raw");
 
+        _analyze->add_data_source("ORIGIN", "AHRS2.lat");
+        _analyze->add_data_source("ORIGIN", "AHRS2.lng");
+        _analyze->add_data_source("ORIGIN", "AHRS2.alt");
+
         _analyze->add_data_source("PARAM", "PARAM.param_id");
         _analyze->add_data_source("PARAM", "PARAM.value");
 
@@ -135,6 +139,8 @@ private:
 	{ "MAV_SYS_STATUS_TERRAIN", 4194304 },  /* 0x400000 Terrain subsystem health | */
 	{ "MAV_SYS_STATUS_SENSOR_ENUM_END", 4194305 }  /*  | */
     };
+
+    bool set_origin_was_armed = false;
 };
 
 

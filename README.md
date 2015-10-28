@@ -38,6 +38,7 @@ RC1_REV -1.000000
 RC1_TRIM 1527.000000
  (there's ~500 to the left, ~250 to the right - that's probably a very bad thing)
 
+ - work out what we use RATE for
 
 ## FIXMEs
  - the attitude control tests should ignore periods where the craft is not armed

@@ -372,7 +372,7 @@ public:
     void set_T(const uint64_t time_us);
     uint64_t T() { return _T; }
 
-    // attitude and position information
+    // attitude information
     float roll() { return att().roll(); }
     float pitch() { return att().pitch(); }
     float yaw() { return att().yaw(); }
@@ -393,6 +393,7 @@ public:
     float despitch() { return nav().despitch(); }
     float desyaw() { return nav().desyaw(); }
 
+    // position information
     void set_altitude(float value) {
         // pos().set_alt(T(), value);
         alt().set_alt(T(), value);
@@ -426,7 +427,11 @@ public:
         return _altitude_estimates[name];
     };
 
+    // distance from canonical craft position to whatever we thing home is.
+    // returns -1 if we just don't know.
+    double distance_from_origin();
     
+    // hardware diagnostics
     std::map<const std::string, bool> sensors_health() {
         return _sensors_health;
     }
