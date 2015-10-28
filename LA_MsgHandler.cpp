@@ -209,4 +209,6 @@ void LA_MsgHandler_MAG::xprocess(const uint8_t *msg) {
         abort();
     }
     compass->set_field_T(_vehicle->T());
+
+    _vehicle->sensor_set_healthy(_name, require_field_uint8_t(msg,"Health"));
 }

@@ -106,11 +106,11 @@ void DataFlash_Logger_Program::run()
     client->init();
 
     _writer = new MAVLink_Writer(config());
-    _writer->add_client(client);
     if (_writer == NULL) {
         la_log(LOG_ERR, "Failed to create writer from (%s)\n", config_filename);
         exit(1);
     }
+    _writer->add_client(client);
 
     // instantiate message handlers:
     DataFlash_Logger *dataflash_logger = new DataFlash_Logger(_writer);

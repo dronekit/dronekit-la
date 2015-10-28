@@ -68,7 +68,8 @@ def test_log(filepath_log):
                            '--read-var-info=yes',
                            '--track-origins=yes',
                            '--log-file=%s' % (correctish_valgrind_logpath,)]
-        analysis_string = subprocess.check_output(command);
+        p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        analysis_string,analysis_stderr = p.communicate()
         analysis_json = json.loads(analysis_string)
         filter_analysis_json(analysis_json, 0) # modifies in place
         correctish_json_filepath = filepath_log + "-expected-json"
@@ -77,23 +78,31 @@ def test_log(filepath_log):
         new_json_filepath = "/tmp/" + string.replace(filepath_log,"/","-") + "-new-json"
         spew_string_to_file(json.dumps(analysis_json, indent=2, sort_keys=True), new_json_filepath)
         mydiff = diff_json(correctish_json, analysis_json)
+        if len(mydiff) or len(analysis_stderr):
+            print("FAIL: %s" % (filepath_log,))
+        else:
+            print("PASS: %s" % (filepath_log,))
+
         if len(mydiff):
             test_success = False
             (correctish_json_dirpath,correctish_json_filename) = os.path.split(correctish_json_filepath)
             accept_command = "cp '%s' '%s'; pushd '%s'; git add '%s'; popd" % (new_json_filepath, correctish_json_filepath, correctish_json_dirpath, correctish_json_filename)
             print("""
-FAIL: %s
 ---------diff-----------------
 %s
 ---------diff-----------------
 Accept new result: %s
-""" % (filepath_log, mydiff, accept_command))
+""" % (mydiff, accept_command))
             if args.accept_all:
                 print("Accepting automatically")
                 check_me = subprocess.check_output(accept_command, shell=True, executable='/bin/bash');
+        if len(analysis_stderr):
+            print("""
+---------stderr-----------------
+%s
+---------stderr-----------------
+""" % (analysis_stderr,))
 
-        else:
-            print("PASS: %s" % (filepath_log,))
 
     except subprocess.CalledProcessError as E:
         test_success = False
