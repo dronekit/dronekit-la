@@ -139,48 +139,9 @@ public:
 
 class LA_MsgHandler_EKF1 : public LA_MsgHandler {
 public:
-    LA_MsgHandler_EKF1(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(name, f, analyze, vehicle) {
-        _analyze->add_data_source("ATTITUDE_ESTIMATE_EKF1", "EKF1.Roll");
-        _analyze->add_data_source("ATTITUDE_ESTIMATE_EKF1", "EKF1.Pitch");
-        _analyze->add_data_source("ATTITUDE_ESTIMATE_EKF1", "EKF1.Yaw");
-
-        _analyze->add_data_source("POSITION_ESTIMATE_EKF1", "EKF1.PN");
-        _analyze->add_data_source("POSITION_ESTIMATE_EKF1", "EKF1.PE");
-
-        _analyze->add_data_source("ALTITUDE_ESTIMATE_EKF1", "EKF1.PD");
-    };
-    void xprocess(const uint8_t *msg) override {
-        int16_t Roll = require_field_int16_t(msg, "Roll");
-        int16_t Pitch = require_field_int16_t(msg, "Pitch");
-        float Yaw = require_field_float(msg, "Yaw");
-
-        _vehicle->attitude_estimate("EKF1")->set_roll(T(), Roll/(double)100.0f);
-        _vehicle->attitude_estimate("EKF1")->set_pitch(T(), Pitch/(double)100.0f);
-        _vehicle->attitude_estimate("EKF1")->set_yaw(T(), Yaw-180);
-
-        // these are all relative; need to work out an origin:
-        if (_vehicle->origin_lat_T() != 0) {
-            double posN = require_field_float(msg, "PN");
-            double posE = require_field_float(msg, "PE");
-            double origin_lat = _vehicle->origin_lat();
-            double origin_lon = _vehicle->origin_lon();
-
-            double lat = 0;
-            double lon = 0;
-            gps_offset(origin_lat, origin_lon, posE, posN, lat, lon);
-            // ::fprintf(stderr, "%f+%f / %f+%f = %f / %f\n",
-            //           origin_lat, posE, origin_lon, posN, lat, lon);
-
-            _vehicle->position_estimate("EKF1")->set_lat(T(), lat);
-            _vehicle->position_estimate("EKF1")->set_lon(T(), lon);
-        }
-        if (_vehicle->origin_altitude_T() != 0) {
-            double posD = require_field_float(msg, "PD");
-            double origin_alt = _vehicle->origin_altitude();
-            _vehicle->altitude_estimate("EKF1")->set_alt(T(), origin_alt - posD);
-        }
-    }
+    LA_MsgHandler_EKF1(std::string name, const struct log_Format &f,
+                       Analyze *analyze, AnalyzerVehicle::Base *&vehicle);
+    void xprocess(const uint8_t *msg) override;
 };
 
 class LA_MsgHandler_EKF4 : public LA_MsgHandler {
