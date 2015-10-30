@@ -172,6 +172,13 @@ void Analyze::instantiate_analyzers(INIReader *config)
         syslog(LOG_INFO, "Failed to create analyzer_vehicle_definition");
     }
 
+    analyzer_velocity_estimate_divergence = new Analyzer_Velocity_Estimate_Divergence(vehicle,_data_sources);
+    if (analyzer_velocity_estimate_divergence != NULL) {
+        configure_analyzer(config, analyzer_velocity_estimate_divergence);
+    } else {
+        syslog(LOG_INFO, "Failed to create analyzer_velocity_estimate_divergence");
+    }
+
 }
 
 
@@ -218,6 +225,12 @@ void Analyze::results_json_add_statistics(Json::Value &root)
         root["maximum-altitude-relative"] = analyzer_altitude_estimate_divergence->maximum_altitude_relative();
         root["maximum-altitude-relative-units"] = "metres";
     }
+
+    if (analyzer_velocity_estimate_divergence != NULL) {
+        root["maximum-velocity"] = analyzer_velocity_estimate_divergence->maximum_velocity();
+        root["maximum-velocity-units"] = "metres/second";
+    }
+
 }
 
 void Analyze::results_json(Json::Value &root)

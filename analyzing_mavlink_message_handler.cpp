@@ -73,6 +73,11 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
         _vehicle->set_origin_altitude(alt);
     }
 
+    // ... and for velocity
+    _vehicle->vel().set_x(T, msg.vx/100.0f);
+    _vehicle->vel().set_y(T, msg.vy/100.0f);
+    _vehicle->vel().set_z(T, msg.vz/100.0f);
+
     _analyze->evaluate_all();
 }
 

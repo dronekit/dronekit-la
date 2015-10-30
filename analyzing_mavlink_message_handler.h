@@ -82,6 +82,10 @@ public:
         _analyze->add_data_source("POSITION_ESTIMATE_GPS_RAW_INT", "GPS_RAW_INT.lat");
         _analyze->add_data_source("POSITION_ESTIMATE_GPS_RAW_INT", "GPS_RAW_INT.lon");
         
+        _analyze->add_data_source("VELOCITY_GROUND", "GLOBAL_POSITION_INT.vx");
+        _analyze->add_data_source("VELOCITY_GROUND", "GLOBAL_POSITION_INT.vy");
+        _analyze->add_data_source("VELOCITY_GROUND", "GLOBAL_POSITION_INT.vz");
+
         _analyze->add_data_source("VEHICLE_DEFINITION", "STATUSTEXT.text");
         _analyze->add_data_source("SYSTEM_TIME", "SYSTEM_TIME.boot_time_ms");
     }

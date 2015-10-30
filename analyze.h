@@ -11,6 +11,7 @@
 #include "analyzer/analyzer_altitude_estimate_divergence.h"
 #include "analyzer/analyzer_ever_flew.h"
 #include "analyzer/analyzer_position_estimate_divergence.h"
+#include "analyzer/analyzer_velocity_estimate_divergence.h"
 
 #include "data_sources.h"
 
@@ -76,6 +77,7 @@ private:
     Analyzer_Altitude_Estimate_Divergence *analyzer_altitude_estimate_divergence = NULL;    
     Analyzer_Ever_Flew *analyzer_ever_flew = NULL;
     Analyzer_Position_Estimate_Divergence *analyzer_position_estimate_divergence = NULL;    
+    Analyzer_Velocity_Estimate_Divergence * analyzer_velocity_estimate_divergence = NULL;
 };
 
 #endif

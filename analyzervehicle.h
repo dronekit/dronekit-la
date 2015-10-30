@@ -121,6 +121,49 @@ namespace AnalyzerVehicle {
         uint64_t _lon_modtime;
     };
 
+    class Velocity {
+    public:
+        double size() {
+            if (! is_equal(_velocity_scalar, -1.0f)) {
+                return _velocity_scalar;
+            }
+            if (! is_equal(_velocity[2], -1.0f)) {
+                return _velocity.len();
+            }
+            return sqrt(_velocity[0]*_velocity[0] + _velocity[1] * _velocity[1]);
+        }
+
+        void set_x(uint64_t T, double x) {
+            _have_components = true;
+            _velocity[0] = x;
+            _velocity_modtime = T;
+        }
+        void set_y(uint64_t T, double y) {
+            _have_components = true;
+            _velocity[1] = y;
+            _velocity_modtime = T;
+        }
+        void set_z(uint64_t T, double z) {
+            _have_components = true;
+            _velocity[2] = z;
+            _velocity_modtime = T;
+        }
+        void set_scalar(uint64_t T, double scalar) {
+            _velocity_scalar = scalar;
+            _velocity_modtime = T;
+        }
+        uint64_t velocity_modtime() {
+            return _velocity_modtime;
+        }
+
+    private:
+        // only one of these two should be set:
+        Vector3f _velocity = { };
+        double _velocity_scalar = -1;
+        bool _have_components = false;
+        uint64_t _velocity_modtime = 0;
+    };
+
     class EKF {
     public:
         void set_variance(uint64_t T, std::string name, double value) {
@@ -519,6 +562,7 @@ public:
     Attitude& att() { return _att; };
     Position& pos() { return _pos; };
     Altitude& alt() { return _alt; }; // absolute
+    Velocity& vel() { return _vel; }; // metres/second
 
     const Position &origin() const { return _origin; }
     double origin_lat() const { return _origin.lat(); }
@@ -551,6 +595,7 @@ protected:
     Attitude _att = { };
     Position _pos = { };
     Altitude _alt = { };
+    Velocity _vel = { };
     AV_Nav _nav = { };
 
     Position _origin = { };
