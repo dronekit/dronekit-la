@@ -306,6 +306,43 @@ namespace AnalyzerVehicle {
         uint8_t _fix_type = 0;        
     };
 
+    /* may need to factor and subclass this for non-APM-on-PixHawk: */
+    class AutoPilot {
+    public:
+        uint16_t overruns() { return _overruns; }
+        uint16_t overruns_T() { return _overruns_T; }
+        void set_overruns(uint64_t T, uint16_t);
+
+        uint16_t loopcount() { return _loopcount; }
+        void set_loopcount(uint64_t T, uint16_t);
+
+        uint64_t slices_max_T() { return _slices_max_T; }
+        uint16_t slices_max() { return _slices_max; }
+        void set_slices_max(uint64_t T, uint16_t);
+
+        uint16_t slices_min() { return _slices_min; }
+        void set_slices_min(uint64_t T, uint16_t);
+
+        uint16_t slices_avg() { return _slices_avg; }
+        void set_slices_avg(uint64_t T, uint16_t);
+
+        uint16_t slices_stddev() { return _slices_stddev; }
+        void set_slices_stddev(uint64_t T, uint16_t);
+        
+    private:
+        uint16_t _overruns;
+        uint64_t _overruns_T;
+        uint16_t _loopcount;
+        uint64_t _loopcount_T;
+        uint16_t _slices_max;
+        uint64_t _slices_max_T;
+        uint16_t _slices_min;
+        uint64_t _slices_min_T;
+        uint16_t _slices_avg;
+        uint64_t _slices_avg_T;
+        uint16_t _slices_stddev;
+        uint64_t _slices_stddev_T;
+    };
 
     // template <typename packettype>
     // class PacketHistory {
@@ -514,6 +551,29 @@ public:
         return _altitude_estimates;
     }
 
+    AutoPilot &autopilot() {
+        return _autopilot;
+    }
+
+    void autopilot_set_overruns(uint16_t overruns) {
+        _autopilot.set_overruns(T(), overruns);
+    }
+    void autopilot_set_loopcount(uint16_t count) {
+        _autopilot.set_loopcount(T(), count);
+    }
+    void autopilot_set_slices_max(uint16_t slices) {
+        _autopilot.set_slices_max(T(), slices);
+    }
+    void autopilot_set_slices_min(uint16_t slices) {
+        _autopilot.set_slices_min(T(), slices);
+    }
+    void autopilot_set_slices_avg(uint16_t slices) {
+        _autopilot.set_slices_avg(T(), slices);
+    }
+    void autopilot_set_slices_stddev(uint16_t slices) {
+        _autopilot.set_slices_stddev(T(), slices);
+    }
+
     // not really sure this belongs here; possibly move this out if we
     // ever move to a "state of the universe" object for the analyzers
     // rather than just a vehicle
@@ -610,6 +670,8 @@ private:
     vehicletype_t _vehicletype = invalid;
 
     Battery _battery;
+
+    AutoPilot _autopilot;
 
     std::map<const std::string, PositionEstimate*> _position_estimates;
     std::map<const std::string, AttitudeEstimate*> _attitude_estimates;

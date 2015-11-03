@@ -156,3 +156,36 @@ double AnalyzerVehicle::Base::distance_from_origin()
     // ::fprintf(stderr, "distance: %f\n", pos().horizontal_distance_to(origin()));
     return pos().horizontal_distance_to(origin());
 }
+
+
+
+void AnalyzerVehicle::AutoPilot::set_overruns(uint64_t T, uint16_t overruns)
+{
+    _overruns = overruns;
+    _overruns_T = T;
+}
+void AnalyzerVehicle::AutoPilot::set_loopcount(uint64_t T, uint16_t loopcount)
+{
+    _loopcount = loopcount;
+    _loopcount_T = T;
+}
+void AnalyzerVehicle::AutoPilot::set_slices_max(uint64_t T, uint16_t slices_max)
+{
+    _slices_max = slices_max;
+    _slices_max_T = T;
+}
+void AnalyzerVehicle::AutoPilot::set_slices_min(uint64_t T, uint16_t slices_min)
+{
+    _slices_min = slices_min;
+    _slices_min_T = T;
+}
+void AnalyzerVehicle::AutoPilot::set_slices_avg(uint64_t T, uint16_t slices_avg)
+{
+    _slices_avg = slices_avg;
+    _slices_avg_T = T;
+}
+void AnalyzerVehicle::AutoPilot::set_slices_stddev(uint64_t T, uint16_t slices_stddev)
+{
+    _slices_stddev = slices_stddev;
+    _slices_stddev_T = T;
+}

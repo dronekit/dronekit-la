@@ -267,3 +267,10 @@ void LA_MsgHandler_MAG::xprocess(const uint8_t *msg) {
 
     _vehicle->sensor_set_healthy(_name, require_field_uint8_t(msg,"Health"));
 }
+
+void LA_MsgHandler_PM::xprocess(const uint8_t *msg)
+{
+    _vehicle->autopilot_set_overruns(require_field_uint16_t(msg,"NLon"));
+    _vehicle->autopilot_set_loopcount(require_field_uint16_t(msg,"NLoop"));
+    _vehicle->autopilot_set_slices_max(require_field_uint32_t(msg,"MaxT"));
+}

@@ -48,6 +48,7 @@ public:
     float require_field_float(const uint8_t *msg, const char *label);
     uint8_t require_field_uint8_t(const uint8_t *msg, const char *label);
     int32_t require_field_int32_t(const uint8_t *msg, const char *label);
+    uint32_t require_field_uint32_t(const uint8_t *msg, const char *label);
     uint16_t require_field_uint16_t(const uint8_t *msg, const char *label);
     int16_t require_field_int16_t(const uint8_t *msg, const char *label);
 

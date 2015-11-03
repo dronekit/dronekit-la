@@ -264,6 +264,12 @@ int32_t MsgHandler::require_field_int32_t(const uint8_t *msg, const char *label)
     require_field(msg, label, ret);
     return ret;
 }
+uint32_t MsgHandler::require_field_uint32_t(const uint8_t *msg, const char *label)
+{
+    uint32_t ret;
+    require_field(msg, label, ret);
+    return ret;
+}
 uint16_t MsgHandler::require_field_uint16_t(const uint8_t *msg, const char *label)
 {
     uint16_t ret;

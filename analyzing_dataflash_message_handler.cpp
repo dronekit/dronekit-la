@@ -43,6 +43,8 @@ void Analyzing_DataFlash_Message_Handler::handle_format_message_received(const c
         }
     } else if (streq(name, "PARM")) {
         handlers[new_msg_type] = new LA_MsgHandler_PARM(name, format, _analyze, _vehicle);
+    } else if (streq(name, "PM")) {
+        handlers[new_msg_type] = new LA_MsgHandler_PM(name, format, _analyze, _vehicle);
     } else if (streq(name, "POS")) {
         handlers[new_msg_type] = new LA_MsgHandler_POS(name, format, _analyze, _vehicle);
         have_pos = true;

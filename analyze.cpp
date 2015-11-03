@@ -9,6 +9,7 @@
 #include "analyzer/analyzer_altitude_estimate_divergence.h"
 #include "analyzer/analyzer_attitude_estimate_divergence.h"
 #include "analyzer/analyzer_attitude_control.h"
+#include "analyzer/analyzer_autopilot.h"
 #include "analyzer/analyzer_battery.h"
 #include "analyzer/analyzer_brownout.h"
 #include "analyzer/analyzer_compass_offsets.h"
@@ -128,6 +129,13 @@ void Analyze::instantiate_analyzers(INIReader *config)
         configure_analyzer(config, analyzer_attitude_control);
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_attitude_control");
+    }
+
+    Analyzer_Autopilot *analyzer_autopilot = new Analyzer_Autopilot(vehicle,_data_sources);
+    if (analyzer_autopilot != NULL) {
+        configure_analyzer(config, analyzer_autopilot);
+    } else {
+        syslog(LOG_INFO, "Failed to create analyzer_autopilot");
     }
 
     Analyzer_Battery *analyzer_battery = new Analyzer_Battery(vehicle,_data_sources);

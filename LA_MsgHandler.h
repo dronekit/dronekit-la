@@ -317,6 +317,18 @@ public:
 
 };
 
+class LA_MsgHandler_PM : public LA_MsgHandler {
+public:
+    LA_MsgHandler_PM(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
+        _analyze->add_data_source("AUTOPILOT_SCHEDULING", "MSG.NLon");
+        _analyze->add_data_source("AUTOPILOT_SCHEDULING", "MSG.NLoop");
+        _analyze->add_data_source("AUTOPILOT_SCHEDULING", "MSG.MaxT");
+    };
+
+    void xprocess(const uint8_t *msg) override;
+};
+
 class LA_MsgHandler_POS : public LA_MsgHandler {
 public:
     LA_MsgHandler_POS(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :

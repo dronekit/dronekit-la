@@ -1,5 +1,7 @@
 #include "analyzing_mavlink_message_handler.h"
 
+#include <regex>
+
 void Analyzing_MAVLink_Message_Handler::end_of_log(uint32_t packet_count, uint64_t bytes_dropped UNUSED)
 {
     _analyze->end_of_log(packet_count);
@@ -254,6 +256,25 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
             break;
         case AnalyzerVehicle::Base::vehicletype_t::invalid:
             break;
+        }
+    }
+
+    if (strstr(msg.text, "PERF:")) {
+        std::string x = std::string(msg.text);
+        std::regex perf_regex("PERF: ([0-9]+)/([0-9]+) ([0-9]+) ([0-9]+)(?: ([0-9]+) ([0-9]+))?");
+        std::smatch result;
+        regex_search(x, result, perf_regex);
+        std::string::size_type sz;
+        _vehicle->autopilot_set_overruns(stoi(result[1].str()));
+        _vehicle->autopilot_set_loopcount(stoi(result[2].str()));
+        _vehicle->autopilot_set_slices_max(stoi(result[3].str()));
+        _vehicle->autopilot_set_slices_min(stoi(result[4].str()));
+        // for (uint8_t i=0; i< result.size(); i++) {
+        //     ::fprintf(stderr, "%u: %s\n", i, result[i].str().c_str());
+        // }
+        if (result[6].str().size()) {
+            _vehicle->autopilot_set_slices_avg(stoi(result[5].str())); 
+            _vehicle->autopilot_set_slices_stddev(stoi(result[6].str()));
         }
     }
 }

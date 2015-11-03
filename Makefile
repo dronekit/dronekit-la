@@ -40,6 +40,7 @@ SRCS_CPP += heart.cpp
 SRCS_CPP += analyzer/analyzer_any_parameters_seen.cpp
 SRCS_CPP += analyzer/analyzer_arming_checks.cpp
 SRCS_CPP += analyzer/analyzer_attitude_control.cpp
+SRCS_CPP += analyzer/analyzer_autopilot.cpp
 SRCS_CPP += analyzer/analyzer_battery.cpp
 SRCS_CPP += analyzer/analyzer_brownout.cpp
 SRCS_CPP += analyzer/analyzer_compass_offsets.cpp

@@ -34,6 +34,7 @@ public:
         _analyze->add_data_source("ATTITUDE_ESTIMATE_AHRS2", "AHRS2.pitch");
         _analyze->add_data_source("ATTITUDE_ESTIMATE_AHRS2", "AHRS2.yaw");
 
+        _analyze->add_data_source("AUTOPILOT_SCHEDULING", "STATUSTEXT.text");
         
         _analyze->add_data_source("BATTERY_REMAINING", "SYS_STATUS.battery_remaining");
 
