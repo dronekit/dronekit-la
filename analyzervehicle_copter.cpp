@@ -42,11 +42,9 @@ bool Copter::any_motor_running_fast() {
 
 std::set<uint8_t> Copter::motors_clipping_high() {
     std::set<uint8_t> ret;
-    char label[] = "RCx_MAX";
-    for (uint8_t i=1; i<=_num_motors; i++) {
-        label[2] = '0' + i;
-        float max;
-        if (param(label, max)) {
+    float max;
+    if (param("RC3_MAX", max)) {
+        for (uint8_t i=1; i<=_num_motors; i++) {
             uint16_t delta = abs((int32_t)_servo_output[i] - (uint16_t)max);
             if ((float)delta/max < .05) { // within 5%
                 ret.insert(i);
@@ -58,13 +56,16 @@ std::set<uint8_t> Copter::motors_clipping_high() {
 
 std::set<uint8_t> Copter::motors_clipping_low() {
     std::set<uint8_t> ret;
-    char label[] = "RCx_MIN";
-    for (uint8_t i=1; i <= _num_motors; i++) {
-        label[2] = '0' + i;
-        float min;
-        if (param(label, min)) {
+    float min;
+    if (param("RC3_MIN", min)) {
+        float thr_min;
+        if (param("THR_MIN", thr_min)) {
+            min += thr_min;
+        }
+        for (uint8_t i=1; i <= _num_motors; i++) {
+            uint16_t delta = abs((int32_t)_servo_output[i] - (uint16_t)min);
             if (_servo_output[i] < (uint16_t)min ||
-                _servo_output[i] - min < 105) { // FIXME: constant
+                ((float)delta/min) < 0.05) {
                 ret.insert(i);
             }
             // uint16_t delta = abs((int32_t)_servo_output[i] - (uint16_t)min);
