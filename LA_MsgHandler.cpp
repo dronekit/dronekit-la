@@ -170,6 +170,32 @@ void LA_MsgHandler_EKF1::xprocess(const uint8_t *msg) {
     
 }
 
+#define ERROR_SUBSYSTEM_FAILSAFE_BATT       6
+#define ERROR_SUBSYSTEM_CRASH	    	   12
+#define ERROR_CODE_FAILSAFE_OCCURRED        1
+
+LA_MsgHandler_ERR::LA_MsgHandler_ERR(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+    LA_MsgHandler(name, f, analyze, vehicle) {
+    _analyze->add_data_source("BATTERY_FAILSAFE", "ERR.Subsys");
+    _analyze->add_data_source("BATTERY_FAILSAFE", "ERR.ECode");
+    _analyze->add_data_source("CRASH", "ERR.Subsys");
+    _analyze->add_data_source("CRASH", "ERR.ECode");
+};
+
+void LA_MsgHandler_ERR::xprocess(const uint8_t *msg) {
+    uint8_t subsys = require_field_uint8_t(msg, "Subsys");
+    uint8_t ecode = require_field_uint8_t(msg, "ECode");
+    switch(subsys) {
+    case ERROR_SUBSYSTEM_FAILSAFE_BATT:
+        _vehicle->set_battery_in_failsafe(ecode ? ERROR_CODE_FAILSAFE_OCCURRED : 0);
+        break;
+    case ERROR_SUBSYSTEM_CRASH:
+        _vehicle->set_crashed(ecode);
+        break;
+    }
+}
+
+
 bool LA_MsgHandler_GPS::find_T(const uint8_t *msg, uint64_t &T) {
     if (field_value(msg, "TimeUS", T)) {
         return true;

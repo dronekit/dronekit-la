@@ -105,6 +105,7 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
     }
 
     _vehicle->set_armed(msg.base_mode & MAV_MODE_FLAG_SAFETY_ARMED);
+    _vehicle->set_crashed(msg.system_status == MAV_STATE_EMERGENCY);
 
     _analyze->evaluate_all();
 }

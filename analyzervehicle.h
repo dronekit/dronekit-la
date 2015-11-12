@@ -13,7 +13,7 @@
 namespace AnalyzerVehicle {
 
     // Attitude should be the best guess as to what the vehicle's
-    // status is - typicall the POS message from dataflash, for
+    // status is - typically the ATT message from dataflash, for
     // example
     class Attitude {
     public:
@@ -52,7 +52,7 @@ namespace AnalyzerVehicle {
         uint64_t get_att_modtime(uint8_t offset) const {
             return _att_modtime[offset];
         }
-};
+    };
 
     class Altitude {
     public:
@@ -641,6 +641,9 @@ public:
 
     bool relative_alt(double &relative); // returns true if relative alt could be calculated
 
+    bool crashed() const { return _crashed; }
+    void set_crashed(bool value) { _crashed = value; _crashed_T = T(); }
+
 protected:
     AV_Nav& nav() { return _nav; };
 
@@ -668,6 +671,9 @@ private:
     uint64_t _time_since_boot_T = 0;
 
     vehicletype_t _vehicletype = invalid;
+
+    bool _crashed; // vehicle's own estimate of whether it has crashed
+    uint64_t _crashed_T; // last update time of vehicle's estimate
 
     Battery _battery;
 

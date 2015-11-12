@@ -22,7 +22,7 @@ public:
         _analyze->add_data_source("ALTITUDE_ESTIMATE_SCALED_PRESSURE2", "SCALED_PRESSURE2.temperature");
         _analyze->add_data_source("ALTITUDE_ESTIMATE_SCALED_PRESSURE2", "SCALED_PRESSURE2.press_abs");
 
-        _analyze->add_data_source("ARMING", "HEARBEAT.base_mode");
+        _analyze->add_data_source("ARMING", "HEARTBEAT.base_mode");
 
         _analyze->add_data_source("ATTITUDE", "ATTITUDE.roll");
         _analyze->add_data_source("ATTITUDE", "ATTITUDE.pitch");
@@ -37,6 +37,8 @@ public:
         _analyze->add_data_source("AUTOPILOT_SCHEDULING", "STATUSTEXT.text");
         
         _analyze->add_data_source("BATTERY_REMAINING", "SYS_STATUS.battery_remaining");
+
+        _analyze->add_data_source("CRASHED", "HEARTBEAT.system_status");
 
         _analyze->add_data_source("DESATTITUDE", "NAV_CONTROLLER_OUTPUT.nav_roll");
         _analyze->add_data_source("DESATTITUDE", "NAV_CONTROLLER_OUTPUT.nav_pitch");
