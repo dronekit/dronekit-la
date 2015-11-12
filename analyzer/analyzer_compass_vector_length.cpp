@@ -223,16 +223,44 @@ void Analyzer_Compass_Vector_Length::check_vector_delta(const std::string name,
     }
 }
 
+// void Analyzer_Compass_Vector_Length::for_each_tmping(
+//     std::map<const std::basic_string<char>, Analyzer_Compass_Vector_Length_Result_Short*>::iterator start,
+//     std::map<const std::basic_string<char>, Analyzer_Compass_Vector_Length_Result_Short*>::iterator end,
+//     std::function<std::map<const std::basic_string<char>, Analyzer_Compass_Vector_Length_Result_Short*>::iterator> function)
+// {
+//     std::map<const std::basic_string<char>, Analyzer_Compass_Vector_Length_Result_Short*>::iterator next = start;
+//     while (next != end) {
+//         std::map<const std::basic_string<char>, Analyzer_Compass_Vector_Length_Result_Short*>::iterator current = next;
+//         next++;
+//         function(next);
+//     }
+// }
+
+void Analyzer_Compass_Vector_Length::close_results_short()
+{
+    auto next = _result_short.begin();
+    while (next != _result_short.end()) {
+        auto current = next;
+        next++;
+        close_result_short((*current).second);
+    }
+}
+
+void Analyzer_Compass_Vector_Length::close_results_long()
+{
+    auto next = _result_long.begin();
+    while (next != _result_long.end()) {
+        auto current = next;
+        next++;
+        close_result_long((*current).second);
+    }
+}
+
 void Analyzer_Compass_Vector_Length::end_of_log(uint32_t packet_count UNUSED)
 {
     // close off any existing result:
-    std::for_each(_result_short.begin(),
-                  _result_short.end(),
-                  [this](std::pair<const std::string, Analyzer_Compass_Vector_Length_Result_Short*>c){ close_result_short(c.second); });
-
-    std::for_each(_result_long.begin(),
-                  _result_long.end(),
-                  [this](std::pair<const std::string, Analyzer_Compass_Vector_Length_Result_Long*>c){ close_result_long(c.second); });
+    close_results_short();
+    close_results_long();
 
     // check to see how much the vector length varied:
     std::for_each(_longest_vector_length_seen.begin(),

@@ -331,17 +331,17 @@ namespace AnalyzerVehicle {
         
     private:
         uint16_t _overruns;
-        uint64_t _overruns_T;
+        uint64_t _overruns_T = 0;
         uint16_t _loopcount;
-        uint64_t _loopcount_T;
+        uint64_t _loopcount_T = 0;
         uint16_t _slices_max;
-        uint64_t _slices_max_T;
+        uint64_t _slices_max_T = 0;
         uint16_t _slices_min;
-        uint64_t _slices_min_T;
+        uint64_t _slices_min_T = 0;
         uint16_t _slices_avg;
-        uint64_t _slices_avg_T;
+        uint64_t _slices_avg_T = 0;
         uint16_t _slices_stddev;
-        uint64_t _slices_stddev_T;
+        uint64_t _slices_stddev_T = 0;
     };
 
     // template <typename packettype>

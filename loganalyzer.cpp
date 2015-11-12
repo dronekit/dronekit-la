@@ -72,7 +72,7 @@ void LogAnalyzer::parse_path(const char *path)
     }
 
     int fd;
-    if (!strcmp(path, "-")) {
+    if (streq(path, "-")) {
         fd = fileno(stdin);
     } else {
         fd = xopen(path, O_RDONLY);
@@ -83,6 +83,10 @@ void LogAnalyzer::parse_path(const char *path)
     }
 
     parse_fd(reader, fd);
+
+    if (!streq(path, "-")) {
+        close(fd);
+    }
 
     if (output_style == Analyze::OUTPUT_BRIEF) {
         printf("\n");

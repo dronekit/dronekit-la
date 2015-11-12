@@ -79,6 +79,9 @@ private:
     void update_result_short(Analyzer_Compass_Vector_Length_Result_Short *, double length);
     void close_result_short(Analyzer_Compass_Vector_Length_Result_Short *);
 
+    void close_results_short();
+    void close_results_long();
+
     std::map<const std::string, Analyzer_Compass_Vector_Length_Result_Long *>
        _result_long;
     void open_result_long(std::string name, double length);

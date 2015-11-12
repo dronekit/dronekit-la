@@ -8,6 +8,7 @@ import subprocess
 import string
 import argparse
 import sys
+import re
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--accept-all',
@@ -52,22 +53,70 @@ def diff_json(expected, new):
     mydiff = difflib.unified_diff(expected_string.splitlines(1), new_string.splitlines(1))
     return "".join(mydiff)
 
+def diff_valgrind(expected, new):
+    expected_string = open(expected).read()
+    new_string = open(new).read()
+
+    strip_pids = re.compile("^==\d+==", re.MULTILINE)
+    expected_string = strip_pids.sub("==PID==", expected_string)
+    new_string = strip_pids.sub("==PID==", new_string)
+
+    strip_parent_pid = re.compile("Parent PID: \d+")
+    expected_string = strip_parent_pid.sub("PPID", expected_string);
+    new_string = strip_parent_pid.sub("PPID", new_string);
+
+    strip_heap_usage = re.compile("total heap usage: .*");
+    expected_string = strip_heap_usage.sub("total heap usage: Yes!", expected_string);
+    new_string = strip_heap_usage.sub("total heap usage: Yes!", new_string);
+
+    mydiff = difflib.unified_diff(expected_string.splitlines(1), new_string.splitlines(1))
+    return "\n".join(mydiff)
+
 def json_from_filepath(filepath):
     contents = open(filepath).read()
     return json.loads(contents)
 
+def handle_output_diff(mydiff, correctish_json_filepath, new_json_filepath):
+    (correctish_json_dirpath,correctish_json_filename) = os.path.split(correctish_json_filepath)
+    accept_command = "cp '%s' '%s'; pushd '%s'; git add '%s'; popd" % (new_json_filepath, correctish_json_filepath, correctish_json_dirpath, correctish_json_filename)
+    print("""
+---------output diff-----------------
+%s
+---------end output diff-------------
+Accept new result: %s
+""" % (mydiff, accept_command))
+    if args.accept_all:
+        print("Accepting automatically")
+        check_me = subprocess.check_output(accept_command, shell=True, executable='/bin/bash');
+
+
+def handle_valgrind_diff(valdiff, correctish_filepath, new_filepath):
+    (correctish_dirpath,correctish_filename) = os.path.split(correctish_filepath)
+    accept_command = "cp '%s' '%s'; pushd '%s'; git add '%s'; popd" % (new_filepath, correctish_filepath, correctish_dirpath, correctish_filename)
+    print("""
+---------valgrind diff-----------------
+%s
+---------end valgrind diff-------------
+Accept new result: %s
+""" % (valdiff, accept_command))
+    if args.accept_all:
+        print("Accepting automatically")
+        check_me = subprocess.check_output(accept_command, shell=True, executable='/bin/bash');
+            
 def test_log(filepath_log):
     test_success = True
     try:
         command = ["./dronekit-la", filepath_log]
         if args.valgrind:
             correctish_valgrind_logpath = filepath_log + "-memcheck"
+            new_valgrind_logpath = "/tmp/" + string.replace(correctish_valgrind_logpath,"/","-") + "-new-valgrind"
             command[:0] = ['valgrind',
-                           '--track-fds=yes',
+#                           '--track-fds=yes',
+                           '--leak-check=no',
                            '--read-inline-info=yes',
                            '--read-var-info=yes',
                            '--track-origins=yes',
-                           '--log-file=%s' % (correctish_valgrind_logpath,)]
+                           '--log-file=%s' % (new_valgrind_logpath,)]
         p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         analysis_string,analysis_stderr = p.communicate()
         analysis_json = json.loads(analysis_string)
@@ -75,27 +124,24 @@ def test_log(filepath_log):
         correctish_json_filepath = filepath_log + "-expected-json"
         correctish_json = json_from_filepath(correctish_json_filepath)
 
+        valdiff = ""
+        if args.valgrind:
+            valdiff = diff_valgrind(correctish_valgrind_logpath, new_valgrind_logpath)
+
         new_json_filepath = "/tmp/" + string.replace(filepath_log,"/","-") + "-new-json"
         spew_string_to_file(json.dumps(analysis_json, indent=2, sort_keys=True), new_json_filepath)
+
         mydiff = diff_json(correctish_json, analysis_json)
-        if len(mydiff) or len(analysis_stderr):
+
+        if len(mydiff) or len(analysis_stderr) or len(valdiff):
+            test_success = False
             print("FAIL: %s" % (filepath_log,))
         else:
             print("PASS: %s" % (filepath_log,))
 
         if len(mydiff):
-            test_success = False
-            (correctish_json_dirpath,correctish_json_filename) = os.path.split(correctish_json_filepath)
-            accept_command = "cp '%s' '%s'; pushd '%s'; git add '%s'; popd" % (new_json_filepath, correctish_json_filepath, correctish_json_dirpath, correctish_json_filename)
-            print("""
----------diff-----------------
-%s
----------diff-----------------
-Accept new result: %s
-""" % (mydiff, accept_command))
-            if args.accept_all:
-                print("Accepting automatically")
-                check_me = subprocess.check_output(accept_command, shell=True, executable='/bin/bash');
+            handle_output_diff(mydiff, correctish_json_filepath, new_json_filepath)
+
         if len(analysis_stderr):
             print("""
 ---------stderr-----------------
@@ -103,6 +149,8 @@ Accept new result: %s
 ---------stderr-----------------
 """ % (analysis_stderr,))
 
+        if len(valdiff):
+            handle_valgrind_diff(valdiff, correctish_valgrind_logpath, new_valgrind_logpath)
 
     except subprocess.CalledProcessError as E:
         test_success = False
