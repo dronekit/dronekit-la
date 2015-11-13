@@ -65,9 +65,14 @@ def diff_valgrind(expected, new):
     expected_string = strip_parent_pid.sub("PPID", expected_string);
     new_string = strip_parent_pid.sub("PPID", new_string);
 
-    strip_heap_usage = re.compile("total heap usage: .*");
-    expected_string = strip_heap_usage.sub("total heap usage: Yes!", expected_string);
-    new_string = strip_heap_usage.sub("total heap usage: Yes!", new_string);
+    strip_heap_usage = re.compile("in use at exit: .*");
+    expected_string = strip_heap_usage.sub("in use at exit: Yes!", expected_string);
+    new_string = strip_heap_usage.sub("in use at exit: Yes!", new_string);
+
+    strip_heap_usage2 = re.compile("total heap usage: .*");
+    expected_string = strip_heap_usage2.sub("total heap usage: Yes!", expected_string);
+    new_string = strip_heap_usage2.sub("total heap usage: Yes!", new_string);
+
 
     mydiff = difflib.unified_diff(expected_string.splitlines(1), new_string.splitlines(1))
     return "\n".join(mydiff)

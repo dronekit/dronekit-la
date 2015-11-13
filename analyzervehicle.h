@@ -683,8 +683,8 @@ private:
 
     vehicletype_t _vehicletype = invalid;
 
-    bool _crashed; // vehicle's own estimate of whether it has crashed
-    uint64_t _crashed_T; // last update time of vehicle's estimate
+    bool _crashed = false; // vehicle's own estimate of whether it has crashed
+    uint64_t _crashed_T = 0; // last update time of vehicle's estimate
 
     Battery _battery;
 
