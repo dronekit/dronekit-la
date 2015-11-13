@@ -13,13 +13,11 @@ namespace AnalyzerVehicle {
             Base()
             { }
 
-        const std::string typeString() const { return "Plane"; }
+        const std::string typeString() const override { return "Plane"; }
 
-        bool is_flying();
+        bool is_flying() const override;
 
-        bool param_default(const char *name, float &ret);
-
-        static const uint16_t is_flying_motor_threshold = 1250;
+        bool param_default(const char *name, float &ret) const override;
 
         vehicletype_t vehicletype() override {
             return plane;

@@ -47,17 +47,18 @@ void Base::set_T(const uint64_t time_us)
     // ::fprintf(stderr, "Set T to (%lu)\n", T);
 }
 
-bool Base::param_default(const char *name, float &ret)
+bool Base::param_default(const char *name, float &ret) const
 {
-    if (_param_defaults.count(name)) {
-        ret = _param_defaults[name];
+    auto it = _param_defaults.find(name);
+    if (it != _param_defaults.end()) {
+        ret = it->second;
         return true;
     }
     return false;
 }
 
-// will return value of param if see, otherwise a default value
-bool Base::param_with_defaults(const char *name, float &ret)
+// will return value of param if seen, otherwise a default value
+bool Base::param_with_defaults(const char *name, float &ret) const
 {
     if (param_seen(name)) {
         ret = param(name);
@@ -67,7 +68,24 @@ bool Base::param_with_defaults(const char *name, float &ret)
     return param_default(name, ret);
 }
 
-bool Base::param(const char *name, float &ret)
+// will return value of param if seen, otherwise a default value
+float Base::require_param_with_defaults(const char *name) const
+{
+    if (param_seen(name)) {
+        return param(name);
+    }
+
+    float ret;
+
+    if (!param_default(name, ret)) {
+        ::fprintf(stderr, "No %s parameter", name);
+        abort();
+    }
+
+    return ret;
+}
+
+bool Base::param(const char *name, float &ret) const
 {
     if (!param_seen(name)) {
         return false;
@@ -75,6 +93,18 @@ bool Base::param(const char *name, float &ret)
     ret = param(name);
     return true;
 }    
+
+float Base::param(const std::string name) const
+{
+    const std::string x = std::string(name);
+    // ::fprintf(stderr, "Looking for (%s)\n", name);
+    auto it = _param.find(name);
+    if (it == _param.end()) {
+        ::fprintf(stderr, "asked for unseen parameter");
+        abort();
+    }
+    return it->second;
+}
 
 void Base::param_set(const char *name, const float value)
 {
@@ -93,7 +123,7 @@ bool Base::param_seen(const std::string name) const
 {
     const std::string x = std::string(name);
     // ::fprintf(stderr, "Looking for (%s)\n", name);
-    std::map<const std::string, float>::const_iterator it = _param.find(name);
+    auto it = _param.find(name);
     if (it != _param.end()) {
         return true;
     }
@@ -112,7 +142,7 @@ void Base::set_servo_output(uint16_t ch1, uint16_t ch2, uint16_t ch3, uint16_t c
     _servo_output[8] = (float)ch8;
 }
 
-bool Base::relative_alt(double &relative)
+bool Base::relative_alt(double &relative) const
 {
     if (origin_altitude_T() == 0) {
         return false;

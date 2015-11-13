@@ -61,7 +61,7 @@ void Analyzer_NotCrashed::evaluate_attitude()
             }
             _result->add_evidence(string_format("ANGLE_MAX (fabs(%f) > %f)", _result->angle, _result->angle_max));
             for (uint8_t i=1; i<=v->num_motors(); i++) {
-                if (v->_servo_output[i] > v->is_flying_motor_threshold) {
+                if (v->_servo_output[i] > v->is_flying_motor_threshold()) {
                     _result->add_evidence(string_format("SERVO_OUTPUT_RAW.servo%d_raw=%f",
                                                        i, _result->servo_output[i]));
                 }

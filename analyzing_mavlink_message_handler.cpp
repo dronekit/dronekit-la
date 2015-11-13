@@ -25,8 +25,7 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
 
     // we fake up the vehicle origin by setting it whenever the
     // vehicle moves from disarmed to armed
-    bool is_armed = _vehicle->is_armed();
-    if (is_armed) {
+    if (_vehicle->is_armed()) {
         if (!set_origin_was_armed) {
             _vehicle->set_origin_lat(lat);
             _vehicle->set_origin_lon(lng);

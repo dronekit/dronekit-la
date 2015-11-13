@@ -106,7 +106,10 @@ Accept new result: %s
 def test_log(filepath_log):
     test_success = True
     try:
-        command = ["./dronekit-la", filepath_log]
+        command = ["./dronekit-la",
+                   '-m', 'copter', # assume a quadcopter for the time being
+                   '-f', 'QUAD',
+                   filepath_log]
         if args.valgrind:
             correctish_valgrind_logpath = filepath_log + "-memcheck"
             new_valgrind_logpath = "/tmp/" + string.replace(correctish_valgrind_logpath,"/","-") + "-new-valgrind"

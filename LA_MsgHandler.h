@@ -60,49 +60,8 @@ public:
 
 class LA_MsgHandler_AHR2 : public LA_MsgHandler {
 public:
-    LA_MsgHandler_AHR2(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(name, f, analyze, vehicle) {
-        _analyze->add_data_source("ATTITUDE_ESTIMATE_AHR2", "AHR2.Roll");
-        _analyze->add_data_source("ATTITUDE_ESTIMATE_AHR2", "AHR2.Pitch");
-        _analyze->add_data_source("ATTITUDE_ESTIMATE_AHR2", "AHR2.Yaw");
-
-        _analyze->add_data_source("POSITION_ESTIMATE_AHR2", "AHR2.Lat");
-        _analyze->add_data_source("POSITION_ESTIMATE_AHR2", "AHR2.Lng");
-
-        _analyze->add_data_source("ALTITUDE_ESTIMATE_AHR2", "AHR2.Alt");
-    };
-    void xprocess(const uint8_t *msg) override {
-        int16_t Roll = require_field_int16_t(msg, "Roll");
-        int16_t Pitch = require_field_int16_t(msg, "Pitch");
-        float Yaw = require_field_float(msg, "Yaw");
-
-        attitude_estimate()->set_roll(T(), Roll/(double)100.0f);
-        attitude_estimate()->set_pitch(T(), Pitch/(double)100.0f);
-        attitude_estimate()->set_yaw(T(), Yaw-180);
-
-        int32_t Lat = require_field_int32_t(msg, "Lat");
-        int32_t Lng = require_field_int32_t(msg, "Lng");
-        float Alt = require_field_float(msg, "Alt");
-
-        position_estimate()->set_lat(T(), Lat/(double)10000000.0f);
-        position_estimate()->set_lon(T(), Lng/(double)10000000.0f);
-        altitude_estimate()->set_alt(T(), Alt);
-
-        double lat = Lat/(double)10000000.0f;
-        double lng = Lng/(double)10000000.0f;
-        if (canonical_for_position()) {
-            _vehicle->set_lat(lat);
-            _vehicle->set_lon(lng);
-            _vehicle->set_altitude(Alt);
-        }
-        if (canonical_for_origin()) {
-            if (_vehicle->origin_lat_T() == 0) {
-                _vehicle->set_origin_lat(lat);
-                _vehicle->set_origin_lon(lng);
-                _vehicle->set_origin_altitude(Alt);
-            }
-        }
-    }
+    LA_MsgHandler_AHR2(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle);
+    void xprocess(const uint8_t *msg) override;
 
     bool canonical_for_position() { return _canonical_for_position; };
     void set_canonical_for_position(bool value) { _canonical_for_position = value; }
@@ -112,6 +71,7 @@ public:
 private:
     bool _canonical_for_position = true;
     bool _canonical_for_origin = true;
+    bool _was_armed = false;
 };
 
 class LA_MsgHandler_ATT : public LA_MsgHandler {

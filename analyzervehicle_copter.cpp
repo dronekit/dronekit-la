@@ -2,15 +2,18 @@
 
 using namespace AnalyzerVehicle;
 
-bool Copter::param_default(const char *name, float &ret) {
+bool Copter::param_default(const char *name, float &ret) const {
     if (_frame_type == frame_type_quad) {
-        if (_param_defaults_quad.count(name)) {
-            ret = _param_defaults_quad[name];
+        auto it = _param_defaults_quad.find(name);
+        if (it != _param_defaults_quad.end()) {
+            ret = it->second;
             return true;
         }
     }
-    if (_param_defaults.count(name)) {
-        ret = _param_defaults[name];
+
+    auto it = _param_defaults.find(name);
+    if (it != _param_defaults.end()) {
+        ret = it->second;
         return true;
     }
     return Base::param_default(name, ret);
@@ -18,7 +21,8 @@ bool Copter::param_default(const char *name, float &ret) {
 
 /* I think there's an argument for moving the following into Analyzer: */
 
-bool Copter::is_flying() {
+bool Copter::is_flying() const
+{
     if (! is_armed()) {
         // we hope we're not flying, anyway!
         return false;
@@ -31,16 +35,25 @@ bool Copter::is_flying() {
     return true;
 }
 
-bool Copter::any_motor_running_fast() {
+uint16_t Copter::is_flying_motor_threshold() const
+{
+    double rc3_min = require_param_with_defaults("RC3_MIN");
+    double mot_spin_armed = require_param_with_defaults("MOT_SPIN_ARMED");
+    return rc3_min + mot_spin_armed + 10; // the 10 is a random number...
+}
+
+bool Copter::any_motor_running_fast() const
+{
     for (uint8_t i=1; i<_num_motors; i++) {
-        if (_servo_output[i] > is_flying_motor_threshold) {
+        if (_servo_output[i] > is_flying_motor_threshold()) {
             return true;
         }
     }
     return false;
 }
 
-std::set<uint8_t> Copter::motors_clipping_high() {
+std::set<uint8_t> Copter::motors_clipping_high()
+{
     std::set<uint8_t> ret;
     float max;
     if (param("RC3_MAX", max)) {
@@ -54,7 +67,8 @@ std::set<uint8_t> Copter::motors_clipping_high() {
     return ret;
 }
 
-std::set<uint8_t> Copter::motors_clipping_low() {
+std::set<uint8_t> Copter::motors_clipping_low()
+{
     std::set<uint8_t> ret;
     float min;
     if (param("RC3_MIN", min)) {
@@ -95,7 +109,7 @@ void Copter::set_frame_type(copter_frame_type frame_type)
     }
 }
 
-bool Copter::exceeding_angle_max()
+bool Copter::exceeding_angle_max() const
 {
     float angle_max; // convert from centidegrees
     if (param_with_defaults("ANGLE_MAX", angle_max)) {

@@ -77,6 +77,55 @@ bool LA_MsgHandler_ACC::find_T(const uint8_t *msg, uint64_t &T) {
     return false;
 }
 
+LA_MsgHandler_AHR2::LA_MsgHandler_AHR2(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+    LA_MsgHandler(name, f, analyze, vehicle) {
+    _analyze->add_data_source("ATTITUDE_ESTIMATE_AHR2", "AHR2.Roll");
+    _analyze->add_data_source("ATTITUDE_ESTIMATE_AHR2", "AHR2.Pitch");
+    _analyze->add_data_source("ATTITUDE_ESTIMATE_AHR2", "AHR2.Yaw");
+
+    _analyze->add_data_source("POSITION_ESTIMATE_AHR2", "AHR2.Lat");
+    _analyze->add_data_source("POSITION_ESTIMATE_AHR2", "AHR2.Lng");
+
+    _analyze->add_data_source("ALTITUDE_ESTIMATE_AHR2", "AHR2.Alt");
+};
+void LA_MsgHandler_AHR2::xprocess(const uint8_t *msg) {
+    int16_t Roll = require_field_int16_t(msg, "Roll");
+    int16_t Pitch = require_field_int16_t(msg, "Pitch");
+    float Yaw = require_field_float(msg, "Yaw");
+
+    attitude_estimate()->set_roll(T(), Roll/(double)100.0f);
+    attitude_estimate()->set_pitch(T(), Pitch/(double)100.0f);
+    attitude_estimate()->set_yaw(T(), Yaw-180);
+
+    int32_t Lat = require_field_int32_t(msg, "Lat");
+    int32_t Lng = require_field_int32_t(msg, "Lng");
+    float Alt = require_field_float(msg, "Alt");
+
+    position_estimate()->set_lat(T(), Lat/(double)10000000.0f);
+    position_estimate()->set_lon(T(), Lng/(double)10000000.0f);
+    altitude_estimate()->set_alt(T(), Alt);
+
+    double lat = Lat/(double)10000000.0f;
+    double lng = Lng/(double)10000000.0f;
+    if (canonical_for_position()) {
+        _vehicle->set_lat(lat);
+        _vehicle->set_lon(lng);
+        _vehicle->set_altitude(Alt);
+    }
+    if (canonical_for_origin()) {
+        if (_vehicle->is_armed()) {
+            if (!_was_armed) {
+                _was_armed = true;
+                _vehicle->set_origin_lat(lat);
+                _vehicle->set_origin_lon(lng);
+                _vehicle->set_origin_altitude(Alt);
+            }
+        } else {
+            _was_armed = false;
+        }
+    }
+}
+
 LA_MsgHandler_ATT::LA_MsgHandler_ATT(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
     LA_MsgHandler(name, f, analyze, vehicle) {
     _analyze->add_data_source("ATTITUDE", "ATT.Roll");

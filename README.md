@@ -38,6 +38,10 @@ RC1_REV -1.000000
 RC1_TRIM 1527.000000
  (there's ~500 to the left, ~250 to the right - that's probably a very bad thing)
 
+ - accelerometer and gyro drift
+ - accelerometer and gyro disagreement
+ - check for obviously bad parameters (e.g. ANGLE_MAX < 1000)
+
  - work out what we use RATE for
 
 ## FIXMEs

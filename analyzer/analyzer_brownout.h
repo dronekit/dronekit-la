@@ -17,7 +17,9 @@ public:
     void set_last_altitude(double altitude) { _alt_last = altitude; }
     double last_altitude() { return _alt_last; }
 
-    void set_takeoff_altitude(double altitude) { _alt_takeoff = altitude; }
+    void set_takeoff_altitude(double altitude) {
+        _alt_takeoff = altitude;
+    }
     double takeoff_altitude() { return _alt_takeoff; }
 
 private:

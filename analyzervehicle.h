@@ -386,11 +386,10 @@ public:
     }
     
     // vehicle state information
-    virtual bool is_flying() { return false; }
-    void exceeding_angle_max() const;
+    virtual bool is_flying() const { return false; }
 
     // arming 
-    virtual bool is_armed() { return _armed; };
+    virtual bool is_armed() const { return _armed; };
     virtual void set_armed(bool value) {  _armed = value; };
 
     // vehicle type
@@ -431,14 +430,15 @@ public:
     void take_state(Base *old);
     
     // Parameters
-    float param(const std::string name) { return _param[name]; };
+    float param(const std::string name) const;
+    bool param(const char *name, float &ret) const;
     uint16_t param_count() { return _param.size(); };
-    bool param(const char *name, float &ret);
     bool param_seen(const std::string name) const;
     uint64_t param_modtime(const std::string name) { return _param_modtime[name]; }
     void param_set(const char *name, const float value);
-    virtual bool param_default(const char *name, float &ret);
-    bool param_with_defaults(const char *name, float &ret);
+    virtual bool param_default(const char *name, float &ret) const;
+    bool param_with_defaults(const char *name, float &ret) const;
+    float require_param_with_defaults(const char *name) const;
 
     // servo output
     void set_servo_output(uint16_t ch1, uint16_t ch2, uint16_t ch3, uint16_t ch4, uint16_t ch5, uint16_t ch6, uint16_t ch7, uint16_t ch8);
@@ -475,11 +475,10 @@ public:
 
     // position information
     void set_altitude(float value) {
-        // pos().set_alt(T(), value);
         alt().set_alt(T(), value);
     }
-    float altitude() { return alt().alt(); };
-    uint64_t alt_modtime() { return alt().alt_modtime(); }
+    float altitude() const { return alt().alt(); };
+    uint64_t alt_modtime() const { return alt().alt_modtime(); }
 
     void set_lat(double lat) { pos().set_lat(T(), lat); }
     void set_lon(double lon) { pos().set_lon(T(), lon); }
@@ -619,12 +618,16 @@ public:
     };
 
 
+    const Attitude& att() const { return _att; };
+    const Position& pos() const { return _pos; };
+    const Altitude& alt() const { return _alt; }; // absolute
+    const Velocity& vel() const { return _vel; }; // metres/second
+
     Attitude& att() { return _att; };
     Position& pos() { return _pos; };
     Altitude& alt() { return _alt; }; // absolute
     Velocity& vel() { return _vel; }; // metres/second
 
-    const Position &origin() const { return _origin; }
     double origin_lat() const { return _origin.lat(); }
     uint64_t origin_lat_T() const { return _origin.lat_modtime(); }
     double origin_lon() const { return _origin.lon(); }
@@ -635,11 +638,19 @@ public:
     Position& origin() { return _origin; }
     Altitude &origin_alt() { return _origin_altitude; }
 
-    void set_origin_altitude(double value) { _origin_altitude.set_alt(T(),value); }
-    double origin_altitude() { return _origin_altitude.alt(); }
+    const Position& origin() const { return _origin; }
+    const Altitude &origin_alt() const { return _origin_altitude; }
+
+    void set_origin_altitude(double value) {
+        _origin_altitude.set_alt(T(),value);
+        // if (value < 0.5) {
+        //     abort();
+        // }
+    }
+    double origin_altitude() const { return _origin_altitude.alt(); }
     uint64_t origin_altitude_T() const { return _origin_altitude.alt_modtime(); }
 
-    bool relative_alt(double &relative); // returns true if relative alt could be calculated
+    bool relative_alt(double &relative) const; // returns true if relative alt could be calculated
 
     bool crashed() const { return _crashed; }
     void set_crashed(bool value) { _crashed = value; _crashed_T = T(); }
