@@ -1,20 +1,24 @@
 {
   "bytes-dropped": 0, 
   "duration": "987654321", 
-  "evilness": 1880, 
+  "evilness": 2000, 
   "format-version": "0.1", 
   "git_version": "some-hash", 
   "maximum-altitude-absolute": 608.8099975585938, 
   "maximum-altitude-absolute-units": "metres", 
   "maximum-altitude-relative": 14.1300048828125, 
   "maximum-altitude-relative-units": "metres", 
+  "maximum-distance-from-origin": 55.9482159093255, 
+  "maximum-distance-from-origin-units": "metres", 
+  "maximum-velocity": 10.01072880274505, 
+  "maximum-velocity-units": "metres/second", 
   "packet-count": 157284, 
   "packet_count": 157284, 
-  "severity-score": 1880, 
+  "severity-score": 2000, 
   "tests": {
     "Altitude Estimate Divergence": {
       "description": "This test will FAIL if various craft's Altitude estimates diverge", 
-      "evilness": 290, 
+      "evilness": 410, 
       "name": "Altitude Estimate Divergence", 
       "results": [
         {
@@ -36,6 +40,27 @@
           "status": "WARN", 
           "timestamp_start": 1437195928006080, 
           "timestamp_stop": 1437196260039492
+        }, 
+        {
+          "duration": 24.59832382202148, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-585.872703 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "SCALED_PRESSURE", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "SCALED_PRESSURE.temperature", 
+            "SCALED_PRESSURE.press_abs"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1437196260039492, 
+          "timestamp_stop": 1437196284637816
         }, 
         {
           "duration": 1.413576006889343, 
@@ -98,6 +123,27 @@
           "timestamp_stop": 1437196323245120
         }, 
         {
+          "duration": 40.17575836181641, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-585.883937 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "SCALED_PRESSURE", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "SCALED_PRESSURE.temperature", 
+            "SCALED_PRESSURE.press_abs"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1437196407264276, 
+          "timestamp_stop": 1437196447440036
+        }, 
+        {
           "duration": 1.284603953361511, 
           "duration-units": "seconds", 
           "evidence": [
@@ -136,6 +182,27 @@
           "status": "WARN", 
           "timestamp_start": 1437196468584528, 
           "timestamp_stop": 1437196469172708
+        }, 
+        {
+          "duration": 41.14144134521484, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-585.954061 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "SCALED_PRESSURE", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "SCALED_PRESSURE.temperature", 
+            "SCALED_PRESSURE.press_abs"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1437196483935928, 
+          "timestamp_stop": 1437196525077368
         }, 
         {
           "duration": 41.62467193603516, 
@@ -278,6 +345,27 @@
           "timestamp_stop": 1437196683425884
         }, 
         {
+          "duration": 334.8738098144531, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-586.090621 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "SCALED_PRESSURE", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "SCALED_PRESSURE.temperature", 
+            "SCALED_PRESSURE.press_abs"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1437196575435412, 
+          "timestamp_stop": 1437196910309228
+        }, 
+        {
           "duration": 13.45865631103516, 
           "duration-units": "seconds", 
           "evidence": [
@@ -336,6 +424,27 @@
           "status": "WARN", 
           "timestamp_start": 1437196975476556, 
           "timestamp_stop": 1437196980719620
+        }, 
+        {
+          "duration": 70.39749145507812, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-585.885987 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "SCALED_PRESSURE", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "SCALED_PRESSURE.temperature", 
+            "SCALED_PRESSURE.press_abs"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1437196932241652, 
+          "timestamp_stop": 1437197002639144
         }, 
         {
           "duration": 1.106619954109192, 
@@ -398,6 +507,27 @@
           "timestamp_stop": 1437197021953880
         }, 
         {
+          "duration": 3.790647983551025, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=9.090210 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "SCALED_PRESSURE", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "SCALED_PRESSURE.temperature", 
+            "SCALED_PRESSURE.press_abs"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1437197018163232, 
+          "timestamp_stop": 1437197021953880
+        }, 
+        {
           "duration": 17.31003570556641, 
           "duration-units": "seconds", 
           "evidence": [
@@ -416,6 +546,48 @@
           "status": "WARN", 
           "timestamp_start": 1437197021953880, 
           "timestamp_stop": 1437197039263916
+        }, 
+        {
+          "duration": 19.24064445495605, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-586.642581 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "SCALED_PRESSURE", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "SCALED_PRESSURE.temperature", 
+            "SCALED_PRESSURE.press_abs"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1437197022885368, 
+          "timestamp_stop": 1437197042126012
+        }, 
+        {
+          "duration": 5.455180168151855, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-585.989213 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "SCALED_PRESSURE", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "SCALED_PRESSURE.temperature", 
+            "SCALED_PRESSURE.press_abs"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1437197064866448, 
+          "timestamp_stop": 1437197070321628
         }, 
         {
           "duration": 2.279887914657593, 
@@ -478,10 +650,10 @@
           "timestamp_stop": 1437197345914296
         }, 
         {
-          "duration": 1143.594604492188, 
+          "duration": 295.3475646972656, 
           "duration-units": "seconds", 
           "evidence": [
-            "max-delta=-586.807565 metres", 
+            "max-delta=-586.210450 metres", 
             "delta-threshold=4.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
@@ -495,7 +667,7 @@
           ], 
           "severity-score": 10, 
           "status": "WARN", 
-          "timestamp_start": 1437196260039492, 
+          "timestamp_start": 1437197108286612, 
           "timestamp_stop": 1437197403634172
         }, 
         {
@@ -519,6 +691,90 @@
           "timestamp_stop": 1437197659327184
         }, 
         {
+          "duration": 43.16186904907227, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-593.936234 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "SCALED_PRESSURE", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "SCALED_PRESSURE.temperature", 
+            "SCALED_PRESSURE.press_abs"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1437197659327184, 
+          "timestamp_stop": 1437197702489052
+        }, 
+        {
+          "duration": 11.03082847595215, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-593.982375 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "SCALED_PRESSURE", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "SCALED_PRESSURE.temperature", 
+            "SCALED_PRESSURE.press_abs"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1437197850910048, 
+          "timestamp_stop": 1437197861940876
+        }, 
+        {
+          "duration": 41.7287483215332, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-594.075929 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "SCALED_PRESSURE", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "SCALED_PRESSURE.temperature", 
+            "SCALED_PRESSURE.press_abs"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1437197979887340, 
+          "timestamp_stop": 1437198021616088
+        }, 
+        {
+          "duration": 15.34258365631104, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=-594.043468 metres", 
+            "delta-threshold=4.000000 metres", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "name": "SCALED_PRESSURE", 
+          "reason": "This altitude estimate differs from the canonical craft altitude", 
+          "series": [
+            "GLOBAL_POSITION_INT.alt", 
+            "SCALED_PRESSURE.temperature", 
+            "SCALED_PRESSURE.press_abs"
+          ], 
+          "severity-score": 10, 
+          "status": "WARN", 
+          "timestamp_start": 1437198077768684, 
+          "timestamp_stop": 1437198093111268
+        }, 
+        {
           "duration": 563.3909301757812, 
           "duration-units": "seconds", 
           "evidence": [
@@ -539,10 +795,10 @@
           "timestamp_stop": 1437198304037768
         }, 
         {
-          "duration": 644.7535400390625, 
+          "duration": 178.3219299316406, 
           "duration-units": "seconds", 
           "evidence": [
-            "max-delta=-593.474231 metres", 
+            "max-delta=-594.262982 metres", 
             "delta-threshold=4.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
@@ -556,7 +812,7 @@
           ], 
           "severity-score": 10, 
           "status": "WARN", 
-          "timestamp_start": 1437197659327184, 
+          "timestamp_start": 1437198125758816, 
           "timestamp_stop": 1437198304080752
         }, 
         {
@@ -600,7 +856,7 @@
           "timestamp_stop": 1437198363460736
         }
       ], 
-      "severity-score": 290, 
+      "severity-score": 410, 
       "status": "WARN"
     }, 
     "Any Parameters Seen": {
@@ -1213,7 +1469,8 @@
             "Desired-Roll-at-Max-Delta=0.000000 degrees", 
             "Pitch-at-Max-Delta=0.772496 degrees", 
             "Desired-Pitch-at-Max-Delta=-16.990000 degrees", 
-            "Motor 2 clipping high"
+            "Motor 2 clipping high", 
+            "Motor 3 clipping low"
           ], 
           "evilness": 10, 
           "reason": "Desired attitude not achieved", 
@@ -1375,7 +1632,8 @@
             "Roll-at-Max-Delta=3.348494 degrees", 
             "Desired-Roll-at-Max-Delta=-14.110000 degrees", 
             "Pitch-at-Max-Delta=-1.541033 degrees", 
-            "Desired-Pitch-at-Max-Delta=0.000000 degrees"
+            "Desired-Pitch-at-Max-Delta=0.000000 degrees", 
+            "Motor 4 clipping low"
           ], 
           "evilness": 10, 
           "reason": "Desired attitude not achieved", 
@@ -1807,7 +2065,8 @@
             "Roll-at-Max-Delta=-0.175738 degrees", 
             "Desired-Roll-at-Max-Delta=0.000000 degrees", 
             "Pitch-at-Max-Delta=5.407975 degrees", 
-            "Desired-Pitch-at-Max-Delta=0.000000 degrees"
+            "Desired-Pitch-at-Max-Delta=0.000000 degrees", 
+            "Motor 3 clipping low"
           ], 
           "evilness": 5, 
           "reason": "Desired attitude not achieved", 
@@ -1834,7 +2093,8 @@
             "Roll-at-Max-Delta=-5.989750 degrees", 
             "Desired-Roll-at-Max-Delta=13.150000 degrees", 
             "Pitch-at-Max-Delta=-1.153362 degrees", 
-            "Desired-Pitch-at-Max-Delta=7.740000 degrees"
+            "Desired-Pitch-at-Max-Delta=7.740000 degrees", 
+            "Motor 2 clipping low"
           ], 
           "evilness": 10, 
           "reason": "Desired attitude not achieved", 
@@ -2050,7 +2310,8 @@
             "Roll-at-Max-Delta=-2.253561 degrees", 
             "Desired-Roll-at-Max-Delta=0.000000 degrees", 
             "Pitch-at-Max-Delta=-13.610033 degrees", 
-            "Desired-Pitch-at-Max-Delta=0.000000 degrees"
+            "Desired-Pitch-at-Max-Delta=0.000000 degrees", 
+            "Motor 3 clipping low"
           ], 
           "evilness": 10, 
           "reason": "Desired attitude not achieved", 
@@ -2392,16 +2653,19 @@
           "timestamp_stop": 1437197840294680
         }, 
         {
-          "duration": 15.75913238525391, 
+          "duration": 1.78549599647522, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
             "threshold-duration=0.250000 seconds", 
-            "Max-Delta=7.927939 degrees", 
-            "Roll-at-Max-Delta=0.894981 degrees", 
+            "Max-Delta=7.945545 degrees", 
+            "Roll-at-Max-Delta=0.952398 degrees", 
             "Desired-Roll-at-Max-Delta=2.740000 degrees", 
-            "Pitch-at-Max-Delta=1.147939 degrees", 
-            "Desired-Pitch-at-Max-Delta=-6.780000 degrees"
+            "Pitch-at-Max-Delta=1.165546 degrees", 
+            "Desired-Pitch-at-Max-Delta=-6.780000 degrees", 
+            "Motor 1 clipping low", 
+            "Motor 2 clipping low", 
+            "Motor 3 clipping low"
           ], 
           "evilness": 5, 
           "reason": "Desired attitude not achieved", 
@@ -2415,8 +2679,8 @@
           ], 
           "severity-score": 5, 
           "status": "WARN", 
-          "timestamp_start": 1437197846784332, 
-          "timestamp_stop": 1437197862543464
+          "timestamp_start": 1437197846585456, 
+          "timestamp_stop": 1437197848370952
         }, 
         {
           "duration": 0.4489319920539856, 
@@ -3806,7 +4070,8 @@
             "Roll-at-Max-Delta=-4.301596 degrees", 
             "Desired-Roll-at-Max-Delta=0.000000 degrees", 
             "Pitch-at-Max-Delta=-5.061805 degrees", 
-            "Desired-Pitch-at-Max-Delta=0.000000 degrees"
+            "Desired-Pitch-at-Max-Delta=0.000000 degrees", 
+            "Motor 2 clipping low"
           ], 
           "evilness": 5, 
           "reason": "Desired attitude not achieved", 
@@ -3980,6 +4245,14 @@
       "severity-score": 60, 
       "status": "FAIL"
     }, 
+    "AutoPilot Health": {
+      "description": "This test will FAIL if problems are detected with the AutoPilot", 
+      "evilness": 0, 
+      "name": "AutoPilot Health", 
+      "results": [], 
+      "severity-score": 0, 
+      "status": "PASS"
+    }, 
     "Battery": {
       "description": "This test will FAIL if the battery level remaining falls below a threshold level", 
       "evilness": 0, 
@@ -4057,6 +4330,14 @@
       "severity-score": 2, 
       "status": "PASS"
     }, 
+    "Compass Vector Length": {
+      "description": "This test will FAIL if the compass' vector length exceeds a threshold.  Causes of this include flying near large metal objects.", 
+      "evilness": 0, 
+      "name": "Compass Vector Length", 
+      "results": [], 
+      "severity-score": 0, 
+      "status": "PASS"
+    }, 
     "Crash Test": {
       "description": "This test will FAIL if the vehicle appears to crash", 
       "evilness": 0, 
@@ -4100,7 +4381,7 @@
           "evilness": 0, 
           "reason": "The vehicle armed", 
           "series": [
-            "HEARBEAT.base_mode"
+            "HEARTBEAT.base_mode"
           ], 
           "severity-score": 0, 
           "status": "PASS", 
@@ -4119,7 +4400,7 @@
           "evilness": 0, 
           "reason": "The vehicle appeared to fly", 
           "series": [
-            "HEARBEAT.base_mode", 
+            "HEARTBEAT.base_mode", 
             "SERVO_OUTPUT_RAW.servo1_raw", 
             "SERVO_OUTPUT_RAW.servo2_raw", 
             "SERVO_OUTPUT_RAW.servo3_raw", 
@@ -4131,7 +4412,7 @@
           ], 
           "severity-score": 0, 
           "status": "PASS", 
-          "timestamp-first-flying": 1437196285193040
+          "timestamp-first-flying": 1437196284820076
         }
       ], 
       "severity-score": 0, 
@@ -5576,11 +5857,19 @@
       ], 
       "severity-score": 0, 
       "status": "PASS"
+    }, 
+    "Velocity Estimate Divergence": {
+      "description": "This test will FAIL if various craft's velocity estimates diverge", 
+      "evilness": 0, 
+      "name": "Velocity Estimate Divergence", 
+      "results": [], 
+      "severity-score": 0, 
+      "status": "PASS"
     }
   }, 
   "timestamp": "123456789", 
   "total-distance-travelled-units": "metres", 
   "total-distance-travellled": 1722.674176642179, 
-  "total-flight-time": 603.4132690429688, 
+  "total-flight-time": 614.4847412109375, 
   "total-flight-time-units": "seconds"
 }
