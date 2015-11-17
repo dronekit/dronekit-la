@@ -8,11 +8,12 @@
 #include "mavlink/c_library/common/mavlink.h"
 
 #include "analyzer_util.h"
+#include "Vector3f.h"
 
 namespace AnalyzerVehicle {
 
     // Attitude should be the best guess as to what the vehicle's
-    // status is - typicall the POS message from dataflash, for
+    // status is - typically the ATT message from dataflash, for
     // example
     class Attitude {
     public:
@@ -51,7 +52,7 @@ namespace AnalyzerVehicle {
         uint64_t get_att_modtime(uint8_t offset) const {
             return _att_modtime[offset];
         }
-};
+    };
 
     class Altitude {
     public:
@@ -62,13 +63,13 @@ namespace AnalyzerVehicle {
         double alt() const {
             return _alt;
         }
-        double alt_modtime() const {
+        uint64_t alt_modtime() const {
             return _alt_modtime;
         }
 
     private:
         double _alt;
-        double _alt_modtime;
+        uint64_t _alt_modtime;
     };
 
     class AltitudeEstimate {
@@ -92,13 +93,6 @@ namespace AnalyzerVehicle {
 
     class Position {
     public:
-        // void set_alt(uint64_t T, float alt) {
-        //     _alt = alt;
-        //     _alt_modtime = T;
-        // }
-        // float alt() { return _alt; };
-        // uint64_t alt_modtime() { return _alt_modtime; };
-
         void set_lat(uint64_t T, double lat) {
             _lat = lat;
             _lat_modtime = T;
@@ -123,10 +117,51 @@ namespace AnalyzerVehicle {
     private:
         double _lat;
         double _lon;
-        float _alt; // relative, in metres
-        // uint64_t _alt_modtime;
         uint64_t _lat_modtime;
         uint64_t _lon_modtime;
+    };
+
+    class Velocity {
+    public:
+        double size() {
+            if (! is_equal(_velocity_scalar, -1.0f)) {
+                return _velocity_scalar;
+            }
+            if (! is_equal(_velocity[2], -1.0f)) {
+                return _velocity.len();
+            }
+            return sqrt(_velocity[0]*_velocity[0] + _velocity[1] * _velocity[1]);
+        }
+
+        void set_x(uint64_t T, double x) {
+            _have_components = true;
+            _velocity[0] = x;
+            _velocity_modtime = T;
+        }
+        void set_y(uint64_t T, double y) {
+            _have_components = true;
+            _velocity[1] = y;
+            _velocity_modtime = T;
+        }
+        void set_z(uint64_t T, double z) {
+            _have_components = true;
+            _velocity[2] = z;
+            _velocity_modtime = T;
+        }
+        void set_scalar(uint64_t T, double scalar) {
+            _velocity_scalar = scalar;
+            _velocity_modtime = T;
+        }
+        uint64_t velocity_modtime() {
+            return _velocity_modtime;
+        }
+
+    private:
+        // only one of these two should be set:
+        Vector3f _velocity = { };
+        double _velocity_scalar = -1;
+        bool _have_components = false;
+        uint64_t _velocity_modtime = 0;
     };
 
     class EKF {
@@ -201,12 +236,8 @@ namespace AnalyzerVehicle {
             { }
         const std::string name() { return _name; }
         const Position position() { return _position; }
-        // void set_alt(uint64_t T, float alt) {
-        //     _position.set_alt(T, alt);
-        // }
         void set_lat(uint64_t T, double lat) { _position.set_lat(T, lat); }
         void set_lon(uint64_t T, double lon) { _position.set_lon(T, lon); }
-        // float alt() { return _position.alt(); }
         double lat() { return _position.lat(); }
         double lon() { return _position.lon(); }
 
@@ -256,18 +287,62 @@ namespace AnalyzerVehicle {
     class GPSInfo {
     public:
         GPSInfo(std::string name) { _name = name; }
+        const std::string name() { return _name; }
+
+        uint8_t fix_type() { return _fix_type; }
+        void set_fix_type(uint8_t fix_type) { _fix_type = fix_type; }
+
         double hdop() { return _hdop; }
         void set_hdop(double hdop) { _hdop = hdop; }
+
         uint8_t satellites() { return _satellites_visible; }
         void set_satellites(uint8_t satellites) { _satellites_visible = satellites; }
-        const std::string name() { return _name; }
         
     private:
-        double _hdop;
-        uint8_t _satellites_visible;
         std::string _name;
+
+        double _hdop = 0;
+        uint8_t _satellites_visible = 0;
+        uint8_t _fix_type = 0;        
     };
 
+    /* may need to factor and subclass this for non-APM-on-PixHawk: */
+    class AutoPilot {
+    public:
+        uint16_t overruns() { return _overruns; }
+        uint16_t overruns_T() { return _overruns_T; }
+        void set_overruns(uint64_t T, uint16_t);
+
+        uint16_t loopcount() { return _loopcount; }
+        void set_loopcount(uint64_t T, uint16_t);
+
+        uint64_t slices_max_T() { return _slices_max_T; }
+        uint16_t slices_max() { return _slices_max; }
+        void set_slices_max(uint64_t T, uint16_t);
+
+        uint16_t slices_min() { return _slices_min; }
+        void set_slices_min(uint64_t T, uint16_t);
+
+        uint16_t slices_avg() { return _slices_avg; }
+        void set_slices_avg(uint64_t T, uint16_t);
+
+        uint16_t slices_stddev() { return _slices_stddev; }
+        void set_slices_stddev(uint64_t T, uint16_t);
+        
+    private:
+        uint16_t _overruns;
+        uint64_t _overruns_T = 0;
+        uint16_t _loopcount;
+        uint64_t _loopcount_T = 0;
+        uint16_t _slices_max;
+        uint64_t _slices_max_T = 0;
+        uint16_t _slices_min;
+        uint64_t _slices_min_T = 0;
+        uint16_t _slices_avg;
+        uint64_t _slices_avg_T = 0;
+        uint16_t _slices_stddev;
+        uint64_t _slices_stddev_T = 0;
+    };
 
     // template <typename packettype>
     // class PacketHistory {
@@ -297,24 +372,39 @@ public:
     Base() { }
     virtual ~Base() { }
 
+    virtual const std::string typeString() const { return "Base"; }
+
+    uint64_t time_since_boot() {
+        return _time_since_boot;
+    }
+    uint64_t time_since_boot_T() {
+        return _time_since_boot_T;
+    }
+    void set_time_since_boot(const uint64_t time_since_boot) {
+        _time_since_boot = time_since_boot;
+        _time_since_boot_T = T();
+    }
+    
     // vehicle state information
-    virtual bool is_flying() { return false; }
-    void exceeding_angle_max() const;
+    virtual bool is_flying() const { return false; }
 
     // arming 
-    virtual bool is_armed() { return _armed; };
+    virtual bool is_armed() const { return _armed; };
     virtual void set_armed(bool value) {  _armed = value; };
 
     // vehicle type
     enum vehicletype_t {
         invalid = 0,
-        copter = 17
+        copter = 17,
+        plane = 19,
     };
     bool vehicletype_is_forced() { return _vehicletype_is_forced; }
     void set_vehicletype_is_forced(bool value) { _vehicletype_is_forced = value; }
     virtual vehicletype_t vehicletype() {
         return invalid;
     }
+
+    static void switch_vehicletype(Base *&_vehicle, vehicletype_t newtype);
 
     // EKF
     void ekf_set_variance(const char *name, double value) {
@@ -340,14 +430,15 @@ public:
     void take_state(Base *old);
     
     // Parameters
-    float param(const std::string name) { return _param[name]; };
+    float param(const std::string name) const;
+    bool param(const char *name, float &ret) const;
     uint16_t param_count() { return _param.size(); };
-    bool param(const char *name, float &ret);
     bool param_seen(const std::string name) const;
     uint64_t param_modtime(const std::string name) { return _param_modtime[name]; }
     void param_set(const char *name, const float value);
-    virtual bool param_default(const char *name, float &ret);
-    bool param_with_defaults(const char *name, float &ret);
+    virtual bool param_default(const char *name, float &ret) const;
+    bool param_with_defaults(const char *name, float &ret) const;
+    float require_param_with_defaults(const char *name) const;
 
     // servo output
     void set_servo_output(uint16_t ch1, uint16_t ch2, uint16_t ch3, uint16_t ch4, uint16_t ch5, uint16_t ch6, uint16_t ch7, uint16_t ch8);
@@ -361,7 +452,7 @@ public:
     void set_T(const uint64_t time_us);
     uint64_t T() { return _T; }
 
-    // attitude and position information
+    // attitude information
     float roll() { return att().roll(); }
     float pitch() { return att().pitch(); }
     float yaw() { return att().yaw(); }
@@ -382,12 +473,12 @@ public:
     float despitch() { return nav().despitch(); }
     float desyaw() { return nav().desyaw(); }
 
+    // position information
     void set_altitude(float value) {
-        // pos().set_alt(T(), value);
         alt().set_alt(T(), value);
     }
-    float altitude() { return alt().alt(); };
-    uint64_t alt_modtime() { return alt().alt_modtime(); }
+    float altitude() const { return alt().alt(); };
+    uint64_t alt_modtime() const { return alt().alt_modtime(); }
 
     void set_lat(double lat) { pos().set_lat(T(), lat); }
     void set_lon(double lon) { pos().set_lon(T(), lon); }
@@ -415,7 +506,11 @@ public:
         return _altitude_estimates[name];
     };
 
+    // distance from canonical craft position to whatever we thing home is.
+    // returns -1 if we just don't know.
+    double distance_from_origin();
     
+    // hardware diagnostics
     std::map<const std::string, bool> sensors_health() {
         return _sensors_health;
     }
@@ -455,6 +550,29 @@ public:
         return _altitude_estimates;
     }
 
+    AutoPilot &autopilot() {
+        return _autopilot;
+    }
+
+    void autopilot_set_overruns(uint16_t overruns) {
+        _autopilot.set_overruns(T(), overruns);
+    }
+    void autopilot_set_loopcount(uint16_t count) {
+        _autopilot.set_loopcount(T(), count);
+    }
+    void autopilot_set_slices_max(uint16_t slices) {
+        _autopilot.set_slices_max(T(), slices);
+    }
+    void autopilot_set_slices_min(uint16_t slices) {
+        _autopilot.set_slices_min(T(), slices);
+    }
+    void autopilot_set_slices_avg(uint16_t slices) {
+        _autopilot.set_slices_avg(T(), slices);
+    }
+    void autopilot_set_slices_stddev(uint16_t slices) {
+        _autopilot.set_slices_stddev(T(), slices);
+    }
+
     // not really sure this belongs here; possibly move this out if we
     // ever move to a "state of the universe" object for the analyzers
     // rather than just a vehicle
@@ -469,12 +587,47 @@ public:
         return _gpsinfo[name];
     };
 
+    // again, not sure if this Compass object should be in the vehicle
+    // class here.
+    class Compass {
+    public:
+        Compass(const std::string name) :
+            _name(name)
+            { }
+        const std::string name() const { return _name; }
+        Vector3f &field() { return _field; }
+        uint64_t field_T() { // most recent timestamp of all components
+            return _field_T;
+        }
+        void set_field_T(uint64_t field_T) { _field_T = field_T; }
+    private:
+        const std::string _name; // do we really want this?!
+        Vector3f _field = { };
+        uint64_t _field_T = 0;
+    };
+
+    const std::map<const std::string, Compass*> &compasses() {
+        return _compasses;
+    }
+
+    Compass *compass(const std::string name) {
+        if (_compasses.count(name) == 0) {
+            _compasses[name] = new Compass(name);
+        }
+        return _compasses[name];
+    };
+
+
+    const Attitude& att() const { return _att; };
+    const Position& pos() const { return _pos; };
+    const Altitude& alt() const { return _alt; }; // absolute
+    const Velocity& vel() const { return _vel; }; // metres/second
 
     Attitude& att() { return _att; };
     Position& pos() { return _pos; };
-    Altitude& alt() { return _alt; };
+    Altitude& alt() { return _alt; }; // absolute
+    Velocity& vel() { return _vel; }; // metres/second
 
-    const Position &origin() const { return _origin; }
     double origin_lat() const { return _origin.lat(); }
     uint64_t origin_lat_T() const { return _origin.lat_modtime(); }
     double origin_lon() const { return _origin.lon(); }
@@ -483,10 +636,24 @@ public:
     void set_origin_lon(double value) { _origin.set_lon(T(),value); }
         
     Position& origin() { return _origin; }
+    Altitude &origin_alt() { return _origin_altitude; }
 
-    void set_origin_altitude(double value) { _origin_altitude.set_alt(T(),value); }
-    double origin_altitude() { return _origin_altitude.alt(); }
+    const Position& origin() const { return _origin; }
+    const Altitude &origin_alt() const { return _origin_altitude; }
+
+    void set_origin_altitude(double value) {
+        _origin_altitude.set_alt(T(),value);
+        // if (value < 0.5) {
+        //     abort();
+        // }
+    }
+    double origin_altitude() const { return _origin_altitude.alt(); }
     uint64_t origin_altitude_T() const { return _origin_altitude.alt_modtime(); }
+
+    bool relative_alt(double &relative) const; // returns true if relative alt could be calculated
+
+    bool crashed() const { return _crashed; }
+    void set_crashed(bool value) { _crashed = value; _crashed_T = T(); }
 
 protected:
     AV_Nav& nav() { return _nav; };
@@ -502,6 +669,7 @@ protected:
     Attitude _att = { };
     Position _pos = { };
     Altitude _alt = { };
+    Velocity _vel = { };
     AV_Nav _nav = { };
 
     Position _origin = { };
@@ -510,15 +678,24 @@ private:
     bool _vehicletype_is_forced = false;
     uint64_t _T = 0;
 
+    uint64_t _time_since_boot;
+    uint64_t _time_since_boot_T = 0;
+
     vehicletype_t _vehicletype = invalid;
 
+    bool _crashed = false; // vehicle's own estimate of whether it has crashed
+    uint64_t _crashed_T = 0; // last update time of vehicle's estimate
+
     Battery _battery;
+
+    AutoPilot _autopilot;
 
     std::map<const std::string, PositionEstimate*> _position_estimates;
     std::map<const std::string, AttitudeEstimate*> _attitude_estimates;
     std::map<const std::string, AltitudeEstimate*> _altitude_estimates;
 
     std::map<const std::string, GPSInfo*> _gpsinfo;
+    std::map<const std::string, Compass*> _compasses;
 
     // PacketHistory<mavlink_heartbeat_t> history_heartbeat;
     // PacketHistory<mavlink_nav_controller_output_t> history_nav_controller_output;

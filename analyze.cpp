@@ -2,15 +2,18 @@
 
 #include <syslog.h>
 #include <stdlib.h> // for exit() (fixme)
+#include <algorithm> // for for_each
 
 #include "analyzer/analyzer_any_parameters_seen.h"
 #include "analyzer/analyzer_arming_checks.h"
 #include "analyzer/analyzer_altitude_estimate_divergence.h"
 #include "analyzer/analyzer_attitude_estimate_divergence.h"
 #include "analyzer/analyzer_attitude_control.h"
+#include "analyzer/analyzer_autopilot.h"
 #include "analyzer/analyzer_battery.h"
 #include "analyzer/analyzer_brownout.h"
 #include "analyzer/analyzer_compass_offsets.h"
+#include "analyzer/analyzer_compass_vector_length.h"
 #include "analyzer/analyzer_ever_armed.h"
 #include "analyzer/analyzer_good_ekf.h"
 #include "analyzer/analyzer_gps_fix.h"
@@ -68,6 +71,14 @@ void Analyze::instantiate_analyzers(INIReader *config)
         }
     }
     {
+        Analyzer_Compass_Vector_Length *analyzer_compass_vector_length = new Analyzer_Compass_Vector_Length(vehicle,_data_sources);
+        if (analyzer_compass_vector_length != NULL) {
+            configure_analyzer(config, analyzer_compass_vector_length);
+        } else {
+            syslog(LOG_INFO, "Failed to create analyzer_compass_vector_length1");
+        }
+    }
+    {
         Analyzer_Compass_Offsets *analyzer_compass_offsets = new Analyzer_Compass_Offsets(vehicle,_data_sources, "2");
         if (analyzer_compass_offsets != NULL) {
             configure_analyzer(config, analyzer_compass_offsets);
@@ -120,6 +131,13 @@ void Analyze::instantiate_analyzers(INIReader *config)
         syslog(LOG_INFO, "Failed to create analyzer_attitude_control");
     }
 
+    Analyzer_Autopilot *analyzer_autopilot = new Analyzer_Autopilot(vehicle,_data_sources);
+    if (analyzer_autopilot != NULL) {
+        configure_analyzer(config, analyzer_autopilot);
+    } else {
+        syslog(LOG_INFO, "Failed to create analyzer_autopilot");
+    }
+
     Analyzer_Battery *analyzer_battery = new Analyzer_Battery(vehicle,_data_sources);
     if (analyzer_battery != NULL) {
         configure_analyzer(config, analyzer_battery);
@@ -162,6 +180,13 @@ void Analyze::instantiate_analyzers(INIReader *config)
         syslog(LOG_INFO, "Failed to create analyzer_vehicle_definition");
     }
 
+    analyzer_velocity_estimate_divergence = new Analyzer_Velocity_Estimate_Divergence(vehicle,_data_sources);
+    if (analyzer_velocity_estimate_divergence != NULL) {
+        configure_analyzer(config, analyzer_velocity_estimate_divergence);
+    } else {
+        syslog(LOG_INFO, "Failed to create analyzer_velocity_estimate_divergence");
+    }
+
 }
 
 
@@ -195,13 +220,25 @@ void Analyze::results_json_add_statistics(Json::Value &root)
     if (analyzer_position_estimate_divergence != NULL) {
         root["total-distance-travellled"] = analyzer_position_estimate_divergence->total_distance_travelled();
         root["total-distance-travelled-units"] = "metres";
+        double dfh = analyzer_position_estimate_divergence->maximum_distance_from_origin();;
+        if (!is_equal(dfh, -1.0f)) {
+            root["maximum-distance-from-origin"] = dfh;
+            root["maximum-distance-from-origin-units"] = "metres";
+        }
     }
+
     if (analyzer_altitude_estimate_divergence != NULL) {
         root["maximum-altitude-absolute"] = analyzer_altitude_estimate_divergence->maximum_altitude();
         root["maximum-altitude-absolute-units"] = "metres";
         root["maximum-altitude-relative"] = analyzer_altitude_estimate_divergence->maximum_altitude_relative();
         root["maximum-altitude-relative-units"] = "metres";
     }
+
+    if (analyzer_velocity_estimate_divergence != NULL) {
+        root["maximum-velocity"] = analyzer_velocity_estimate_divergence->maximum_velocity();
+        root["maximum-velocity-units"] = "metres/second";
+    }
+
 }
 
 void Analyze::results_json(Json::Value &root)
@@ -489,12 +526,11 @@ namespace Json {
     }
 }
 
-void Analyze::end_of_log(uint32_t packet_count) {
-    for (std::vector<Analyzer*>::iterator it = _analyzers.begin();
-         it != _analyzers.end();
-         ++it) {
-        (*it)->end_of_log(packet_count);
-    }
+void Analyze::end_of_log(uint32_t packet_count, uint64_t bytes_dropped) {
+
+    std::for_each(_analyzers.begin(),
+                  _analyzers.end(),
+                  [packet_count](Analyzer* c){c->end_of_log(packet_count); });
 
     Json::Value root;
     root["format-version"] = "0.1";
@@ -504,6 +540,8 @@ void Analyze::end_of_log(uint32_t packet_count) {
     results_json(root);
 
     root["packet_count"] = packet_count;
+    root["packet-count"] = packet_count;
+    root["bytes-dropped"] = (Json::UInt64)bytes_dropped;
 
     Json::Writer *writer;
     switch(_output_style) {
@@ -520,6 +558,9 @@ void Analyze::end_of_log(uint32_t packet_count) {
     case OUTPUT_BRIEF:
         writer = new Json::BriefPlainTextWriter();
         break;
+    default:
+        ::fprintf(stderr, "Writer not set for output style");
+        abort();
     }
     std::string document = writer->write(root);
     fprintf(stdout, "%s", document.c_str());
@@ -527,11 +568,9 @@ void Analyze::end_of_log(uint32_t packet_count) {
 
 
 void Analyze::evaluate_all() {
-    for (std::vector<Analyzer*>::iterator it = _analyzers.begin();
-         it != _analyzers.end();
-         ++it) {
-        (*it)->evaluate();
-    }
+    std::for_each(_analyzers.begin(),
+                  _analyzers.end(),
+                  [](Analyzer* c){c->evaluate(); });
 }
 
 

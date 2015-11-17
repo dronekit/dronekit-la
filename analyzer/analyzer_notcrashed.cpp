@@ -5,13 +5,6 @@
 #include "analyzer_util.h"
 #include "analyzervehicle_copter.h"
 
-class Analyzer_Ever_Armed_Result : public Analyzer_Result_Event {
-public:
-    Analyzer_Ever_Armed_Result() :
-        Analyzer_Result_Event()
-        { }
-};
-
 void Analyzer_NotCrashed::end_of_log(const uint32_t packet_count UNUSED)
 {
     if (_result != NULL) {
@@ -31,13 +24,14 @@ void Analyzer_NotCrashed::end_of_log(const uint32_t packet_count UNUSED)
         _result->add_source(_data_sources.get("ATTITUDE"));
         _result->add_source(_data_sources.get("SERVO_OUTPUT"));
         _result->add_source(_data_sources.get("PARAM"));
+        _result->add_source(_data_sources.get("CRASH"));
         _result->set_status(analyzer_status_ok);
         add_result(_result);
         _result = NULL;
     }
 }
 
-void Analyzer_NotCrashed::evaluate()
+void Analyzer_NotCrashed::evaluate_attitude()
 {
     if (_vehicle->vehicletype() != AnalyzerVehicle::Base::copter) {
         // need to subclass this class to do notcrashed properly
@@ -67,7 +61,7 @@ void Analyzer_NotCrashed::evaluate()
             }
             _result->add_evidence(string_format("ANGLE_MAX (fabs(%f) > %f)", _result->angle, _result->angle_max));
             for (uint8_t i=1; i<=v->num_motors(); i++) {
-                if (v->_servo_output[i] > v->is_flying_motor_threshold) {
+                if (v->_servo_output[i] > v->is_flying_motor_threshold()) {
                     _result->add_evidence(string_format("SERVO_OUTPUT_RAW.servo%d_raw=%f",
                                                        i, _result->servo_output[i]));
                 }
@@ -88,4 +82,27 @@ void Analyzer_NotCrashed::evaluate()
             _result = NULL;
         }
     }
+}
+
+void Analyzer_NotCrashed::evaluate_vehicle()
+{
+    if (_vehicle->crashed() && !_was_crashed) {
+        _was_crashed = true;
+        Analyzer_NotCrashed_Result_CRASHED *result =
+            new Analyzer_NotCrashed_Result_CRASHED();
+        result->add_source(_data_sources.get("CRASH"));
+        result->add_evilness(100);
+        result->set_status(analyzer_status_fail);
+        result->set_reason("Vehicle evaluated itself as crashed");
+        result->set_T(_vehicle->T());
+        add_result(result);
+    } else if (!_vehicle->crashed() && _was_crashed) {
+        _was_crashed = false;
+    }
+}
+
+void Analyzer_NotCrashed::evaluate()
+{
+    evaluate_attitude();
+    evaluate_vehicle();
 }

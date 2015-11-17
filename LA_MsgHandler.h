@@ -6,6 +6,7 @@
 #include "analyze.h"
 #include "analyzervehicle.h"
 #include "analyzervehicle_copter.h"
+#include "analyzervehicle_plane.h"
 
 #include <string.h>
 
@@ -16,7 +17,9 @@ public:
         _name(name),
         _analyze(analyze),
         _vehicle(vehicle)
-        { };
+        {
+            // _analyze->add_data_source("SYSTEM_TIME", "SYSTEM_TIME.time_boot_ms");
+        };
 
     virtual bool find_T(const uint8_t *msg, uint64_t &T);
     bool process_set_T(const uint8_t *msg);
@@ -57,48 +60,8 @@ public:
 
 class LA_MsgHandler_AHR2 : public LA_MsgHandler {
 public:
-    LA_MsgHandler_AHR2(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(name, f, analyze, vehicle) {
-        _analyze->add_data_source("ATTITUDE_ESTIMATE_AHR2", "AHR2.Roll");
-        _analyze->add_data_source("ATTITUDE_ESTIMATE_AHR2", "AHR2.Pitch");
-        _analyze->add_data_source("ATTITUDE_ESTIMATE_AHR2", "AHR2.Yaw");
-
-        _analyze->add_data_source("POSITION_ESTIMATE_AHR2", "AHR2.Lat");
-        _analyze->add_data_source("POSITION_ESTIMATE_AHR2", "AHR2.Lng");
-
-        _analyze->add_data_source("ALTITUDE_ESTIMATE_AHR2", "AHR2.Alt");
-    };
-    void xprocess(const uint8_t *msg) override {
-        int16_t Roll = require_field_int16_t(msg, "Roll");
-        int16_t Pitch = require_field_int16_t(msg, "Pitch");
-        float Yaw = require_field_float(msg, "Yaw");
-
-        attitude_estimate()->set_roll(T(), Roll/(double)100.0f);
-        attitude_estimate()->set_pitch(T(), Pitch/(double)100.0f);
-        attitude_estimate()->set_yaw(T(), Yaw-180);
-
-        int32_t Lat = require_field_int32_t(msg, "Lat");
-        int32_t Lng = require_field_int32_t(msg, "Lng");
-        float Alt = require_field_float(msg, "Alt");
-
-        position_estimate()->set_lat(T(), Lat/(double)10000000.0f);
-        position_estimate()->set_lon(T(), Lng/(double)10000000.0f);
-        altitude_estimate()->set_alt(T(), Alt);
-
-        double lat = Lat/(double)10000000.0f;
-        double lng = Lng/(double)10000000.0f;
-        if (canonical_for_position()) {
-            _vehicle->set_lat(lat);
-            _vehicle->set_lon(lng);
-            _vehicle->set_altitude(Alt);
-        }
-        if (canonical_for_origin()) {
-            if (_vehicle->origin_lat_T() == 0) {
-                _vehicle->set_origin_lat(lat);
-                _vehicle->set_origin_lon(lng);
-            }
-        }
-    }
+    LA_MsgHandler_AHR2(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle);
+    void xprocess(const uint8_t *msg) override;
 
     bool canonical_for_position() { return _canonical_for_position; };
     void set_canonical_for_position(bool value) { _canonical_for_position = value; }
@@ -108,6 +71,7 @@ public:
 private:
     bool _canonical_for_position = true;
     bool _canonical_for_origin = true;
+    bool _was_armed = false;
 };
 
 class LA_MsgHandler_ATT : public LA_MsgHandler {
@@ -135,48 +99,9 @@ public:
 
 class LA_MsgHandler_EKF1 : public LA_MsgHandler {
 public:
-    LA_MsgHandler_EKF1(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(name, f, analyze, vehicle) {
-        _analyze->add_data_source("ATTITUDE_ESTIMATE_EKF1", "EKF1.Roll");
-        _analyze->add_data_source("ATTITUDE_ESTIMATE_EKF1", "EKF1.Pitch");
-        _analyze->add_data_source("ATTITUDE_ESTIMATE_EKF1", "EKF1.Yaw");
-
-        _analyze->add_data_source("POSITION_ESTIMATE_EKF1", "EKF1.PN");
-        _analyze->add_data_source("POSITION_ESTIMATE_EKF1", "EKF1.PE");
-
-        _analyze->add_data_source("ALTITUDE_ESTIMATE_EKF1", "EKF1.PD");
-    };
-    void xprocess(const uint8_t *msg) override {
-        int16_t Roll = require_field_int16_t(msg, "Roll");
-        int16_t Pitch = require_field_int16_t(msg, "Pitch");
-        float Yaw = require_field_float(msg, "Yaw");
-
-        _vehicle->attitude_estimate("EKF1")->set_roll(T(), Roll/(double)100.0f);
-        _vehicle->attitude_estimate("EKF1")->set_pitch(T(), Pitch/(double)100.0f);
-        _vehicle->attitude_estimate("EKF1")->set_yaw(T(), Yaw-180);
-
-        // these are all relative; need to work out an origin:
-        if (_vehicle->origin_lat_T() != 0) {
-            double posN = require_field_float(msg, "PN");
-            double posE = require_field_float(msg, "PE");
-            double origin_lat = _vehicle->origin_lat();
-            double origin_lon = _vehicle->origin_lon();
-
-            double lat = 0;
-            double lon = 0;
-            gps_offset(origin_lat, origin_lon, posE, posN, lat, lon);
-            // ::fprintf(stderr, "%f+%f / %f+%f = %f / %f\n",
-            //           origin_lat, posE, origin_lon, posN, lat, lon);
-
-            _vehicle->position_estimate("EKF1")->set_lat(T(), lat);
-            _vehicle->position_estimate("EKF1")->set_lon(T(), lon);
-        }
-        if (_vehicle->origin_altitude_T() != 0) {
-            double posD = require_field_float(msg, "PD");
-            double origin_alt = _vehicle->origin_altitude();
-            _vehicle->altitude_estimate("EKF1")->set_alt(T(), origin_alt - posD);
-        }
-    }
+    LA_MsgHandler_EKF1(std::string name, const struct log_Format &f,
+                       Analyze *analyze, AnalyzerVehicle::Base *&vehicle);
+    void xprocess(const uint8_t *msg) override;
 };
 
 class LA_MsgHandler_EKF4 : public LA_MsgHandler {
@@ -213,24 +138,11 @@ public:
     }
 };
 
-#define ERROR_SUBSYSTEM_FAILSAFE_BATT       6
-#define ERROR_CODE_FAILSAFE_OCCURRED        1
-
 class LA_MsgHandler_ERR : public LA_MsgHandler {
 public:
-    LA_MsgHandler_ERR(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(name, f, analyze, vehicle) {
-        _analyze->add_data_source("BATTERY_FAILSAFE", "ERR.Subsys");
-        _analyze->add_data_source("BATTERY_FAILSAFE", "ERR.ECode");
-    };
+    LA_MsgHandler_ERR(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle);
 
-    void xprocess(const uint8_t *msg) override {
-        uint8_t subsys = require_field_uint8_t(msg, "Subsys");
-        uint8_t ecode = require_field_uint8_t(msg, "ECode");
-        if (subsys == ERROR_SUBSYSTEM_FAILSAFE_BATT) {
-            _vehicle->set_battery_in_failsafe(ecode ? ERROR_CODE_FAILSAFE_OCCURRED : 0);
-        }
-    }
+    void xprocess(const uint8_t *msg) override;
 };
 
 class LA_MsgHandler_EV : public LA_MsgHandler {
@@ -268,6 +180,8 @@ public:
         // FIXME: need to take from correct source here!  Move to xprocess?
         _analyze->add_data_source(string_format("GPSINFO_%s",name.c_str()),
             string_format("%s.NSats",name.c_str()));
+        _analyze->add_data_source(string_format("GPSINFO_FIXTYPE_%s",name.c_str()),
+            string_format("%s.Status",name.c_str()));
     };
     void xprocess(const uint8_t *msg) override;
 };
@@ -283,6 +197,19 @@ public:
     bool find_T(const uint8_t *msg, uint64_t &T);
 };
 
+class LA_MsgHandler_MAG : public LA_MsgHandler {
+public:
+    LA_MsgHandler_MAG(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
+        const char * cname = name.c_str();
+        _analyze->add_data_source(string_format("MAGNETIC_FIELD_STRENGTH_%s", cname), string_format("%s.MagX", cname));
+        _analyze->add_data_source(string_format("MAGNETIC_FIELD_STRENGTH_%s", cname), string_format("%s.MagY", cname));
+        _analyze->add_data_source(string_format("MAGNETIC_FIELD_STRENGTH_%s", cname), string_format("%s.MagZ", cname));
+    };
+
+    void xprocess(const uint8_t *msg) override;
+};
+
 class LA_MsgHandler_MSG : public LA_MsgHandler {
 public:
     LA_MsgHandler_MSG(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
@@ -290,37 +217,7 @@ public:
         _analyze->add_data_source("VEHICLE_DEFINITION", "MSG.Message");
     };
 
-    void set_vehicle_copter()
-        {
-            AnalyzerVehicle::Base *vehicle_old = _vehicle;
-            AnalyzerVehicle::Copter *vehicle_new = new AnalyzerVehicle::Copter();
-            vehicle_new->take_state(vehicle_old);
-            _vehicle = vehicle_new;
-            delete vehicle_old;
-        }
-
-    void xprocess(const uint8_t *msg) override {
-        char msg_message[160];
-        uint8_t msg_message_len = 160;
-        require_field(msg, "Message", msg_message, msg_message_len);
-
-        if (!_vehicle->vehicletype_is_forced()) {
-            if (strstr(msg_message, "APM:Copter") || strstr(msg_message, "ArduCopter")) {
-                set_vehicle_copter();
-            }
-
-            switch(_vehicle->vehicletype()) {
-            case AnalyzerVehicle::Base::vehicletype_t::copter:
-                if (strstr(msg_message, "Frame")) {
-                    ((AnalyzerVehicle::Copter*&)_vehicle)->set_frame(msg_message);
-                }
-                break;
-            case AnalyzerVehicle::Base::vehicletype_t::invalid:
-                ::fprintf(stderr, "unhandled message (%s)\n", msg_message);
-                // abort();
-            }
-        }
-    }
+    void xprocess(const uint8_t *msg) override;
 };
 
 class LA_MsgHandler_ORGN : public LA_MsgHandler {
@@ -365,6 +262,18 @@ public:
         _vehicle->param_set(name, value);
     }
 
+};
+
+class LA_MsgHandler_PM : public LA_MsgHandler {
+public:
+    LA_MsgHandler_PM(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
+        _analyze->add_data_source("AUTOPILOT_SCHEDULING", "MSG.NLon");
+        _analyze->add_data_source("AUTOPILOT_SCHEDULING", "MSG.NLoop");
+        _analyze->add_data_source("AUTOPILOT_SCHEDULING", "MSG.MaxT");
+    };
+
+    void xprocess(const uint8_t *msg) override;
 };
 
 class LA_MsgHandler_POS : public LA_MsgHandler {
@@ -437,6 +346,18 @@ public:
             _vehicle->set_servo_output(i, value);
         }
     }
+};
+
+class LA_MsgHandler_STAT : public LA_MsgHandler {
+public:
+    LA_MsgHandler_STAT(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
+    }
+
+    void xprocess(const uint8_t *msg) override;
+
+private:
+    bool have_added_STAT = false;
 };
 
 #endif

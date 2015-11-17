@@ -108,6 +108,12 @@ void MAVLink_Message_Handler::handle_message(uint64_t timestamp, mavlink_message
         handle_decoded_message(timestamp, decoded);
         break;
     }
+    case MAVLINK_MSG_ID_SYSTEM_TIME: {
+        mavlink_system_time_t decoded;
+        mavlink_msg_system_time_decode(&msg, &decoded);
+        handle_decoded_message(timestamp, decoded);
+        break;
+    }
     case MAVLINK_MSG_ID_VFR_HUD: {
         mavlink_vfr_hud_t decoded;
         mavlink_msg_vfr_hud_decode(&msg, &decoded);

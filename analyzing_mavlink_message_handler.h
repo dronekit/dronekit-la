@@ -22,7 +22,7 @@ public:
         _analyze->add_data_source("ALTITUDE_ESTIMATE_SCALED_PRESSURE2", "SCALED_PRESSURE2.temperature");
         _analyze->add_data_source("ALTITUDE_ESTIMATE_SCALED_PRESSURE2", "SCALED_PRESSURE2.press_abs");
 
-        _analyze->add_data_source("ARMING", "HEARBEAT.base_mode");
+        _analyze->add_data_source("ARMING", "HEARTBEAT.base_mode");
 
         _analyze->add_data_source("ATTITUDE", "ATTITUDE.roll");
         _analyze->add_data_source("ATTITUDE", "ATTITUDE.pitch");
@@ -34,8 +34,11 @@ public:
         _analyze->add_data_source("ATTITUDE_ESTIMATE_AHRS2", "AHRS2.pitch");
         _analyze->add_data_source("ATTITUDE_ESTIMATE_AHRS2", "AHRS2.yaw");
 
+        _analyze->add_data_source("AUTOPILOT_SCHEDULING", "STATUSTEXT.text");
         
         _analyze->add_data_source("BATTERY_REMAINING", "SYS_STATUS.battery_remaining");
+
+        _analyze->add_data_source("CRASHED", "HEARTBEAT.system_status");
 
         _analyze->add_data_source("DESATTITUDE", "NAV_CONTROLLER_OUTPUT.nav_roll");
         _analyze->add_data_source("DESATTITUDE", "NAV_CONTROLLER_OUTPUT.nav_pitch");
@@ -50,6 +53,8 @@ public:
 
         _analyze->add_data_source("GPSINFO_GPS_RAW_INT", "GPS_RAW_INT.satellites_visible");
         _analyze->add_data_source("GPSINFO_GPS_RAW_INT", "GPS_RAW_INT.eph");
+        _analyze->add_data_source("GPSINFO_FIXTYPE_GPS_RAW_INT", "GPS_RAW_INT.fix_type");
+        _analyze->add_data_source("GPSINFO_FIXTYPE_GPS_RAW_INT", "SYSTEM_TIME.time_boot_ms");
 
         _analyze->add_data_source("SENSORS_HEALTH", "SYS_STATUS.onboard_control_sensors_present");
         _analyze->add_data_source("SENSORS_HEALTH", "SYS_STATUS.onboard_control_sensors_enabled");
@@ -64,6 +69,10 @@ public:
         _analyze->add_data_source("SERVO_OUTPUT", "SERVO_OUTPUT_RAW.servo7_raw");
         _analyze->add_data_source("SERVO_OUTPUT", "SERVO_OUTPUT_RAW.servo8_raw");
 
+        _analyze->add_data_source("ORIGIN", "AHRS2.lat");
+        _analyze->add_data_source("ORIGIN", "AHRS2.lng");
+        _analyze->add_data_source("ORIGIN", "AHRS2.alt");
+
         _analyze->add_data_source("PARAM", "PARAM.param_id");
         _analyze->add_data_source("PARAM", "PARAM.value");
 
@@ -76,7 +85,12 @@ public:
         _analyze->add_data_source("POSITION_ESTIMATE_GPS_RAW_INT", "GPS_RAW_INT.lat");
         _analyze->add_data_source("POSITION_ESTIMATE_GPS_RAW_INT", "GPS_RAW_INT.lon");
         
+        _analyze->add_data_source("VELOCITY_GROUND", "GLOBAL_POSITION_INT.vx");
+        _analyze->add_data_source("VELOCITY_GROUND", "GLOBAL_POSITION_INT.vy");
+        _analyze->add_data_source("VELOCITY_GROUND", "GLOBAL_POSITION_INT.vz");
+
         _analyze->add_data_source("VEHICLE_DEFINITION", "STATUSTEXT.text");
+        _analyze->add_data_source("SYSTEM_TIME", "SYSTEM_TIME.boot_time_ms");
     }
 
 private:
@@ -95,9 +109,10 @@ private:
     virtual void handle_decoded_message(uint64_t T, mavlink_servo_output_raw_t &msg) override;
     virtual void handle_decoded_message(uint64_t T, mavlink_statustext_t &msg) override;
     virtual void handle_decoded_message(uint64_t T, mavlink_sys_status_t &msg) override;
+    virtual void handle_decoded_message(uint64_t T, mavlink_system_time_t &msg) override;
     virtual void handle_decoded_message(uint64_t T, mavlink_vfr_hud_t &msg) override;
 
-    void end_of_log(uint32_t packet_count) override;
+    void end_of_log(uint32_t packet_count, uint64_t bytes_dropped = 0) override;
     
     Analyze *_analyze;
     AnalyzerVehicle::Base *&_vehicle;
@@ -131,6 +146,8 @@ private:
 	{ "MAV_SYS_STATUS_TERRAIN", 4194304 },  /* 0x400000 Terrain subsystem health | */
 	{ "MAV_SYS_STATUS_SENSOR_ENUM_END", 4194305 }  /*  | */
     };
+
+    bool set_origin_was_armed = false;
 };
 
 

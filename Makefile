@@ -17,8 +17,8 @@ INCS = -I./util -I./ini -I./ini/cpp
 INCS += -I.  # for <DataFlash/DataFlash.h> in MsgHandler
 
 STD=-std=c++11
-#STATIC=-static
-WARNFLAGS= -Wall -Werror -Wextra -Wunused
+STATIC=-static
+WARNFLAGS= -Wall -Werror -Wextra -Wunused -Wlogical-op -Wredundant-decls -D_FORTIFY_SOURCE=2 -Wfloat-equal -fstack-protector
 CFLAGS += $(INCS) -DGIT_VERSION=\"$(GIT_VERSION)\" $(WARNFLAGS)
 CXXFLAGS += $(INCS) $(STD) -g -DGIT_VERSION=\"$(GIT_VERSION)\" $(STATIC) $(WARNFLAGS)
 
@@ -40,9 +40,11 @@ SRCS_CPP += heart.cpp
 SRCS_CPP += analyzer/analyzer_any_parameters_seen.cpp
 SRCS_CPP += analyzer/analyzer_arming_checks.cpp
 SRCS_CPP += analyzer/analyzer_attitude_control.cpp
+SRCS_CPP += analyzer/analyzer_autopilot.cpp
 SRCS_CPP += analyzer/analyzer_battery.cpp
 SRCS_CPP += analyzer/analyzer_brownout.cpp
 SRCS_CPP += analyzer/analyzer_compass_offsets.cpp
+SRCS_CPP += analyzer/analyzer_compass_vector_length.cpp
 SRCS_CPP += analyzer/analyzer_ever_armed.cpp
 SRCS_CPP += analyzer/analyzer_ever_flew.cpp
 SRCS_CPP += analyzer/analyzer_good_ekf.cpp
@@ -54,7 +56,9 @@ SRCS_CPP += analyzer/analyzer_altitude_estimate_divergence.cpp
 SRCS_CPP += analyzer/analyzer_attitude_estimate_divergence.cpp
 SRCS_CPP += analyzer/analyzer_position_estimate_divergence.cpp
 SRCS_CPP += analyzer/analyzer_vehicle_definition.cpp
+SRCS_CPP += analyzer/analyzer_velocity_estimate_divergence.cpp
 SRCS_CPP += analyzervehicle_copter.cpp
+SRCS_CPP += analyzervehicle_plane.cpp
 SRCS_CPP += analyzervehicle.cpp
 SRCS_CPP += la-log.cpp
 SRCS_CPP += common_tool.cpp
@@ -71,7 +75,7 @@ OBJS = $(SRCS_CPP:.cpp=.o) $(SRCS_C:.c=.o)
 
 DATAFLASH_LOGGER = dataflash_logger
 
-LOG_ANALYZER = loganalyzer
+LOG_ANALYZER = dronekit-la
 
 IMAGETAGGER = imagetagger
 
@@ -90,6 +94,11 @@ clean:
 	$(RM) *.o *~ $(DATAFLASH_LOGGER) $(LOG_ANALYZER) $(IMAGETAGGER) analyzer/*.o
 
 test: clean all
-	cd test; ./test.sh
+	./test/test.sh
 
 .PHONY: clean
+
+install-dronekit-la: dronekit-la
+	install -D dronekit-la $(DESTDIR)/usr/bin/dronekit-la
+
+install: install-dronekit-la

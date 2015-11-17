@@ -1,9 +1,19 @@
+machine:
+  environment:
+    LOGANALYZE_DIRPATH_LOG: dronekit-la-testdata-3dr
+
 dependencies:
   pre:
     - sudo apt-get update -y
     - sudo apt-get install -y build-essential
     - sudo apt-get install -y g++
     - sudo apt-get install -y libjsoncpp-dev libjsoncpp0
+    - git clone ssh://git@github.com/dronekit/dronekit-la-testdata-3dr.git
+    - sudo rm /usr/bin/g++ /usr/bin/gcc
+    - sudo ln -s /usr/bin/g++-4.9 /usr/bin/g++
+    - sudo ln -s /usr/bin/gcc-4.9 /usr/bin/gcc
+
 test:
   override:
-    - make
+    - make -j8
+    - ./test/test.py

@@ -12,19 +12,22 @@ namespace AnalyzerVehicle {
         Copter() :
             Base()
             { }
-        bool is_flying();
+
+        const std::string typeString() const override { return "Copter"; }
+
+        bool is_flying() const override;
         
         uint8_t num_motors() { return _num_motors; }
 
-        bool any_motor_running_fast();
-        bool exceeding_angle_max();
+        bool any_motor_running_fast() const;
+        bool exceeding_angle_max() const;
 
         std::set<uint8_t> motors_clipping_low();
         std::set<uint8_t> motors_clipping_high();
         
-        bool param_default(const char *name, float &ret);
+        bool param_default(const char *name, float &ret) const override;
 
-        static const uint16_t is_flying_motor_threshold = 1250;
+        uint16_t is_flying_motor_threshold() const;
 
         vehicletype_t vehicletype() override {
             return copter;
@@ -45,9 +48,11 @@ namespace AnalyzerVehicle {
     private:
         copter_frame_type _frame_type = invalid;
         std::map<const std::string, float> _param_defaults = {
-            { "ANGLE_MAX", 3000.0f } // degrees*100
+            { "ANGLE_MAX", 3000.0f }, // degrees*100
+            { "MOT_SPIN_ARMED", 75.0f } // pwm-delta
         };
         std::map<const std::string, float> _param_defaults_quad = {
+            { "RC3_MIN", 1000.0f },
             { "RCOU1_MIN", 1200.0f },
             { "RCOU1_MAX", 1800.0f },
             { "RCOU2_MIN", 1200.0f },

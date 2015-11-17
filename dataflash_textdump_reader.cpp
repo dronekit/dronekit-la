@@ -24,6 +24,11 @@ std::vector<std::string> split_line(const uint8_t *line, uint32_t len)
     return ret;
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+// is everything we do here kosher?  Can we really legally assign a
+// float into an un-aligned memory location?
+
 void DataFlash_TextDump_Reader::handle_line(const uint8_t *line, uint32_t len)
 {
     std::vector<std::string> items = split_line(line, len);
@@ -54,7 +59,7 @@ void DataFlash_TextDump_Reader::handle_line(const uint8_t *line, uint32_t len)
     }
 
     if (typename_to_typenum.count(items[TYPESTRING]) == 0) {
-        ::fprintf(stderr, "no FMT message received for %s\n", items[TYPESTRING].c_str());
+        ::fprintf(stderr, "no FMT message received for (%s)\n", items[TYPESTRING].c_str());
         return;
     }
 
@@ -70,9 +75,9 @@ void DataFlash_TextDump_Reader::handle_line(const uint8_t *line, uint32_t len)
     buf[buf_offset++] = typenum;
     for (uint8_t i=0; i< strlen(format_types); i++) {
         char format_char = format_types[i];
-        uint32_t value_integer = atoi(items[1+i].c_str());
+        uint64_t value_integer = atoi(items[1+i].c_str());
         float value_float = atof(items[1+i].c_str());
-            int32_t xvalue = value_float * 10000000.0f;
+        int32_t xvalue = value_float * 10000000.0f;
         switch(format_char) {
         case 'f':
             *((float*)&buf[buf_offset]) = value_float;
@@ -115,6 +120,14 @@ void DataFlash_TextDump_Reader::handle_line(const uint8_t *line, uint32_t len)
             *((int8_t*)&buf[buf_offset]) = value_integer; // FIXME
             buf_offset += sizeof(int8_t);
             break;
+        case 'q':
+            *((int64_t*)&buf[buf_offset]) = value_integer; // FIXME
+            buf_offset += sizeof(int64_t);
+            break;
+        case 'Q':
+            *((uint64_t*)&buf[buf_offset]) = value_integer; // FIXME
+            buf_offset += sizeof(uint64_t);
+            break;
         case 'N':
             strncpy(((char*)&buf[buf_offset]), items[1+i].c_str(), 16); // FIXME
             buf_offset += 16;
@@ -134,17 +147,26 @@ void DataFlash_TextDump_Reader::handle_line(const uint8_t *line, uint32_t len)
     }
     handle_message_received(f, buf);
 }
+#pragma GCC diagnostic pop
 
 uint32_t DataFlash_TextDump_Reader::feed(const uint8_t *buf, const uint32_t len)
 {
     ssize_t total_bytes_used = 0;
     // ::fprintf(stderr, "feed (%u bytes)\n", len);
     ssize_t end_of_line_pointer = 0;
-    while (len - end_of_line_pointer >= 2) {
-        if (buf[end_of_line_pointer] == '\r' && buf[end_of_line_pointer+1] == '\n') {
-            // deal with stuff betwee total_bytes_used and end_of_line_pointer
+    while (len - end_of_line_pointer >= 1) {
+        uint8_t line_ending_length = 0;
+        if (len - end_of_line_pointer >= 2 &&
+            buf[end_of_line_pointer] == '\r' && buf[end_of_line_pointer+1] == '\n') {
+            line_ending_length = 2;
+        } else if (buf[end_of_line_pointer] == '\n') {
+            line_ending_length = 1;
+        }
+
+        // deal with stuff between total_bytes_used and end_of_line_pointer
+        if (line_ending_length) {
             handle_line(&buf[total_bytes_used], end_of_line_pointer-total_bytes_used);
-            end_of_line_pointer += 2;
+            end_of_line_pointer += line_ending_length;
             total_bytes_used = end_of_line_pointer;
         } else {
             end_of_line_pointer++;

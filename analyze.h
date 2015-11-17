@@ -11,6 +11,7 @@
 #include "analyzer/analyzer_altitude_estimate_divergence.h"
 #include "analyzer/analyzer_ever_flew.h"
 #include "analyzer/analyzer_position_estimate_divergence.h"
+#include "analyzer/analyzer_velocity_estimate_divergence.h"
 
 #include "data_sources.h"
 
@@ -24,7 +25,7 @@ public:
         }
     void instantiate_analyzers(INIReader *config);
 
-    void end_of_log(uint32_t packet_count);
+    void end_of_log(uint32_t packet_count, uint64_t bytes_dropped = 0);
 
     enum output_style_option {
         OUTPUT_JSON = 17,
@@ -66,9 +67,6 @@ private:
 
     void configure_analyzer(INIReader *config, Analyzer *handler);
 
-    void set_vehicle_copter();
-    void set_copter_frametype(const char *frame_config_string);
-
     void results_json_add_statistics(Json::Value &root);
     void results_json(Json::Value &root);
 
@@ -79,6 +77,7 @@ private:
     Analyzer_Altitude_Estimate_Divergence *analyzer_altitude_estimate_divergence = NULL;    
     Analyzer_Ever_Flew *analyzer_ever_flew = NULL;
     Analyzer_Position_Estimate_Divergence *analyzer_position_estimate_divergence = NULL;    
+    Analyzer_Velocity_Estimate_Divergence * analyzer_velocity_estimate_divergence = NULL;
 };
 
 #endif

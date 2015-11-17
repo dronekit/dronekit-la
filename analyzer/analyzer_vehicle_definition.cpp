@@ -20,6 +20,7 @@ void Analyzer_Vehicle_Definition::end_of_log(const uint32_t packet_count UNUSED)
         result->add_evilness(50);
     } else {
         result->set_reason("Vehicle was appropriately defined");
+        result->add_evidence(_vehicle->typeString());
         result->set_status(analyzer_status_ok);
     }
     

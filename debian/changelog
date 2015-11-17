@@ -1,0 +1,11 @@
+dronekit-la (0.3) unstable; urgency=low
+
+  * More analyzers, stability and valgrind-inspired fixes
+
+ -- Peter Barker <peter.barker@3drobotics.com>  Sat, 14 Nov 2015 11:08:52 +1100
+
+dronekit-la (0.2) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Peter Barker <peter.barker@3drobotics.com>  Wed, 21 Oct 2015 13:57:17 +1100

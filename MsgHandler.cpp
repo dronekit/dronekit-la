@@ -128,7 +128,7 @@ bool MsgHandler::field_value(const uint8_t *msg, const char *label, char *ret, u
 }
 
 
-bool MsgHandler::field_value(uint8_t *msg, const char *label, Vector3f &ret)
+bool MsgHandler::field_value(const uint8_t *msg, const char *label, Vector3f &ret)
 {
     const char *axes = "XYZ";
     uint8_t i;
@@ -213,8 +213,8 @@ void MsgHandler::ground_vel_from_msg(uint8_t *msg,
     int32_t ground_course;
     require_field(msg, label_speed, ground_speed);
     require_field(msg, label_course, ground_course);
-    vel[0] = ground_speed*0.01f*cosf(radians(ground_course*0.01f));
-    vel[1] = ground_speed*0.01f*sinf(radians(ground_course*0.01f));
+    vel[0] = ground_speed*0.01f*cos(radians(ground_course*0.01f));
+    vel[1] = ground_speed*0.01f*sin(radians(ground_course*0.01f));
     vel[2] = require_field_float(msg, label_vz);
 }
 
@@ -261,6 +261,12 @@ uint8_t MsgHandler::require_field_uint8_t(const uint8_t *msg, const char *label)
 int32_t MsgHandler::require_field_int32_t(const uint8_t *msg, const char *label)
 {
     int32_t ret;
+    require_field(msg, label, ret);
+    return ret;
+}
+uint32_t MsgHandler::require_field_uint32_t(const uint8_t *msg, const char *label)
+{
+    uint32_t ret;
     require_field(msg, label, ret);
     return ret;
 }

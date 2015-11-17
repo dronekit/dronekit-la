@@ -11,7 +11,8 @@ public:
 
     virtual void sighup_received() { }
 
-    virtual void end_of_log(uint32_t packet_count UNUSED) { }
+    virtual void end_of_log(uint32_t packet_count UNUSED,
+                            uint64_t bytes_dropped UNUSED) { }
 
 protected:
     virtual void idle_tenthHz() { }

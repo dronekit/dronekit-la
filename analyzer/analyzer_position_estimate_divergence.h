@@ -46,6 +46,7 @@ public:
     void end_of_log(const uint32_t packet_count) override;
 
     double total_distance_travelled() { return _total_distance_travelled; }
+    double maximum_distance_from_origin() { return _maximum_distance_from_origin; }
 
     const std::string _config_tag() const {
         return std::string("position_estimate_divergence");
@@ -61,6 +62,8 @@ private:
 
     double _total_distance_travelled = 0;
     AnalyzerVehicle::Position prevpos = { };
+
+    double _maximum_distance_from_origin = 0;
 };
 
 #endif

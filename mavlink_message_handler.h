@@ -49,6 +49,7 @@ public:
     virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_servo_output_raw_t &msg UNUSED) { }
     virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_sys_status_t &msg UNUSED) { }
     virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_statustext_t &msg UNUSED) { }
+    virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_system_time_t &msg UNUSED) { }
     virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_vfr_hud_t &msg UNUSED) { }
 
 

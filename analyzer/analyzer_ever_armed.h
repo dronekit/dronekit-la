@@ -20,7 +20,7 @@ public:
     void to_json(Json::Value &root) const override;
 
 private:
-    uint64_t _arm_time;
+    uint64_t _arm_time = 0;
 };
 
 class Analyzer_Ever_Armed : public Analyzer {

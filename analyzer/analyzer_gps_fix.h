@@ -21,9 +21,22 @@ public:
     double hdop() const { return _hdop; }
     const std::string name() { return _name; }
 private:
+    const std::string _name;
     uint8_t _satellites;
     double _hdop;
-    std::string _name;
+};
+
+class Analyzer_GPS_FirstFixTime_Result : public Analyzer_Result_Event {
+public:
+    Analyzer_GPS_FirstFixTime_Result(std::string name) :
+        _name(name)
+        { };
+    void set_time_taken(uint64_t time_taken) { _time_taken = time_taken; }
+
+    const std::string name() { return _name; }
+private:
+    const std::string _name;
+    uint64_t _time_taken;
 };
 
 
@@ -57,11 +70,17 @@ private:
     uint8_t satellites_visible_threshold() const { return _satellites_min; }
     double hdop_threshold() const { return _hdop_min; }
 
-    bool gpsinfo_bad(AnalyzerVehicle::GPSInfo *gpsinfo);
+    bool gpsinfo_bad(AnalyzerVehicle::GPSInfo *gpsinfo) const;
+
+    void add_firstfixtime_result(AnalyzerVehicle::GPSInfo *gpsinfo,
+                                 uint64_t time_taken);
 
     uint8_t _satellites_min = 5;
     double _hdop_min = 5.0f;
     
+    bool _first_3D_fix_found = false;
+    uint64_t _first_3D_fix_T = 0;
+    bool _non_3dfix_seen = false;
 };
 
 #endif

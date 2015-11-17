@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h> // for abort()
+#include <analyzer_util.h> // for is_zero
 
 #include <math.h>
 
@@ -26,12 +27,13 @@ public:
     // retrieve a comma-separated list of all labels
     void string_for_labels(char *buffer, uint bufferlen);
 
+    bool field_value(const uint8_t *msg, const char *label, Vector3f &ret);
+
     // field_value - retrieve the value of a field from the supplied message
     // these return false if the field was not found
     template<typename R>
     bool field_value(const uint8_t *msg, const char *label, R &ret);
 
-    bool field_value(uint8_t *msg, const char *label, Vector3f &ret);
     bool field_value(const uint8_t *msg, const char *label,
 		     char *buffer, uint8_t bufferlen);
     
@@ -46,6 +48,7 @@ public:
     float require_field_float(const uint8_t *msg, const char *label);
     uint8_t require_field_uint8_t(const uint8_t *msg, const char *label);
     int32_t require_field_int32_t(const uint8_t *msg, const char *label);
+    uint32_t require_field_uint32_t(const uint8_t *msg, const char *label);
     uint16_t require_field_uint16_t(const uint8_t *msg, const char *label);
     int16_t require_field_int16_t(const uint8_t *msg, const char *label);
 
@@ -54,6 +57,8 @@ private:
     void add_field(const char *_label, uint8_t _type, uint8_t _offset,
                    uint8_t length);
 
+    void field_value_for_type_at_offset(const uint8_t *msg, uint8_t type,
+                                        uint8_t offset, bool &ret);
     template<typename R>
     void field_value_for_type_at_offset(const uint8_t *msg, uint8_t type,
                                         uint8_t offset, R &ret);
@@ -76,6 +81,10 @@ private:
 
 protected:
     struct format_field_info *find_field_info(const char *label);
+
+    template<typename R>
+    void _field_value_for_type_at_offset(const uint8_t *msg, uint8_t type,
+                                         uint8_t offset, R &ret);
 
     struct log_Format f; // the format we are a parser for
     ~MsgHandler();
@@ -118,9 +127,35 @@ bool MsgHandler::field_value(const uint8_t *msg, const char *label, R &ret)
 
 template<typename R>
 inline void MsgHandler::field_value_for_type_at_offset(const uint8_t *msg,
-                                                      uint8_t type,
-                                                      uint8_t offset,
-                                                      R &ret)
+                                                       uint8_t type,
+                                                       uint8_t offset,
+                                                       R &ret)
+{
+    _field_value_for_type_at_offset(msg, type, offset, ret);
+}
+
+// handle bool return case specially so we can use is_zero on floats:
+inline void MsgHandler::field_value_for_type_at_offset(const uint8_t *msg,
+                                                       uint8_t type,
+                                                       uint8_t offset,
+                                                       bool &ret)
+{
+    float value;
+    switch (type) {
+    case 'f':
+        value = (((float*)&msg[offset])[0]);
+        ret = ! is_zero(value);
+        break;
+    default:
+        _field_value_for_type_at_offset(msg, type, offset, ret);
+    }
+}
+
+template<typename R>
+inline void MsgHandler::_field_value_for_type_at_offset(const uint8_t *msg,
+                                                        uint8_t type,
+                                                        uint8_t offset,
+                                                        R &ret)
 {
     /* we register the types - add_field_type - so can we do without
      * this switch statement somehow? */
@@ -138,9 +173,12 @@ inline void MsgHandler::field_value_for_type_at_offset(const uint8_t *msg,
     case 'C':
         ret = (R)(((uint16_t*)&msg[offset])[0]);
         break;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-equal"
     case 'f':
         ret = (R)(((float*)&msg[offset])[0]);
         break;
+#pragma GCC diagnostic pop
     case 'I':
     case 'E':
         ret = (R)(((uint32_t*)&msg[offset])[0]);

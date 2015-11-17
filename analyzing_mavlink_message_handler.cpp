@@ -1,19 +1,43 @@
 #include "analyzing_mavlink_message_handler.h"
 
-void Analyzing_MAVLink_Message_Handler::end_of_log(uint32_t packet_count)
+#include <regex>
+
+void Analyzing_MAVLink_Message_Handler::end_of_log(uint32_t packet_count, uint64_t bytes_dropped UNUSED)
 {
     _analyze->end_of_log(packet_count);
 }
 
 
 void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_ahrs2_t &msg) {
-    _vehicle->position_estimate("AHRS2")->set_lat(T, msg.lat/(double)10000000.0f);
-    _vehicle->position_estimate("AHRS2")->set_lon(T, msg.lng/(double)10000000.0f);
-    _vehicle->altitude_estimate("AHRS2")->set_alt(T, msg.altitude);
+
+    double lat = msg.lat/(double)10000000.0f;
+    double lng = msg.lng/(double)10000000.0f;
+    double alt = msg.altitude;
+
+    _vehicle->position_estimate("AHRS2")->set_lat(T, lat);
+    _vehicle->position_estimate("AHRS2")->set_lon(T, lng);
+    _vehicle->altitude_estimate("AHRS2")->set_alt(T, alt);
 
     _vehicle->attitude_estimate("AHRS2")->set_roll(T, rad_to_deg(msg.roll));
     _vehicle->attitude_estimate("AHRS2")->set_pitch(T, rad_to_deg(msg.pitch));
     _vehicle->attitude_estimate("AHRS2")->set_yaw(T, rad_to_deg(msg.yaw));
+
+
+    // we fake up the vehicle origin by setting it whenever the
+    // vehicle moves from disarmed to armed
+    if (_vehicle->is_armed()) {
+        if (!set_origin_was_armed) {
+            _vehicle->set_origin_lat(lat);
+            _vehicle->set_origin_lon(lng);
+            _vehicle->set_origin_altitude(alt);
+            set_origin_was_armed = true;
+        }
+    } else {
+        _vehicle->set_origin_lat(0);
+        _vehicle->set_origin_lon(0);
+        _vehicle->set_origin_altitude(0);
+        set_origin_was_armed = false;
+    }
 
     _analyze->evaluate_all();
 }
@@ -50,6 +74,11 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
         _vehicle->set_origin_altitude(alt);
     }
 
+    // ... and for velocity
+    _vehicle->vel().set_x(T, msg.vx/100.0f);
+    _vehicle->vel().set_y(T, msg.vy/100.0f);
+    _vehicle->vel().set_z(T, msg.vz/100.0f);
+
     _analyze->evaluate_all();
 }
 
@@ -60,6 +89,7 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
 
     _vehicle->gpsinfo("GPS_RAW_INT")->set_satellites(msg.satellites_visible);
     _vehicle->gpsinfo("GPS_RAW_INT")->set_hdop(msg.eph/(double)100.0f);
+    _vehicle->gpsinfo("GPS_RAW_INT")->set_fix_type(msg.fix_type);
 
     _analyze->evaluate_all();
 }
@@ -74,6 +104,7 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
     }
 
     _vehicle->set_armed(msg.base_mode & MAV_MODE_FLAG_SAFETY_ARMED);
+    _vehicle->set_crashed(msg.system_status == MAV_STATE_EMERGENCY);
 
     _analyze->evaluate_all();
 }
@@ -185,6 +216,13 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
     _analyze->evaluate_all();
 }
 
+void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_system_time_t &msg) {
+    _vehicle->set_T(T);
+
+    _vehicle->set_time_since_boot(msg.time_boot_ms * 1000);
+    // _analyze->evaluate_all();
+}
+
 void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_vfr_hud_t &msg UNUSED) {
     _vehicle->set_T(T);
 
@@ -194,30 +232,49 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
     // _analyze->evaluate_all();
 }
 
-// something like this is in analyzing_dataflash_mavlink_message_handler
-void Analyzing_MAVLink_Message_Handler::set_vehicle_copter()
-{
-    AnalyzerVehicle::Base *vehicle_old = _vehicle;
-    AnalyzerVehicle::Copter *vehicle_new = new AnalyzerVehicle::Copter();
-    vehicle_new->take_state(vehicle_old);
-    _vehicle = vehicle_new;
-    delete vehicle_old;
-}
-
 void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_statustext_t &msg) {
     _vehicle->set_T(T);
 
-    if (strstr(msg.text, "APM:Copter") || strstr(msg.text, "ArduCopter")) {
-        set_vehicle_copter();
+    if (!_vehicle->vehicletype_is_forced()) {
+        AnalyzerVehicle::Base::vehicletype_t newtype = AnalyzerVehicle::Base::vehicletype_t::invalid;
+        if (strstr(msg.text, "APM:Copter") || strstr(msg.text, "ArduCopter")) {
+            newtype = AnalyzerVehicle::Base::vehicletype_t::copter;
+        } else if (strstr(msg.text, "ArduPlane")) {
+            newtype = AnalyzerVehicle::Base::vehicletype_t::plane;
+        }
+        if (newtype != AnalyzerVehicle::Base::vehicletype_t::invalid) {
+            AnalyzerVehicle::Base::switch_vehicletype(_vehicle, newtype);
+        }
+
+        switch (_vehicle->vehicletype()) {
+        case AnalyzerVehicle::Base::vehicletype_t::copter:
+            if (strstr(msg.text, "Frame")) {
+                ((AnalyzerVehicle::Copter*&)_vehicle)->set_frame(msg.text);
+            }
+            break;
+        case AnalyzerVehicle::Base::vehicletype_t::plane:
+            break;
+        case AnalyzerVehicle::Base::vehicletype_t::invalid:
+            break;
+        }
     }
 
-    switch (_vehicle->vehicletype()) {
-    case AnalyzerVehicle::Base::vehicletype_t::copter:
-        if (strstr(msg.text, "Frame")) {
-            ((AnalyzerVehicle::Copter*&)_vehicle)->set_frame(msg.text);
+    if (strstr(msg.text, "PERF:")) {
+        std::string x = std::string(msg.text);
+        std::regex perf_regex("PERF: ([0-9]+)/([0-9]+) ([0-9]+) ([0-9]+)(?: ([0-9]+) ([0-9]+))?");
+        std::smatch result;
+        regex_search(x, result, perf_regex);
+        std::string::size_type sz;
+        _vehicle->autopilot_set_overruns(stoi(result[1].str()));
+        _vehicle->autopilot_set_loopcount(stoi(result[2].str()));
+        _vehicle->autopilot_set_slices_max(stoi(result[3].str()));
+        _vehicle->autopilot_set_slices_min(stoi(result[4].str()));
+        // for (uint8_t i=0; i< result.size(); i++) {
+        //     ::fprintf(stderr, "%u: %s\n", i, result[i].str().c_str());
+        // }
+        if (result[6].str().size()) {
+            _vehicle->autopilot_set_slices_avg(stoi(result[5].str())); 
+            _vehicle->autopilot_set_slices_stddev(stoi(result[6].str()));
         }
-        break;
-    case AnalyzerVehicle::Base::vehicletype_t::invalid:
-        break;
     }
 }

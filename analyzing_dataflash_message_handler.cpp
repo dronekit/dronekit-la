@@ -27,6 +27,12 @@ void Analyzing_DataFlash_Message_Handler::handle_format_message_received(const c
         handlers[new_msg_type] = new LA_MsgHandler_GPS(name, format, _analyze, _vehicle);
     } else if (streq(name, "GPS2")) {
         handlers[new_msg_type] = new LA_MsgHandler_GPS(name, format, _analyze, _vehicle);
+    } else if (streq(name, "MAG")) {
+        handlers[new_msg_type] = new LA_MsgHandler_MAG(name, format, _analyze, _vehicle);
+    } else if (streq(name, "MAG2")) {
+        handlers[new_msg_type] = new LA_MsgHandler_MAG(name, format, _analyze, _vehicle);
+    } else if (streq(name, "MAG3")) {
+        handlers[new_msg_type] = new LA_MsgHandler_MAG(name, format, _analyze, _vehicle);
     } else if (streq(name, "MSG")) {
         handlers[new_msg_type] = new LA_MsgHandler_MSG(name, format, _analyze, _vehicle);
     } else if (streq(name, "ORGN")) {
@@ -37,6 +43,8 @@ void Analyzing_DataFlash_Message_Handler::handle_format_message_received(const c
         }
     } else if (streq(name, "PARM")) {
         handlers[new_msg_type] = new LA_MsgHandler_PARM(name, format, _analyze, _vehicle);
+    } else if (streq(name, "PM")) {
+        handlers[new_msg_type] = new LA_MsgHandler_PM(name, format, _analyze, _vehicle);
     } else if (streq(name, "POS")) {
         handlers[new_msg_type] = new LA_MsgHandler_POS(name, format, _analyze, _vehicle);
         have_pos = true;
@@ -45,6 +53,8 @@ void Analyzing_DataFlash_Message_Handler::handle_format_message_received(const c
         }
     } else if (streq(name, "RCOU")) {
         handlers[new_msg_type] = new LA_MsgHandler_RCOU(name, format, _analyze, _vehicle);
+    } else if (streq(name, "STAT")) {
+        handlers[new_msg_type] = new LA_MsgHandler_STAT(name, format, _analyze, _vehicle);
     } else {
         return;
     }
@@ -67,7 +77,7 @@ void Analyzing_DataFlash_Message_Handler::handle_message_received(const struct l
     handler->process(msg);
 }
 
-void Analyzing_DataFlash_Message_Handler::end_of_log(uint32_t packet_count)
+void Analyzing_DataFlash_Message_Handler::end_of_log(uint32_t packet_count, uint64_t bytes_dropped UNUSED)
 {
     _analyze->end_of_log(packet_count);
 }

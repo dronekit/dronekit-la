@@ -88,6 +88,6 @@ uint32_t DataFlash_Reader::feed(const uint8_t *buf, const uint32_t len)
 void DataFlash_Reader::end_of_log()
 {
     for(int i=0; i<next_message_handler; i++) {
-        message_handler[i]->end_of_log(packet_count);
+        message_handler[i]->end_of_log(packet_count, count_bytes_skipped);
     }
 }
