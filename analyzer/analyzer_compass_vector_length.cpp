@@ -124,7 +124,7 @@ void Analyzer_Compass_Vector_Length::close_result_long(Analyzer_Compass_Vector_L
     if (result->_length_max >= length_long_fail) {
         result->set_status(analyzer_status_fail);
         result->add_evidence(string_format("threshold=%f", length_long_fail));
-    } else if (result->_length_max < length_long_warn) {
+    } else if (result->_length_max >= length_long_warn) {
         result->set_status(analyzer_status_warn);
         result->add_evidence(string_format("threshold=%f", length_long_warn));
     }
