@@ -44,6 +44,8 @@ RC1_TRIM 1527.000000
 
  - work out what we use RATE for
 
+ - detect GPS resets by position fix going low for some period of time
+
 ## FIXMEs
  - the attitude control tests should ignore periods where the craft is not armed
  - the brownout report should give relative, not absolute, height at end of flight
