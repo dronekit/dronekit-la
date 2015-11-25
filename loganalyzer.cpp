@@ -52,7 +52,7 @@ void LogAnalyzer::parse_path(const char *path)
         if (do_stdin) {
             ::fprintf(stderr, "You asked to parse stdin but did not force a format type\n");
         } else {
-            ::fprintf(stderr, "Unable to determine log type from filename; try -i?\n");
+            ::fprintf(stderr, "Unable to determine log type from filename (%s); try -i?\n", path);
         }
         usage();
         exit(1);
