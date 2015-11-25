@@ -79,6 +79,12 @@ void Analyzer::results_json_results(Json::Value &root)
             // that appears to autovivify :-/
             result["series"] = Json::Value(Json::arrayValue);
         }
+        if (result["reason"].type() == Json::nullValue) {
+            ::fprintf(stderr, "No reason in (%s)\n", name().c_str());
+        }
+        if (result["severity-score"].type() == Json::nullValue) {
+            ::fprintf(stderr, "No severity-score in (%s)\n", name().c_str());
+        }
         root.append(result);
     }
 }

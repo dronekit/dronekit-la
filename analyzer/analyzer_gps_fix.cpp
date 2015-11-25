@@ -118,6 +118,7 @@ void Analyzer_GPS_Fix::evaluate()
 void Analyzer_GPS_Fix::close_result()
 {
     _result->set_T_stop(_vehicle->T());
+    _result->set_reason("No 3D fix was ever acquired");
     _result->add_evidence(string_format("satellites-visible: %d", _result->satellites()));
     _result->add_evidence(string_format("HDop: %.2f", _result->hdop()));
     _result->add_evidence(string_format("satellites-visible-threshold: %d", satellites_visible_threshold()));

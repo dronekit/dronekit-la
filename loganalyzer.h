@@ -9,6 +9,11 @@
  * Initiate a remote-dataflash stream
  */
 
+// if you modify this, modify the debian metadata using e.g.
+// debchange -r -e  (FIXME)
+
+#define DRONEKIT_LA_VERSION "0.3"
+
 #include "INIReader.h"
 
 #include "mavlink_message_handler.h"

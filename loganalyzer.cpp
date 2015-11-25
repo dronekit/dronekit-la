@@ -4,6 +4,7 @@
 
 #include "heart.h"
 
+#include <iostream> // for cout
 #include <syslog.h>
 #include "la-log.h"
 
@@ -236,7 +237,8 @@ void LogAnalyzer::prep_for_log()
 
 void LogAnalyzer::show_version_information()
 {
-    ::printf("Version: " GIT_VERSION "\n");
+    ::printf("Version: " DRONEKIT_LA_VERSION "\n");
+    ::printf("Git-Version: " GIT_VERSION "\n");
 }
 
 void LogAnalyzer::list_analyzers()
@@ -377,14 +379,14 @@ void LogAnalyzer::usage()
     ::printf("Usage:\n");
     ::printf("%s [OPTION] [FILE...]\n", program_name());
     ::printf(" -c filepath      use config file filepath\n");
-    ::printf(" -t               connect to telem forwarder to receive data\n");
+    // ::printf(" -t               connect to telem forwarder to receive data\n");
     ::printf(" -m modeltype     override model; copter|plane|rover\n");
     ::printf(" -f frame         set frame; QUAD|Y6\n");
     ::printf(" -s style         use output style (plain-text|json|brief)\n");
     ::printf(" -h               display usage information\n");
     ::printf(" -l               list analyzers\n");
-    ::printf(" -a               specify analzers to run (comma-separated list)\n");
-    ::printf(" -i format        specify format (tlog|df|log)\n");
+    ::printf(" -a               specify analyzers to run (comma-separated list)\n");
+    ::printf(" -i format        specify input format (tlog|df|log)\n");
     ::printf(" -V               display version information\n");
     ::printf("\n");
     ::printf("Example: %s -s json 1.solo.tlog\n", program_name());
