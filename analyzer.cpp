@@ -21,6 +21,7 @@ void Analyzer_Result::to_json(Json::Value &root) const
 {
     root["status"] = status_as_string();
     root["evilness"] = evilness();
+    root["evilness-is-deprecated"] = 1;
     root["severity-score"] = evilness();
 
     const std::string *my_reason = reason();

@@ -47,10 +47,18 @@ public:
 
     void set_analyzer_names_to_run(const std::vector<std::string> run_these);
 
+    void set_pure_output(bool value) {
+        _pure_output = value;
+    }
+    bool pure_output() {
+        return _pure_output;
+    }
+
 protected:
 
 private:
     uint64_t start_time;
+    bool _pure_output;
 
     AnalyzerVehicle::Base *&vehicle;
 

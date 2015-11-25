@@ -212,6 +212,10 @@ Analyze *LogAnalyzer::create_analyze()
     }
     analyze->instantiate_analyzers(config());
 
+    if (_pure_output) {
+        analyze->set_pure_output(true);
+    }
+
     return analyze;
 }
 
@@ -298,8 +302,8 @@ void LogAnalyzer::create_vehicle_from_commandline_arguments()
             if (_frame_string != NULL) {
                 ((AnalyzerVehicle::Copter*)_vehicle)->set_frame(_frame_string);
             }
-        // } else if (streq(model_string,"plane")) {
-        //     model = new AnalyzerVehicle::Plane();
+        } else if (streq(_model_string,"plane")) {
+            _vehicle = new AnalyzerVehicle::Plane();
         // } else if (streq(model_string,"rover")) {
         //     model = new AnalyzerVehicle::Rover();
         } else {
@@ -387,6 +391,7 @@ void LogAnalyzer::usage()
     ::printf(" -l               list analyzers\n");
     ::printf(" -a               specify analyzers to run (comma-separated list)\n");
     ::printf(" -i format        specify input format (tlog|df|log)\n");
+    ::printf(" -p	        pure output - no deprecated fields\n");
     ::printf(" -V               display version information\n");
     ::printf("\n");
     ::printf("Example: %s -s json 1.solo.tlog\n", program_name());
@@ -411,7 +416,7 @@ void LogAnalyzer::parse_arguments(int argc, char *argv[])
     _argc = argc;
     _argv = argv;
 
-    while ((opt = getopt(argc, argv, "hc:ts:m:f:Vla:i:")) != -1) {
+    while ((opt = getopt(argc, argv, "hc:ts:m:pf:Vla:i:")) != -1) {
         switch(opt) {
         case 'h':
             usage();
@@ -430,6 +435,9 @@ void LogAnalyzer::parse_arguments(int argc, char *argv[])
             break;
         case 'm':
             _model_string = optarg;
+            break;
+        case 'p':
+            _pure_output = true;
             break;
         case 'f':
             _frame_string = optarg;
