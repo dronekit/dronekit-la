@@ -126,7 +126,7 @@ void Analyzer_GPS_Fix::close_result()
 
     _result->add_source(_data_sources.get(std::string("GPSINFO_") + _result->name()));
 
-    _result->add_evilness(20);
+    _result->increase_severity_score(20);
     add_result(_result);
     _result = NULL;
 }

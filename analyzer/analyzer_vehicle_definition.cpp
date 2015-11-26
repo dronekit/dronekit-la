@@ -17,7 +17,7 @@ void Analyzer_Vehicle_Definition::end_of_log(const uint32_t packet_count UNUSED)
     if (vehicle_invalid) {
         result->set_reason("No information provided defined what type of vehicle was being analysed");
         result->set_status(analyzer_status_fail);
-        result->add_evilness(50);
+        result->increase_severity_score(50);
     } else {
         result->set_reason("Vehicle was appropriately defined");
         result->add_evidence(_vehicle->typeString());

@@ -92,19 +92,19 @@ void Analyzer_Compass_Offsets::evaluate()
     double len = result->lens().len();
     if (len >= fail_offset) {
         result->set_status(analyzer_status_fail);
-        result->add_evilness(5);
+        result->increase_severity_score(5);
         result->set_reason("Compass offsets in parameters are out of bounds");
         result->add_evidence
             (string_format("COMPASS_OFS" + _param_extra_string + " %f >= %f", len, fail_offset));
     } else if (len >= warn_offset) {
         result->set_status(analyzer_status_warn);
-        result->add_evilness(2);
+        result->increase_severity_score(2);
         result->set_reason("Compass offsets in parameters are out of bounds");
         result->add_evidence
             (string_format("COMPASS_OFS" + _param_extra_string + " %f >= %f", len, warn_offset));
     } else if (is_zero(len)) {
         result->set_status(analyzer_status_warn);
-        result->add_evilness(4);
+        result->increase_severity_score(4);
         result->set_reason("Compass offsets in parameters are zero");
         result->add_evidence
             (string_format("COMPASS_OFS" + _param_extra_string + " %f == 0", len));
@@ -129,7 +129,7 @@ void Analyzer_Compass_Offsets::end_of_log(uint32_t packet_count UNUSED)
         result->set_status(analyzer_status_fail);
         result->add_source(_data_sources.get("PARAM"));
         result->set_reason("No compass offset parameter set seen");
-        result->add_evilness(5);
+        result->increase_severity_score(5);
         add_result(result);
     }
 }

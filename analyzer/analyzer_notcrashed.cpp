@@ -70,7 +70,7 @@ void Analyzer_NotCrashed::evaluate_attitude()
             _result->add_source(_data_sources.get("ATTITUDE"));
             _result->add_source(_data_sources.get("SERVO_OUTPUT"));
             _result->add_source(_data_sources.get("PARAM"));
-            _result->add_evilness(100);
+            _result->increase_severity_score(100);
         }
     } else { // _result is set, incident underway
         if (!crashed) {
@@ -91,7 +91,7 @@ void Analyzer_NotCrashed::evaluate_vehicle()
         Analyzer_NotCrashed_Result_CRASHED *result =
             new Analyzer_NotCrashed_Result_CRASHED();
         result->add_source(_data_sources.get("CRASH"));
-        result->add_evilness(100);
+        result->increase_severity_score(100);
         result->set_status(analyzer_status_fail);
         result->set_reason("Vehicle evaluated itself as crashed");
         result->set_T(_vehicle->T());

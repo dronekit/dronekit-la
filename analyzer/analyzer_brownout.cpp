@@ -39,9 +39,9 @@ void Analyzer_Brownout::end_of_log(const uint32_t packet_count UNUSED)
             _result.add_evidence(string_format("Final relative altitude %f metres", last_relative_altitude));
 
             _result.set_status(analyzer_status_fail);
-            _result.add_evilness(10);
+            _result.increase_severity_score(10);
             if (last_relative_altitude > max_last_relative_altitude) {
-                _result.add_evilness(10);
+                _result.increase_severity_score(10);
             }
             _result.add_source(_data_sources.get("SERVO_OUTPUT"));
             _result.add_source(_data_sources.get("ALTITUDE"));
@@ -55,7 +55,7 @@ void Analyzer_Brownout::end_of_log(const uint32_t packet_count UNUSED)
         }
     } else {
         _result.set_status(analyzer_status_warn);
-        _result.add_evilness(5);
+        _result.increase_severity_score(5);
         _result.set_reason("Altitude never changed");
         _result.add_source(_data_sources.get("ALTITUDE"));
     }

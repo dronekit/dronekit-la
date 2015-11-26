@@ -64,11 +64,11 @@ void Analyzer_Position_Estimate_Divergence::update_result(std::string name,
         if (delta >= delta_fail()) {
             _result[name]->set_delta_threshold(delta_fail());
             _result[name]->set_status(analyzer_status_fail);
-            _result[name]->set_evilness(20);
+            _result[name]->set_severity_score(20);
         } else if (delta >= delta_warn()) {
             _result[name]->set_status(analyzer_status_warn);
             _result[name]->set_delta_threshold(delta_warn());
-            _result[name]->set_evilness(10);
+            _result[name]->set_severity_score(10);
         }
     }
 }

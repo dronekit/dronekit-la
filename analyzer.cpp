@@ -20,9 +20,9 @@ void Analyzer_Result::to_json_add_array(Json::Value &root,
 void Analyzer_Result::to_json(Json::Value &root) const
 {
     root["status"] = status_as_string();
-    root["evilness"] = evilness();
+    root["evilness"] = severity_score();
     root["evilness-is-deprecated"] = 1;
-    root["severity-score"] = evilness();
+    root["severity-score"] = severity_score();
 
     const std::string *my_reason = reason();
     if (my_reason != NULL) {
@@ -56,13 +56,13 @@ void Analyzer_Result_Event::to_json(Json::Value &root) const
 }
 
 
-uint32_t Analyzer::evilness() const {
+uint32_t Analyzer::severity_score() const {
     uint32_t ret = 0; // remove _evilness here?
     std::vector<Analyzer_Result*> my_results = results();
     for (std::vector<Analyzer_Result*>::const_iterator it = my_results.begin();
          it != my_results.end();
          it++) {
-        ret += (*it)->evilness();
+        ret += (*it)->severity_score();
     }
     return ret;
 }

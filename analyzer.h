@@ -1,3 +1,12 @@
+/**
+ * @file
+ * @author Peter Barker <peter.barker@3drobotics.com>
+ *
+ * @section DESCRIPTION
+ *
+ * Base class for all analyzers; provides facilities to register results
+ */
+
 #ifndef ANALYZER_H
 #define ANALYZER_H
 
@@ -11,40 +20,64 @@
 
 #include "analyzer_util.h"
 
+/// Enumeration of possible states for both an Analyzer_Result and Analyzer
 enum analyzer_status {
     analyzer_status_warn = 17,
     analyzer_status_fail,
     analyzer_status_ok,
 };
 
+/*!
+ * Returns a textual interpretation of the supplied status
+ *
+ * @param status analyser status to provide text for
+ * @return textual interpretation of status
+ */
 const char *_status_as_string(analyzer_status status);
 
+/// Base classs for analyzer result; extend this to provide a custom result object
 class Analyzer_Result {
 public:
+    /// @brief Construct an Analyzer Result
     virtual ~Analyzer_Result() { }
 
+    /// @brief Provides a textual description of the Analyzer Result's status
+    /// @return a text string e.g. "OK" or "FAIL"
     const char *status_as_string() const {
         return _status_as_string(_status);
     }
+
+    /// @brief Provide the Analyzer Result's status
+    /// @return The Analyzer_Result's status
     analyzer_status status() { return _status; }
+
+    /// @brief Set the Analyzer Result's status
+    /// @param status The new status for this Result
     void set_status(analyzer_status status) { _status = status; }
 
+    /// @brief Set a simple, human-readable explanation of the Result
+    /// @param reason The reason for the existence of this Result
     void set_reason(const std::string reason) {
         if (_reason != NULL) {
             delete(_reason);
         }
         _reason = new std::string(reason);
     }
+    /// @brief Provide a simple, human-readable explanation if the Result
     const std::string *reason() const { return _reason; }
 
+    /// @brief Provide analyzer output in the provided Json::Value
+    /// @param[out] root object to populate with output
     virtual void to_json(Json::Value &root) const;
 
+    /// @brief Provide textual free-form evidence for the "reason"
+    /// @param f textual free-form evidence
     void add_evidence(const std::string f) {
         _evidence.push_back(f);
     }
-    // void add_series(const std::string f) {
-    //     _series.push_back(f);
-    // }
+
+    /// @brief Indicate that a particular data source was used to come to the conclusion returned by reason().
+    /// @param f A Data_Source relevant to the conclusion in reason()
     void add_source(const Data_Source *f) {
         if (f == NULL) {
             abort();
@@ -52,13 +85,19 @@ public:
         _sources.push_back(f);
     }
 
-    void add_evilness(uint32_t evilness) {
+    /// @brief Indicate the result is incrementally more significant
+    /// @param evilness Degree to which this result is more significant
+    void increase_severity_score(uint32_t evilness) {
         _evilness += evilness;
     }
-    void set_evilness(uint32_t evilness) {
+    /// @brief Indicate how signficant this result is
+    /// @param evilness Degree of significance of this result
+    void set_severity_score(uint32_t evilness) {
         _evilness = evilness;
     }
-    uint32_t evilness() const {
+    /// @brief Return a number indicating the relative significance of this result
+    /// @return The relative significance of this result
+    uint32_t severity_score() const {
         return _evilness;
     }
 
@@ -146,6 +185,9 @@ public:
     virtual void results_json_results(Json::Value &root);
     virtual void end_of_log(uint32_t packet_count UNUSED) { }
 
+    /*!
+     * @brief Return the analyzer's status represented as a string
+     */
     const char *status_as_string() {
         return _status_as_string(status());
     }
@@ -157,7 +199,7 @@ public:
         return _results.size();
     }
 
-    virtual uint32_t evilness() const;
+    virtual uint32_t severity_score() const;
 
     virtual void evaluate() { }
 
