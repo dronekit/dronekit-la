@@ -55,6 +55,8 @@ void Analyzing_DataFlash_Message_Handler::handle_format_message_received(const c
         handlers[new_msg_type] = new LA_MsgHandler_RCOU(name, format, _analyze, _vehicle);
     } else if (streq(name, "STAT")) {
         handlers[new_msg_type] = new LA_MsgHandler_STAT(name, format, _analyze, _vehicle);
+    } else if (streq(name, "VIBE")) {
+        handlers[new_msg_type] = new LA_MsgHandler_VIBE(name, format, _analyze, _vehicle);
     } else {
         return;
     }

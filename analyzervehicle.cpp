@@ -40,7 +40,7 @@ void Base::switch_vehicletype(Base *&_vehicle, vehicletype_t newtype) {
 void Base::set_T(const uint64_t time_us)
 {
     if (time_us < _T) {
-        ::fprintf(stderr, "time going backwards\n");
+        ::fprintf(stderr, "time going backwards (%lu < %lu) (delta=%ld)\n", time_us, _T, time_us - _T);
         abort();
     }
     _T = time_us;
@@ -176,6 +176,51 @@ double haversine(double from_lat, double from_lon, double to_lat, double to_lon)
 double AnalyzerVehicle::Position::horizontal_distance_to(AnalyzerVehicle::Position otherpos) const
 {
     return (double)earthradius() * (haversine(lat(), lon(), otherpos.lat(), otherpos.lon()));
+}
+
+// if the gyro has ever clipped, returns that time
+// otherwise returns 0
+uint64_t AnalyzerVehicle::IMU::last_acc_clip_time() const
+{
+    if (_acc_clip_count == 0) {
+        return 0;
+    }
+    return _acc_clip_count_T;
+}
+
+// set the number of times this acc has clipped
+void AnalyzerVehicle::IMU::set_acc_clip_count(uint16_t count)
+{
+    if (count > _acc_clip_count) {
+        _acc_clip_count = count;
+        _acc_clip_count_T = _T;
+    } else if (count < _acc_clip_count) {
+        fprintf(stderr, "Weird: clip count going bacwards");
+    }
+}
+
+// returns true if any clipping event happened in the last 0.1 seconds
+bool AnalyzerVehicle::IMU::acc_is_clipping() const
+{
+    uint64_t last_clip_time = last_acc_clip_time();
+    if (last_clip_time == 0) {
+        return false;
+    }
+    if (T() - last_clip_time < 100000) { // FIXME: magic number
+        return true;
+    }
+    
+    return false;
+}
+
+bool Base::any_acc_clipping() const
+{
+    for (auto x = _imus.begin(); x != _imus.end(); x++) {
+        if ((*x).second->acc_is_clipping()) {
+            return true;
+        }
+    }
+    return false;
 }
 
 double AnalyzerVehicle::Base::distance_from_origin()

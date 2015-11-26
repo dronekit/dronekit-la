@@ -91,6 +91,9 @@ void Analyzer_Good_EKF::close_variance_result(const std::string name)
         // should not happen
         ::fprintf(stderr, "Have a result with max less than threshold?!\n");
     }
+    if (_vehicle->any_acc_clipping()) {
+        result->add_evidence("Vehicle Accelerometers Clipping");
+    }
     add_result(result);
     _results[name] = NULL;
 }
@@ -201,6 +204,10 @@ void Analyzer_Good_EKF::open_result_flags(uint16_t flags)
     if (!(flags & EKF_PRED_POS_HORIZ_ABS)) {
         _result_flags->add_evilness(1);
         _result_flags->add_evidence("Predicted horizontal position (absolute) bad");
+    }
+
+    if (_vehicle->any_acc_clipping()) {
+        _result_flags->add_evidence("Vehicle Accelerometers Clipping");
     }
 }
 

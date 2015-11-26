@@ -352,3 +352,24 @@ void LA_MsgHandler_PM::xprocess(const uint8_t *msg)
     _vehicle->autopilot_set_loopcount(require_field_uint16_t(msg,"NLoop"));
     _vehicle->autopilot_set_slices_max(require_field_uint32_t(msg,"MaxT"));
 }
+
+
+void LA_MsgHandler_VIBE::xprocess(const uint8_t *msg)
+{
+    if (!have_added_VIBE) {
+        _analyze->add_data_source("IMU_VIBE_0", "VIBE.Clip0");
+        _analyze->add_data_source("IMU_VIBE_1", "VIBE.Clip1");
+        _analyze->add_data_source("IMU_VIBE_2", "VIBE.Clip2");
+        have_added_VIBE = true;
+    }
+
+    for (uint8_t i=0; i<=2; i++) {
+        // TODO: make sure we get the same IMU name as for ACC messages!
+        const std::string imu_name = string_format("IMU_%d", i);
+        AnalyzerVehicle::IMU *imu = _vehicle->imu(imu_name);
+
+        const std::string field_name = string_format("Clip%d", i);
+        const uint16_t count = require_field_uint16_t(msg, field_name.c_str());
+        imu->set_acc_clip_count(count);
+    }
+}
