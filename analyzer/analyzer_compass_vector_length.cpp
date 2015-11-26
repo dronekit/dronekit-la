@@ -137,7 +137,7 @@ void Analyzer_Compass_Vector_Length::close_result_long(Analyzer_Compass_Vector_L
 }
 
 
-void Analyzer_Compass_Vector_Length::evaluate_compass_field_length(AnalyzerVehicle::Base::Compass *compass)
+void Analyzer_Compass_Vector_Length::evaluate_compass_field_length(AnalyzerVehicle::Compass *compass)
 {
     if (!compass->field_T()) {
         return;
@@ -187,7 +187,7 @@ void Analyzer_Compass_Vector_Length::evaluate_compass_field_length(AnalyzerVehic
     }
 }
 
-void Analyzer_Compass_Vector_Length::evaluate_compass(AnalyzerVehicle::Base::Compass *compass)
+void Analyzer_Compass_Vector_Length::evaluate_compass(AnalyzerVehicle::Compass *compass)
 {
     evaluate_compass_field_length(compass);
 }
@@ -196,7 +196,7 @@ void Analyzer_Compass_Vector_Length::evaluate()
 {
     std::for_each(_vehicle->compasses().begin(),
                   _vehicle->compasses().end(),
-                      [this](std::pair<const std::string, AnalyzerVehicle::Base::Compass*>c){ evaluate_compass(c.second); });
+                      [this](std::pair<const std::string, AnalyzerVehicle::Compass*>c){ evaluate_compass(c.second); });
 }
 
 void Analyzer_Compass_Vector_Length::check_vector_delta(const std::string name,

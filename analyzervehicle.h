@@ -284,6 +284,26 @@ namespace AnalyzerVehicle {
     };
 
 
+    // again, not sure if this Compass object should be in the vehicle
+    // class here.
+    class Compass {
+    public:
+        Compass(const std::string name) :
+            _name(name)
+            { }
+        const std::string name() const { return _name; }
+        Vector3f &field() { return _field; }
+        uint64_t field_T() { // most recent timestamp of all components
+            return _field_T;
+        }
+        void set_field_T(uint64_t field_T) { _field_T = field_T; }
+    private:
+        const std::string _name; // do we really want this?!
+        Vector3f _field = { };
+        uint64_t _field_T = 0;
+    };
+
+
     class GPSInfo {
     public:
         GPSInfo(std::string name) { _name = name; }
@@ -612,13 +632,13 @@ public:
         _autopilot.set_slices_stddev(T(), slices);
     }
 
+    // global positioning systems
     // not really sure this belongs here; possibly move this out if we
     // ever move to a "state of the universe" object for the analyzers
     // rather than just a vehicle
     const std::map<const std::string, GPSInfo*> &gpsinfos() {
         return _gpsinfo;
     }
-
     GPSInfo *gpsinfo(const std::string name) {
         if (_gpsinfo.count(name) == 0) {
             _gpsinfo[name] = new GPSInfo(name);
@@ -626,25 +646,7 @@ public:
         return _gpsinfo[name];
     };
 
-    // again, not sure if this Compass object should be in the vehicle
-    // class here.
-    class Compass {
-    public:
-        Compass(const std::string name) :
-            _name(name)
-            { }
-        const std::string name() const { return _name; }
-        Vector3f &field() { return _field; }
-        uint64_t field_T() { // most recent timestamp of all components
-            return _field_T;
-        }
-        void set_field_T(uint64_t field_T) { _field_T = field_T; }
-    private:
-        const std::string _name; // do we really want this?!
-        Vector3f _field = { };
-        uint64_t _field_T = 0;
-    };
-
+    // magnetometers
     const std::map<const std::string, Compass*> &compasses() {
         return _compasses;
     }

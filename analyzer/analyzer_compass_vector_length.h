@@ -49,11 +49,11 @@ public:
 
     bool configure(INIReader *config) override;
 
-    void evaluate_compass_field_length(AnalyzerVehicle::Base::Compass *compass);
-    void evaluate_compass(AnalyzerVehicle::Base::Compass *compass);
+    void evaluate_compass_field_length(AnalyzerVehicle::Compass *compass);
+    void evaluate_compass(AnalyzerVehicle::Compass *compass);
     void evaluate() override;
 
-    void for_each_compass(const std::function <void (AnalyzerVehicle::Base::Compass*)> f);
+    void for_each_compass(const std::function <void (AnalyzerVehicle::Compass*)> f);
 
 private:
     float length_short_warn = 120.0f;
