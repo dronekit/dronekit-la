@@ -50,3 +50,9 @@ RC1_TRIM 1527.000000
  - the attitude control tests should ignore periods where the craft is not armed
  - the brownout report should give relative, not absolute, height at end of flight
  
+    
+
+
+// - two fundamental types of test
+//  - is the software working correctly (EKF issues)
+//  - is the vehicle doing sensible things (attitude etc)

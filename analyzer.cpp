@@ -67,7 +67,7 @@ uint32_t Analyzer::severity_score() const {
     return ret;
 }
 
-void Analyzer::results_json_results(Json::Value &root)
+void Analyzer::results_json_results(Json::Value &root) const
 {
     std::vector<Analyzer_Result*> my_results = results();
     for (std::vector<Analyzer_Result*>::const_iterator it = my_results.begin();
@@ -90,7 +90,7 @@ void Analyzer::results_json_results(Json::Value &root)
     }
 }
 
-analyzer_status Analyzer::status()
+analyzer_status Analyzer::status() const
 {
     analyzer_status ret = analyzer_status_ok;
 
