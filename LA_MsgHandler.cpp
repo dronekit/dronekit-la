@@ -87,7 +87,7 @@ LA_MsgHandler_AHR2::LA_MsgHandler_AHR2(std::string name, const struct log_Format
     _analyze->add_data_source("POSITION_ESTIMATE_AHR2", "AHR2.Lng");
 
     _analyze->add_data_source("ALTITUDE_ESTIMATE_AHR2", "AHR2.Alt");
-};
+}
 void LA_MsgHandler_AHR2::xprocess(const uint8_t *msg) {
     int16_t Roll = require_field_int16_t(msg, "Roll");
     int16_t Pitch = require_field_int16_t(msg, "Pitch");
@@ -138,7 +138,7 @@ LA_MsgHandler_ATT::LA_MsgHandler_ATT(std::string name, const struct log_Format &
     _analyze->add_data_source("ATTITUDE_ESTIMATE_ATTITUDE", "ATT.Roll");
     _analyze->add_data_source("ATTITUDE_ESTIMATE_ATTITUDE", "ATT.Pitch");
     _analyze->add_data_source("ATTITUDE_ESTIMATE_ATTITUDE", "ATT.Yaw");
-};
+}
 
 void LA_MsgHandler_ATT::xprocess(const uint8_t *msg) {
     int16_t DesRoll = require_field_int16_t(msg, "DesRoll");
@@ -177,7 +177,7 @@ LA_MsgHandler_EKF1::LA_MsgHandler_EKF1(std::string name,
     _analyze->add_data_source("POSITION_ESTIMATE_EKF1", "EKF1.PE");
 
     _analyze->add_data_source("ALTITUDE_ESTIMATE_EKF1", "EKF1.PD");
-};
+}
 
 void LA_MsgHandler_EKF1::xprocess(const uint8_t *msg) {
     int16_t Roll = require_field_int16_t(msg, "Roll");
@@ -229,7 +229,7 @@ LA_MsgHandler_ERR::LA_MsgHandler_ERR(std::string name, const struct log_Format &
     _analyze->add_data_source("BATTERY_FAILSAFE", "ERR.ECode");
     _analyze->add_data_source("CRASH", "ERR.Subsys");
     _analyze->add_data_source("CRASH", "ERR.ECode");
-};
+}
 
 void LA_MsgHandler_ERR::xprocess(const uint8_t *msg) {
     uint8_t subsys = require_field_uint8_t(msg, "Subsys");

@@ -55,6 +55,9 @@ public:
 
 private:
 
+// allow designated initialisers:
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
     std::map<const std::string, ekf_variance> _variances = {
         { "velocity", {
             name: "velocity_variance",
@@ -87,6 +90,8 @@ private:
             }
         }
     };
+#pragma GCC diagnostic pop
+
     std::map<const std::string, Analyzer_Good_EKF_Result_Variance*> _results = {
         { "velocity", NULL },
         { "pos_horiz", NULL },

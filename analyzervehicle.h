@@ -4,8 +4,11 @@
 #include <stdint.h>
 #include <map>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
 #include "mavlink/c_library/ardupilotmega/mavlink.h"
 #include "mavlink/c_library/common/mavlink.h"
+#pragma GCC diagnostic pop
 
 #include "analyzer_util.h"
 #include "Vector3f.h"

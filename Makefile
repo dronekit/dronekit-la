@@ -18,7 +18,7 @@ INCS += -I.  # for <DataFlash/DataFlash.h> in MsgHandler
 
 STD=-std=c++11
 STATIC=-static
-WARNFLAGS= -Wall -Werror -Wextra -Wunused -Wlogical-op -Wredundant-decls -D_FORTIFY_SOURCE=2 -Wfloat-equal -fstack-protector
+WARNFLAGS= -Wall -Werror -Wextra -Wunused -Wlogical-op -Wredundant-decls -D_FORTIFY_SOURCE=2 -Wfloat-equal -fstack-protector -Wformat -Werror=format-security -Werror=pointer-arith -Wpedantic
 CFLAGS += $(INCS) -DGIT_VERSION=\"$(GIT_VERSION)\" $(WARNFLAGS)
 CXXFLAGS += $(INCS) $(STD) -g -DGIT_VERSION=\"$(GIT_VERSION)\" $(STATIC) $(WARNFLAGS)
 

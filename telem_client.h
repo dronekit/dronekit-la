@@ -1,7 +1,11 @@
 #ifndef _TELEM_CLIENT_H
 #define _TELEM_CLIENT_H
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
 #include "mavlink/c_library/ardupilotmega/mavlink.h"
+#pragma GCC diagnostic pop
+
 #include <sys/select.h>
 #include "INIReader.h"
 

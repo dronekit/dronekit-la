@@ -125,7 +125,7 @@ bool DataFlash_Logger::make_new_log_filename(char *buffer, uint8_t bufferlen)
         }
         num = 1;
     } else {
-	uint8_t numbuf_len = 128;
+	const uint8_t numbuf_len = 128;
 	char numbuf[numbuf_len];
         memset(numbuf, '\0', numbuf_len);
         int bytes_read = read(fd, numbuf, numbuf_len);
