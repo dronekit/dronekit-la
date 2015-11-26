@@ -44,7 +44,7 @@ public:
 
     const std::string name() const override { return "Compass Vector Length"; }
     const std::string description() const override {
-        return "This test will FAIL if the compass' vector length exceeds a threshold.  Causes of this include flying near large metal objects.";
+        return "This test will FAIL or WARN if the compass vector length exceeds the respective threshold.  Possible causes include flying near large metal objects.";
     }
 
     bool configure(INIReader *config) override;

@@ -35,7 +35,7 @@ public:
 
     const std::string name() const override { return "Ever Armed"; }
     const std::string description() const override {
-        return "This test will FAIL if the craft never armed during the log";
+        return "This test will FAIL if the craft did not arm";
     }
 
     void evaluate() override;

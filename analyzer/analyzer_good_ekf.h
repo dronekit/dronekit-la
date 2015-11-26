@@ -48,7 +48,7 @@ public:
 
     const std::string name() const override { return "Good EKF"; }
     const std::string description() const override {
-        return "This test will FAIL if EKF variances exceed thresholds, or if the EKF status flags indicate errors";
+        return "This test will FAIL or WARN if EKF variances exceed the respective thresholds, or FAIL if the EKF status flags indicate errors.";
     }
 
     bool configure(INIReader *config) override;
