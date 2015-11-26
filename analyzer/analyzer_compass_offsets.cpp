@@ -109,6 +109,7 @@ void Analyzer_Compass_Offsets::evaluate()
         result->add_evidence
             (string_format("COMPASS_OFS" + _param_extra_string + " %f == 0", len));
     } else {
+        result->set_reason("Compass offsets in parameters look reasonable");
         result->set_status(analyzer_status_ok);
         result->add_evidence
             (string_format("COMPASS_OFS" + _param_extra_string + " %f < %f", len, warn_offset));

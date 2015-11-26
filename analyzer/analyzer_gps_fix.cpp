@@ -145,7 +145,11 @@ void Analyzer_GPS_Fix::open_result(AnalyzerVehicle::GPSInfo *gpsinfo)
 {
     _result = new Analyzer_GPS_Fix_Result(gpsinfo->name());
     _result->set_T_start(_vehicle->T());
+
+    // take a somewhat negative attitude to our chances of success:
     _result->set_status(analyzer_status_fail);
+    _result->set_reason("GPS Fix was never acquired");
+
     _result->set_satellites(gpsinfo->satellites());
     _result->set_hdop(gpsinfo->hdop());
 }
