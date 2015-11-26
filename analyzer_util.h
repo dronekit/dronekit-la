@@ -57,6 +57,8 @@ string_format( const std::string format, const Args ... args )
 #define streq(x,y) (!strcmp(x,y))
 #endif
 
+bool strieq(const char *x, const char *y);
+
 // inline float deg_to_rad(const float deg) {
 //     return deg/M_PI * 180;
 // }
