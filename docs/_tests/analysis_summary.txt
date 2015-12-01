@@ -1,0 +1,126 @@
+DK-LA Version: Version: 0.3
+Git-Version: 0.3-17-g9d853
+
+DK-LA HELP:
+
+ Usage:
+dronekit-la [OPTION] [FILE...]
+ -c FILEPATH      use config file filepath
+ -m MODELTYPE     override model; copter|plane|rover
+ -f FRAME         set frame; QUAD|Y6
+ -s STYLE         use output style (plain-text|json|brief)
+ -h               display usage information
+ -l               list analyzers
+ -a               specify analyzers to run (comma-separated list)
+ -i FORMAT        specify input format (tlog|df|log)
+ -p	        pure output - no deprecated fields
+ -V               display version information
+
+Example: dronekit-la -s json 1.solo.tlog
+Example: dronekit-la -a "Ever Flew, Battery" 1.solo.tlog
+Example: dronekit-la -s brief 1.solo.tlog 2.solo.tlog logs/*.tlog
+Example: dronekit-la - (analyze stdin)
+Example: dronekit-la x.log (analyze text-dumped dataflash log)
+
+Analyser List: 
+
+Any Parameters Seen
+Arming Checks
+Altitude Estimate Divergence
+Attitude Estimate Divergence
+Compass Offsets
+Compass Vector Length
+Compass Offsets
+Compass Offsets
+Ever Armed
+Ever Flew
+Good EKF
+GPS Fix
+Attitude Control
+AutoPilot Health
+Battery
+Brownout
+Position Estimate Divergence
+Crash Test
+Sensor Health
+Vehicle Definition
+Velocity Estimate Divergence
+
+
+TEST: Any Parameters Seen
+Description: This test will FAIL if the input does not contain parameter information.
+* Pass: Parameters seen
+
+TEST: Good EKF
+Description: This test will FAIL or WARN if EKF variances exceed the respective thresholds, or FAIL if the EKF status flags indicate errors.
+* Fail: The EKF status report indicates a problem with the EKF
+* Fail: compass_variance exceeds fail threshold
+* Warn: compass_variance exceeds warn threshold
+* Warn: velocity_variance exceeds warn threshold
+
+TEST: Ever Armed
+Description: This test will FAIL if the craft did not arm
+* Pass: The vehicle armed
+
+TEST: Attitude Control
+Description: This test will FAIL or WARN if the vehicle's desired attitudes and achieved attitudes are not within threshold delta values for more than a threshold time.
+* Warn: Desired attitude not achieved
+
+TEST: Battery
+Description: This test will FAIL if the battery level falls below the battery failsafe threshold level, or if a battery failsafe event is received.
+* Pass: Battery never below failsafe
+
+TEST: AutoPilot Health
+Description: This test will FAIL if problems are detected with the AutoPilot
+
+TEST: GPS Fix
+Description: This test will FAIL if the quality of the GPS information is poor
+* Fail: No 3D fix was ever acquired
+* Pass: First 3D GPS Fix Acquired
+
+TEST: Ever Flew
+Description: This test will FAIL if the craft did not ever seem to fly
+* Pass: The vehicle appeared to fly
+
+TEST: Velocity Estimate Divergence
+Description: This test will FAIL if various craft's velocity estimates diverge
+
+TEST: Crash Test
+Description: This test will FAIL if the vehicle appears to crash
+* Pass: Never crashed
+
+TEST: Altitude Estimate Divergence
+Description: This test will FAIL or WARN if the various vehicle's Altitude estimates diverge
+* Fail: This altitude estimate differs from the canonical craft altitude
+* Warn: This altitude estimate differs from the canonical craft altitude
+
+TEST: Vehicle Definition
+Description: This test will FAIL if the craft type is never defined
+* Pass: Vehicle was appropriately defined
+
+TEST: Brownout
+Description: This test will FAIL if the craft appears to lose onboard power during a flight
+* Fail: Log ended while craft still flying
+
+TEST: Position Estimate Divergence
+Description: This test will FAIL if various craft's position estimates diverge
+
+TEST: Compass Vector Length
+Description: This test will FAIL or WARN if the compass vector length exceeds the respective threshold.  Possible causes include flying near large metal objects.
+
+TEST: Arming Checks
+Description: This test will FAIL if the craft ever arms when some arming checks are disabled
+
+TEST: Sensor Health
+Description: This test will FAIL if any sensor is detected as failed
+* Fail: The craft's assesment of its sensors indicate a problem
+
+TEST: Attitude Estimate Divergence
+Description: This test will FAIL if various craft's attitude estimates diverge
+* Fail: This attitude estimate differs from the canonical craft attitude
+* Warn: This attitude estimate differs from the canonical craft attitude
+
+TEST: Compass Offsets
+Description: This test will WARN or FAIL depending on the degree that compass offset parameters exceed specified thresholds.
+* Warn: Compass offsets in parameters are out of bounds
+* Pass: Compass offsets in parameters look reasonable
