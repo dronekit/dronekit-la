@@ -18,13 +18,34 @@ Use the `Makefile` in the root directory
 make
 ```
 
-## Adding new tests/analyzers (FIXME)
+## Adding new tests/analyzers
+ - create a new header file for your test (e.g. analyzer_gyro_drift.h)
+  - copy in the contents of another, similar header file
+   - in this case, I chose analyzer_compass_vector_length.h as they're testing similar things and will both produce Analyer_Result_Period results
+  - replace all instances of e.g. "compass_vector_length" with "gyro_drift"
+  - trim out of the Result all variables and method definitions which don't look appropriate for your new test result
+  - sometimes multiple different result objects are generated for the one Analyzer  Remove these if not needed
+  - change the test name
+  - change the test description
+ 
+## Adding new data sources
+There is a great deal of data in logs, and not all of it is currently made available for the analyzers to utilise.
 
-Duplicate a test, change the obvious stuff
- - ensure the packet types you are interested in are being handled in mavlink_message_handler and LA_MsgHandler
- - ensure mavlink_reader.cpp mentions your packet type in handle_message_received
- - ensure analyze.h mentions the appropriately-signatured functions
+The method to take data from a data source and make it available to the analyzers differs based on the data source:
 
+ - if there is no place in the vehicle to store the data (see analyzervehicle.h), add an appropriate field
+  - always bear in mind that this data may also come from some other place as well, so the abstraction should avoid coupling against the message type.
+
+### DataFlash logs
+ - subclassing is used to handle different message types
+ - In LA_MsgHandler.h, create a new subclass for the message type you are interested in
+ - in LA_MsgHandler.cpp, create your implementation, updating the vehicle model as appropriate.
+
+### MAVLink (telemetry) logs
+ - polymorphism is used to handle different message types
+ - add declaration of new handle_decoded_message method to analyzing_mavlink_message_handler.h
+ - add add_data_source lines to Analyzing_MAVlink_Message_Handler constructor in analyzing_mavlink_message_handler.cpp
+ - add implementation of new handle_decoded_message to analyzing_mavlink_message_handler.cpp
 
 ## Analyzers to Write:
  - analyzer_default_params_used
@@ -50,3 +71,9 @@ RC1_TRIM 1527.000000
  - the attitude control tests should ignore periods where the craft is not armed
  - the brownout report should give relative, not absolute, height at end of flight
  
+    
+
+
+// - two fundamental types of test
+//  - is the software working correctly (EKF issues)
+//  - is the vehicle doing sensible things (attitude etc)

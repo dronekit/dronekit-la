@@ -44,11 +44,11 @@ void Analyzer_Arming_Checks::evaluate()
 
             result->set_T(_vehicle->T());
             result->set_arming_check(arming_check);
-            result->add_evilness(10);
+            result->increase_severity_score(10);
             for (std::map<uint32_t, const char *>::const_iterator it = _bit_to_name.begin(); it != _bit_to_name.end(); ++it) {
                 if (!(result->arming_check() & (*it).first)) {
                     result->add_evidence(string_format("%s check disabled", (*it).second));
-                    result->add_evilness(1);
+                    result->increase_severity_score(1);
                 }
             }
             add_result(result);

@@ -46,7 +46,7 @@ public:
         return string_format("%s Estimate Divergence", estimate_name().c_str());
     }
     virtual const std::string description() const override {
-        return string_format("This test will FAIL if various craft's %s estimates diverge", estimate_name().c_str());
+        return string_format("This test will FAIL or WARN if the various vehicle's %s estimates diverge", estimate_name().c_str());
     }
 
     // void evaluate() override;

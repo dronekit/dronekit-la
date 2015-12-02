@@ -81,15 +81,18 @@ void Analyzer_Good_EKF::close_variance_result(const std::string name)
         result->set_status(analyzer_status_fail);
         result->set_reason(string_format("%s exceeds fail threshold", name.c_str()));
         result->add_evidence(string_format("threshold=%f", variance->threshold_fail));
-        result->add_evilness(10);
+        result->increase_severity_score(10);
     } else if (result->max() > variance->threshold_warn) {
         result->set_status(analyzer_status_warn);
         result->set_reason(string_format("%s exceeds warn threshold", name.c_str()));
         result->add_evidence(string_format("threshold=%f", variance->threshold_warn));
-        result->add_evilness(4);
+        result->increase_severity_score(4);
     } else {
         // should not happen
         ::fprintf(stderr, "Have a result with max less than threshold?!\n");
+    }
+    if (_vehicle->any_acc_clipping()) {
+        result->add_evidence("Vehicle Accelerometers Clipping");
     }
     add_result(result);
     _results[name] = NULL;
@@ -161,46 +164,50 @@ void Analyzer_Good_EKF::open_result_flags(uint16_t flags)
 
     _result_flags->add_evidence(string_format("flags=%d", flags));
     // TODO: put the flags and the "bad" descrption into a structure
-    _result_flags->add_evilness(10);
+    _result_flags->increase_severity_score(10);
     if (!(flags & EKF_ATTITUDE)) {
-        _result_flags->add_evilness(1);
+        _result_flags->increase_severity_score(1);
         _result_flags->add_evidence("attitude estimate bad");
     }
     if (!(flags & EKF_VELOCITY_HORIZ)) {
-        _result_flags->add_evilness(1);
+        _result_flags->increase_severity_score(1);
         _result_flags->add_evidence("horizontal velocity estimate bad");
     }
     if (!(flags & EKF_VELOCITY_VERT)) {
-        _result_flags->add_evilness(1);
+        _result_flags->increase_severity_score(1);
         _result_flags->add_evidence("vertical velocity estimate bad");
     }
     if (!(flags & EKF_POS_HORIZ_REL)) {
-        _result_flags->add_evilness(1);
+        _result_flags->increase_severity_score(1);
         _result_flags->add_evidence("horizontal position (relative) estimate bad");
     }
     if (!(flags & EKF_POS_HORIZ_ABS)) {
-        _result_flags->add_evilness(1);
+        _result_flags->increase_severity_score(1);
         _result_flags->add_evidence("horizontal position (absolute) estimate bad");
     }
     if (!(flags & EKF_POS_VERT_ABS)) {
-        _result_flags->add_evilness(1);
+        _result_flags->increase_severity_score(1);
         _result_flags->add_evidence("vertical position (absolute) estimate bad");
     }
     if (!(flags & EKF_POS_VERT_AGL)) {
-        _result_flags->add_evilness(1);
+        _result_flags->increase_severity_score(1);
         _result_flags->add_evidence("vertical position (above ground) estimate bad");
     }
     if (!(flags & EKF_CONST_POS_MODE)) {
-        _result_flags->add_evilness(1);
+        _result_flags->increase_severity_score(1);
         _result_flags->add_evidence("In constant position mode (no abs or rel position)");
     }
     if (!(flags & EKF_PRED_POS_HORIZ_REL)) {
-        _result_flags->add_evilness(1);
+        _result_flags->increase_severity_score(1);
         _result_flags->add_evidence("Predicted horizontal position (relative) bad");
     }
     if (!(flags & EKF_PRED_POS_HORIZ_ABS)) {
-        _result_flags->add_evilness(1);
+        _result_flags->increase_severity_score(1);
         _result_flags->add_evidence("Predicted horizontal position (absolute) bad");
+    }
+
+    if (_vehicle->any_acc_clipping()) {
+        _result_flags->add_evidence("Vehicle Accelerometers Clipping");
     }
 }
 

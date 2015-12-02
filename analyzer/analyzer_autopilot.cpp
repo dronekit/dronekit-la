@@ -30,7 +30,7 @@ void Analyzer_Autopilot::open_result_slices_max(uint16_t slices)
     _result_slices_max->set_reason("Severe scheduler overruns");
     _result_slices_max->add_evidence(string_format("slices-threshold=%d", _slices_max_threshold));
     _result_slices_max->set_status(analyzer_status_fail);
-    _result_slices_max->add_evilness(10);
+    _result_slices_max->increase_severity_score(10);
     update_result_slices_max(slices);
 }
 

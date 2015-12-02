@@ -19,7 +19,7 @@ void Analyzer_Any_Parameters_Seen::end_of_log(const uint32_t packet_count UNUSED
     } else {
         result->set_status(analyzer_status_fail);
         result->set_reason("No parameters seen");
-        result->add_evilness(20);
+        result->increase_severity_score(20);
         result->add_source(_data_sources.get("PARAM"));
     }
     add_result(result);

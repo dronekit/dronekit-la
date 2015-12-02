@@ -28,10 +28,10 @@ void Analyzer_Attitude_Control::open_result(double delta)
 
     if (delta > offset_fail) {
         _result->set_status(analyzer_status_fail);
-        _result->set_evilness(10);
+        _result->set_severity_score(10);
     } else if (delta > offset_warn) {
         _result->set_status(analyzer_status_warn);
-        _result->set_evilness(5);
+        _result->set_severity_score(5);
     } else {
         ::fprintf(stderr, "open result for bad delta");
     }
@@ -52,7 +52,7 @@ void Analyzer_Attitude_Control::update_result(const double delta)
         _result->despitch_at_deltamax = _vehicle->despitch();
         if (delta > offset_fail) {
             _result->set_status(analyzer_status_fail);
-            _result->set_evilness(10);
+            _result->set_severity_score(10);
         }
     }
     // should probably subclass attitude_control rather than this:
@@ -181,7 +181,7 @@ void Analyzer_Attitude_Control::end_of_log(uint32_t packet_count UNUSED)
         Analyzer_Result_Summary *result = new Analyzer_Result_Summary();
         result->set_status(analyzer_status_warn);
         result->set_reason("Vehicle attitude never set");
-        result->set_evilness(5);
+        result->set_severity_score(5);
         result->add_source(_data_sources.get("ATTITUDE"));
         add_result(result);
     }

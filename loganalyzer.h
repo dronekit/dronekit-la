@@ -9,6 +9,11 @@
  * Initiate a remote-dataflash stream
  */
 
+// if you modify this, modify the debian metadata using e.g.
+// debchange -r -e  (FIXME)
+
+#define DRONEKIT_LA_VERSION "0.3"
+
 #include "INIReader.h"
 
 #include "mavlink_message_handler.h"
@@ -38,6 +43,7 @@ public:
     void parse_arguments(int argc, char *argv[]);
 
 private:
+    bool _pure_output = false;
     bool _use_telem_forwarder = false;
     Telem_Forwarder_Client *_client = NULL;
     uint8_t _client_recv_buf[512]; // FIXME constant was TELEM_PKT_MAX

@@ -1,3 +1,13 @@
+/**
+ * @file
+ * @author Peter Barker <peter.barker@3drobotics.com>
+ *
+ * @section DESCRIPTION
+ *
+ * Objects to interpret information out of DataFlash messages and into
+ * the Vehicle model
+ */
+
 #ifndef AP_LA_MSGHANDLER_H
 #define AP_LA_MSGHANDLER_H
 
@@ -10,8 +20,19 @@
 
 #include <string.h>
 
+/// @brief Base class for dataflash message handlers
+///
+/// Extend this based on the type of the DataFlash message you wish to
+/// take data from
 class LA_MsgHandler : public MsgHandler {
 public:
+
+    /// @brief construct a DataFlash Message Handler
+    /// @param name Name by which this message handler is known; e.g. GPS2
+    /// @param f DataFlash log format corresponding to the DataFlash message type
+    /// @param analyze Object which is responsible for coordinating analysis of vehicle state
+    /// @param vehicle a vehicle whose state should be updated by the message handler
+    /// @note evaluate_all is called on "analyze" after the vehicle state has been updated
     LA_MsgHandler(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
         MsgHandler(f),
         _name(name),
@@ -21,12 +42,8 @@ public:
             // _analyze->add_data_source("SYSTEM_TIME", "SYSTEM_TIME.time_boot_ms");
         };
 
-    virtual bool find_T(const uint8_t *msg, uint64_t &T);
-    bool process_set_T(const uint8_t *msg);
-    uint64_t T() const { return _vehicle->T(); } // only valid after process_set_T
-
-    virtual void xprocess(const uint8_t *msg) = 0;
-
+    /// @brief process a DataFlash message, update state, run analysis on new vehicle state
+    /// @param msg a DataFlash message
     virtual void process(const uint8_t *msg) {
         if (!process_set_T(msg)) {
             return;
@@ -35,16 +52,34 @@ public:
         _analyze->evaluate_all();
     }
 
-    AnalyzerVehicle::AltitudeEstimate* altitude_estimate();
-    AnalyzerVehicle::AttitudeEstimate* attitude_estimate();
-    AnalyzerVehicle::PositionEstimate* position_estimate();
-    AnalyzerVehicle::GPSInfo* gpsinfo();
+    /// @brief return the name of this Message Handler (e.g. GPS2)
     const std::string name() const { return _name; }
 
 protected:
     std::string _name;
     Analyze *_analyze;
     AnalyzerVehicle::Base *&_vehicle;
+
+    /// @brief Try to find a timestamp given a message
+    /// @return true if a timestamp was found
+    virtual bool find_T(const uint8_t *msg, uint64_t &T);
+    /// @brief Try to set vehicle model timestamp from a given message
+    /// @return true if timestamp was set
+    bool process_set_T(const uint8_t *msg);
+    /// @brief return the current vehicle timestamp
+    uint64_t T() const { return _vehicle->T(); } // only valid after process_set_T
+
+    /// @brief process a DataFlash message, update vehicle mode appropriately
+    virtual void xprocess(const uint8_t *msg) = 0;
+
+    /// @brief convenience function producing an estimate to be used for state
+    AnalyzerVehicle::AltitudeEstimate* altitude_estimate();
+    /// @brief convenience function producing an estimate to be used for state
+    AnalyzerVehicle::AttitudeEstimate* attitude_estimate();
+    /// @brief convenience function producing an estimate to be used for state
+    AnalyzerVehicle::PositionEstimate* position_estimate();
+    /// @brief convenience function producing an estimate to be used for state
+    AnalyzerVehicle::GPSInfo* gpsinfo();
 };
 
 // this is just here ATM because older messages have both TimeMS and
@@ -358,6 +393,19 @@ public:
 
 private:
     bool have_added_STAT = false;
+};
+
+
+class LA_MsgHandler_VIBE : public LA_MsgHandler {
+public:
+    LA_MsgHandler_VIBE(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
+    }
+
+    void xprocess(const uint8_t *msg) override;
+
+private:
+    bool have_added_VIBE = false;
 };
 
 #endif

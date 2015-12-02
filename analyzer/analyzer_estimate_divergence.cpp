@@ -50,10 +50,10 @@ void Analyzer_Estimate_Divergence::update_result(std::string name, double delta)
 
         if (result->status() == analyzer_status_fail) {
             result->set_delta_threshold(delta_fail());
-            result->set_evilness(20);
+            result->set_severity_score(20);
         } else if (result->status() == analyzer_status_warn) {
             result->set_delta_threshold(delta_warn());
-            result->set_evilness(10);
+            result->set_severity_score(10);
         }
     }
 }

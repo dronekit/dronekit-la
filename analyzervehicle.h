@@ -4,8 +4,11 @@
 #include <stdint.h>
 #include <map>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
 #include "mavlink/c_library/ardupilotmega/mavlink.h"
 #include "mavlink/c_library/common/mavlink.h"
+#pragma GCC diagnostic pop
 
 #include "analyzer_util.h"
 #include "Vector3f.h"
@@ -284,6 +287,26 @@ namespace AnalyzerVehicle {
     };
 
 
+    // again, not sure if this Compass object should be in the vehicle
+    // class here.
+    class Compass {
+    public:
+        Compass(const std::string name) :
+            _name(name)
+            { }
+        const std::string name() const { return _name; }
+        Vector3f &field() { return _field; }
+        uint64_t field_T() { // most recent timestamp of all components
+            return _field_T;
+        }
+        void set_field_T(uint64_t field_T) { _field_T = field_T; }
+    private:
+        const std::string _name; // do we really want this?!
+        Vector3f _field = { };
+        uint64_t _field_T = 0;
+    };
+
+
     class GPSInfo {
     public:
         GPSInfo(std::string name) { _name = name; }
@@ -342,6 +365,45 @@ namespace AnalyzerVehicle {
         uint64_t _slices_avg_T = 0;
         uint16_t _slices_stddev;
         uint64_t _slices_stddev_T = 0;
+    };
+
+    // again, not sure if this IMU object should be in the vehicle
+    // class here.
+    class IMU {
+    public:
+        IMU(const std::string name, uint64_t &T) :
+            _name(name),
+            _T(T)
+            { }
+        const std::string name() const { return _name; }
+        uint64_t T() const { return _T; };
+        Vector3f &acc() { return _acc; }
+        Vector3f &gyr() { return _gyr; }
+        uint64_t acc_T() { // most recent timestamp of all components
+            return _acc_T;
+        }
+        uint64_t gyr_T() { // most recent timestamp of all components
+            return _gyr_T;
+        }
+        void set_acc_T(uint64_t acc_T) { _acc_T = acc_T; }
+        void set_gyr_T(uint64_t gyr_T) { _gyr_T = gyr_T; }
+
+        void set_acc_clip_count(uint16_t count);
+
+        uint64_t last_acc_clip_time() const;
+        bool acc_is_clipping() const;
+
+    private:
+        const std::string _name; // do we really want this?!
+        uint64_t &_T;
+
+        Vector3f _acc = { };
+        Vector3f _gyr = { };
+        uint64_t _acc_T = 0;
+        uint64_t _gyr_T = 0;
+
+        uint64_t _acc_clip_count_T;
+        uint16_t _acc_clip_count;
     };
 
     // template <typename packettype>
@@ -573,13 +635,13 @@ public:
         _autopilot.set_slices_stddev(T(), slices);
     }
 
+    // global positioning systems
     // not really sure this belongs here; possibly move this out if we
     // ever move to a "state of the universe" object for the analyzers
     // rather than just a vehicle
     const std::map<const std::string, GPSInfo*> &gpsinfos() {
         return _gpsinfo;
     }
-
     GPSInfo *gpsinfo(const std::string name) {
         if (_gpsinfo.count(name) == 0) {
             _gpsinfo[name] = new GPSInfo(name);
@@ -587,29 +649,10 @@ public:
         return _gpsinfo[name];
     };
 
-    // again, not sure if this Compass object should be in the vehicle
-    // class here.
-    class Compass {
-    public:
-        Compass(const std::string name) :
-            _name(name)
-            { }
-        const std::string name() const { return _name; }
-        Vector3f &field() { return _field; }
-        uint64_t field_T() { // most recent timestamp of all components
-            return _field_T;
-        }
-        void set_field_T(uint64_t field_T) { _field_T = field_T; }
-    private:
-        const std::string _name; // do we really want this?!
-        Vector3f _field = { };
-        uint64_t _field_T = 0;
-    };
-
+    // magnetometers
     const std::map<const std::string, Compass*> &compasses() {
         return _compasses;
     }
-
     Compass *compass(const std::string name) {
         if (_compasses.count(name) == 0) {
             _compasses[name] = new Compass(name);
@@ -617,6 +660,16 @@ public:
         return _compasses[name];
     };
 
+    // IMUs
+    const std::map<const std::string, IMU*> &imus() {
+        return _imus;
+    }
+    IMU *imu(std::string name) {
+        if (_imus.count(name) == 0) {
+            _imus[name] = new IMU(name, _T);
+        }
+        return _imus[name];
+    }
 
     const Attitude& att() const { return _att; };
     const Position& pos() const { return _pos; };
@@ -654,6 +707,8 @@ public:
 
     bool crashed() const { return _crashed; }
     void set_crashed(bool value) { _crashed = value; _crashed_T = T(); }
+
+    bool any_acc_clipping() const;
 
 protected:
     AV_Nav& nav() { return _nav; };
@@ -696,6 +751,7 @@ private:
 
     std::map<const std::string, GPSInfo*> _gpsinfo;
     std::map<const std::string, Compass*> _compasses;
+    std::map<const std::string, IMU*> _imus;
 
     // PacketHistory<mavlink_heartbeat_t> history_heartbeat;
     // PacketHistory<mavlink_nav_controller_output_t> history_nav_controller_output;

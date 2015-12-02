@@ -260,9 +260,12 @@ void Analyze::results_json(Json::Value &root)
 
         analyzer->results_json_results(tests[name]["results"]);
         tests[name]["status"] = analyzer->status_as_string();
-        tests[name]["evilness"] = tests[name]["evilness"].asLargestUInt() + analyzer->evilness();
-        tests[name]["severity-score"] = tests[name]["evilness"];
-        total_evilness += analyzer->evilness();
+        tests[name]["severity-score"] = tests[name]["severity-score"].asLargestUInt() + analyzer->severity_score();
+        if (!pure_output()) {
+            tests[name]["evilness"] = tests[name]["severity-score"];
+            tests[name]["evilness-is-deprecated"] = 1;
+        }
+        total_evilness += analyzer->severity_score();
     }
     
     root["evilness"] = total_evilness;

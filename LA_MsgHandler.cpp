@@ -87,7 +87,7 @@ LA_MsgHandler_AHR2::LA_MsgHandler_AHR2(std::string name, const struct log_Format
     _analyze->add_data_source("POSITION_ESTIMATE_AHR2", "AHR2.Lng");
 
     _analyze->add_data_source("ALTITUDE_ESTIMATE_AHR2", "AHR2.Alt");
-};
+}
 void LA_MsgHandler_AHR2::xprocess(const uint8_t *msg) {
     int16_t Roll = require_field_int16_t(msg, "Roll");
     int16_t Pitch = require_field_int16_t(msg, "Pitch");
@@ -138,7 +138,7 @@ LA_MsgHandler_ATT::LA_MsgHandler_ATT(std::string name, const struct log_Format &
     _analyze->add_data_source("ATTITUDE_ESTIMATE_ATTITUDE", "ATT.Roll");
     _analyze->add_data_source("ATTITUDE_ESTIMATE_ATTITUDE", "ATT.Pitch");
     _analyze->add_data_source("ATTITUDE_ESTIMATE_ATTITUDE", "ATT.Yaw");
-};
+}
 
 void LA_MsgHandler_ATT::xprocess(const uint8_t *msg) {
     int16_t DesRoll = require_field_int16_t(msg, "DesRoll");
@@ -177,7 +177,7 @@ LA_MsgHandler_EKF1::LA_MsgHandler_EKF1(std::string name,
     _analyze->add_data_source("POSITION_ESTIMATE_EKF1", "EKF1.PE");
 
     _analyze->add_data_source("ALTITUDE_ESTIMATE_EKF1", "EKF1.PD");
-};
+}
 
 void LA_MsgHandler_EKF1::xprocess(const uint8_t *msg) {
     int16_t Roll = require_field_int16_t(msg, "Roll");
@@ -229,7 +229,7 @@ LA_MsgHandler_ERR::LA_MsgHandler_ERR(std::string name, const struct log_Format &
     _analyze->add_data_source("BATTERY_FAILSAFE", "ERR.ECode");
     _analyze->add_data_source("CRASH", "ERR.Subsys");
     _analyze->add_data_source("CRASH", "ERR.ECode");
-};
+}
 
 void LA_MsgHandler_ERR::xprocess(const uint8_t *msg) {
     uint8_t subsys = require_field_uint8_t(msg, "Subsys");
@@ -333,7 +333,7 @@ void LA_MsgHandler_STAT::xprocess(const uint8_t *msg)
 }
 
 void LA_MsgHandler_MAG::xprocess(const uint8_t *msg) {
-    AnalyzerVehicle::Base::Compass *compass = _vehicle->compass(_name);
+    AnalyzerVehicle::Compass *compass = _vehicle->compass(_name);
     if (!field_value(msg, "Mag", compass->field())) {
         ::fprintf(stderr, "Failed to extract Mag fields from MAG message");
         abort();
@@ -351,4 +351,25 @@ void LA_MsgHandler_PM::xprocess(const uint8_t *msg)
     _vehicle->autopilot_set_overruns(require_field_uint16_t(msg,"NLon"));
     _vehicle->autopilot_set_loopcount(require_field_uint16_t(msg,"NLoop"));
     _vehicle->autopilot_set_slices_max(require_field_uint32_t(msg,"MaxT"));
+}
+
+
+void LA_MsgHandler_VIBE::xprocess(const uint8_t *msg)
+{
+    if (!have_added_VIBE) {
+        _analyze->add_data_source("IMU_VIBE_0", "VIBE.Clip0");
+        _analyze->add_data_source("IMU_VIBE_1", "VIBE.Clip1");
+        _analyze->add_data_source("IMU_VIBE_2", "VIBE.Clip2");
+        have_added_VIBE = true;
+    }
+
+    for (uint8_t i=0; i<=2; i++) {
+        // TODO: make sure we get the same IMU name as for ACC messages!
+        const std::string imu_name = string_format("IMU_%d", i);
+        AnalyzerVehicle::IMU *imu = _vehicle->imu(imu_name);
+
+        const std::string field_name = string_format("Clip%d", i);
+        const uint16_t count = require_field_uint16_t(msg, field_name.c_str());
+        imu->set_acc_clip_count(count);
+    }
 }

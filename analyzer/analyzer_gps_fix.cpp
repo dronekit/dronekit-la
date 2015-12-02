@@ -118,6 +118,7 @@ void Analyzer_GPS_Fix::evaluate()
 void Analyzer_GPS_Fix::close_result()
 {
     _result->set_T_stop(_vehicle->T());
+    _result->set_reason("No 3D fix was ever acquired");
     _result->add_evidence(string_format("satellites-visible: %d", _result->satellites()));
     _result->add_evidence(string_format("HDop: %.2f", _result->hdop()));
     _result->add_evidence(string_format("satellites-visible-threshold: %d", satellites_visible_threshold()));
@@ -125,7 +126,7 @@ void Analyzer_GPS_Fix::close_result()
 
     _result->add_source(_data_sources.get(std::string("GPSINFO_") + _result->name()));
 
-    _result->add_evilness(20);
+    _result->increase_severity_score(20);
     add_result(_result);
     _result = NULL;
 }
@@ -144,7 +145,11 @@ void Analyzer_GPS_Fix::open_result(AnalyzerVehicle::GPSInfo *gpsinfo)
 {
     _result = new Analyzer_GPS_Fix_Result(gpsinfo->name());
     _result->set_T_start(_vehicle->T());
+
+    // take a somewhat negative attitude to our chances of success:
     _result->set_status(analyzer_status_fail);
+    _result->set_reason("GPS Fix was never acquired");
+
     _result->set_satellites(gpsinfo->satellites());
     _result->set_hdop(gpsinfo->hdop());
 }

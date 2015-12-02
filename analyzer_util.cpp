@@ -74,3 +74,27 @@ double altitude_from_pressure_delta(
     double scaling = press_abs/gnd_abs_press;
     return 153.8462 * (gnd_temp + 273.15) * (1.0 - exp(0.190259 * log(scaling)));
 }
+
+bool strieq(const char *x, const char *y)
+{
+    const char *xp = &x[0];
+    const char *yp = &y[0];
+    while (true) {
+        if (*xp == '\0') {
+            if (*yp == '\0') {
+                return true;
+            }
+            return false;
+        }
+        if (*yp == '\0') {
+            return false;
+        }
+        char xc = tolower(*xp);
+        char yc = tolower(*yp);
+        if (xc != yc) {
+            return false;
+        }
+        xp++;
+        yp++;
+    }
+}

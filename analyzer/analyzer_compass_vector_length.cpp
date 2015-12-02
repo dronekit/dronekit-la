@@ -38,7 +38,7 @@ void Analyzer_Compass_Vector_Length::open_result_short(const std::string name,
     result->add_source(_data_sources.get(string_format("MAGNETIC_FIELD_STRENGTH_%s", name.c_str())));
 
     result->set_status(analyzer_status_warn);
-    result->set_evilness(5);
+    result->set_severity_score(5);
     
     update_result_short(result, length);
 }
@@ -51,7 +51,7 @@ void Analyzer_Compass_Vector_Length::update_result_short
         result->_length_min = length;
         if (length < length_short_fail) {
             result->set_status(analyzer_status_fail);
-            result->set_evilness(10);
+            result->set_severity_score(10);
         }
     }
 }
@@ -93,7 +93,7 @@ void Analyzer_Compass_Vector_Length::open_result_long(const std::string name,
     result->add_source(_data_sources.get(string_format("MAGNETIC_FIELD_STRENGTH_%s", name.c_str())));
 
     result->set_status(analyzer_status_warn);
-    result->set_evilness(5);
+    result->set_severity_score(5);
     
     result->_length_max = 0;
     update_result_long(result, length);
@@ -106,7 +106,7 @@ void Analyzer_Compass_Vector_Length::update_result_long
         result->_length_max = length;
         if (length >= length_long_fail) {
             result->set_status(analyzer_status_fail);
-            result->set_evilness(10);
+            result->set_severity_score(10);
         }
     }
 }
@@ -137,7 +137,7 @@ void Analyzer_Compass_Vector_Length::close_result_long(Analyzer_Compass_Vector_L
 }
 
 
-void Analyzer_Compass_Vector_Length::evaluate_compass_field_length(AnalyzerVehicle::Base::Compass *compass)
+void Analyzer_Compass_Vector_Length::evaluate_compass_field_length(AnalyzerVehicle::Compass *compass)
 {
     if (!compass->field_T()) {
         return;
@@ -187,7 +187,7 @@ void Analyzer_Compass_Vector_Length::evaluate_compass_field_length(AnalyzerVehic
     }
 }
 
-void Analyzer_Compass_Vector_Length::evaluate_compass(AnalyzerVehicle::Base::Compass *compass)
+void Analyzer_Compass_Vector_Length::evaluate_compass(AnalyzerVehicle::Compass *compass)
 {
     evaluate_compass_field_length(compass);
 }
@@ -196,7 +196,7 @@ void Analyzer_Compass_Vector_Length::evaluate()
 {
     std::for_each(_vehicle->compasses().begin(),
                   _vehicle->compasses().end(),
-                      [this](std::pair<const std::string, AnalyzerVehicle::Base::Compass*>c){ evaluate_compass(c.second); });
+                      [this](std::pair<const std::string, AnalyzerVehicle::Compass*>c){ evaluate_compass(c.second); });
 }
 
 void Analyzer_Compass_Vector_Length::check_vector_delta(const std::string name,
@@ -209,10 +209,10 @@ void Analyzer_Compass_Vector_Length::check_vector_delta(const std::string name,
         Analyzer_Result_Summary *result = new Analyzer_Result_Summary();
         if (delta_percent >= delta_fail_percent) {
             result->set_status(analyzer_status_fail);
-            result->set_evilness(10);
+            result->set_severity_score(10);
         } else {
             result->set_status(analyzer_status_warn);
-            result->set_evilness(5);
+            result->set_severity_score(5);
         }
         result->set_reason("Compass Vector Length delta exceeds threshold");
         result->add_evidence(string_format("shortest=%f", shortest));
@@ -275,7 +275,7 @@ void Analyzer_Compass_Vector_Length::end_of_log(uint32_t packet_count UNUSED)
     //     Analyzer_Result_Summary *result = new Analyzer_Result_Summary();
     //     result->set_status(analyzer_status_warn);
     //     result->set_reason("Vehicle attitude never set");
-    //     result->set_evilness(5);
+    //     result->set_severity_score(5);
     //     result->add_source(_data_sources.get("ATTITUDE"));
     //     add_result(result);
     // }

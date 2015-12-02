@@ -56,10 +56,11 @@ void Analyzer_Sensor_Health::close_result(const std::string name)
 void Analyzer_Sensor_Health::open_result(const std::string name)
 {
     _results[name] = new Analyzer_Sensor_Health_Result(name);
+    _results[name]->set_reason("The craft's assessment of its sensors indicate a problem");
     _results[name]->set_T_start(_vehicle->T()); 
     _results[name]->set_status(analyzer_status_fail);
     _results[name]->add_source(_data_sources.get("SENSORS_HEALTH"));
-    _results[name]->add_evilness(10);
+    _results[name]->increase_severity_score(10);
 }
 
 

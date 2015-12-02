@@ -35,7 +35,7 @@ public:
 
     const std::string name() const override { return "Compass Offsets"; }
     const std::string description() const override {
-        return "This test will FAIL if the compass offset parameters exceed thresholds";
+        return "This test will WARN or FAIL depending on the degree that compass offset parameters exceed specified thresholds.";
     }
 
     bool configure(INIReader *config) override;

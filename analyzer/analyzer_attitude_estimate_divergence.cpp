@@ -54,7 +54,7 @@ void Analyzer_Attitude_Estimate_Divergence::close_result(std::string name)
     _result[name]->add_evidence(string_format("max-delta=%f degrees", _result[name]->max_delta()));
     _result[name]->add_evidence(string_format("delta-threshold=%f degrees", _result[name]->delta_threshold()));
     _result[name]->add_evidence(string_format("delta-time-threshold=%f seconds", delta_time_threshold() / 1000000.0f));
-    _result[name]->set_evilness(10);
+    _result[name]->set_severity_score(10);
 
     add_result(_result[name]);
     _result[name] = NULL;

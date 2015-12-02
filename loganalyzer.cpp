@@ -4,6 +4,7 @@
 
 #include "heart.h"
 
+#include <iostream> // for cout
 #include <syslog.h>
 #include "la-log.h"
 
@@ -51,7 +52,7 @@ void LogAnalyzer::parse_path(const char *path)
         if (do_stdin) {
             ::fprintf(stderr, "You asked to parse stdin but did not force a format type\n");
         } else {
-            ::fprintf(stderr, "Unable to determine log type from filename; try -i?\n");
+            ::fprintf(stderr, "Unable to determine log type from filename (%s); try -i?\n", path);
         }
         usage();
         exit(1);
@@ -211,6 +212,10 @@ Analyze *LogAnalyzer::create_analyze()
     }
     analyze->instantiate_analyzers(config());
 
+    if (_pure_output) {
+        analyze->set_pure_output(true);
+    }
+
     return analyze;
 }
 
@@ -236,7 +241,8 @@ void LogAnalyzer::prep_for_log()
 
 void LogAnalyzer::show_version_information()
 {
-    ::printf("Version: " GIT_VERSION "\n");
+    ::printf("Version: " DRONEKIT_LA_VERSION "\n");
+    ::printf("Git-Version: " GIT_VERSION "\n");
 }
 
 void LogAnalyzer::list_analyzers()
@@ -290,14 +296,14 @@ void LogAnalyzer::expand_names_to_run()
 void LogAnalyzer::create_vehicle_from_commandline_arguments()
 {
     if (_model_string != NULL) {
-        if (streq(_model_string,"copter")) {
+        if (strieq(_model_string,"copter")) {
             _vehicle = new AnalyzerVehicle::Copter();
 //            _analyze->set_vehicle_copter();
             if (_frame_string != NULL) {
                 ((AnalyzerVehicle::Copter*)_vehicle)->set_frame(_frame_string);
             }
-        // } else if (streq(model_string,"plane")) {
-        //     model = new AnalyzerVehicle::Plane();
+        } else if (strieq(_model_string,"plane")) {
+            _vehicle = new AnalyzerVehicle::Plane();
         // } else if (streq(model_string,"rover")) {
         //     model = new AnalyzerVehicle::Rover();
         } else {
@@ -340,13 +346,13 @@ void LogAnalyzer::run()
     output_style = Analyze::OUTPUT_JSON;
     if (output_style_string != NULL) {
         output_style = Analyze::OUTPUT_JSON;
-        if (streq(output_style_string, "json")) {
+        if (strieq(output_style_string, "json")) {
             output_style = Analyze::OUTPUT_JSON;
-        } else if(streq(output_style_string, "plain-text")) {
+        } else if(strieq(output_style_string, "plain-text")) {
             output_style = Analyze::OUTPUT_PLAINTEXT;
-        } else if(streq(output_style_string, "brief")) {
+        } else if(strieq(output_style_string, "brief")) {
             output_style = Analyze::OUTPUT_BRIEF;
-        } else if(streq(output_style_string, "html")) {
+        } else if(strieq(output_style_string, "html")) {
             output_style = Analyze::OUTPUT_HTML;
         } else {
             usage();
@@ -355,11 +361,11 @@ void LogAnalyzer::run()
     }
 
     if (forced_format_string != NULL) {
-        if (streq(forced_format_string, "tlog")) {
+        if (strieq(forced_format_string, "tlog")) {
             _force_format = log_format_tlog;
-        } else if(streq(forced_format_string, "df")) {
+        } else if(strieq(forced_format_string, "df")) {
             _force_format = log_format_df;
-        } else if(streq(forced_format_string, "log")) {
+        } else if(strieq(forced_format_string, "log")) {
             _force_format = log_format_log;
         } else {
             usage();
@@ -376,15 +382,16 @@ void LogAnalyzer::usage()
 {
     ::printf("Usage:\n");
     ::printf("%s [OPTION] [FILE...]\n", program_name());
-    ::printf(" -c filepath      use config file filepath\n");
-    ::printf(" -t               connect to telem forwarder to receive data\n");
-    ::printf(" -m modeltype     override model; copter|plane|rover\n");
-    ::printf(" -f frame         set frame; QUAD|Y6\n");
-    ::printf(" -s style         use output style (plain-text|json|brief)\n");
+    ::printf(" -c FILEPATH      use config file filepath\n");
+    // ::printf(" -t               connect to telem forwarder to receive data\n");
+    ::printf(" -m MODELTYPE     override model; copter|plane|rover\n");
+    ::printf(" -f FRAME         set frame; QUAD|Y6\n");
+    ::printf(" -s STYLE         use output style (plain-text|json|brief)\n");
     ::printf(" -h               display usage information\n");
     ::printf(" -l               list analyzers\n");
-    ::printf(" -a               specify analzers to run (comma-separated list)\n");
-    ::printf(" -i format        specify format (tlog|df|log)\n");
+    ::printf(" -a               specify analyzers to run (comma-separated list)\n");
+    ::printf(" -i FORMAT        specify input format (tlog|df|log)\n");
+    ::printf(" -p               pure output - no deprecated fields\n");
     ::printf(" -V               display version information\n");
     ::printf("\n");
     ::printf("Example: %s -s json 1.solo.tlog\n", program_name());
@@ -409,7 +416,7 @@ void LogAnalyzer::parse_arguments(int argc, char *argv[])
     _argc = argc;
     _argv = argv;
 
-    while ((opt = getopt(argc, argv, "hc:ts:m:f:Vla:i:")) != -1) {
+    while ((opt = getopt(argc, argv, "hc:ts:m:pf:Vla:i:")) != -1) {
         switch(opt) {
         case 'h':
             usage();
@@ -428,6 +435,9 @@ void LogAnalyzer::parse_arguments(int argc, char *argv[])
             break;
         case 'm':
             _model_string = optarg;
+            break;
+        case 'p':
+            _pure_output = true;
             break;
         case 'f':
             _frame_string = optarg;

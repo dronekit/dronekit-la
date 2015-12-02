@@ -2,6 +2,92 @@
 
 #include <regex>
 
+Analyzing_MAVLink_Message_Handler::Analyzing_MAVLink_Message_Handler(Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+    MAVLink_Message_Handler(),
+    _analyze(analyze),
+    _vehicle(vehicle) {
+
+    _analyze->add_data_source("ALTITUDE", "GLOBAL_POSITION_INT.alt");
+    _analyze->add_data_source("ALTITUDE_ESTIMATE_AHRS2", "AHRS2.alt");
+    _analyze->add_data_source("ALTITUDE_ESTIMATE_GLOBAL_POSITION_INT", "GLOBAL_POSITION_INT.alt");
+    _analyze->add_data_source("ALTITUDE_ESTIMATE_GPS_RAW_INT", "GPS_RAW_INT.alt");
+
+    _analyze->add_data_source("ALTITUDE_ESTIMATE_SCALED_PRESSURE", "SCALED_PRESSURE.temperature");
+    _analyze->add_data_source("ALTITUDE_ESTIMATE_SCALED_PRESSURE", "SCALED_PRESSURE.press_abs");
+    _analyze->add_data_source("ALTITUDE_ESTIMATE_SCALED_PRESSURE2", "SCALED_PRESSURE2.temperature");
+    _analyze->add_data_source("ALTITUDE_ESTIMATE_SCALED_PRESSURE2", "SCALED_PRESSURE2.press_abs");
+
+    _analyze->add_data_source("ARMING", "HEARTBEAT.base_mode");
+
+    _analyze->add_data_source("ATTITUDE", "ATTITUDE.roll");
+    _analyze->add_data_source("ATTITUDE", "ATTITUDE.pitch");
+    _analyze->add_data_source("ATTITUDE", "ATTITUDE.yaw");
+    _analyze->add_data_source("ATTITUDE_ESTIMATE_ATTITUDE", "ATTITUDE.roll");
+    _analyze->add_data_source("ATTITUDE_ESTIMATE_ATTITUDE", "ATTITUDE.pitch");
+    _analyze->add_data_source("ATTITUDE_ESTIMATE_ATTITUDE", "ATTITUDE.yaw");
+    _analyze->add_data_source("ATTITUDE_ESTIMATE_AHRS2", "AHRS2.roll");
+    _analyze->add_data_source("ATTITUDE_ESTIMATE_AHRS2", "AHRS2.pitch");
+    _analyze->add_data_source("ATTITUDE_ESTIMATE_AHRS2", "AHRS2.yaw");
+
+    _analyze->add_data_source("AUTOPILOT_SCHEDULING", "STATUSTEXT.text");
+        
+    _analyze->add_data_source("BATTERY_REMAINING", "SYS_STATUS.battery_remaining");
+
+    _analyze->add_data_source("CRASHED", "HEARTBEAT.system_status");
+
+    _analyze->add_data_source("DESATTITUDE", "NAV_CONTROLLER_OUTPUT.nav_roll");
+    _analyze->add_data_source("DESATTITUDE", "NAV_CONTROLLER_OUTPUT.nav_pitch");
+    _analyze->add_data_source("DESATTITUDE", "NAV_CONTROLLER_OUTPUT.nav_bearing");
+
+    _analyze->add_data_source("EKF_FLAGS", "EKF_STATUS_REPORT.flags");
+    _analyze->add_data_source("EKF_VARIANCES_velocity_variance", "EKF_STATUS_REPORT.velocity");
+    _analyze->add_data_source("EKF_VARIANCES_pos_horiz_variance", "EKF_STATUS_REPORT.pos_horiz");
+    _analyze->add_data_source("EKF_VARIANCES_pos_vert_variance", "EKF_STATUS_REPORT.pos_vert");
+    _analyze->add_data_source("EKF_VARIANCES_compass_variance", "EKF_STATUS_REPORT.compass");
+    _analyze->add_data_source("EKF_VARIANCES_terrain_alt_variance", "EKF_STATUS_REPORT.terrain_alt");
+
+    _analyze->add_data_source("GPSINFO_GPS_RAW_INT", "GPS_RAW_INT.satellites_visible");
+    _analyze->add_data_source("GPSINFO_GPS_RAW_INT", "GPS_RAW_INT.eph");
+    _analyze->add_data_source("GPSINFO_FIXTYPE_GPS_RAW_INT", "GPS_RAW_INT.fix_type");
+    _analyze->add_data_source("GPSINFO_FIXTYPE_GPS_RAW_INT", "SYSTEM_TIME.time_boot_ms");
+
+    _analyze->add_data_source("SENSORS_HEALTH", "SYS_STATUS.onboard_control_sensors_present");
+    _analyze->add_data_source("SENSORS_HEALTH", "SYS_STATUS.onboard_control_sensors_enabled");
+    _analyze->add_data_source("SENSORS_HEALTH", "SYS_STATUS.onboard_control_sensors_health");
+
+    _analyze->add_data_source("SERVO_OUTPUT", "SERVO_OUTPUT_RAW.servo1_raw");
+    _analyze->add_data_source("SERVO_OUTPUT", "SERVO_OUTPUT_RAW.servo2_raw");
+    _analyze->add_data_source("SERVO_OUTPUT", "SERVO_OUTPUT_RAW.servo3_raw");
+    _analyze->add_data_source("SERVO_OUTPUT", "SERVO_OUTPUT_RAW.servo4_raw");
+    _analyze->add_data_source("SERVO_OUTPUT", "SERVO_OUTPUT_RAW.servo5_raw");
+    _analyze->add_data_source("SERVO_OUTPUT", "SERVO_OUTPUT_RAW.servo6_raw");
+    _analyze->add_data_source("SERVO_OUTPUT", "SERVO_OUTPUT_RAW.servo7_raw");
+    _analyze->add_data_source("SERVO_OUTPUT", "SERVO_OUTPUT_RAW.servo8_raw");
+
+    _analyze->add_data_source("ORIGIN", "AHRS2.lat");
+    _analyze->add_data_source("ORIGIN", "AHRS2.lng");
+    _analyze->add_data_source("ORIGIN", "AHRS2.alt");
+
+    _analyze->add_data_source("PARAM", "PARAM.param_id");
+    _analyze->add_data_source("PARAM", "PARAM.value");
+
+    _analyze->add_data_source("POSITION", "GLOBAL_POSITION_INT.lat");
+    _analyze->add_data_source("POSITION", "GLOBAL_POSITION_INT.lon");
+
+    _analyze->add_data_source("POSITION_ESTIMATE_AHRS2", "AHRS2.lat");
+    _analyze->add_data_source("POSITION_ESTIMATE_AHRS2", "AHRS2.lng");
+
+    _analyze->add_data_source("POSITION_ESTIMATE_GPS_RAW_INT", "GPS_RAW_INT.lat");
+    _analyze->add_data_source("POSITION_ESTIMATE_GPS_RAW_INT", "GPS_RAW_INT.lon");
+        
+    _analyze->add_data_source("VELOCITY_GROUND", "GLOBAL_POSITION_INT.vx");
+    _analyze->add_data_source("VELOCITY_GROUND", "GLOBAL_POSITION_INT.vy");
+    _analyze->add_data_source("VELOCITY_GROUND", "GLOBAL_POSITION_INT.vz");
+
+    _analyze->add_data_source("VEHICLE_DEFINITION", "STATUSTEXT.text");
+    _analyze->add_data_source("SYSTEM_TIME", "SYSTEM_TIME.boot_time_ms");
+}
+
 void Analyzing_MAVLink_Message_Handler::end_of_log(uint32_t packet_count, uint64_t bytes_dropped UNUSED)
 {
     _analyze->end_of_log(packet_count);

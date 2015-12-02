@@ -50,11 +50,13 @@ void Analyzer_Altitude_Estimate_Divergence::evaluate_estimate(
 
 void Analyzer_Altitude_Estimate_Divergence::update_result_set_status(Analyzer_Estimate_Divergence_Result *result)
 {
-    // if (multiple_values_seen) {
-    //     Analyzer_Estimate_Divergence::update_result_set_status(result);
-    // } else {
+    if (fabs(result->max_delta()) > delta_fail()) {
+        result->set_status(analyzer_status_fail);
+        result->set_severity_score(10);
+    } else {
         result->set_status(analyzer_status_warn);
-    // }
+        result->set_severity_score(5);
+    }
 }
 
 void Analyzer_Altitude_Estimate_Divergence::open_result(const std::string name,

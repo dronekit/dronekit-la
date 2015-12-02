@@ -44,16 +44,16 @@ public:
 
     const std::string name() const override { return "Compass Vector Length"; }
     const std::string description() const override {
-        return "This test will FAIL if the compass' vector length exceeds a threshold.  Causes of this include flying near large metal objects.";
+        return "This test will FAIL or WARN if the compass vector length exceeds the respective threshold.  Possible causes include flying near large metal objects.";
     }
 
     bool configure(INIReader *config) override;
 
-    void evaluate_compass_field_length(AnalyzerVehicle::Base::Compass *compass);
-    void evaluate_compass(AnalyzerVehicle::Base::Compass *compass);
+    void evaluate_compass_field_length(AnalyzerVehicle::Compass *compass);
+    void evaluate_compass(AnalyzerVehicle::Compass *compass);
     void evaluate() override;
 
-    void for_each_compass(const std::function <void (AnalyzerVehicle::Base::Compass*)> f);
+    void for_each_compass(const std::function <void (AnalyzerVehicle::Compass*)> f);
 
 private:
     float length_short_warn = 120.0f;

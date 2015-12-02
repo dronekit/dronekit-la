@@ -1,3 +1,12 @@
+/**
+ * @file
+ * @author Peter Barker <peter.barker@3drobotics.com>
+ *
+ * @section DESCRIPTION
+ *
+ * Base class for all analyzers; provides facilities to register results
+ */
+
 #ifndef ANALYZER_H
 #define ANALYZER_H
 
@@ -11,40 +20,69 @@
 
 #include "analyzer_util.h"
 
+/// Enumeration of possible states for both an Analyzer_Result and Analyzer
 enum analyzer_status {
     analyzer_status_warn = 17,
     analyzer_status_fail,
     analyzer_status_ok,
 };
 
+
+/*!
+ * Returns a textual interpretation of the supplied status
+ *
+ * @param status analyser status to provide text for
+ * @return textual interpretation of status
+ */
 const char *_status_as_string(analyzer_status status);
 
+
+
+/// @brief Base class for analyzer results; extend this to provide a custom result object
+///
+/// You probably do not want to directly extend Analyzer_Result, but one of its immediate subclasses
 class Analyzer_Result {
 public:
+    /// @brief Construct an Analyzer Result
     virtual ~Analyzer_Result() { }
 
+    /// @brief Provides a textual description of the Analyzer Result's status
+    /// @return a text string e.g. "OK" or "FAIL"
     const char *status_as_string() const {
         return _status_as_string(_status);
     }
+
+    /// @brief Provide the Analyzer Result's status
+    /// @return The Analyzer_Result's status
     analyzer_status status() { return _status; }
+
+    /// @brief Set the Analyzer Result's status
+    /// @param status The new status for this Result
     void set_status(analyzer_status status) { _status = status; }
 
+    /// @brief Set a simple, human-readable explanation of the Result
+    /// @param reason The reason for the existence of this Result
     void set_reason(const std::string reason) {
         if (_reason != NULL) {
             delete(_reason);
         }
         _reason = new std::string(reason);
     }
+    /// @brief Provide a simple, human-readable explanation if the Result
     const std::string *reason() const { return _reason; }
 
+    /// @brief Provide analyzer output in the provided Json::Value
+    /// @param[out] root object to populate with output
     virtual void to_json(Json::Value &root) const;
 
+    /// @brief Provide textual free-form evidence for the "reason"
+    /// @param f textual free-form evidence
     void add_evidence(const std::string f) {
         _evidence.push_back(f);
     }
-    // void add_series(const std::string f) {
-    //     _series.push_back(f);
-    // }
+
+    /// @brief Indicate that a particular data source was used to come to the conclusion returned by reason().
+    /// @param f A Data_Source relevant to the conclusion in reason()
     void add_source(const Data_Source *f) {
         if (f == NULL) {
             abort();
@@ -52,13 +90,19 @@ public:
         _sources.push_back(f);
     }
 
-    void add_evilness(uint32_t evilness) {
+    /// @brief Indicate the result is incrementally more significant
+    /// @param evilness Degree to which this result is more significant
+    void increase_severity_score(uint32_t evilness) {
         _evilness += evilness;
     }
-    void set_evilness(uint32_t evilness) {
+    /// @brief Indicate how signficant this result is
+    /// @param evilness Degree of significance of this result
+    void set_severity_score(uint32_t evilness) {
         _evilness = evilness;
     }
-    uint32_t evilness() const {
+    /// @brief Return a number indicating the relative significance of this result
+    /// @return The relative significance of this result
+    uint32_t severity_score() const {
         return _evilness;
     }
 
@@ -75,6 +119,10 @@ private:
     uint32_t _evilness = 0;
 };
 
+
+/// @brief Base class for an Analyzer Result which spans a period
+///
+/// Examples would include a momentary attitude control loss
 class Analyzer_Result_Period : public Analyzer_Result {
 public:
     Analyzer_Result_Period() :
@@ -96,6 +144,9 @@ private:
     uint64_t _T_stop;
 };
 
+/// @brief Base class for an Analyzer Result which provides information derived over the entire period of data input
+///
+/// Examples would include "How many bytes of the input were processed"
 class Analyzer_Result_Summary : public Analyzer_Result {
 public:
     Analyzer_Result_Summary() :
@@ -108,6 +159,9 @@ private:
 };
 
 
+/// @brief Base class for an Analyzer Result which does not span any time
+///
+/// Examples would include a "Crash" event present in a log
 class Analyzer_Result_Event : public Analyzer_Result {
 public:
     Analyzer_Result_Event() :
@@ -129,61 +183,88 @@ private:
 };
 
 
+/// @brief Base class for all analyzers
+///
+/// @description Extend this class to create a new analyzer
+///
+/// An Analyzer tracks changes to a vehicle model over time to
+/// determine if anything untoward is happening.  "evaluate()" is
+/// called repeatedly when the model's state changes, and "end_of_log"
+/// is called when no more input will be forthcoming.  An Analyzer is
+/// expected to output Analyzer_Result objects through the "add_result
+/// object.
 class Analyzer {
 
 public:
+    /// @brief Constructor for Analyzer
+    /// @param vehicle The vehicle model to be analysed
+    /// @param data_sources A mapping of abstract data source names to their concrete data sources (e.g. ATTITUDE -> [ ATT.Pitch, ATT.Roll ])
     Analyzer(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
         _vehicle(vehicle),
         _data_sources(data_sources)
         { }
 
+    /// @brief Configure an analyzer from a .ini config file
+    /// @param config the configuration source
+    /// @return true if configuration succeeded
     virtual bool configure(INIReader *config UNUSED) {
         return true;
     }
 
+    /// @brief a simple name this Analyzer is known by
     virtual const std::string name() const = 0;
+    /// @brief Outlines the reason this test exists
     virtual const std::string description() const = 0;
-    virtual void results_json_results(Json::Value &root);
-    virtual void end_of_log(uint32_t packet_count UNUSED) { }
 
-    const char *status_as_string() {
+    /// @brief Provide analyzer output in the provided Json::Value
+    /// @param[out] root object to populate with output
+    virtual void results_json_results(Json::Value &root) const;
+
+    /// @brief Return the analyzer's status represented as a string
+    const char *status_as_string() const {
         return _status_as_string(status());
     }
 
+    /// @brief return all results this analyzer has produced
     std::vector<Analyzer_Result*> results() const {
         return _results;
     }
-    uint16_t result_count() {
+    /// @brief return the number of results this analyzer has produced
+    uint16_t result_count() const {
         return _results.size();
     }
 
-    virtual uint32_t evilness() const;
+    /// @brief returns a number hinting how significant this result may be
+    virtual uint32_t severity_score() const;
 
-    virtual void evaluate() { }
+    /// @brief called whenever the vehicle's state changes
+    virtual void evaluate() = 0;
 
+    /// @brief Called when no more input will be forthcoming
+    /// @param packet_count The number of packets processed to update the model
+    virtual void end_of_log(uint32_t packet_count UNUSED) { }
+
+    /// @brief Provide the Analyzer's overall status
+    /// @return The Analyzer overall status
+    analyzer_status status() const;
+
+protected:
+    // @brief Add a result for this Analyzer
+    // @param result The result to add
     virtual void add_result(Analyzer_Result* result) {
         _results.push_back(result);
     }
 
-    analyzer_status status();
-
-protected:
+    /// @brief Provide the Analyzer Result's status
+    /// @return The Analyzer_Result's status
     std::string to_string(double x);
 
     AnalyzerVehicle::Base *&_vehicle;
-
-    // FIXME: scope
-    std::vector<Analyzer_Result*> _results;
-
     Data_Sources &_data_sources;
 
 private:
+    std::vector<Analyzer_Result*> _results;
+
 };
 
 #endif
-    
-
-
-// - two fundamental types of test
-//  - is the software working correctly (EKF issues)
-//  - is the vehicle doing sensible things (attitude etc)
