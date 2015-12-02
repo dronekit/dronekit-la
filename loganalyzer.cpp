@@ -391,7 +391,7 @@ void LogAnalyzer::usage()
     ::printf(" -l               list analyzers\n");
     ::printf(" -a               specify analyzers to run (comma-separated list)\n");
     ::printf(" -i FORMAT        specify input format (tlog|df|log)\n");
-    ::printf(" -p	        pure output - no deprecated fields\n");
+    ::printf(" -p               pure output - no deprecated fields\n");
     ::printf(" -V               display version information\n");
     ::printf("\n");
     ::printf("Example: %s -s json 1.solo.tlog\n", program_name());
