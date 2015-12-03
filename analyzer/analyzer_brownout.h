@@ -38,7 +38,7 @@ public:
 
     const std::string name() const override { return "Brownout"; }
     const std::string description() const override {
-        return "This test will FAIL if the craft appears to lose onboard power during a flight";
+        return "A log should not end while the vehicle appears to be moving under its own power.  This test will FAIL if the vehicle still appears to be moving when the log ends.";
     }
     bool configure(INIReader *config) override;
 

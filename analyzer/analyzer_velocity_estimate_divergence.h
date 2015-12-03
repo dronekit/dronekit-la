@@ -26,7 +26,7 @@ public:
 
     const std::string name() const override { return "Velocity Estimate Divergence"; }
     const std::string description() const override {
-        return "This test will FAIL if various craft's velocity estimates diverge";
+        return "A UAV typically has several estimates of its velocity.  This test will FAIL if the craft's velocity estimates diverge";
     }
 
     const std::string estimate_name() const {
