@@ -35,6 +35,8 @@ The topics below explain how to :doc:`contribute to the tool <contribution_tool>
     contribution_docs
     add_analyzer
     add_message_handler
+    ../reference/analyser_reference
+    ../reference/message_handlers_reference
     #developer_setup_windows
     #developer_setup_linux
 
