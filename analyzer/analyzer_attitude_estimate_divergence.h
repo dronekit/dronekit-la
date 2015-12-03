@@ -25,11 +25,6 @@ public:
 	Analyzer_Estimate_Divergence(vehicle,data_sources)
     { }
 
-    const std::string name() const override { return "Attitude Estimate Divergence"; }
-    const std::string description() const override {
-        return "This test will FAIL if various craft's attitude estimates diverge";
-    }
-
     const std::string estimate_name() const {
         return "Attitude";
     };

@@ -26,7 +26,7 @@ public:
 
     const std::string name() const override { return "Any Parameters Seen"; }
     const std::string description() const override {
-        return "This test will FAIL if the input does not contain parameter information.";
+        return "Autopilots store information on-board in the form of parameters.  For proper analysis, logs must contain this parameter information.  This test will FAIL if the input does not contain parameter information.";
     }
 
     void evaluate() override;

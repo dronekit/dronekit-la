@@ -32,7 +32,7 @@ public:
     
     const std::string name() const override { return "Crash Test"; }
     const std::string description() const override {
-        return "This test will FAIL if the vehicle appears to crash";
+        return "Crashes are detected both heuristically and by explicit log messages.  This test will FAIL if the vehicle appears to crash";
     }
 
     void end_of_log(const uint32_t packet_count) override;
