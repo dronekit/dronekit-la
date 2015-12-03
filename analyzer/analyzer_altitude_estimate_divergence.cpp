@@ -4,6 +4,14 @@
 
 void Analyzer_Altitude_Estimate_Divergence::end_of_log(const uint32_t packet_count)
 {
+    // auto next = _result.begin();
+    // while (next != _result.end()) {
+    //     auto current = next;
+    //     next++;
+    //     if ((*current).second != NULL) {
+    //         close_result((*current).first);
+    //     }
+    // }
     Analyzer_Estimate_Divergence::end_of_log(packet_count);
 
     AnalyzerVehicle::Altitude alt = _vehicle->alt();
