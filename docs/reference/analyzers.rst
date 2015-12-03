@@ -17,15 +17,6 @@ Each section lists a description of the analyzer, along with possible fails/warn
     (what caused a fail/warning to be raised).
 
 
-.. todo:: 
-
-    - Is it useful to have links to the original C++ files "snapshot" for download/examination? Or to link to the C++ on Github (at all). Generally I lean towards "no" the docs should explain what needs to be explained.
-    - Generally - "what do we do if we get a fail"
-    - Generally - are there documents we should read if we get a fail
-    - Are warns all at "same level"? What action do we expect people to take.
-    - Is it useful to explain what evidence is provided in each of these?
-
-
 
 Any Parameters Seen
 =================== 
@@ -59,15 +50,6 @@ This test will FAIL if the vehicle arms when any arming checks are disabled.
 
 
 
-
-.. todo:: 
-
-    list the output/evidence. Maybe
-    Explain how serious evilness of 10 is. (how evil, why this?)
-    What are implications?
-    
-
-
 .. internalnotes
 
     - defined in: 
@@ -84,14 +66,6 @@ Altitude Estimate Divergence
 This analyzer will WARN if the altitude estimate differs from the canonical craft altitude.
 
 * Warn: This altitude estimate differs from the canonical craft altitude
-
-
-.. todo::
-
-    - How does this work? The estimate is from what? The canonical measurement is presumably the measured value from the log?
-    - There is no evilness - why - how concerned should we be about this.
-    - What can we do if we see a warning?? ie where should we look for trouble. 
-    - Why no fail case?   
 
     
 
@@ -111,15 +85,7 @@ Attitude Estimate Divergence
 This test will FAIL or WARN if the various vehicle's Altitude estimates diverge.
 
 * Fail: This attitude estimate differs from the canonical craft attitude.
-* Warn: This attitude estimate differs from the canonical craft attitude.
-
-.. todo::
-
-    - What is the estimate against? Do we need to explain the "canonical thingy"
-    - Need to check if warn evilness is same as fail. Do by testing
-    - What can we do if we see a fail? ie where should we look for trouble.
-    - How are the thresholds set - are these just something people should trust are reasonable?
-    - How worried should you be about the warning. The evil of 10 is pretty high for fail.    
+* Warn: This attitude estimate differs from the canonical craft attitude. 
     
 
 
@@ -166,12 +132,6 @@ Possible causes include flying near large metal objects.
 * Warn: Compass Vector Length above threshold
 
 
-.. todo:: 
-
-    - Check what actual output for this particular case is. 
-    - Any docs we can link to in order to understand how this works
-    - Looks like warn both above and below threshold!
-    - CHange text above 
 
 .. internalnotes
 
@@ -188,10 +148,6 @@ This test will FAIL if the craft did not arm.
 * Fail: The vehicle never armed
 * Pass: The vehicle armed
 
-
-.. todo:: 
-
-    How can we get more information on why it didn't arm?
 
 
 .. internalnotes
@@ -232,7 +188,7 @@ For EKF status flag fails, the evidence field provides information about the spe
 
 * Fail: The EKF status report indicates a problem with the EKF
 * Fail: [variance] exceeds fail threshold
-* Warn: [variance] exceeds fail threshold
+* Warn: [variance] exceeds warn threshold
 * Warn: [variance] was never updated
 * Warn: EKF flags were never updated
 
@@ -302,20 +258,10 @@ and the duration of the test.
 AutoPilot Health
 ================
 
-This test will FAIL if problems are detected with the AutoPilot.
+Many autopilots are capable of monitoring their own performance.  This test will FAIL if problems are detected with the autopilot
 
 * Fail: Severe scheduler overruns
 
-
-.. todo::
-
-    Explain what can cause this and what you can do about it. What problems does checking for 
-    scheduler overruns help with? From file ...
-    //Check for freemem dropping while we are armed
-    // check for scheduling overruns
-    // i2c errors
-    // autopilot voltages
-    // load
 
 
 .. internalnotes
@@ -337,12 +283,6 @@ threshold level, or if a battery failsafe event is received.
 * Fail: Battery failsafe event received
 * Pass: Battery never below failsafe
 
-
-
-
-.. todo::
-
-    - What is the threshold of 15f actually mean? 
 
 
 .. internalnotes
@@ -368,11 +308,6 @@ This test will pass if the log is not truncated, an issue which is often caused 
    running out of memory for the log file, or failure of the logging sub-system). Failing this test
    does not necessarily mean a brownout actually occurred.
 
-.. todo:: 
-
-    - How does this show loss of onboard power? It appears to only fail if your log ends while still flying and warn if altitude never changed.
-    - What should you do if you get this error? Throw hands up "got not enough logging?"
-
 
 .. internalnotes
 
@@ -391,14 +326,6 @@ This test will FAIL or WARN if various position estimates diverge from given thr
 * Warn: This position estimate differs from the canonical craft position
 
 
-.. todo::
-
-    - What position estimates methods are used (i.e. what is various)
-    - The default duration is 500000 seconds - isn't that long for a "default"
-    - A description of how this actually works would be good - i.e. plots course of virtual vehicle on map and
-      etc...
-    - What can they do in each case? What does it mean. 
-
 .. internalnotes
 
     - defined in:
@@ -416,12 +343,6 @@ This test will FAIL if the vehicle appears to crash.
 * Fail: Vehicle is past maximum allowed angle and running its motors
 * Warn: Vehicle's attitude never updated
 * Pass: Never crashed   
-
-.. todo::
-
-    - So why is this a fail? specifically, shouldn't altitude be taken into account? Doesn't the behavior that implies crash depend on
-      the type of vehicle.
-    - For the warning, does this just mean we couldn't measure the angle?
 
 
 .. internalnotes
