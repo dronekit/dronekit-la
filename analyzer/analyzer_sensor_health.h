@@ -32,7 +32,7 @@ public:
 
     const std::string name() const override { return "Sensor Health"; }
     const std::string description() const override {
-        return "This test will FAIL if any sensor is detected as failed";
+        return "A UAV can self-assess its sensors' health.  This test will FAIL if any sensor is detected as failed";
     }
 
     bool configure(INIReader *config) override;
