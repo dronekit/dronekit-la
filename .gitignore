@@ -4,3 +4,5 @@ dataflash_logger
 imagetagger
 dronekit-la
 docs/_build/
+doxygen/xml/
+doxygen/doxygen_sqlite3.db
