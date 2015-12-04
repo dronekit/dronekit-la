@@ -108,35 +108,46 @@ in the analysis. A score of 20 (as shown below) would be pretty low!
 
     {
        "bytes-dropped" : 0,
-       "duration" : 5050,
-       "evilness" : 20,
+       "duration" : 806105,
+       "evilness" : 723,
+       "evilness-is-deprecated" : 1,
        "format-version" : "0.1",
-       "git_version" : "v0.1-96-g3ce8",
-       "maximum-altitude-absolute" : 20.79000091552734,
+       "git_version" : "v0.1-122-g6f81",
+       "maximum-altitude-absolute" : 230.1900024414062,
        "maximum-altitude-absolute-units" : "metres",
-       "maximum-altitude-relative" : -1000.0,
+       "maximum-altitude-relative" : 32.97999572753906,
        "maximum-altitude-relative-units" : "metres",
-       "maximum-distance-from-origin" : 0.0,
+       "maximum-distance-from-origin" : 71.59389640850262,
        "maximum-distance-from-origin-units" : "metres",
-       "maximum-velocity" : 0.495883040848340,
+       "maximum-velocity" : 5.319671099254919,
        "maximum-velocity-units" : "metres/second",
-       "packet-count" : 2685,
-       "packet_count" : 2685,
-       "severity-score" : 20,
-       "tests" : {  
+       "packet-count" : 54560,
+       "packet_count" : 54560,
+       "severity-score" : 723,
+       "tests" : {
         ...
        },
-       "timestamp" : 1448339938679116,
+       "timestamp" : 1449206800331951,
        "total-distance-travelled-units" : "metres",
-       "total-distance-travellled" : 4.470865881462720,
-       "total-flight-time" : 0.0,
+       "total-distance-travellled" : 735.6248609083336,
+       "total-flight-time" : 556.1003417968750,
        "total-flight-time-units" : "seconds"
-    }       
+    }     
 
 .. note::
 
-    The output contains some deprecated fields. For example *evilness* is the deprecated term for "severity-score" and
-    will be removed in a future version.
+    The default output contains some deprecated fields, which can be recognized by the accompanying field ``**fieldname**_is_deprecated``.
+    For example ``evilness`` (replaced by ``severity-score``) has the accompanying field ``evilness-is-deprecated``.
+    
+    .. code-block:: bash
+    
+        "evilness" : 723,
+        "evilness-is-deprecated" : 1,    
+    
+    Deprecated fields may be omitted in a following release, so it is important that any tools which use
+    DroneKit-LA remove dependencies on these fields before upgrading to another release. You can test whether you 
+    are ready to upgrade by using the :option:`-p` option to create output without deprecated fields.
+    
 
 All of the tests that were run are listed under the *tests* value. The tests have a *description*, *status*, *name*, *results*, 
 and a *severity-score* for this current test. The example below shows a passing test - 
@@ -148,6 +159,7 @@ the *severity-score" is set to 0 and there are no *results*.
       "GPS Fix" : {
          "description" : "This test will FAIL if the quality of the GPS information is poor",
          "evilness" : 0,
+         "evilness-is-deprecated" : 1, 
          "name" : "GPS Fix",
          "results" : [],
          "severity-score" : 0,
@@ -185,6 +197,7 @@ can be used along with the series information for further analysis of the logs (
                   "Predicted horizontal position (absolute) bad"
                ],
                "evilness" : 20,
+               "evilness-is-deprecated" : 1, 
                "reason" : "The EKF status report indicates a problem with the EKF",
                "series" : [ "EKF_STATUS_REPORT.flags" ],
                "severity-score" : 20,
