@@ -71,7 +71,7 @@ protected:
     /// @brief return the current vehicle timestamp
     uint64_t T() const { return _vehicle->T(); } // only valid after process_set_T
 
-    /// @brief process a DataFlash message, update vehicle mode appropriately
+    /// @brief process a DataFlash message, update vehicle model appropriately
     virtual void xprocess(const uint8_t *msg) = 0;
 
     /// @brief convenience function producing an estimate to be used for state

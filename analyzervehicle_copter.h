@@ -29,7 +29,7 @@ namespace AnalyzerVehicle {
 
         uint16_t is_flying_motor_threshold() const;
 
-        vehicletype_t vehicletype() override {
+        vehicletype_t vehicletype() const override {
             return copter;
         }
 

@@ -19,7 +19,7 @@ namespace AnalyzerVehicle {
 
         bool param_default(const char *name, float &ret) const override;
 
-        vehicletype_t vehicletype() override {
+        vehicletype_t vehicletype() const override {
             return plane;
         }
 

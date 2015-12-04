@@ -259,7 +259,11 @@ protected:
     /// @return The Analyzer_Result's status
     std::string to_string(double x);
 
+    /// @brief vehicle model
+    /// @details updated by LA_MsgHandler* and analyzing_mavlink_message_handler, analyzed by analyzer_*
     AnalyzerVehicle::Base *&_vehicle;
+    /// @brief map from abstract data source to concrete data source
+    /// @details e.g. BATTERY_REMAINING -> SYS_STATUS.battery_remaining
     Data_Sources &_data_sources;
 
 private:
