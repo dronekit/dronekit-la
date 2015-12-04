@@ -16,7 +16,7 @@ Vagrant.configure(2) do |config|
         apt-get -y install python-dev
         echo "[SPHINX-DOCS]: Installing pip ..."
         apt-get -y install python-pip
-        easy_install -U pip     
+        easy_install -U pip
         echo "[SPHINX-DOCS]: Installing Sphinx ... "
         pip install sphinx
         cd /vagrant
