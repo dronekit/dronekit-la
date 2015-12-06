@@ -9,8 +9,8 @@ to catch high level changes.
 The script needs to be run against a big set of logs. By default, the logs used are the private 3DR logs
 in https://github.com/dronekit/dronekit-la-testdata-3dr (these cannot be shared publically for legal reasons).
 
-NOTE: The script is intended to be run inside vagrant AFTER dronekit-la has already been built.
-
+NOTE: The script is intended to be run after dronekit-la has already been built in the /dronekit-la directory 
+     (it calls `../../dronekit-la`, the location of dronekit-la relative to this script).
 
 Issues:
 
@@ -73,7 +73,7 @@ def process_files(filelist):
     tests_summary=dict()
     for filename in filelist:
         print "Processing: %s" % filename
-        analysed_file=check_output(["/vagrant/dronekit-la", "-f QUAD", "-mcopter" , filename])
+        analysed_file=check_output(["../../dronekit-la", "-f QUAD", "-mcopter" , filename])
         #print analysed_file
         data = json.loads(analysed_file)
         for name_test, testcontents in data['tests'].iteritems():
@@ -123,16 +123,13 @@ def generate_dk_la_summary():
     """
     import subprocess
 
-    dk_la_version=check_output(["/vagrant/dronekit-la", "-V"])
-    #dk_la_version=check_output(["./dronekit-la", "-V"])
+    dk_la_version=check_output(["../../dronekit-la", "-V"])
     output_string='DK-LA Version: %s' % dk_la_version
-    
 
-
-    dk_la_version=check_output(["/vagrant/dronekit-la", "-k"])
+    dk_la_version=check_output(["../../dronekit-la", "-h"])
     output_string+='\nDK-LA HELP:\n\n %s' % dk_la_version
 
-    dk_la_list_analysers=check_output(["/vagrant/dronekit-la", "-l"])
+    dk_la_list_analysers=check_output(["../../dronekit-la", "-l"])
     output_string+='\nAnalyser List: \n\n%s' % dk_la_list_analysers
     return output_string
 

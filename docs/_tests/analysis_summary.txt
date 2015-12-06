@@ -4,7 +4,7 @@ Git-Version: v0.1-122-g6f81
 DK-LA HELP:
 
  Usage:
-/vagrant/dronekit-la [OPTION] [FILE...]
+../../dronekit-la [OPTION] [FILE...]
  -c FILEPATH      use config file filepath
  -m MODELTYPE     override model; copter|plane|rover
  -f FRAME         set frame; QUAD|Y6
@@ -16,11 +16,11 @@ DK-LA HELP:
  -p               pure output - no deprecated fields
  -V               display version information
 
-Example: /vagrant/dronekit-la -s json 1.solo.tlog
-Example: /vagrant/dronekit-la -a "Ever Flew, Battery" 1.solo.tlog
-Example: /vagrant/dronekit-la -s brief 1.solo.tlog 2.solo.tlog logs/*.tlog
-Example: /vagrant/dronekit-la - (analyze stdin)
-Example: /vagrant/dronekit-la x.log (analyze text-dumped dataflash log)
+Example: ../../dronekit-la -s json 1.solo.tlog
+Example: ../../dronekit-la -a "Ever Flew, Battery" 1.solo.tlog
+Example: ../../dronekit-la -s brief 1.solo.tlog 2.solo.tlog logs/*.tlog
+Example: ../../dronekit-la - (analyze stdin)
+Example: ../../dronekit-la x.log (analyze text-dumped dataflash log)
 
 Analyser List: 
 
