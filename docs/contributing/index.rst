@@ -32,9 +32,11 @@ The topics below explain how to :doc:`contribute to the tool <contribution_tool>
 
     contribution_tool
     contribution_docs
+    developer_setup_vagrant
     add_analyzer
     add_message_handler
-    developer_setup_vagrant
+    ../reference/analyser_reference
+    ../reference/message_handlers_reference
 
 
 

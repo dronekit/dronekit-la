@@ -1,10 +1,10 @@
 DK-LA Version: Version: 0.3
-Git-Version: 0.3-17-g9d853
+Git-Version: v0.1-122-g6f81
 
 DK-LA HELP:
 
  Usage:
-dronekit-la [OPTION] [FILE...]
+../../dronekit-la [OPTION] [FILE...]
  -c FILEPATH      use config file filepath
  -m MODELTYPE     override model; copter|plane|rover
  -f FRAME         set frame; QUAD|Y6
@@ -13,14 +13,14 @@ dronekit-la [OPTION] [FILE...]
  -l               list analyzers
  -a               specify analyzers to run (comma-separated list)
  -i FORMAT        specify input format (tlog|df|log)
- -p	        pure output - no deprecated fields
+ -p               pure output - no deprecated fields
  -V               display version information
 
-Example: dronekit-la -s json 1.solo.tlog
-Example: dronekit-la -a "Ever Flew, Battery" 1.solo.tlog
-Example: dronekit-la -s brief 1.solo.tlog 2.solo.tlog logs/*.tlog
-Example: dronekit-la - (analyze stdin)
-Example: dronekit-la x.log (analyze text-dumped dataflash log)
+Example: ../../dronekit-la -s json 1.solo.tlog
+Example: ../../dronekit-la -a "Ever Flew, Battery" 1.solo.tlog
+Example: ../../dronekit-la -s brief 1.solo.tlog 2.solo.tlog logs/*.tlog
+Example: ../../dronekit-la - (analyze stdin)
+Example: ../../dronekit-la x.log (analyze text-dumped dataflash log)
 
 Analyser List: 
 
@@ -54,8 +54,12 @@ Description: This test will FAIL if the input does not contain parameter informa
 TEST: Good EKF
 Description: This test will FAIL or WARN if EKF variances exceed the respective thresholds, or FAIL if the EKF status flags indicate errors.
 * Fail: The EKF status report indicates a problem with the EKF
+* Fail: pos_horiz_variance exceeds fail threshold
 * Fail: compass_variance exceeds fail threshold
+* Fail: pos_vert_variance exceeds fail threshold
+* Fail: velocity_variance exceeds fail threshold
 * Warn: compass_variance exceeds warn threshold
+* Warn: pos_horiz_variance exceeds warn threshold
 * Warn: velocity_variance exceeds warn threshold
 
 TEST: Ever Armed
@@ -64,6 +68,7 @@ Description: This test will FAIL if the craft did not arm
 
 TEST: Attitude Control
 Description: This test will FAIL or WARN if the vehicle's desired attitudes and achieved attitudes are not within threshold delta values for more than a threshold time.
+* Fail: Desired attitude not achieved
 * Warn: Desired attitude not achieved
 
 TEST: Battery
@@ -87,7 +92,7 @@ Description: This test will FAIL if various craft's velocity estimates diverge
 
 TEST: Crash Test
 Description: This test will FAIL if the vehicle appears to crash
-* Pass: Never crashed
+* Fail: Vehicle is past maximum allowed angle and running its motors
 
 TEST: Altitude Estimate Divergence
 Description: This test will FAIL or WARN if the various vehicle's Altitude estimates diverge
@@ -104,6 +109,7 @@ Description: This test will FAIL if the craft appears to lose onboard power duri
 
 TEST: Position Estimate Divergence
 Description: This test will FAIL if various craft's position estimates diverge
+* Fail: This position estimate differs from the canonical craft position
 
 TEST: Compass Vector Length
 Description: This test will FAIL or WARN if the compass vector length exceeds the respective threshold.  Possible causes include flying near large metal objects.
@@ -113,14 +119,12 @@ Description: This test will FAIL if the craft ever arms when some arming checks 
 
 TEST: Sensor Health
 Description: This test will FAIL if any sensor is detected as failed
-* Fail: The craft's assesment of its sensors indicate a problem
+* Fail: The craft's assessment of its sensors indicate a problem
 
 TEST: Attitude Estimate Divergence
 Description: This test will FAIL if various craft's attitude estimates diverge
 * Fail: This attitude estimate differs from the canonical craft attitude
-* Warn: This attitude estimate differs from the canonical craft attitude
 
 TEST: Compass Offsets
 Description: This test will WARN or FAIL depending on the degree that compass offset parameters exceed specified thresholds.
-* Warn: Compass offsets in parameters are out of bounds
-* Pass: Compass offsets in parameters look reasonable
+* Fail: Compass offsets in parameters are out of bounds

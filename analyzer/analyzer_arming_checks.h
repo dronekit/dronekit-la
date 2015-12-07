@@ -26,7 +26,7 @@ public:
 
     const std::string name() const override { return "Arming Checks"; }
     const std::string description() const override {
-        return "This test will FAIL if the craft ever arms when some arming checks are disabled";
+        return "An autopilot checks many aspects of the aircraft's state before allowing it to be armed - for example, that it has a good GPS fix.  This test will FAIL if the craft ever arms when some arming checks are disabled";
     }
 
     void evaluate() override;

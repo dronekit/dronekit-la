@@ -9,6 +9,7 @@ Vagrant.configure(2) do |config|
      sudo apt-get install -y git
      sudo apt-get install -y build-essential
      sudo apt-get install -y libjsoncpp-dev libjsoncpp0
+     sudo apt-get install -y valgrind
    SHELL
 
    config.vm.provision "sphinx", type: "shell", inline: <<-SHELL
@@ -22,6 +23,12 @@ Vagrant.configure(2) do |config|
         cd /vagrant
         echo "[SPHINX-DOCS]: Installing SPHINX-DOCS theme ... "
         pip install sphinx-3dr-theme
+        echo "[SPHINX-DOCS]: Installing Breath Extension (Doxygen->Spinx Bridge) ... "
+        pip install breathe
+        echo "[SPHINX-DOCS]: Installing DOxygen ..."
+        apt-get -y install doxygen  
+        echo "[SPHINX-DOCS]: Run DOxygen ..."
+        doxygen doxygen/doxygen.conf
         echo "[SPHINX-DOCS]: Building docs "
         cd docs/
         make html

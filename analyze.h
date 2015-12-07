@@ -58,7 +58,7 @@ protected:
 
 private:
     uint64_t start_time;
-    bool _pure_output;
+    bool _pure_output = false;
 
     AnalyzerVehicle::Base *&vehicle;
 

@@ -24,9 +24,21 @@ sys.path.append(os.path.abspath('..'))
 # If your documentation needs a minimal Sphinx version, state it here.
 #needs_sphinx = '1.0'
 
+
+
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.todo', 'sphinx.ext.coverage','sphinx.ext.todo']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.todo', 'sphinx.ext.coverage','sphinx.ext.todo','breathe']
+
+
+breathe_projects = {
+    "analyzer":"../doxygen/xml/",
+    }
+    
+breathe_default_project = "analyzer"
+
+breathe_default_members = ('members','protected-members' ,'undoc-members')
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
