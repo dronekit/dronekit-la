@@ -44,7 +44,7 @@ public:
         AnalyzerVehicle::Attitude estimate);
     void evaluate() override;
 
-    void end_of_log(const uint32_t packet_count);
+    void end_of_log(const uint32_t packet_count) override;
 
     const std::string _config_tag() const {
         return std::string("attitude_estimate_divergence");

@@ -73,6 +73,9 @@ def diff_valgrind(expected, new):
     expected_string = strip_heap_usage2.sub("total heap usage: Yes!", expected_string);
     new_string = strip_heap_usage2.sub("total heap usage: Yes!", new_string);
 
+    strip_log_path = re.compile("(Command:.*) .*");
+    expected_string = strip_log_path.sub("Command: Yes!", expected_string);
+    new_string = strip_log_path.sub("Command: Yes!", new_string);
 
     mydiff = difflib.unified_diff(expected_string.splitlines(1), new_string.splitlines(1))
     return "\n".join(mydiff)
@@ -127,7 +130,12 @@ def test_log(filepath_log):
                            '--log-file=%s' % (new_valgrind_logpath,)]
         p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         analysis_string,analysis_stderr = p.communicate()
-        analysis_json = json.loads(analysis_string)
+        try:
+            analysis_json = json.loads(analysis_string)
+        except Exception as e:
+            print("Failed to load (%s)" % (analysis_string))
+            raise e
+
         filter_analysis_json(analysis_json, 0) # modifies in place
         correctish_json_filepath = filepath_log + "-expected-json"
         correctish_json = json_from_filepath(correctish_json_filepath)

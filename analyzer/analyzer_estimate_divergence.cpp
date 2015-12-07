@@ -21,13 +21,13 @@ void Analyzer_Estimate_Divergence_Result::to_json(Json::Value &root) const
 
 void Analyzer_Estimate_Divergence::end_of_log(const uint32_t packet_count UNUSED)
 {
-    for (std::map<const std::string, Analyzer_Estimate_Divergence_Result*>::iterator it = _result.begin();
-         it != _result.end();
-         ++it) {
-        Analyzer_Estimate_Divergence_Result *result = (*it).second;
-        if (result != NULL) {
-            close_result((*it).first);
-        }        
+    auto next = _result.begin();
+    while (next != _result.end()) {
+        auto current = next;
+        next++;
+        if ((*current).second != NULL) {
+            close_result((*current).first);
+        }
     }
 }
 
