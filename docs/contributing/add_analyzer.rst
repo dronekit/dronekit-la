@@ -9,31 +9,29 @@ log input and output formats, and for creating tests (analyzers) which are indep
 of each other.
 
 This article provides a brief overview of the main framework classes and some suggestions on the 
-how to write a new analyzer.
+how to write a new analyzer. There is additional information in the :doc:`../reference/analyser_reference`.
 
 .. tip::
 
-    This documentation is a work in progress. We plan to extend and evolve it future (including a  
-    detailed reference generated from in-source comments). In the meantime, we highly recommend you
-    check out the `existing analyzers <https://github.com/dronekit/dronekit-la/tree/master/analyzer>`_ for ideas/examples.
+    We highly recommend that you check out the 
+    `existing analyzers <https://github.com/dronekit/dronekit-la/tree/master/analyzer>`_ 
+    for ideas/examples.
     
 
 Framework overview
 ==================
 
 The main framework classes are the analyzer base class 
-(`Analyzer <https://github.com/dronekit/dronekit-la/blob/master/analyzer.h>`_), the results base classes
-(`Analyzer_Result <https://github.com/dronekit/dronekit-la/blob/master/analyzer.h>`_,
-`Analyzer_Result_Period <https://github.com/dronekit/dronekit-la/blob/master/analyzer.h>`_,
-`Analyzer_Result_Event <https://github.com/dronekit/dronekit-la/blob/master/analyzer.h>`_,
-`Analyzer_Result_Summary <https://github.com/dronekit/dronekit-la/blob/master/analyzer.h>`_) and the
-vehicle/log class which is used to expose log information to the analyzer (`AnalyzerVehicle::Base <https://github.com/dronekit/dronekit-la/blob/master/analyzervehicle.h>`_).
+(:cpp:class:`Analyzer`), the results base classes
+(:cpp:class:`Analyzer_Result`, :cpp:class:`Analyzer_Result_Period`, :cpp:class:`Analyzer_Result_Event`,
+:cpp:class:`Analyzer_Result_Summary`) and the vehicle/log class which is used to expose log information 
+to the analyzer (:cpp:class:`AnalyzerVehicle::Base`).
 
 .. todo:: Generate a UML diagram and add here.
 
 
-Analyzers must be derived from ``Analyzer`` and override its virtual methods. The first two methods set the name and 
-description reported by the analyzer in the output log:
+Analyzers must be derived from :cpp:class:`Analyzer` and override its virtual methods. 
+The first two methods set the name and description reported by the analyzer in the output log:
 
 .. code-block:: cpp
 
@@ -46,10 +44,10 @@ description reported by the analyzer in the output log:
     virtual const std::string description() const = 0;
 
     
-The ``evaluate()`` and ``end_of_log()`` methods are called by the framework for every logged message, to gather relevant 
-information and report the results (respectively). Some analyzers may choose to report the results only at the end of the
+The :cpp:func:`Analyzer::evaluate()` and :cpp:func:`Analyzer::end_of_log()` methods are called 
+by the framework for every logged message, to gather relevant information and report the results 
+(respectively). Some analyzers may choose to report the results only at the end of the
 available log data.
-    
     
 .. code-block:: cpp
 
@@ -62,23 +60,28 @@ available log data.
     virtual void end_of_log(uint32_t packet_count UNUSED) { }
 
 
-The ``evaluate()`` method gets data about the vehicle (log) to analyze using the base-classes protected ``_vehicle`` member 
-(an ``AnalyzerVehicle::Base``, cast to the the actual vehicle type). The key information from the evaluation is typically 
-saved as part of the new analyzer's private data.
+The :cpp:func:`evaluate() <Analyzer::evaluate()>` method gets data about the vehicle (log) to analyze 
+using the base-classes protected :cpp:member:`_vehicle <Analyzer::_vehicle>` member 
+(an :cpp:class:`AnalyzerVehicle::Base`, cast to the the actual vehicle type). 
+The key information from the evaluation is typically saved as part of the new analyzer's private data.
 
 The new analyzer should also define a results class (an instance of which is usually owned by your Analyzer-derived class).
 The results class must be derived from one of the base classes listed below:
 
-* ``Analyzer_Result``
-* ``Analyzer_Result_Period``
-* ``Analyzer_Result_Event``
-* ``Analyzer_Result_Summary`` 
+* :cpp:class:`Analyzer_Result`
+* :cpp:class:`Analyzer_Result_Period`
+* :cpp:class:`Analyzer_Result_Event`
+* :cpp:class:`Analyzer_Result_Summary`
 
-.. todo:: Brief explanation of where each of he above are used.
+.. todo:: Brief explanation of where each of the above are used.
 
-In your ``end_of_log()`` implementation you can populate this results object using the ``set_status()``, 
-``set_reason()``, ``add_evidence()``, ``add_source()`` and ``add_evilness()`` (severity-score) methods (defined in the 
-``Analyzer_Result`` base class) and then save it to the Analyzer using ``Analyzer::add_result()``. An example from the Arming Check analyzer is shown below: 
+In your :cpp:func:`end_of_log() <Analyzer::end_of_log()>` implementation you can populate this results object 
+using the :cpp:func:`Analyzer_Result::set_status()`, :cpp:func:`set_reason() <Analyzer_Result::set_reason()>`,
+:cpp:func:`add_evidence() <Analyzer_Result::add_evidence()>`, :cpp:func:`add_source() <Analyzer_Result::add_source()>` and 
+:cpp:func:`set_severity_score() <Analyzer_Result::set_severity_score()>` or 
+:cpp:func:`increase_severity_score() <Analyzer_Result::increase_severity_score()>` (severity-score) methods 
+and then save it to the analyzer using :cpp:func:`Analyzer::add_result()`. 
+An example from the *Arming Check* analyzer is shown below: 
 
 .. code-block:: cpp
 
@@ -91,10 +94,11 @@ In your ``end_of_log()`` implementation you can populate this results object usi
     //Add the result to the Analyzer
     add_result(result);
             
-If the analyzer detects multiple issues it can repopulate its ``result`` object and call ``add_result()`` for each issue.
+If the analyzer detects multiple issues it can repopulate its ``result`` object and call :cpp:func:`add_result() <Analyzer::add_result()>` for each issue.
 
-``Analyzer`` provides a number of other methods that you can optionally use/over ride in your classes. 
-One example is ``configure()``, which can be overridden to support setting failure levels using a configuration file.
+:cpp:class:`Analyzer` provides a number of other methods that you can optionally use/over ride in your classes. 
+One example is :cpp:func:`configure() <Analyzer::configure()>`, which can be overridden to support 
+setting failure levels using a configuration file.
     
 .. todo::
 
@@ -129,14 +133,14 @@ All of the existing analyzers have been implemented in just two files (the heade
 They are placed in the **/analyzer/** folder and prefixed with the string **analyzer_**.
 
 You'll need to add the source files into the project 
-`Makefile <https://github.com/dronekit/dronekit-la/blob/master/Makefile>_:
+`Makefile <https://github.com/dronekit/dronekit-la/blob/master/Makefile>`_:
 
 .. code-block:: make
 
     SRCS_CPP += analyzer/analyzer_your_problem.cpp
 
 You'll also need to setup the code to instantiate the new analyzer in 
-`dronekit-la/analyze.cpp <https://github.com/dronekit/dronekit-la/blob/master/analyze.cpp>`_. 
+`analyze.cpp <https://github.com/dronekit/dronekit-la/blob/master/analyze.cpp>`_. 
 This code usually also sets up any trigger values from the configuration file, as shown:
 
 
@@ -158,6 +162,6 @@ This code usually also sets up any trigger values from the configuration file, a
 .. tip::
 
     Not all information your analyzer might need will necessary be available
-    in the ``AnalyzerVehicle::Base`` class (accessed through analyzer's ``_vehicle`` member). If required
+    in the :cpp:class:`AnalyzerVehicle::Base` class (accessed through analyzer's :cpp:member:`_vehicle <Analyzer::_vehicle>` member). If required
     information is present in the original log but not the analyzer's vehicle model then you can add it using
     the process described in :doc:`add_message_handler`.
