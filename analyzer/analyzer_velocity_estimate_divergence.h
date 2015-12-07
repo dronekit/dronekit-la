@@ -21,12 +21,12 @@ class Analyzer_Velocity_Estimate_Divergence : public Analyzer_Estimate_Divergenc
 public:
 
     Analyzer_Velocity_Estimate_Divergence(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
-	Analyzer_Estimate_Divergence(vehicle,data_sources)
+    Analyzer_Estimate_Divergence(vehicle,data_sources)
     { }
 
     const std::string name() const override { return "Velocity Estimate Divergence"; }
     const std::string description() const override {
-        return "A UAV typically has several estimates of its velocity.  This test will FAIL if the craft's velocity estimates diverge";
+        return "A UAV typically has several estimates of its velocity.  This test will FAIL if the craft's velocity estimates diverge.";
     }
 
     const std::string estimate_name() const {

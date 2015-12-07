@@ -36,7 +36,7 @@ class Analyzer_Ever_Flew : public Analyzer {
 public:
 
     Analyzer_Ever_Flew(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
-	Analyzer(vehicle,data_sources)
+    Analyzer(vehicle,data_sources)
     {
         _result.set_status(analyzer_status_fail);
         _result.set_reason("The vehicle never seemed to take off");
@@ -45,7 +45,7 @@ public:
 
     const std::string name() const { return "Ever Flew"; }
     const std::string description() const {
-        return "Determining whether a vehicle has ever flown in a log is done heuristically based on things like motor speeds.  This test will FAIL if the craft did not ever seem to fly";
+        return "Determining whether a vehicle has ever flown in a log is done heuristically based on things like motor speeds.  This test will FAIL if the craft did not ever seem to fly.";
     }
 
     bool configure(INIReader *config) override;

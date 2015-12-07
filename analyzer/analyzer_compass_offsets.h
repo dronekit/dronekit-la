@@ -29,13 +29,13 @@ class Analyzer_Compass_Offsets : public Analyzer {
 public:
 
     Analyzer_Compass_Offsets(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources, const std::string param_extra_string) :
-	Analyzer(vehicle,data_sources),
+    Analyzer(vehicle,data_sources),
         _param_extra_string(param_extra_string)
     { }
 
     const std::string name() const override { return "Compass Offsets"; }
     const std::string description() const override {
-        return "Compass calibration process produces a set of parameters that specify expected compass discrepancies.  This test will WARN or FAIL depending on the degree that these compass offset parameters exceed specified thresholds.";
+        return "Compass calibration produces a set of parameters that specify expected compass discrepancies.  This test will WARN or FAIL depending on the degree that these compass offset parameters exceed specified thresholds.";
     }
 
     bool configure(INIReader *config) override;

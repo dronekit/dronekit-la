@@ -21,7 +21,7 @@ class Analyzer_Battery : public Analyzer {
 public:
 
     Analyzer_Battery(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
-	Analyzer(vehicle,data_sources)
+    Analyzer(vehicle,data_sources)
     {
         result = new Analyzer_Battery_Result();
         result->add_source(_data_sources.get("BATTERY_REMAINING"));
@@ -31,7 +31,7 @@ public:
 
     const std::string name() const override { return "Battery"; }
     const std::string description() const override {
-        return "Many autpilots are capable of monitoring their flight batteries.  This test will FAIL if the battery level falls below the battery failsafe threshold level, or if a battery failsafe event is received.";
+        return "Many autopilots are capable of monitoring their flight batteries.  This test will FAIL if the battery level falls below the battery failsafe threshold level, or if a battery failsafe event is received.";
     }
     bool configure(INIReader *config) override;
 

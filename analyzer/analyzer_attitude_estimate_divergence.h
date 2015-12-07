@@ -22,7 +22,7 @@ class Analyzer_Attitude_Estimate_Divergence : public Analyzer_Estimate_Divergenc
 public:
 
     Analyzer_Attitude_Estimate_Divergence(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
-	Analyzer_Estimate_Divergence(vehicle,data_sources)
+    Analyzer_Estimate_Divergence(vehicle,data_sources)
     { }
 
     const std::string estimate_name() const {

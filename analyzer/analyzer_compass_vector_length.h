@@ -39,12 +39,12 @@ class Analyzer_Compass_Vector_Length : public Analyzer {
 public:
 
     Analyzer_Compass_Vector_Length(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
-	Analyzer(vehicle,data_sources)
+    Analyzer(vehicle,data_sources)
     { }
 
     const std::string name() const override { return "Compass Vector Length"; }
     const std::string description() const override {
-        return "The strength and direction of the Earth's magnetic field should be relatively constant and lay within certain thresholds.  This test will FAIL or WARN if the compass vector length exceeds the respective threshold.  Possible causes include flying near large metal objects.";
+        return "The strength and direction of the Earth's magnetic field should be relatively constant and lie within certain thresholds.  This test will FAIL or WARN if the compass vector length exceeds the respective threshold.  Possible causes include flying near large metal objects.";
     }
 
     bool configure(INIReader *config) override;

@@ -21,12 +21,12 @@ class Analyzer_Vehicle_Definition : public Analyzer {
 public:
 
     Analyzer_Vehicle_Definition(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
-	Analyzer(vehicle,data_sources)
+    Analyzer(vehicle,data_sources)
     { }
 
     const std::string name() const override { return "Vehicle Definition"; }
     const std::string description() const override {
-        return "The vehicle type is normally automatically detected by dronekit-la from the log itself.  Sometimes the log does not contain sufficient information to make this determination.  This test will FAIL if the craft type is never defined";
+        return "The vehicle type is normally automatically detected by dronekit-la from the log.  Sometimes the log does not contain sufficient information to make this determination.  This test will FAIL if the craft type is never defined";
     }
 
     void evaluate() override;

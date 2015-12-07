@@ -33,7 +33,7 @@ class Analyzer_Brownout : public Analyzer {
 public:
 
     Analyzer_Brownout(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
-	Analyzer(vehicle,data_sources)
+    Analyzer(vehicle,data_sources)
     { }
 
     const std::string name() const override { return "Brownout"; }

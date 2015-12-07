@@ -48,7 +48,7 @@ public:
 
     const std::string name() const override { return "Good EKF"; }
     const std::string description() const override {
-        return "The Extended Kalman filter has many built-in checks to ensure it is funcitoning correctly.  This test will FAIL or WARN if EKF variances exceed the respective thresholds, or FAIL if the EKF status flags indicate errors.";
+        return "The Extended Kalman Filter (EKF) has many built-in checks to ensure that it is functioning correctly.  This test will FAIL or WARN if EKF variances exceed the respective thresholds, or FAIL if the EKF status flags indicate errors.";
     }
 
     bool configure(INIReader *config) override;

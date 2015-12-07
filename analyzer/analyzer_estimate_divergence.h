@@ -37,7 +37,7 @@ class Analyzer_Estimate_Divergence : public Analyzer {
 public:
 
     Analyzer_Estimate_Divergence(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
-	Analyzer(vehicle,data_sources)
+    Analyzer(vehicle,data_sources)
     { }
 
     virtual const std::string estimate_name() const = 0;
@@ -46,7 +46,7 @@ public:
         return string_format("%s Estimate Divergence", estimate_name().c_str());
     }
     virtual const std::string description() const override {
-        return string_format("A UAV often has several estimates of its %s.  This test will FAIL or WARN if the various vehicle's %s estimates diverge", estimate_name().c_str(), estimate_name().c_str());
+        return string_format("A UAV often has several estimates of its %s.  This test will FAIL or WARN if the various vehicle's %s estimates diverge.", estimate_name().c_str(), estimate_name().c_str());
     }
 
     // void evaluate() override;
