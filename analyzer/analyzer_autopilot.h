@@ -36,7 +36,7 @@ public:
 
     const std::string name() const override { return "AutoPilot Health"; }
     const std::string description() const override {
-        return "This test will FAIL if problems are detected with the AutoPilot";
+        return "Many autopilots are capable of monitoring their own performance.  This test will FAIL if problems are detected with the autopilot";
     }
 
     bool configure(INIReader *config) override;

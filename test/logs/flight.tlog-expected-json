@@ -1,7 +1,7 @@
 {
   "bytes-dropped": 0, 
   "duration": "987654321", 
-  "evilness": 2000, 
+  "evilness": 2270, 
   "format-version": "0.1", 
   "git_version": "some-hash", 
   "maximum-altitude-absolute": 608.8099975585938, 
@@ -14,11 +14,12 @@
   "maximum-velocity-units": "metres/second", 
   "packet-count": 157284, 
   "packet_count": 157284, 
-  "severity-score": 2000, 
+  "severity-score": 2270, 
   "tests": {
     "Altitude Estimate Divergence": {
-      "description": "This test will FAIL if various craft's Altitude estimates diverge", 
-      "evilness": 410, 
+      "description": "A UAV often has several estimates of its Altitude.  This test will FAIL or WARN if the various vehicle's  estimates diverge", 
+      "evilness": 680, 
+      "evilness-is-deprecated": 1, 
       "name": "Altitude Estimate Divergence", 
       "results": [
         {
@@ -26,18 +27,19 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=589.150020 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
             "GLOBAL_POSITION_INT.alt", 
             "GPS_RAW_INT.alt"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437195928006080, 
           "timestamp_stop": 1437196260039492
         }, 
@@ -46,10 +48,11 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-585.872703 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "SCALED_PRESSURE", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -57,8 +60,8 @@
             "SCALED_PRESSURE.temperature", 
             "SCALED_PRESSURE.press_abs"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437196260039492, 
           "timestamp_stop": 1437196284637816
         }, 
@@ -71,6 +74,7 @@
             "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -91,6 +95,7 @@
             "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -111,6 +116,7 @@
             "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -127,10 +133,11 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-585.883937 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "SCALED_PRESSURE", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -138,8 +145,8 @@
             "SCALED_PRESSURE.temperature", 
             "SCALED_PRESSURE.press_abs"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437196407264276, 
           "timestamp_stop": 1437196447440036
         }, 
@@ -152,6 +159,7 @@
             "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -172,6 +180,7 @@
             "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -188,10 +197,11 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-585.954061 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "SCALED_PRESSURE", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -199,8 +209,8 @@
             "SCALED_PRESSURE.temperature", 
             "SCALED_PRESSURE.press_abs"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437196483935928, 
           "timestamp_stop": 1437196525077368
         }, 
@@ -209,18 +219,19 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-6.049988 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
             "GLOBAL_POSITION_INT.alt", 
             "GPS_RAW_INT.alt"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437196501818664, 
           "timestamp_stop": 1437196543443336
         }, 
@@ -229,18 +240,19 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-5.010010 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
             "GLOBAL_POSITION_INT.alt", 
             "GPS_RAW_INT.alt"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437196545238080, 
           "timestamp_stop": 1437196547665144
         }, 
@@ -253,6 +265,7 @@
             "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -273,6 +286,7 @@
             "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -293,6 +307,7 @@
             "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -313,6 +328,7 @@
             "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -329,18 +345,19 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-6.620056 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
             "GLOBAL_POSITION_INT.alt", 
             "GPS_RAW_INT.alt"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437196645497824, 
           "timestamp_stop": 1437196683425884
         }, 
@@ -349,10 +366,11 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-586.090621 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "SCALED_PRESSURE", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -360,8 +378,8 @@
             "SCALED_PRESSURE.temperature", 
             "SCALED_PRESSURE.press_abs"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437196575435412, 
           "timestamp_stop": 1437196910309228
         }, 
@@ -374,6 +392,7 @@
             "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -394,6 +413,7 @@
             "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -414,6 +434,7 @@
             "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -430,10 +451,11 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-585.885987 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "SCALED_PRESSURE", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -441,8 +463,8 @@
             "SCALED_PRESSURE.temperature", 
             "SCALED_PRESSURE.press_abs"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437196932241652, 
           "timestamp_stop": 1437197002639144
         }, 
@@ -451,18 +473,19 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-5.510010 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
             "GLOBAL_POSITION_INT.alt", 
             "GPS_RAW_INT.alt"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437197010511004, 
           "timestamp_stop": 1437197011617624
         }, 
@@ -471,18 +494,19 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-8.809998 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
             "GLOBAL_POSITION_INT.alt", 
             "GPS_RAW_INT.alt"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437197016024916, 
           "timestamp_stop": 1437197018163232
         }, 
@@ -491,18 +515,19 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=8.579956 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "AHRS2", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
             "GLOBAL_POSITION_INT.alt", 
             "AHRS2.alt"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437197018548376, 
           "timestamp_stop": 1437197021953880
         }, 
@@ -511,10 +536,11 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=9.090210 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "SCALED_PRESSURE", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -522,8 +548,8 @@
             "SCALED_PRESSURE.temperature", 
             "SCALED_PRESSURE.press_abs"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437197018163232, 
           "timestamp_stop": 1437197021953880
         }, 
@@ -532,18 +558,19 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-7.340027 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
             "GLOBAL_POSITION_INT.alt", 
             "GPS_RAW_INT.alt"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437197021953880, 
           "timestamp_stop": 1437197039263916
         }, 
@@ -552,10 +579,11 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-586.642581 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "SCALED_PRESSURE", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -563,8 +591,8 @@
             "SCALED_PRESSURE.temperature", 
             "SCALED_PRESSURE.press_abs"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437197022885368, 
           "timestamp_stop": 1437197042126012
         }, 
@@ -573,10 +601,11 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-585.989213 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "SCALED_PRESSURE", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -584,8 +613,8 @@
             "SCALED_PRESSURE.temperature", 
             "SCALED_PRESSURE.press_abs"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437197064866448, 
           "timestamp_stop": 1437197070321628
         }, 
@@ -598,6 +627,7 @@
             "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -618,6 +648,7 @@
             "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -634,18 +665,19 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-8.400024 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
             "GLOBAL_POSITION_INT.alt", 
             "GPS_RAW_INT.alt"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437197334707428, 
           "timestamp_stop": 1437197345914296
         }, 
@@ -654,10 +686,11 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-586.210450 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "SCALED_PRESSURE", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -665,8 +698,8 @@
             "SCALED_PRESSURE.temperature", 
             "SCALED_PRESSURE.press_abs"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437197108286612, 
           "timestamp_stop": 1437197403634172
         }, 
@@ -675,18 +708,19 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=596.450000 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
             "GLOBAL_POSITION_INT.alt", 
             "GPS_RAW_INT.alt"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437197403620208, 
           "timestamp_stop": 1437197659327184
         }, 
@@ -695,10 +729,11 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-593.936234 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "SCALED_PRESSURE", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -706,8 +741,8 @@
             "SCALED_PRESSURE.temperature", 
             "SCALED_PRESSURE.press_abs"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437197659327184, 
           "timestamp_stop": 1437197702489052
         }, 
@@ -716,10 +751,11 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-593.982375 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "SCALED_PRESSURE", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -727,8 +763,8 @@
             "SCALED_PRESSURE.temperature", 
             "SCALED_PRESSURE.press_abs"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437197850910048, 
           "timestamp_stop": 1437197861940876
         }, 
@@ -737,10 +773,11 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-594.075929 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "SCALED_PRESSURE", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -748,8 +785,8 @@
             "SCALED_PRESSURE.temperature", 
             "SCALED_PRESSURE.press_abs"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437197979887340, 
           "timestamp_stop": 1437198021616088
         }, 
@@ -758,10 +795,11 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-594.043468 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "SCALED_PRESSURE", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -769,8 +807,8 @@
             "SCALED_PRESSURE.temperature", 
             "SCALED_PRESSURE.press_abs"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437198077768684, 
           "timestamp_stop": 1437198093111268
         }, 
@@ -779,18 +817,19 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-11.840027 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
             "GLOBAL_POSITION_INT.alt", 
             "GPS_RAW_INT.alt"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437197740646872, 
           "timestamp_stop": 1437198304037768
         }, 
@@ -799,10 +838,11 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-594.262982 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "SCALED_PRESSURE", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
@@ -810,8 +850,8 @@
             "SCALED_PRESSURE.temperature", 
             "SCALED_PRESSURE.press_abs"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437198125758816, 
           "timestamp_stop": 1437198304080752
         }, 
@@ -820,18 +860,19 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=592.959961 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "AHRS2", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
             "GLOBAL_POSITION_INT.alt", 
             "AHRS2.alt"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437198304080752, 
           "timestamp_stop": 1437198305931492
         }, 
@@ -840,32 +881,35 @@
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=591.920015 metres", 
-            "delta-threshold=4.000000 metres", 
+            "delta-threshold=5.000000 metres", 
             "delta-time-threshold=0.500000 seconds"
           ], 
-          "evilness": 10, 
+          "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This altitude estimate differs from the canonical craft altitude", 
           "series": [
             "GLOBAL_POSITION_INT.alt", 
             "GPS_RAW_INT.alt"
           ], 
-          "severity-score": 10, 
-          "status": "WARN", 
+          "severity-score": 20, 
+          "status": "FAIL", 
           "timestamp_start": 1437198304080752, 
           "timestamp_stop": 1437198363460736
         }
       ], 
-      "severity-score": 410, 
-      "status": "WARN"
+      "severity-score": 680, 
+      "status": "FAIL"
     }, 
     "Any Parameters Seen": {
-      "description": "This test will FAIL if no parameters are seen from the UAV", 
+      "description": "Autopilots store information on-board in the form of parameters.  For proper analysis, logs must contain this parameter information.  This test will FAIL if the input does not contain parameter information.", 
       "evilness": 0, 
+      "evilness-is-deprecated": 1, 
       "name": "Any Parameters Seen", 
       "results": [
         {
           "evilness": 0, 
+          "evilness-is-deprecated": 1, 
           "reason": "Parameters seen", 
           "series": [
             "PARAM.param_id", 
@@ -879,16 +923,18 @@
       "status": "PASS"
     }, 
     "Arming Checks": {
-      "description": "This test will FAIL if the craft ever arms when some arming checks are disabled", 
+      "description": "An autopilot checks many aspects of the aircraft's state before allowing it to be armed - for example, that it has a good GPS fix.  This test will FAIL if the craft ever arms when some arming checks are disabled", 
       "evilness": 0, 
+      "evilness-is-deprecated": 1, 
       "name": "Arming Checks", 
       "results": [], 
       "severity-score": 0, 
       "status": "PASS"
     }, 
     "Attitude Control": {
-      "description": "This test will FAIL if the craft's desired attitudes and achieved attitudes do not match for more than a threshold time", 
+      "description": "The autopilot reports both the craft's attitude and the attitude the craft believes it should be at.  This test will FAIL or WARN if the vehicle's desired attitudes and achieved attitudes are not within threshold delta values for more than a threshold time.", 
       "evilness": 800, 
+      "evilness-is-deprecated": 1, 
       "name": "Attitude Control", 
       "results": [
         {
@@ -904,6 +950,7 @@
             "Desired-Pitch-at-Max-Delta=9.860000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -931,6 +978,7 @@
             "Desired-Pitch-at-Max-Delta=-6.060000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -958,6 +1006,7 @@
             "Desired-Pitch-at-Max-Delta=-5.200000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -985,6 +1034,7 @@
             "Desired-Pitch-at-Max-Delta=0.000000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1012,6 +1062,7 @@
             "Desired-Pitch-at-Max-Delta=0.000000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1039,6 +1090,7 @@
             "Desired-Pitch-at-Max-Delta=-6.710000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1066,6 +1118,7 @@
             "Desired-Pitch-at-Max-Delta=-5.780000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1093,6 +1146,7 @@
             "Desired-Pitch-at-Max-Delta=22.859999 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1120,6 +1174,7 @@
             "Desired-Pitch-at-Max-Delta=6.530000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1147,6 +1202,7 @@
             "Desired-Pitch-at-Max-Delta=-7.190000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1174,6 +1230,7 @@
             "Desired-Pitch-at-Max-Delta=-26.590000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1201,6 +1258,7 @@
             "Desired-Pitch-at-Max-Delta=-2.830000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1228,6 +1286,7 @@
             "Desired-Pitch-at-Max-Delta=2.140000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1255,6 +1314,7 @@
             "Desired-Pitch-at-Max-Delta=6.570000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1282,6 +1342,7 @@
             "Desired-Pitch-at-Max-Delta=-1.040000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1309,6 +1370,7 @@
             "Desired-Pitch-at-Max-Delta=9.520000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1336,6 +1398,7 @@
             "Desired-Pitch-at-Max-Delta=1.140000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1363,6 +1426,7 @@
             "Desired-Pitch-at-Max-Delta=0.000000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1390,6 +1454,7 @@
             "Desired-Pitch-at-Max-Delta=15.559999 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1417,6 +1482,7 @@
             "Desired-Pitch-at-Max-Delta=0.000000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1444,6 +1510,7 @@
             "Desired-Pitch-at-Max-Delta=-1.610000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1473,6 +1540,7 @@
             "Motor 3 clipping low"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1500,6 +1568,7 @@
             "Desired-Pitch-at-Max-Delta=-3.910000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1527,6 +1596,7 @@
             "Desired-Pitch-at-Max-Delta=0.000000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1554,6 +1624,7 @@
             "Desired-Pitch-at-Max-Delta=0.740000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1581,6 +1652,7 @@
             "Desired-Pitch-at-Max-Delta=0.000000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1608,6 +1680,7 @@
             "Desired-Pitch-at-Max-Delta=7.360000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1636,6 +1709,7 @@
             "Motor 4 clipping low"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1663,6 +1737,7 @@
             "Desired-Pitch-at-Max-Delta=0.000000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1690,6 +1765,7 @@
             "Desired-Pitch-at-Max-Delta=0.000000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1717,6 +1793,7 @@
             "Desired-Pitch-at-Max-Delta=0.000000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1744,6 +1821,7 @@
             "Desired-Pitch-at-Max-Delta=-15.559999 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1771,6 +1849,7 @@
             "Desired-Pitch-at-Max-Delta=-20.439999 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1798,6 +1877,7 @@
             "Desired-Pitch-at-Max-Delta=-7.470000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1825,6 +1905,7 @@
             "Desired-Pitch-at-Max-Delta=14.940000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1852,6 +1933,7 @@
             "Desired-Pitch-at-Max-Delta=5.790000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1879,6 +1961,7 @@
             "Desired-Pitch-at-Max-Delta=-4.500000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1906,6 +1989,7 @@
             "Desired-Pitch-at-Max-Delta=-15.009999 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1933,6 +2017,7 @@
             "Desired-Pitch-at-Max-Delta=-14.870000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1960,6 +2045,7 @@
             "Desired-Pitch-at-Max-Delta=-18.359999 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -1987,6 +2073,7 @@
             "Desired-Pitch-at-Max-Delta=-16.309999 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2014,6 +2101,7 @@
             "Desired-Pitch-at-Max-Delta=-20.900000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2041,6 +2129,7 @@
             "Desired-Pitch-at-Max-Delta=-9.840000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2069,6 +2158,7 @@
             "Motor 3 clipping low"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2097,6 +2187,7 @@
             "Motor 2 clipping low"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2124,6 +2215,7 @@
             "Desired-Pitch-at-Max-Delta=5.800000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2151,6 +2243,7 @@
             "Desired-Pitch-at-Max-Delta=-3.420000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2178,6 +2271,7 @@
             "Desired-Pitch-at-Max-Delta=0.140000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2205,6 +2299,7 @@
             "Desired-Pitch-at-Max-Delta=-15.000000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2232,6 +2327,7 @@
             "Desired-Pitch-at-Max-Delta=-12.650000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2259,6 +2355,7 @@
             "Desired-Pitch-at-Max-Delta=-11.429999 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2286,6 +2383,7 @@
             "Desired-Pitch-at-Max-Delta=-8.570000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2314,6 +2412,7 @@
             "Motor 3 clipping low"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2341,6 +2440,7 @@
             "Desired-Pitch-at-Max-Delta=12.250000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2368,6 +2468,7 @@
             "Desired-Pitch-at-Max-Delta=3.500000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2395,6 +2496,7 @@
             "Desired-Pitch-at-Max-Delta=0.000000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2422,6 +2524,7 @@
             "Desired-Pitch-at-Max-Delta=0.000000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2449,6 +2552,7 @@
             "Desired-Pitch-at-Max-Delta=-5.900000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2476,6 +2580,7 @@
             "Desired-Pitch-at-Max-Delta=-3.850000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2503,6 +2608,7 @@
             "Desired-Pitch-at-Max-Delta=-6.830000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2530,6 +2636,7 @@
             "Desired-Pitch-at-Max-Delta=2.770000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2557,6 +2664,7 @@
             "Desired-Pitch-at-Max-Delta=5.210000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2584,6 +2692,7 @@
             "Desired-Pitch-at-Max-Delta=-1.190000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2611,6 +2720,7 @@
             "Desired-Pitch-at-Max-Delta=2.980000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2638,6 +2748,7 @@
             "Desired-Pitch-at-Max-Delta=3.200000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2668,6 +2779,7 @@
             "Motor 3 clipping low"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2695,6 +2807,7 @@
             "Desired-Pitch-at-Max-Delta=-13.790000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2722,6 +2835,7 @@
             "Desired-Pitch-at-Max-Delta=-7.240000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2749,6 +2863,7 @@
             "Desired-Pitch-at-Max-Delta=-0.510000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2776,6 +2891,7 @@
             "Desired-Pitch-at-Max-Delta=-24.340000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2803,6 +2919,7 @@
             "Desired-Pitch-at-Max-Delta=-27.019999 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2830,6 +2947,7 @@
             "Desired-Pitch-at-Max-Delta=-12.960000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2857,6 +2975,7 @@
             "Desired-Pitch-at-Max-Delta=-3.570000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2884,6 +3003,7 @@
             "Desired-Pitch-at-Max-Delta=-14.000000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2911,6 +3031,7 @@
             "Desired-Pitch-at-Max-Delta=-9.090000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2938,6 +3059,7 @@
             "Desired-Pitch-at-Max-Delta=-20.250000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2965,6 +3087,7 @@
             "Desired-Pitch-at-Max-Delta=-2.980000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -2992,6 +3115,7 @@
             "Desired-Pitch-at-Max-Delta=0.000000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3019,6 +3143,7 @@
             "Desired-Pitch-at-Max-Delta=0.000000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3046,6 +3171,7 @@
             "Desired-Pitch-at-Max-Delta=-11.030000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3073,6 +3199,7 @@
             "Desired-Pitch-at-Max-Delta=-25.920000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3100,6 +3227,7 @@
             "Desired-Pitch-at-Max-Delta=-31.400000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3127,6 +3255,7 @@
             "Desired-Pitch-at-Max-Delta=-24.199999 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3154,6 +3283,7 @@
             "Desired-Pitch-at-Max-Delta=-20.879999 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3181,6 +3311,7 @@
             "Desired-Pitch-at-Max-Delta=-15.690000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3208,6 +3339,7 @@
             "Desired-Pitch-at-Max-Delta=-16.850000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3235,6 +3367,7 @@
             "Desired-Pitch-at-Max-Delta=-19.430000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3262,6 +3395,7 @@
             "Desired-Pitch-at-Max-Delta=-20.340000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3289,6 +3423,7 @@
             "Desired-Pitch-at-Max-Delta=-24.980000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3316,6 +3451,7 @@
             "Desired-Pitch-at-Max-Delta=-18.049999 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3343,6 +3479,7 @@
             "Desired-Pitch-at-Max-Delta=-19.129999 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3370,6 +3507,7 @@
             "Desired-Pitch-at-Max-Delta=-15.480000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3397,6 +3535,7 @@
             "Desired-Pitch-at-Max-Delta=0.000000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3424,6 +3563,7 @@
             "Desired-Pitch-at-Max-Delta=-33.340000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3451,6 +3591,7 @@
             "Desired-Pitch-at-Max-Delta=-19.020000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3478,6 +3619,7 @@
             "Desired-Pitch-at-Max-Delta=-18.379999 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3505,6 +3647,7 @@
             "Desired-Pitch-at-Max-Delta=-23.340000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3532,6 +3675,7 @@
             "Desired-Pitch-at-Max-Delta=-19.500000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3559,6 +3703,7 @@
             "Desired-Pitch-at-Max-Delta=-11.980000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3586,6 +3731,7 @@
             "Desired-Pitch-at-Max-Delta=-3.670000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3613,6 +3759,7 @@
             "Desired-Pitch-at-Max-Delta=0.000000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3640,6 +3787,7 @@
             "Desired-Pitch-at-Max-Delta=4.810000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3667,6 +3815,7 @@
             "Desired-Pitch-at-Max-Delta=-10.820000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3694,6 +3843,7 @@
             "Desired-Pitch-at-Max-Delta=-12.320000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3721,6 +3871,7 @@
             "Desired-Pitch-at-Max-Delta=1.650000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3748,6 +3899,7 @@
             "Desired-Pitch-at-Max-Delta=10.070000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3775,6 +3927,7 @@
             "Desired-Pitch-at-Max-Delta=-6.470000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3802,6 +3955,7 @@
             "Desired-Pitch-at-Max-Delta=9.960000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3829,6 +3983,7 @@
             "Desired-Pitch-at-Max-Delta=7.190000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3856,6 +4011,7 @@
             "Desired-Pitch-at-Max-Delta=4.280000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3883,6 +4039,7 @@
             "Desired-Pitch-at-Max-Delta=8.679999 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3911,6 +4068,7 @@
             "Motor 3 clipping high"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3938,6 +4096,7 @@
             "Desired-Pitch-at-Max-Delta=24.510000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3965,6 +4124,7 @@
             "Desired-Pitch-at-Max-Delta=2.350000 degrees"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -3992,6 +4152,7 @@
             "Desired-Pitch-at-Max-Delta=-4.580000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -4019,6 +4180,7 @@
             "Desired-Pitch-at-Max-Delta=-0.440000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -4046,6 +4208,7 @@
             "Desired-Pitch-at-Max-Delta=0.000000 degrees"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -4074,6 +4237,7 @@
             "Motor 2 clipping low"
           ], 
           "evilness": 5, 
+          "evilness-is-deprecated": 1, 
           "reason": "Desired attitude not achieved", 
           "series": [
             "ATTITUDE.roll", 
@@ -4093,8 +4257,9 @@
       "status": "FAIL"
     }, 
     "Attitude Estimate Divergence": {
-      "description": "This test will FAIL if various craft's attitude estimates diverge", 
+      "description": "A UAV often has several estimates of its Attitude.  This test will FAIL or WARN if the various vehicle's conds estimates div", 
       "evilness": 60, 
+      "evilness-is-deprecated": 1, 
       "name": "Attitude Estimate Divergence", 
       "results": [
         {
@@ -4106,6 +4271,7 @@
             "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "name": "AHRS2", 
           "reason": "This attitude estimate differs from the canonical craft attitude", 
           "series": [
@@ -4130,6 +4296,7 @@
             "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "name": "AHRS2", 
           "reason": "This attitude estimate differs from the canonical craft attitude", 
           "series": [
@@ -4154,6 +4321,7 @@
             "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "name": "AHRS2", 
           "reason": "This attitude estimate differs from the canonical craft attitude", 
           "series": [
@@ -4178,6 +4346,7 @@
             "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "name": "AHRS2", 
           "reason": "This attitude estimate differs from the canonical craft attitude", 
           "series": [
@@ -4202,6 +4371,7 @@
             "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "name": "AHRS2", 
           "reason": "This attitude estimate differs from the canonical craft attitude", 
           "series": [
@@ -4226,6 +4396,7 @@
             "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "name": "AHRS2", 
           "reason": "This attitude estimate differs from the canonical craft attitude", 
           "series": [
@@ -4246,16 +4417,18 @@
       "status": "FAIL"
     }, 
     "AutoPilot Health": {
-      "description": "This test will FAIL if problems are detected with the AutoPilot", 
+      "description": "Many autopilots are capable of monitoring their own performance.  This test will FAIL if problems are detected with the autopilot", 
       "evilness": 0, 
+      "evilness-is-deprecated": 1, 
       "name": "AutoPilot Health", 
       "results": [], 
       "severity-score": 0, 
       "status": "PASS"
     }, 
     "Battery": {
-      "description": "This test will FAIL if the battery level remaining falls below a threshold level", 
+      "description": "Many autpilots are capable of monitoring their flight batteries.  This test will FAIL if the battery level falls below the battery failsafe threshold level, or if a battery failsafe event is received.", 
       "evilness": 0, 
+      "evilness-is-deprecated": 1, 
       "name": "Battery", 
       "results": [
         {
@@ -4264,6 +4437,7 @@
             "failsafe=15.000000%"
           ], 
           "evilness": 0, 
+          "evilness-is-deprecated": 1, 
           "reason": "Battery never below failsafe", 
           "series": [
             "SYS_STATUS.battery_remaining"
@@ -4276,8 +4450,9 @@
       "status": "PASS"
     }, 
     "Brownout": {
-      "description": "This test will FAIL if the craft appears to lose onboard power during a flight", 
+      "description": "A log should not end while the vehicle appears to be moving under its own power.  This test will FAIL if the vehicle still appears to be moving when the log ends.", 
       "evilness": 0, 
+      "evilness-is-deprecated": 1, 
       "name": "Brownout", 
       "results": [
         {
@@ -4285,6 +4460,7 @@
             "Final altitude -0.050000 metres"
           ], 
           "evilness": 0, 
+          "evilness-is-deprecated": 1, 
           "reason": "No brownout detected", 
           "series": [
             "SERVO_OUTPUT_RAW.servo1_raw", 
@@ -4305,8 +4481,9 @@
       "status": "PASS"
     }, 
     "Compass Offsets": {
-      "description": "This test will FAIL if the compass offset parameters exceed thresholds", 
+      "description": "Compass calibration process produces a set of parameters that specify expected compass discrepancies.  This test will WARN or FAIL depending on the degree that these compass offset parameters exceed specified thresholds.", 
       "evilness": 2, 
+      "evilness-is-deprecated": 1, 
       "name": "Compass Offsets", 
       "results": [
         {
@@ -4317,6 +4494,7 @@
             "COMPASS_OFS 111.601079 >= 100.000000"
           ], 
           "evilness": 2, 
+          "evilness-is-deprecated": 1, 
           "reason": "Compass offsets in parameters are out of bounds", 
           "series": [
             "PARAM.param_id", 
@@ -4331,20 +4509,23 @@
       "status": "PASS"
     }, 
     "Compass Vector Length": {
-      "description": "This test will FAIL if the compass' vector length exceeds a threshold.  Causes of this include flying near large metal objects.", 
+      "description": "The strength and direction of the Earth's magnetic field should be relatively constant and lay within certain thresholds.  This test will FAIL or WARN if the compass vector length exceeds the respective threshold.  Possible causes include flying near large metal objects.", 
       "evilness": 0, 
+      "evilness-is-deprecated": 1, 
       "name": "Compass Vector Length", 
       "results": [], 
       "severity-score": 0, 
       "status": "PASS"
     }, 
     "Crash Test": {
-      "description": "This test will FAIL if the vehicle appears to crash", 
+      "description": "Crashes are detected both heuristically and by explicit log messages.  This test will FAIL if the vehicle appears to crash", 
       "evilness": 0, 
+      "evilness-is-deprecated": 1, 
       "name": "Crash Test", 
       "results": [
         {
           "evilness": 0, 
+          "evilness-is-deprecated": 1, 
           "reason": "Never crashed", 
           "series": [
             "ATTITUDE.roll", 
@@ -4370,8 +4551,9 @@
       "status": "PASS"
     }, 
     "Ever Armed": {
-      "description": "This test will FAIL if the craft never armed during the log", 
+      "description": "Vehicles typically need to progress through a sequence of arming steps before they can move.  This test will FAIL if the craft did not arm", 
       "evilness": 0, 
+      "evilness-is-deprecated": 1, 
       "name": "Ever Armed", 
       "results": [
         {
@@ -4379,6 +4561,7 @@
             "Armed at 1437196284268592"
           ], 
           "evilness": 0, 
+          "evilness-is-deprecated": 1, 
           "reason": "The vehicle armed", 
           "series": [
             "HEARTBEAT.base_mode"
@@ -4392,12 +4575,14 @@
       "status": "PASS"
     }, 
     "Ever Flew": {
-      "description": "This test will FAIL if the craft did not ever seem to fly", 
+      "description": "Determining whether a vehicle has ever flown in a log is done heuristically based on things like motor speeds.  This test will FAIL if the craft did not ever seem to fly", 
       "evilness": 0, 
+      "evilness-is-deprecated": 1, 
       "name": "Ever Flew", 
       "results": [
         {
           "evilness": 0, 
+          "evilness-is-deprecated": 1, 
           "reason": "The vehicle appeared to fly", 
           "series": [
             "HEARTBEAT.base_mode", 
@@ -4419,8 +4604,9 @@
       "status": "PASS"
     }, 
     "GPS Fix": {
-      "description": "This test will FAIL if the quality of the GPS information is poor", 
+      "description": "The accuracy and precision of GPS messages can vary depending on many factors including weather, ionospheric disturbances and number of satellites visible.  This test will FAIL if the quality of the GPS information is poor", 
       "evilness": 20, 
+      "evilness-is-deprecated": 1, 
       "name": "GPS Fix", 
       "results": [
         {
@@ -4433,6 +4619,8 @@
             "HDop-threshold: 5.000000"
           ], 
           "evilness": 20, 
+          "evilness-is-deprecated": 1, 
+          "reason": "No 3D fix was ever acquired", 
           "series": [
             "GPS_RAW_INT.satellites_visible", 
             "GPS_RAW_INT.eph"
@@ -4447,8 +4635,9 @@
       "status": "FAIL"
     }, 
     "Good EKF": {
-      "description": "This test will FAIL if EKF variances exceed thresholds, or if the EKF status flags indicate errors", 
+      "description": "The Extended Kalman filter has many built-in checks to ensure it is funcitoning correctly.  This test will FAIL or WARN if EKF variances exceed the respective thresholds, or FAIL if the EKF status flags indicate errors.", 
       "evilness": 618, 
+      "evilness-is-deprecated": 1, 
       "name": "Good EKF", 
       "results": [
         {
@@ -4468,6 +4657,7 @@
             "Predicted horizontal position (absolute) bad"
           ], 
           "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -4490,6 +4680,7 @@
             "Predicted horizontal position (absolute) bad"
           ], 
           "evilness": 16, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -4510,6 +4701,7 @@
             "vertical position (above ground) estimate bad"
           ], 
           "evilness": 14, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -4527,6 +4719,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -4544,6 +4737,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -4561,6 +4755,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -4578,6 +4773,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -4595,6 +4791,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -4613,6 +4810,7 @@
             "In constant position mode (no abs or rel position)"
           ], 
           "evilness": 12, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -4633,6 +4831,7 @@
             "vertical position (above ground) estimate bad"
           ], 
           "evilness": 14, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -4650,6 +4849,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -4667,6 +4867,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -4685,6 +4886,7 @@
             "In constant position mode (no abs or rel position)"
           ], 
           "evilness": 12, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -4705,6 +4907,7 @@
             "vertical position (above ground) estimate bad"
           ], 
           "evilness": 14, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -4722,6 +4925,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -4739,6 +4943,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -4756,6 +4961,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -4773,6 +4979,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -4791,6 +4998,7 @@
             "In constant position mode (no abs or rel position)"
           ], 
           "evilness": 12, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -4811,6 +5019,7 @@
             "vertical position (above ground) estimate bad"
           ], 
           "evilness": 14, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -4829,6 +5038,7 @@
             "In constant position mode (no abs or rel position)"
           ], 
           "evilness": 12, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -4849,6 +5059,7 @@
             "vertical position (above ground) estimate bad"
           ], 
           "evilness": 14, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -4866,6 +5077,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "velocity_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.velocity"
@@ -4884,6 +5096,7 @@
             "In constant position mode (no abs or rel position)"
           ], 
           "evilness": 12, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -4901,6 +5114,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "pos_vert_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.pos_vert"
@@ -4927,6 +5141,7 @@
             "Predicted horizontal position (absolute) bad"
           ], 
           "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -4947,6 +5162,7 @@
             "vertical position (above ground) estimate bad"
           ], 
           "evilness": 14, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -4964,6 +5180,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -4982,6 +5199,7 @@
             "In constant position mode (no abs or rel position)"
           ], 
           "evilness": 12, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -5002,6 +5220,7 @@
             "vertical position (above ground) estimate bad"
           ], 
           "evilness": 14, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -5019,6 +5238,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -5036,6 +5256,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -5053,6 +5274,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "velocity_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.velocity"
@@ -5071,6 +5293,7 @@
             "In constant position mode (no abs or rel position)"
           ], 
           "evilness": 12, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -5088,6 +5311,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -5105,6 +5329,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -5122,6 +5347,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -5139,6 +5365,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -5156,6 +5383,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -5173,6 +5401,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -5190,6 +5419,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -5207,6 +5437,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -5224,6 +5455,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -5241,6 +5473,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -5261,6 +5494,7 @@
             "vertical position (above ground) estimate bad"
           ], 
           "evilness": 14, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -5287,6 +5521,7 @@
             "Predicted horizontal position (absolute) bad"
           ], 
           "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -5307,6 +5542,7 @@
             "vertical position (above ground) estimate bad"
           ], 
           "evilness": 14, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -5329,6 +5565,7 @@
             "Predicted horizontal position (absolute) bad"
           ], 
           "evilness": 16, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -5349,6 +5586,7 @@
             "vertical position (above ground) estimate bad"
           ], 
           "evilness": 14, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -5367,6 +5605,7 @@
             "In constant position mode (no abs or rel position)"
           ], 
           "evilness": 12, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -5387,6 +5626,7 @@
             "vertical position (above ground) estimate bad"
           ], 
           "evilness": 14, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -5405,6 +5645,7 @@
             "In constant position mode (no abs or rel position)"
           ], 
           "evilness": 12, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -5425,6 +5666,7 @@
             "vertical position (above ground) estimate bad"
           ], 
           "evilness": 14, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -5443,6 +5685,7 @@
             "In constant position mode (no abs or rel position)"
           ], 
           "evilness": 12, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -5463,6 +5706,7 @@
             "vertical position (above ground) estimate bad"
           ], 
           "evilness": 14, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -5480,6 +5724,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -5498,6 +5743,7 @@
             "In constant position mode (no abs or rel position)"
           ], 
           "evilness": 12, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -5515,6 +5761,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -5532,6 +5779,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -5552,6 +5800,7 @@
             "vertical position (above ground) estimate bad"
           ], 
           "evilness": 14, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -5578,6 +5827,7 @@
             "Predicted horizontal position (absolute) bad"
           ], 
           "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -5595,6 +5845,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -5615,6 +5866,7 @@
             "vertical position (above ground) estimate bad"
           ], 
           "evilness": 14, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -5632,6 +5884,7 @@
             "threshold=0.500000"
           ], 
           "evilness": 4, 
+          "evilness-is-deprecated": 1, 
           "reason": "compass_variance exceeds warn threshold", 
           "series": [
             "EKF_STATUS_REPORT.compass"
@@ -5658,6 +5911,7 @@
             "Predicted horizontal position (absolute) bad"
           ], 
           "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -5680,6 +5934,7 @@
             "Predicted horizontal position (absolute) bad"
           ], 
           "evilness": 16, 
+          "evilness-is-deprecated": 1, 
           "reason": "The EKF status report indicates a problem with the EKF", 
           "series": [
             "EKF_STATUS_REPORT.flags"
@@ -5694,8 +5949,9 @@
       "status": "FAIL"
     }, 
     "Position Estimate Divergence": {
-      "description": "This test will FAIL if various craft's position estimates diverge", 
+      "description": "A UAV often has several estimates of its Position.  This test will FAIL or WARN if the various vehicle's  estimates diverge", 
       "evilness": 50, 
+      "evilness-is-deprecated": 1, 
       "name": "Position Estimate Divergence", 
       "results": [
         {
@@ -5707,6 +5963,7 @@
             "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This position estimate differs from the canonical craft position", 
           "series": [
@@ -5729,6 +5986,7 @@
             "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 20, 
+          "evilness-is-deprecated": 1, 
           "name": "AHRS2", 
           "reason": "This position estimate differs from the canonical craft position", 
           "series": [
@@ -5751,6 +6009,7 @@
             "delta-time-threshold=0.500000 seconds"
           ], 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
           "name": "GPS_RAW_INT", 
           "reason": "This position estimate differs from the canonical craft position", 
           "series": [
@@ -5769,14 +6028,17 @@
       "status": "FAIL"
     }, 
     "Sensor Health": {
-      "description": "This test will FAIL if any sensor is detected as failed", 
+      "description": "A UAV can self-assess its sensors' health.  This test will FAIL if any sensor is detected as failed", 
       "evilness": 40, 
+      "evilness-is-deprecated": 1, 
       "name": "Sensor Health", 
       "results": [
         {
           "duration": 0.3140360116958618, 
           "duration-units": "seconds", 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
+          "reason": "The craft's assessment of its sensors indicate a problem", 
           "sensor-name": "MAV_SYS_STATUS_AHRS", 
           "series": [
             "SYS_STATUS.onboard_control_sensors_present", 
@@ -5792,6 +6054,8 @@
           "duration": 2.335135936737061, 
           "duration-units": "seconds", 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
+          "reason": "The craft's assessment of its sensors indicate a problem", 
           "sensor-name": "MAV_SYS_STATUS_AHRS", 
           "series": [
             "SYS_STATUS.onboard_control_sensors_present", 
@@ -5807,6 +6071,8 @@
           "duration": 61.07578659057617, 
           "duration-units": "seconds", 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
+          "reason": "The craft's assessment of its sensors indicate a problem", 
           "sensor-name": "MAV_SYS_STATUS_AHRS", 
           "series": [
             "SYS_STATUS.onboard_control_sensors_present", 
@@ -5822,6 +6088,8 @@
           "duration": 59.42296981811523, 
           "duration-units": "seconds", 
           "evilness": 10, 
+          "evilness-is-deprecated": 1, 
+          "reason": "The craft's assessment of its sensors indicate a problem", 
           "sensor-name": "MAV_SYS_STATUS_SENSOR_3D_GYRO", 
           "series": [
             "SYS_STATUS.onboard_control_sensors_present", 
@@ -5838,8 +6106,9 @@
       "status": "FAIL"
     }, 
     "Vehicle Definition": {
-      "description": "This test will FAIL if the craft type is never defined", 
+      "description": "The vehicle type is normally automatically detected by dronekit-la from the log itself.  Sometimes the log does not contain sufficient information to make this determination.  This test will FAIL if the craft type is never defined", 
       "evilness": 0, 
+      "evilness-is-deprecated": 1, 
       "name": "Vehicle Definition", 
       "results": [
         {
@@ -5847,6 +6116,7 @@
             "Copter"
           ], 
           "evilness": 0, 
+          "evilness-is-deprecated": 1, 
           "reason": "Vehicle was appropriately defined", 
           "series": [
             "STATUSTEXT.text"
@@ -5859,8 +6129,9 @@
       "status": "PASS"
     }, 
     "Velocity Estimate Divergence": {
-      "description": "This test will FAIL if various craft's velocity estimates diverge", 
+      "description": "A UAV typically has several estimates of its velocity.  This test will FAIL if the craft's velocity estimates diverge", 
       "evilness": 0, 
+      "evilness-is-deprecated": 1, 
       "name": "Velocity Estimate Divergence", 
       "results": [], 
       "severity-score": 0, 

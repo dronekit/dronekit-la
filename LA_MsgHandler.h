@@ -61,6 +61,8 @@ protected:
     AnalyzerVehicle::Base *&_vehicle;
 
     /// @brief Try to find a timestamp given a message
+    /// @param msg a dataflash message
+    /// @param[out] T a timestamp value to fill in
     /// @return true if a timestamp was found
     virtual bool find_T(const uint8_t *msg, uint64_t &T);
     /// @brief Try to set vehicle model timestamp from a given message

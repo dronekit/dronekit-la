@@ -35,7 +35,7 @@ public:
 
     const std::string name() const override { return "Attitude Control"; }
     const std::string description() const override {
-        return "This test will FAIL or WARN if the vehicle's desired attitudes and achieved attitudes are not within threshold delta values for more than a threshold time.";
+        return "The autopilot reports both the craft's attitude and the attitude the craft believes it should be at.  This test will FAIL or WARN if the vehicle's desired attitudes and achieved attitudes are not within threshold delta values for more than a threshold time.";
     }
 
     bool configure(INIReader *config) override;

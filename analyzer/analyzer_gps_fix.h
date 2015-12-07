@@ -50,7 +50,7 @@ public:
 
     const std::string name() const override { return "GPS Fix"; }
     const std::string description() const override {
-        return "This test will FAIL if the quality of the GPS information is poor";
+        return "The accuracy and precision of GPS messages can vary depending on many factors including weather, ionospheric disturbances and number of satellites visible.  This test will FAIL if the quality of the GPS information is poor";
     }
 
     bool configure(INIReader *config) override;
