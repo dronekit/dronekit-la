@@ -31,7 +31,7 @@ enum analyzer_status {
 /*!
  * Returns a textual interpretation of the supplied status.
  *
- * @param Status analyzer status to provide text for.
+ * @param status Analyzer status to provide text for.
  * @return Textual interpretation of status.
  */
 const char *_status_as_string(analyzer_status status);
