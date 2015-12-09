@@ -218,7 +218,7 @@ void Analyze::results_json_add_statistics(Json::Value &root)
         root["total-flight-time-units"] = "seconds";
     }
     if (analyzer_position_estimate_divergence != NULL) {
-        root["total-distance-travellled"] = analyzer_position_estimate_divergence->total_distance_travelled();
+        root["total-distance-travelled"] = analyzer_position_estimate_divergence->total_distance_travelled();
         root["total-distance-travelled-units"] = "metres";
         double dfh = analyzer_position_estimate_divergence->maximum_distance_from_origin();;
         if (!is_equal(dfh, -1.0f)) {
