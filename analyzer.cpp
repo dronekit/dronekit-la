@@ -20,9 +20,11 @@ void Analyzer_Result::to_json_add_array(Json::Value &root,
 void Analyzer_Result::to_json(Json::Value &root) const
 {
     root["status"] = status_as_string();
-    root["evilness"] = severity_score();
-    root["evilness-is-deprecated"] = 1;
     root["severity-score"] = severity_score();
+    if (!pure_output()) {
+        root["evilness"] = root["severity-score"];
+        root["evilness-is-deprecated"] = "Use severity-score";
+    }
 
     const std::string *my_reason = reason();
     if (my_reason != NULL) {

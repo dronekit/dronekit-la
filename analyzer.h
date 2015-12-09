@@ -106,6 +106,13 @@ public:
         return _evilness;
     }
 
+    void set_pure_output(bool pure) {
+        _pure = pure;
+    }
+    bool pure_output() const {
+        return _pure;
+    }
+
 private:
     analyzer_status _status = analyzer_status_ok;
     std::string *_reason = NULL;
@@ -117,6 +124,8 @@ private:
                            std::string name,
                            std::vector<std::string> array) const;
     uint32_t _evilness = 0;
+
+    bool _pure = false;
 };
 
 
@@ -130,7 +139,7 @@ public:
         { }
 
     virtual void to_json(Json::Value &root) const override;
-    
+
     void set_T_start(const uint64_t start) { _T_start = start; }
     uint64_t T_start() const { return _T_start; }
 
@@ -191,7 +200,7 @@ private:
 /// determine if anything untoward is happening.  "evaluate()" is
 /// called repeatedly when the model's state changes, and "end_of_log"
 /// is called when no more input will be forthcoming.  An Analyzer is
-/// expected to output Analyzer_Result objects through the "add_result
+/// expected to output Analyzer_Result objects through the "add_result"
 /// object.
 class Analyzer {
 
@@ -225,7 +234,19 @@ public:
         return _status_as_string(status());
     }
 
-    /// @brief return all results this analyzer has produced
+    /// @brief Set whether to produce output compatible with older versions.
+    /// @param purity True if compatability fields should not be produced
+    void set_pure_output(bool pure) {
+        _pure = pure;
+    }
+
+    /// @brief Returns true if compatability fields will not be produced.
+    /// @return true if compatability fields will not be produced.
+    bool pure_output() const {
+        return _pure;
+    }
+
+    /// @brief Return all results this analyzer has produced.
     std::vector<Analyzer_Result*> results() const {
         return _results;
     }
@@ -252,6 +273,7 @@ protected:
     // @brief Add a result for this Analyzer
     // @param result The result to add
     virtual void add_result(Analyzer_Result* result) {
+        result->set_pure_output(pure_output());
         _results.push_back(result);
     }
 
@@ -261,6 +283,8 @@ protected:
 
     AnalyzerVehicle::Base *&_vehicle;
     Data_Sources &_data_sources;
+
+    bool _pure = false;
 
 private:
     std::vector<Analyzer_Result*> _results;
