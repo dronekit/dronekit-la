@@ -82,6 +82,8 @@ protected:
     AnalyzerVehicle::PositionEstimate* position_estimate();
     /// @brief convenience function producing an estimate to be used for state
     AnalyzerVehicle::GPSInfo* gpsinfo();
+    /// @brief convenience function producing IMU to be used for state
+    AnalyzerVehicle::IMU* imu();
 };
 
 // this is just here ATM because older messages have both TimeMS and
@@ -200,6 +202,13 @@ public:
             break;
         }
     }
+};
+
+class LA_MsgHandler_IMU : public LA_MsgHandler {
+public:
+
+    LA_MsgHandler_IMU(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle);
+    void xprocess(const uint8_t *msg) override;
 };
 
 class LA_MsgHandler_GPS : public LA_MsgHandler {
