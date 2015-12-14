@@ -1,0 +1,6 @@
+[submodule "test/modules/dronekit-la-testdata-3dr"]
+	path = test/modules/dronekit-la-testdata-3dr
+	url = ssh://git@github.com/dronekit/dronekit-la-testdata-3dr
+[submodule "test/modules/dronekit-la-testdata"]
+	path = test/modules/dronekit-la-testdata
+	url = ssh://git@github.com/dronekit/dronekit-la-testdata
