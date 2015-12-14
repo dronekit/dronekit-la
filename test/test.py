@@ -19,6 +19,14 @@ parser.add_argument('--valgrind',
                     help='run analyzer through valgrind',
                     dest='valgrind',
                     action="store_true")
+parser.add_argument('--submodules SUBMODULE_NAMES',
+                    help='(only) test logs found in submodules',
+                    dest='submodules',
+                    action="store")
+parser.add_argument('--verbose',
+                    help='print more messages',
+                    dest='verbose',
+                    action="store_true")
 args = parser.parse_args()
 
 def filter_analysis_json(json_stuff, depth):
@@ -112,6 +120,9 @@ Accept new result: %s
         check_me = subprocess.check_output(accept_command, shell=True, executable='/bin/bash');
             
 def test_log(filepath_log):
+    if args.verbose:
+        print("Testing log %s" % filepath_log)
+
     test_success = True
     try:
         command = ["./dronekit-la",
@@ -128,12 +139,16 @@ def test_log(filepath_log):
                            '--read-var-info=yes',
                            '--track-origins=yes',
                            '--log-file=%s' % (new_valgrind_logpath,)]
+        if args.verbose:
+            print("Command: %s" % command)
+
         p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         analysis_string,analysis_stderr = p.communicate()
         try:
             analysis_json = json.loads(analysis_string)
         except Exception as e:
             print("Failed to load (%s)" % (analysis_string))
+            print ("STDERR was: (%s)" % analysis_stderr)
             raise e
 
         filter_analysis_json(analysis_json, 0) # modifies in place
@@ -177,16 +192,27 @@ subprocess exception (%s)
 
     return test_success
 
-log_dirpath = os.getenv("LOGANALYZE_DIRPATH_LOG", "test/logs");
+def logpaths_from_dir(log_dirpath):
+    ret = []
+    for dirname, dirnames, filenames in os.walk(log_dirpath):
+        for filename in filenames:
+            if filename.lower().endswith(".tlog") or filename.upper().endswith(".BIN"):
+                ret.append(os.path.join(dirname, filename))
+    return ret
 
-# print("Log dirpath: " + log_dirpath);
+
+paths_to_test = []
+if args.submodules is not None:
+    for submodule in args.submodules.split(','):
+        paths_to_test.extend(logpaths_from_dir("test/modules/" + submodule))
+else:
+    log_dirpath = os.getenv("LOGANALYZE_DIRPATH_LOG", "test/logs");
+    paths_to_test.extend(logpaths_from_dir(log_dirpath))
+ 
 success = True
-for dirname, dirnames, filenames in os.walk(log_dirpath):
-    for filename in filenames:
-        if filename.endswith(".tlog") or filename.endswith(".BIN"):
-            filepath = os.path.join(dirname, filename)
-            if not test_log(filepath):
-                success = False
+for filepath in paths_to_test:
+    if not test_log(filepath):
+        success = False
 
 if not success:
     sys.exit(1)
