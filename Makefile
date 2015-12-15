@@ -50,6 +50,7 @@ SRCS_CPP += analyzer/analyzer_ever_armed.cpp
 SRCS_CPP += analyzer/analyzer_ever_flew.cpp
 SRCS_CPP += analyzer/analyzer_good_ekf.cpp
 SRCS_CPP += analyzer/analyzer_gps_fix.cpp
+SRCS_CPP += analyzer/analyzer_gyro_drift.cpp
 SRCS_CPP += analyzer/analyzer_notcrashed.cpp
 SRCS_CPP += analyzer/analyzer_sensor_health.cpp
 SRCS_CPP += analyzer/analyzer_estimate_divergence.cpp

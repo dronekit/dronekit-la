@@ -17,6 +17,7 @@
 #include "analyzer/analyzer_ever_armed.h"
 #include "analyzer/analyzer_good_ekf.h"
 #include "analyzer/analyzer_gps_fix.h"
+#include "analyzer/analyzer_gyro_drift.h"
 #include "analyzer/analyzer_notcrashed.h"
 #include "analyzer/analyzer_position_estimate_divergence.h"
 #include "analyzer/analyzer_sensor_health.h"
@@ -122,6 +123,15 @@ void Analyze::instantiate_analyzers(INIReader *config)
         configure_analyzer(config, analyzer_gps_fix);
     } else {
         syslog(LOG_INFO, "Failed to create analyzer_gps_fix");
+    }
+
+    {
+        Analyzer_Gyro_Drift *analyzer_gyro_drift = new Analyzer_Gyro_Drift(vehicle,_data_sources);
+        if (analyzer_gyro_drift != NULL) {
+            configure_analyzer(config, analyzer_gyro_drift);
+        } else {
+            syslog(LOG_INFO, "Failed to create analyzer_gyro_drift");
+        }
     }
 
     Analyzer_Attitude_Control *analyzer_attitude_control = new Analyzer_Attitude_Control(vehicle,_data_sources);
