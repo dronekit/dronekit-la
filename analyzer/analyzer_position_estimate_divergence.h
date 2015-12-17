@@ -24,6 +24,8 @@ public:
     Analyzer_Estimate_Divergence(vehicle,data_sources)
     { }
 
+    virtual ~Analyzer_Position_Estimate_Divergence() { }
+
     const std::string estimate_name() const override {
         return "Position";
     };

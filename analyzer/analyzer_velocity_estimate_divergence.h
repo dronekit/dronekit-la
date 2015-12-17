@@ -24,6 +24,8 @@ public:
     Analyzer_Estimate_Divergence(vehicle,data_sources)
     { }
 
+    virtual ~Analyzer_Velocity_Estimate_Divergence() { }
+
     const std::string name() const override { return "Velocity Estimate Divergence"; }
     const std::string description() const override {
         return "A UAV typically has several estimates of its velocity.  This test will FAIL if the craft's velocity estimates diverge.";

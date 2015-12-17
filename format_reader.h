@@ -18,6 +18,8 @@ public:
             next_100hz_time = now_us;
         };
 
+    virtual ~Format_Reader() { }
+
     void do_idle_callbacks();
 
     virtual bool add_message_handler(Message_Handler *handler,
@@ -39,7 +41,7 @@ protected:
     Message_Handler *message_handler[MAX_MESSAGE_HANDLERS];
 
 private:
-        
+
     bool sighup_received = false;
 
     uint64_t next_tenthhz_time;

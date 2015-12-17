@@ -94,8 +94,7 @@ void Analyzer_Compass_Vector_Length::open_result_long(const std::string name,
 
     result->set_status(analyzer_status_warn);
     result->set_severity_score(5);
-    
-    result->_length_max = 0;
+
     update_result_long(result, length);
 }
 

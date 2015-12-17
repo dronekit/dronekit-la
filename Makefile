@@ -20,9 +20,10 @@ STD=-std=c++11
 CSTD=-std=c11
 STATIC=-static
 #GCOV=-fprofile-arcs -ftest-coverage
+#EFFCPP=-Weffc++
 WARNFLAGS= -Wall -Werror -Wextra -Wunused -Wlogical-op -Wredundant-decls -D_FORTIFY_SOURCE=2 -Wfloat-equal -fstack-protector -Wformat -Werror=format-security -Werror=pointer-arith -Wpedantic
 CFLAGS += $(INCS) -DGIT_VERSION=\"$(GIT_VERSION)\" $(WARNFLAGS) $(CSTD) $(GCOV)
-CXXFLAGS += $(INCS) $(STD) -g -DGIT_VERSION=\"$(GIT_VERSION)\" $(STATIC) $(WARNFLAGS) $(GCOV)
+CXXFLAGS += $(INCS) $(STD) -g -DGIT_VERSION=\"$(GIT_VERSION)\" $(STATIC) $(WARNFLAGS) $(GCOV) $(EFFCPP)
 
 SRCS_CPP += jsoncpp/jsoncpp.cpp
 
