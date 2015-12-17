@@ -28,6 +28,32 @@ repository and contribute changes back to the project master branch using pull r
 
 
 
+Building the Tool
+=================
+
+Building using Vagrant
+----------------------
+
+:doc:`developer_setup_vagrant` explains how to build both the tool and its documentation in a Vagrant VM. 
+
+
+Building on Linux
+-----------------
+
+If you want to run natively on Linux you can manually install the dependencies listed in the 
+`Vagrantfile <https://github.com/dronekit/dronekit-la/blob/master/Vagrantfile>`_. At time of writing the
+commands to do so on Linux would be:
+
+.. code-block:: bash
+       
+    # These are needed to build DroneKit-LA
+    sudo apt-get install git build-essential libjsoncpp-dev libjsoncpp0
+
+    # These are needed to build the documentation using Sphinx
+    sudo apt-get install python-dev python-pip
+    sudo easy_install -U pip
+    sudo pip install sphinx sphinx-3dr-theme
+
 .. _contributing-test-code:
 
 Testing changes

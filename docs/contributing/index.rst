@@ -30,15 +30,13 @@ The topics below explain how to :doc:`contribute to the tool <contribution_tool>
 .. toctree::
     :maxdepth: 1
 
-    #getting_started
     contribution_tool
     contribution_docs
+    developer_setup_vagrant
     add_analyzer
     add_message_handler
     ../reference/analyser_reference
     ../reference/message_handlers_reference
-    #developer_setup_windows
-    #developer_setup_linux
 
 
 
