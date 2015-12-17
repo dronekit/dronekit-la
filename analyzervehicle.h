@@ -15,9 +15,7 @@
 
 namespace AnalyzerVehicle {
 
-    // Attitude should be the best guess as to what the vehicle's
-    // status is - typically the ATT message from dataflash, for
-    // example
+    /// @brief Abstraction of a vehicle attitude.
     class Attitude {
     public:
        
@@ -57,6 +55,7 @@ namespace AnalyzerVehicle {
         }
     };
 
+    /// @brief Abstraction of a vehicle altitude.
     class Altitude {
     public:
         void set_alt(uint64_t T, double alt) {
@@ -75,6 +74,7 @@ namespace AnalyzerVehicle {
         uint64_t _alt_modtime;
     };
 
+    /// @brief Altitude according to some sensor or algorithm.
     class AltitudeEstimate {
     public:
         AltitudeEstimate(const std::string name) :
@@ -94,6 +94,7 @@ namespace AnalyzerVehicle {
         Altitude _altitude = { };
     };
 
+    /// @brief Abstraction of a vehicle global position (2D).
     class Position {
     public:
         void set_lat(uint64_t T, double lat) {
@@ -124,6 +125,7 @@ namespace AnalyzerVehicle {
         uint64_t _lon_modtime;
     };
 
+    /// @brief Abstraction of a vehicle velocity.
     class Velocity {
     public:
         double size() {
@@ -167,24 +169,23 @@ namespace AnalyzerVehicle {
         uint64_t _velocity_modtime = 0;
     };
 
+    /// @brief State information for a base Extended Kalman Filter.
     class EKF {
     public:
         void set_variance(uint64_t T, std::string name, double value) {
             _variances[name] = value;
             _variances_T[name] = T;
         }
-        uint64_t variance_T(std::string name) {
-            return _variances_T[name];
-        }
+        uint64_t variance_T(std::string name) const;
             
         void set_flags(uint64_t T, uint16_t flags) {
             _flags = flags;
             _flags_T = T;
         }
-        uint16_t flags() {
+        uint16_t flags() const {
             return _flags;
         }
-        uint64_t flags_T() {
+        uint64_t flags_T() const {
             return _flags_T;
         }
         std::map<const std::string, double> variances() {
@@ -205,6 +206,7 @@ namespace AnalyzerVehicle {
     //     uint16_t D;
     // };
 
+    /// @brief Attitude according to some sensor or algorithm.
     class AttitudeEstimate {
     public:
         AttitudeEstimate(const std::string name) :
@@ -228,6 +230,7 @@ namespace AnalyzerVehicle {
         Attitude _attitude;
     };
 
+    /// @brief Position according to some sensor or algorithm.
     class PositionEstimate {
     public:
         PositionEstimate(const std::string name) :
@@ -249,6 +252,7 @@ namespace AnalyzerVehicle {
         Position _position = { };
     };
 
+    /// @brief Information on a vehicle battery.
     class Battery {
     public:
         float _remaining = 0; // percent
@@ -261,25 +265,26 @@ namespace AnalyzerVehicle {
         uint64_t _failsafe_event_T = 0;
     };
     
+    /// @brief Information about the Navigation Controller's output.
     class AV_Nav {
     public:
         void set_desroll(uint64_t T, float roll) {
             _des[0] = roll;
             _modtimes[0] = T;
         }
-        float desroll() { return _des[0]; }
+        float desroll() const { return _des[0]; }
 
         void set_despitch(uint64_t T, float pitch) {
             _des[1] = pitch;
             _modtimes[1] = T;
         }
-        float despitch() { return _des[1]; }
+        float despitch() const { return _des[1]; }
 
         void set_desyaw(uint64_t T, float yaw) {
             _des[2] = yaw;
             _modtimes[2] = T;
         }
-        float desyaw() { return _des[2]; }
+        float desyaw() const { return _des[2]; }
 
     private:
         float _des[3];
@@ -287,8 +292,7 @@ namespace AnalyzerVehicle {
     };
 
 
-    // again, not sure if this Compass object should be in the vehicle
-    // class here.
+    /// @brief A source of magnetic field information.
     class Compass {
     public:
         Compass(const std::string name) :
@@ -307,6 +311,7 @@ namespace AnalyzerVehicle {
     };
 
 
+    /// @brief A source of GPS information (typically output from a GPS device).
     class GPSInfo {
     public:
         GPSInfo(std::string name) { _name = name; }
@@ -330,6 +335,7 @@ namespace AnalyzerVehicle {
     };
 
     /* may need to factor and subclass this for non-APM-on-PixHawk: */
+    /// @brief Information about the AutoPilot.
     class AutoPilot {
     public:
         uint16_t overruns() { return _overruns; }
@@ -367,8 +373,7 @@ namespace AnalyzerVehicle {
         uint64_t _slices_stddev_T = 0;
     };
 
-    // again, not sure if this IMU object should be in the vehicle
-    // class here.
+    /// @brief Accelerometer and gyroscope information from onboard IMUs.
     class IMU {
     public:
         IMU(const std::string name, uint64_t &T) :
@@ -406,147 +411,253 @@ namespace AnalyzerVehicle {
         uint16_t _acc_clip_count;
     };
 
-    // template <typename packettype>
-    // class PacketHistory {
-    // public:
-    //     PacketHistory() :
-    //         next(0),
-    //         count(0)
-    //         { }
-    //     void packet(packettype &packet) {
-    //         memcpy(&packets[next++], &packet, sizeof(packet));
-    //         if (next >= size) {
-    //             next = 0;
-    //         }
-    //         if (count < size) {
-    //             count++;
-    //         }
-    //     }
-    // private:
-    //     static const uint8_t size = 20;
-    //     uint8_t next;
-    //     uint8_t count;
-    //     packettype packets[size];
-    // };
-    
+/// @brief Base class from which all vehicles inherit.
 class Base {
 public:
     Base() { }
     virtual ~Base() { }
 
+    /// @brief Returns a short string describing the vehicle.
+    /// @return A short string describing the vehicle e.g. "Copter".
     virtual const std::string typeString() const { return "Base"; }
 
-    uint64_t time_since_boot() {
+    /// @brief Time since autopilot boot (microseconds).
+    /// @return Time since autopilot boot (microseconds).
+    uint64_t time_since_boot() const {
         return _time_since_boot;
     }
-    uint64_t time_since_boot_T() {
+    /// @brief The timestamp at which the "time_since_boot()" timestamp was updated.
+    /// @details This timestamp may reflect time on a different system - for example, a MAVLink tlog often uses a Ground Control Station's concept of time.
+    /// @return Timestamp that the autopilot boot time was last changed.
+    uint64_t time_since_boot_T() const {
         return _time_since_boot_T;
     }
+    /// @brief Set the number of microseconds the autopilot has been booted.
+    /// @param time_since_boot Microseconds since autopilot boot.
     void set_time_since_boot(const uint64_t time_since_boot) {
         _time_since_boot = time_since_boot;
         _time_since_boot_T = T();
     }
     
-    // vehicle state information
+    /// @brief Evaluation of whether the vehicle is flying.
+    /// @return ``true`` if it is believed the vehicle is flying.
     virtual bool is_flying() const { return false; }
 
-    // arming 
+    /// @brief Vehicle arm status.
+    /// @return ``true`` if it believed the vehicle is armed.
     virtual bool is_armed() const { return _armed; };
+    /// @brief Set the vehicle arm status.
+    /// @param value The new vehicle arm status.
     virtual void set_armed(bool value) {  _armed = value; };
 
-    // vehicle type
+    /// @brief All the different vehicles we have specific tests for.
     enum vehicletype_t {
         invalid = 0,
         copter = 17,
         plane = 19,
     };
-    bool vehicletype_is_forced() { return _vehicletype_is_forced; }
+    /// @brief Vehicle type forced status.
+    /// @detail Sometimes the vehicle type can not be determined from a log and must be forced.
+    /// @return ``true`` if the vehicle type has been forced.
+    bool vehicletype_is_forced() const { return _vehicletype_is_forced; }
+    /// @brief Indicates that the vehicle type has been forced.
+    /// @param value ``true`` if the vehicle type has been forced.
     void set_vehicletype_is_forced(bool value) { _vehicletype_is_forced = value; }
-    virtual vehicletype_t vehicletype() {
+    /// @brief Vehicle type.
+    /// @detail Until the vehicle type is determined, this returns invalid.  After the vehicle type is determined (e.g. from a log), this will return a specific value from the vehicletype_t enumeration indication the vehicle type.
+    /// @return The current vehicle type.
+    virtual vehicletype_t vehicletype() const {
         return invalid;
     }
 
+    /// @brief Change the vehicle from one type to another.
+    /// @detail A base vehicle is used to gather information until we determine what vehicle type we are actually analyzing.  This call is used to switch to a more-specific vehicle type.
+    /// @param _vehicle Vehicle to change type of.
+    /// @newtype New vehicle type.
     static void switch_vehicletype(Base *&_vehicle, vehicletype_t newtype);
 
-    // EKF
+    /// @brief Set a variance value by name.
+    /// @param name Name of variance to set (e.g. "pos_horiz").
+    /// @param value New value of the variance.
     void ekf_set_variance(const char *name, double value) {
         _ekf.set_variance(T(), name, value);
     }
-    uint64_t ekf_variance_T(std::string name) {
+    /// @brief Variance modification time.
+    /// @param name Name of variance to retrieve modification time for.
+    /// @return timestamp Timestamp at which variance was last changed (microseconds).
+    uint64_t ekf_variance_T(std::string name) const {
         return _ekf.variance_T(name);
     }
+    /// @brief Set EKF status flags.
+    /// @param flags EKF self-assessment status flags.
     void ekf_set_flags(uint16_t flags) {
         _ekf.set_flags(T(), flags);
     }
+    /// @brief EKF status flags.
+    /// @return EKF self-assessment status flags.
     uint16_t ekf_flags() {
         return _ekf.flags();
     }
-    uint64_t ekf_flags_T() {
+
+    /// @brief EKF status flags modification time.
+    /// @return timestamp Timestamp at which the EKF self-assessment flags were last changed (microseconds).
+    uint64_t ekf_flags_T() const {
         return _ekf.flags_T();
     }
+    /// @brief All EKF variances.
+    /// @return Returns all EKF variances as a map from name to value.
     std::map<const std::string, double> ekf_variances() {
         return _ekf.variances();
     }
 
-    // take_state copies state from one vehicle to another
-    void take_state(Base *old);
-    
-    // Parameters
+    /// @brief Retrieve parameter value.
+    /// @param name Parameter value to retrieve.
+    /// @detail This function will abort if the parameter has not been seen and no default is known.
+    /// @return Parameter value from log or defaults.
     float param(const std::string name) const;
+    /// @brief Retrieve parameter value.
+    /// @detail Returns parameter value ONLY from input, not from defaults.
+    /// @param name Parameter value to retrieve.
+    /// @param[out] ret Parameter value.
+    /// @return ``true`` if the parameter has been seen in the log.
     bool param(const char *name, float &ret) const;
-    uint16_t param_count() { return _param.size(); };
+    /// @brief Number of parameters seen.
+    /// @return Number of parameters seen in input.
+    uint16_t param_count() const { return _param.size(); };
+    /// @brief Parameter status.
+    /// @return ``true`` if the parameter has been seen in the log.
     bool param_seen(const std::string name) const;
-    uint64_t param_modtime(const std::string name) { return _param_modtime[name]; }
+    /// @brief Timestamp at which a parameter was last modified (microseconds).
+    /// @param name Parameter modification time to retrieve.
+    /// @return Parameter modification time (microseconds).
+    uint64_t param_modtime(const std::string name) const;
+    /// @brief Set a parameter.
+    /// @param name Parameter to set.
+    /// @param value New value of parameter.
     void param_set(const char *name, const float value);
+    /// @brief Return the default value for a parameter.
+    /// @detail Default parameters are supplied so that some analysis can be done even in the absence of parameters in the logs.
+    /// @param name Parameter to retrieve default value for.
+    /// @param[out] ret Value of parameter.
+    /// @return ``true`` if a default was found for the parameters.
     virtual bool param_default(const char *name, float &ret) const;
+    /// @brief Retrieve a parameter value.
+    /// @detail Returns the value last set for this parameter, or a default if it has not been set yet.
+    /// @param name Parameter to retrieve default value for.
+    /// @param[out] ret Value of parameter.
+    /// @return ``true`` if the parameter value was found.
     bool param_with_defaults(const char *name, float &ret) const;
+    /// @brief Retrieves a parameter value and abort()s if it not found.
+    /// @detail Returns the value last set for this parameter, or a default if it has not been set yet.
+    /// @param name Parameter to retrieve default value for.
+    /// @return Value of parameter.
     float require_param_with_defaults(const char *name) const;
 
-    // servo output
+    /// @brief Set outputs for all servos.
+    /// @param ch1 current output for servo 1 (ppm).
+    /// @param ch2 current output for servo 2 (ppm).
+    /// @param ch3 current output for servo 3 (ppm).
+    /// @param ch4 current output for servo 4 (ppm).
+    /// @param ch5 current output for servo 5 (ppm).
+    /// @param ch6 current output for servo 6 (ppm).
+    /// @param ch7 current output for servo 7 (ppm).
+    /// @param ch8 current output for servo 8 (ppm).
     void set_servo_output(uint16_t ch1, uint16_t ch2, uint16_t ch3, uint16_t ch4, uint16_t ch5, uint16_t ch6, uint16_t ch7, uint16_t ch8);
+    /// @brief Set outputs for single servo.
+    /// @param channel_number Servo to set value for.
+    /// @param value New value for servo output (ppm).
     void set_servo_output(uint8_t channel_number, uint16_t value);
 
-    // FIXME: scope
-    uint16_t _servo_output[9] = { }; // indexed from 1
-    EKF _ekf;
-
-    // universe time
+    /// @brief Return current output for a specific servo.
+    /// @param channel_number Servo number.
+    /// @return Current servo output (ppm).
+    uint16_t servo_output(uint8_t channel_number) const {
+        return _servo_output[channel_number];
+    }
+    
+    /// @brief Set timestamp distinguishing logging events.
+    /// @detail This may or may not be a real wall-clock time.
+    /// @param time_us New timestamp (microseconds).
     void set_T(const uint64_t time_us);
+    /// @brief Current timestamp.
+    /// @return Current universe timestamp.
     uint64_t T() { return _T; }
 
-    // attitude information
-    float roll() { return att().roll(); }
-    float pitch() { return att().pitch(); }
-    float yaw() { return att().yaw(); }
+    /// @brief Canonical vehicle attitude - roll.
+    /// @return Canonical attitude - roll (degrees).
+    float roll() const { return att().roll(); }
+    /// @brief Canonical vehicle attitude - pitch (degrees).
+    /// @return Canonical attitude - pitch.
+    float pitch() const { return att().pitch(); }
+    /// @brief Canonical vehicle attitude - yaw.
+    /// @return Canonical attitude - yaw (degrees).
+    float yaw() const { return att().yaw(); }
 
-    uint64_t roll_modtime() { return att().roll_modtime(); }
-    uint64_t pitch_modtime() { return att().pitch_modtime(); }
-    uint64_t yaw_modtime() { return att().yaw_modtime(); }
+    /// @brief Modification time - roll.
+    /// @return Timestamp roll was last modified (microseconds).
+    uint64_t roll_modtime() const { return att().roll_modtime(); }
+    /// @brief Modification time - pitch.
+    /// @return Timestamp pitch was last modified (microseconds).
+    uint64_t pitch_modtime() const { return att().pitch_modtime(); }
+    /// @brief Modification time - yaw.
+    /// @return Timestamp yaw was last modified (microseconds).
+    uint64_t yaw_modtime() const { return att().yaw_modtime(); }
 
+    /// @brief Set canonical vehicle atttiude - roll.
+    /// @param new Canonical attitude - roll (degrees).
     void set_roll(float roll) { att().set_roll(T(), roll); }
+    /// @brief Set canonical vehicle atttiude - pitch.
+    /// @param new Canonical attitude - pitch (degrees).
     void set_pitch(float roll) { att().set_pitch(T(), roll); }
+    /// @brief Set canonical vehicle atttiude - yaw.
+    /// @param new Canonical attitude - yaw (degrees).
     void set_yaw(float roll) { att().set_yaw(T(), roll); }
 
-    void set_desroll(float roll) { nav().set_desroll(T(), roll); };
-    void set_despitch(float pitch) { nav().set_despitch(T(), pitch); };
-    void set_desyaw(float yaw) { nav().set_desyaw(T(), yaw); };
+    /// @brief set Navigation Controller desired attitude - roll.
+    /// @param roll New desired attitude - roll.
+    void set_desroll(float roll) { _nav.set_desroll(T(), roll); };
+    /// @brief Set Navigation Controller desired attitude - pitch.
+    /// @param roll New desired attitude - pitch.
+    void set_despitch(float pitch) { _nav.set_despitch(T(), pitch); };
+    /// @brief Set Navigation Controller desired attitude - yaw.
+    /// @param roll New desired attitude - yaw.
+    void set_desyaw(float yaw) { _nav.set_desyaw(T(), yaw); };
 
-    float desroll() { return nav().desroll(); }
-    float despitch() { return nav().despitch(); }
-    float desyaw() { return nav().desyaw(); }
+    /// @brief Navigation Controller desired attitude - roll.
+    float desroll() const { return nav().desroll(); }
+    /// @brief Navigation Controller desired attitude - pitch.
+    float despitch() const { return nav().despitch(); }
+    /// @brief Navigation Controller desired attitude - yaw.
+    float desyaw() const { return nav().desyaw(); }
 
-    // position information
+    /// @brief Set canonical vehicle altitude.
+    /// @param value New vehicle altitude.
     void set_altitude(float value) {
         alt().set_alt(T(), value);
     }
+    /// @brief Canonical vehicle altitude.
+    /// @return The vehicle's canonical altitude.
     float altitude() const { return alt().alt(); };
+    /// @brief Canonical vehicle altitude modification time.
+    /// @return Timestamp The canonical vehicle altitude was modified (microseconds).
     uint64_t alt_modtime() const { return alt().alt_modtime(); }
 
+    /// @brief Set vehicle canonical latitude.
+    /// @param lat New vehicle canonical latitude.
     void set_lat(double lat) { pos().set_lat(T(), lat); }
+    /// @brief Set vehicle canonical longitude.
+    /// @param lat New vehicle canonical latitude.
     void set_lon(double lon) { pos().set_lon(T(), lon); }
+    // @brief Vehicle canonical latitude.
+    // @return Vehicle's canonical latitude.
     double lat() { return pos().lat(); }
+    // @brief Vehicle canonical longitude.
+    // @return Vehicle's canonical longitude.
     double lon() { return pos().lon(); }
 
+    /// @brief Retrieve named position estimate.
+    /// @param name Name of position estimate to retrieve.
+    /// @return A position estimate.
     PositionEstimate *position_estimate(const std::string name) {
         if (_position_estimates.count(name) == 0) {
             _position_estimates[name] = new PositionEstimate(name);
@@ -554,6 +665,9 @@ public:
         return _position_estimates[name];
     };
 
+    /// @brief Retrieve named attitude estimate.
+    /// @param name Name of attitude estimate to retrieve.
+    /// @return An attitude estimate.
     AttitudeEstimate *attitude_estimate(const std::string name) {
         if (_attitude_estimates.count(name) == 0) {
             _attitude_estimates[name] = new AttitudeEstimate(name);
@@ -561,6 +675,9 @@ public:
         return _attitude_estimates[name];
     };
 
+    /// @brief Retrieve named altitude estimate.
+    /// @param name Name of altitude estimate to retrieve.
+    /// @return An altitude estimate.
     AltitudeEstimate *altitude_estimate(const std::string name) {
         if (_altitude_estimates.count(name) == 0) {
             _altitude_estimates[name] = new AltitudeEstimate(name);
@@ -568,80 +685,115 @@ public:
         return _altitude_estimates[name];
     };
 
-    // distance from canonical craft position to whatever we thing home is.
-    // returns -1 if we just don't know.
+    /// @brief Distance from canonical vehicle position to canonical origin.
+    /// @return Distance from origin, or -1 if we just don't know.
     double distance_from_origin();
     
-    // hardware diagnostics
+    /// @brief Hardware diagnostics.
+    /// @return Map of sensor name to its boolean health.
     std::map<const std::string, bool> sensors_health() {
         return _sensors_health;
     }
+    /// @brief Set the health status of a sensor by name.
+    /// @param name Name of sensor.
+    /// @param value New health value of sensor.
     void sensor_set_healthy(std::string name, bool value) {
         _sensors_health[name] = value;
     }
 
-    // battery
+    /// @brief Indicate amount of flight battery remaining.
+    /// @param percent Percentage of charge remaining.
     void set_battery_remaining(float percent) {
         _battery._remaining = percent;
         _battery._remaining_modtime = T();
     }
+    /// @brief Amount of battery remaining.
+    /// @return Amount of battery remaining (percentage).
     float battery_remaining() {
         return _battery._remaining;
     }
+    /// @brief Battery remaining modification time.
+    /// @return Timestamp when battery remaining was last modified (microseconds).
     uint64_t battery_remaining_T() {
         return _battery._remaining_modtime;
     }
+    /// @brief Indicate a battery is in failsafe.
+    /// @param in_failsafe ``true`` if battery is in failsafe.
     void set_battery_in_failsafe(bool in_failsafe) {
         _battery._failsafe_event = in_failsafe;
         _battery._failsafe_event_T = T();
     }
+    /// @brief Battery failsafe status.
+    /// @return ``true`` if the battery is in failsafe.
     bool battery_in_failsafe() {
         return _battery._failsafe_event;
     }
+    /// @brief Battery in failsafe modification time.
+    /// @return Timestamp when battery failsafe was last modified (microseconds).
     uint64_t battery_in_failsafe_T() {
         return _battery._failsafe_event_T;
     }
 
+    /// @brief Attitude estimates.
+    /// @return Map of attitude estimate name to attitude estimate.
     const std::map<const std::string, AttitudeEstimate*> &attitude_estimates() {
         return _attitude_estimates;
     }
-    const std::map<const std::string, PositionEstimate*> &position_estimates() {
-        return _position_estimates;
-    }
+    /// @brief Altitude estimates.
+    /// @return Map of altitude estimate name to altitude estimate.
     const std::map<const std::string, AltitudeEstimate*> &altitude_estimates() {
         return _altitude_estimates;
     }
+    /// @brief Position estimates.
+    /// @return Map of position estimate name to position estimate.
+    const std::map<const std::string, PositionEstimate*> &position_estimates() {
+        return _position_estimates;
+    }
 
+    /// @brief Autopilot status information.
+    /// @return Object containing autopilot status information.
     AutoPilot &autopilot() {
         return _autopilot;
     }
 
+    /// @brief Set number of autopilot scheduler overruns.
+    /// @param scheduler Overruns in last loopcount() loops.
     void autopilot_set_overruns(uint16_t overruns) {
         _autopilot.set_overruns(T(), overruns);
     }
+    /// @brief Set number of loops for scheduler data.
+    /// @param count Number of loops for scheduler data.
     void autopilot_set_loopcount(uint16_t count) {
         _autopilot.set_loopcount(T(), count);
     }
+    /// @brief Maximum number of slices moved in a scheduler loop.
+    /// @param slices Maximum number of slices used.
     void autopilot_set_slices_max(uint16_t slices) {
         _autopilot.set_slices_max(T(), slices);
     }
+    /// @brief Minimum number of slices moved in a scheduler loop.
+    /// @param slices Minimum number of slices used.
     void autopilot_set_slices_min(uint16_t slices) {
         _autopilot.set_slices_min(T(), slices);
     }
+    /// @brief Average number of slices moved in a scheduler loop.
+    /// @param slices Average number of slices used.
     void autopilot_set_slices_avg(uint16_t slices) {
         _autopilot.set_slices_avg(T(), slices);
     }
+    /// @brief Stddev number of slices moved in a scheduler loop.
+    /// @param slices Stddev from average number of slices used.
     void autopilot_set_slices_stddev(uint16_t slices) {
         _autopilot.set_slices_stddev(T(), slices);
     }
 
-    // global positioning systems
-    // not really sure this belongs here; possibly move this out if we
-    // ever move to a "state of the universe" object for the analyzers
-    // rather than just a vehicle
+    /// @brief Information from global positioning systems.
+    /// @return Map from GPS name to GPS information object.
     const std::map<const std::string, GPSInfo*> &gpsinfos() {
         return _gpsinfo;
     }
+    /// @brief Information from a specific global positioning system.
+    /// @param name Name of GPS unit to return information for.
     GPSInfo *gpsinfo(const std::string name) {
         if (_gpsinfo.count(name) == 0) {
             _gpsinfo[name] = new GPSInfo(name);
@@ -649,10 +801,14 @@ public:
         return _gpsinfo[name];
     };
 
-    // magnetometers
+    /// @brief Magnetometer information.
+    /// @return Map from compass name to compass data.
     const std::map<const std::string, Compass*> &compasses() {
         return _compasses;
     }
+    /// @brief Magnetometer information for specific named compass.
+    /// @param name Compass name to retrieve information for.
+    /// @return Compass information for named compass.
     Compass *compass(const std::string name) {
         if (_compasses.count(name) == 0) {
             _compasses[name] = new Compass(name);
@@ -660,65 +816,121 @@ public:
         return _compasses[name];
     };
 
-    // IMUs
+    /// @brief IMU information.
+    /// @return Map from IMU name to IMU data.
     const std::map<const std::string, IMU*> &imus() {
         return _imus;
     }
-    IMU *imu(std::string name) {
+    /// @brief IMU information for specific named IMU.
+    /// @param name IMU to retrieve information for.
+    /// return IMU information for named IMU.
+    IMU *imu(const std::string name) {
         if (_imus.count(name) == 0) {
             _imus[name] = new IMU(name, _T);
         }
         return _imus[name];
     }
 
+    /// @brief Canonical vehicle attitude.
+    /// @return The vehicle's current canonical attitude.
     const Attitude& att() const { return _att; };
+    /// @brief Canonical vehicle position.
+    /// @return The vehicle's current canonical position.
     const Position& pos() const { return _pos; };
-    const Altitude& alt() const { return _alt; }; // absolute
-    const Velocity& vel() const { return _vel; }; // metres/second
+    /// @brief Canonical vehicle altitude.
+    /// @return The vehicle's current canonical absolute altitude.
+    const Altitude& alt() const { return _alt; };
+    /// @brief Canonical vehicle velocity.
+    /// @return The vehicle's current canonical velocity.
+    const Velocity& vel() const { return _vel; };
 
+    /// @brief Canonical vehicle attitude.
+    /// @return The vehicle's current canonical attitude.
     Attitude& att() { return _att; };
+    /// @brief Canonical vehicle position.
+    /// @return The vehicle's current canonical position.
     Position& pos() { return _pos; };
-    Altitude& alt() { return _alt; }; // absolute
-    Velocity& vel() { return _vel; }; // metres/second
+    /// @brief Canonical vehicle altitude.
+    /// @return The vehicle's current canonical absolute altitude.
+    Altitude& alt() { return _alt; };
+    /// @brief Canonical vehicle velocity.
+    /// @return The vehicle's current canonical velocity.
+    Velocity& vel() { return _vel; };
 
+    /// @brief Vehicle origin position - latitude.
+    /// @return The vehicle's original position - latitude.
     double origin_lat() const { return _origin.lat(); }
+    /// @brief Modification time of the vehicle's original latitude.
+    /// @return The modification time of the vehicle's original latitude.
     uint64_t origin_lat_T() const { return _origin.lat_modtime(); }
+    /// @brief Vehicle origin position - longitude.
+    /// @return The vehicle's original position - longitude.
     double origin_lon() const { return _origin.lon(); }
+    /// @brief Modification time of the vehicle's original longitude.
+    /// @return The modification time of the vehicle's original longitude.
     uint64_t origin_lon_T() const { return _origin.lon_modtime(); }
+    /// @brief Set vehicle's original latitude.
+    /// @param value New vehicle's original latitude.
     void set_origin_lat(double value) { _origin.set_lat(T(),value); }
+    /// @brief Set vehicle's original longitude.
+    /// @param value New vehicle's original longitude.
     void set_origin_lon(double value) { _origin.set_lon(T(),value); }
         
+    /// @brief Vehicle origin.
+    /// @return The vehicle's origin.
     Position& origin() { return _origin; }
-    Altitude &origin_alt() { return _origin_altitude; }
 
+    /// @brief Vehicle origin.
+    /// @return The vehicle's origin.
     const Position& origin() const { return _origin; }
+    /// @brief Vehicle's original altitude.
+    /// @return The vehicle's original altitude (metres).
     const Altitude &origin_alt() const { return _origin_altitude; }
 
+    /// @brief Set vehicle origin altitude.
+    /// @param value The vehicle's origin altitude (metres).
     void set_origin_altitude(double value) {
         _origin_altitude.set_alt(T(),value);
-        // if (value < 0.5) {
-        //     abort();
-        // }
     }
+    /// @brief Vehicle's original altitude.
+    /// @return The vehicle's original altitude (metres).
     double origin_altitude() const { return _origin_altitude.alt(); }
+    /// @brief Modification time of vehicle's original altitude.
+    /// @return Timestamp when origin altitude was last set (microseconds).
     uint64_t origin_altitude_T() const { return _origin_altitude.alt_modtime(); }
 
-    bool relative_alt(double &relative) const; // returns true if relative alt could be calculated
+    /// @brief vehicle's altitude relative to origin altitude.
+    /// @param[out] relative Vehicle's altitude relative to its origin.
+    /// @return true if the relative value could e calculated.
+    bool relative_alt(double &relative) const;
 
+    /// @brief Vehicle's crash state.
+    /// @return ``true`` if the craft is believed to be in a crashed state.
     bool crashed() const { return _crashed; }
+    /// @brief Set the vehicle's crash state.
+    /// @value The vehicle's new crash state.
     void set_crashed(bool value) { _crashed = value; _crashed_T = T(); }
 
+    /// @brief Accelerometer clipping state.
+    /// @return ``true`` if any accelerometer is clipping.
     bool any_acc_clipping() const;
 
 protected:
-    AV_Nav& nav() { return _nav; };
+    /// @brief Navigation state object.
+    /// @return Object representing Navigation Controller state.
+    const AV_Nav& nav() const { return _nav; };
 
-    bool _armed = false;
+    /// @brief Current servo outputs (ppm).
+    uint16_t _servo_output[9] = { }; // indexed from 1
 
+private:
+    /// @brief Parameters that have been set.
     std::map<const std::string, float> _param;
+    /// @brief Timestamps parameters were last set.
     std::map<const std::string, uint64_t> _param_modtime;
+    /// @brief Values for parameters if they haven't been seen from a log.
     std::map<const std::string, float> _param_defaults = {};
-    
+    /// @brief Map from sensor name to its health.
     std::map<const std::string, bool> _sensors_health = {};
 
     Attitude _att = { };
@@ -729,7 +941,14 @@ protected:
 
     Position _origin = { };
     Altitude _origin_altitude = { };
-private:
+
+    EKF _ekf;
+
+    bool _armed = false;
+
+    /// @brief Copy state from another vehicle.
+    void take_state(Base *old);
+    
     bool _vehicletype_is_forced = false;
     uint64_t _T = 0;
 
@@ -738,8 +957,8 @@ private:
 
     vehicletype_t _vehicletype = invalid;
 
-    bool _crashed = false; // vehicle's own estimate of whether it has crashed
-    uint64_t _crashed_T = 0; // last update time of vehicle's estimate
+    bool _crashed = false; // vehicle's own estimate of whether it has crashed.
+    uint64_t _crashed_T = 0; // last update time of vehicle's estimate.
 
     Battery _battery;
 
@@ -752,11 +971,6 @@ private:
     std::map<const std::string, GPSInfo*> _gpsinfo;
     std::map<const std::string, Compass*> _compasses;
     std::map<const std::string, IMU*> _imus;
-
-    // PacketHistory<mavlink_heartbeat_t> history_heartbeat;
-    // PacketHistory<mavlink_nav_controller_output_t> history_nav_controller_output;
-    // PacketHistory<mavlink_servo_output_raw_t> history_servo_output_raw;
-
 }; // end class
 
 } // end namespace

@@ -17,7 +17,7 @@
   "severity-score": 2270, 
   "tests": {
     "Altitude Estimate Divergence": {
-      "description": "A UAV often has several estimates of its Altitude.  This test will FAIL or WARN if the various vehicle's  estimates diverge", 
+      "description": "A UAV often has several estimates of its Altitude.  This test will FAIL or WARN if the various vehicle's Altitude estimates diverge", 
       "evilness": 680, 
       "evilness-is-deprecated": 1, 
       "name": "Altitude Estimate Divergence", 
@@ -4257,7 +4257,7 @@
       "status": "FAIL"
     }, 
     "Attitude Estimate Divergence": {
-      "description": "A UAV often has several estimates of its Attitude.  This test will FAIL or WARN if the various vehicle's conds estimates div", 
+      "description": "A UAV often has several estimates of its Attitude.  This test will FAIL or WARN if the various vehicle's Attitude estimates diverge", 
       "evilness": 60, 
       "evilness-is-deprecated": 1, 
       "name": "Attitude Estimate Divergence", 
@@ -5949,7 +5949,7 @@
       "status": "FAIL"
     }, 
     "Position Estimate Divergence": {
-      "description": "A UAV often has several estimates of its Position.  This test will FAIL or WARN if the various vehicle's  estimates diverge", 
+      "description": "A UAV often has several estimates of its Position.  This test will FAIL or WARN if the various vehicle's Position estimates diverge", 
       "evilness": 50, 
       "evilness-is-deprecated": 1, 
       "name": "Position Estimate Divergence", 
@@ -6139,8 +6139,8 @@
     }
   }, 
   "timestamp": "123456789", 
+  "total-distance-travelled": 1722.674176642179, 
   "total-distance-travelled-units": "metres", 
-  "total-distance-travellled": 1722.674176642179, 
   "total-flight-time": 614.4847412109375, 
   "total-flight-time-units": "seconds"
 }

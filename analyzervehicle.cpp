@@ -68,6 +68,15 @@ bool Base::param_with_defaults(const char *name, float &ret) const
     return param_default(name, ret);
 }
 
+uint64_t Base::param_modtime(const std::string name) const {
+    auto it = _param_modtime.find(name);
+    if (it != _param_modtime.end()) {
+        return it->second;
+    }
+    ::fprintf(stderr, "param_modtime called for non-existant parameter (%s)\n", name.c_str());
+    return 0;
+}
+
 // will return value of param if seen, otherwise a default value
 float Base::require_param_with_defaults(const char *name) const
 {
@@ -232,7 +241,13 @@ double AnalyzerVehicle::Base::distance_from_origin()
     return pos().horizontal_distance_to(origin());
 }
 
-
+uint64_t AnalyzerVehicle::EKF::variance_T(std::string name) const {
+    auto it = _variances_T.find(name);
+    if (it != _variances_T.end()) {
+        return it->second;
+    }
+    return 0;
+}
 
 void AnalyzerVehicle::AutoPilot::set_overruns(uint64_t T, uint16_t overruns)
 {

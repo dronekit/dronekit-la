@@ -20,7 +20,7 @@
 
 #include "analyzer_util.h"
 
-/// Enumeration of possible states for both an Analyzer_Result and Analyzer
+/// Enumeration of possible states for both an Analyzer_Result and Analyzer.
 enum analyzer_status {
     analyzer_status_warn = 17,
     analyzer_status_fail,
@@ -29,60 +29,60 @@ enum analyzer_status {
 
 
 /*!
- * Returns a textual interpretation of the supplied status
+ * Returns a textual interpretation of the supplied status.
  *
- * @param status analyser status to provide text for
- * @return textual interpretation of status
+ * @param status Analyzer status to provide text for.
+ * @return Textual interpretation of status.
  */
 const char *_status_as_string(analyzer_status status);
 
 
 
-/// @brief Base class for analyzer results; extend this to provide a custom result object
+/// @brief Base class for analyzer results; extend this to provide a custom result object.
 ///
-/// You probably do not want to directly extend Analyzer_Result, but one of its immediate subclasses
+/// You probably do not want to directly extend Analyzer_Result, but one of its immediate subclasses.
 class Analyzer_Result {
 public:
-    /// @brief Construct an Analyzer Result
+    /// @brief Construct an Analyzer_Result.
     virtual ~Analyzer_Result() { }
 
-    /// @brief Provides a textual description of the Analyzer Result's status
-    /// @return a text string e.g. "OK" or "FAIL"
+    /// @brief Provides a textual description of the Analyzer Result's status.
+    /// @return A text string e.g. "OK" or "FAIL".
     const char *status_as_string() const {
         return _status_as_string(_status);
     }
 
-    /// @brief Provide the Analyzer Result's status
-    /// @return The Analyzer_Result's status
+    /// @brief Provide the Analyzer_Result's status.
+    /// @return The Analyzer_Result's status.
     analyzer_status status() { return _status; }
 
-    /// @brief Set the Analyzer Result's status
-    /// @param status The new status for this Result
+    /// @brief Set the Analyzer Result's status.
+    /// @param status The new status for this Result.
     void set_status(analyzer_status status) { _status = status; }
 
-    /// @brief Set a simple, human-readable explanation of the Result
-    /// @param reason The reason for the existence of this Result
+    /// @brief Set a simple, human-readable explanation of the result.
+    /// @param reason The reason for the existence of this result.
     void set_reason(const std::string reason) {
         if (_reason != NULL) {
             delete(_reason);
         }
         _reason = new std::string(reason);
     }
-    /// @brief Provide a simple, human-readable explanation if the Result
+    /// @brief Provide a simple, human-readable explanation if the result.
     const std::string *reason() const { return _reason; }
 
-    /// @brief Provide analyzer output in the provided Json::Value
-    /// @param[out] root object to populate with output
+    /// @brief Provide analyzer output in the provided Json::Value.
+    /// @param[out] Root object to populate with output.
     virtual void to_json(Json::Value &root) const;
 
-    /// @brief Provide textual free-form evidence for the "reason"
-    /// @param f textual free-form evidence
+    /// @brief Provide textual free-form evidence for the "reason".
+    /// @param f Textual free-form evidence.
     void add_evidence(const std::string f) {
         _evidence.push_back(f);
     }
 
     /// @brief Indicate that a particular data source was used to come to the conclusion returned by reason().
-    /// @param f A Data_Source relevant to the conclusion in reason()
+    /// @param f A Data_Source relevant to the conclusion in reason().
     void add_source(const Data_Source *f) {
         if (f == NULL) {
             abort();
@@ -90,18 +90,18 @@ public:
         _sources.push_back(f);
     }
 
-    /// @brief Indicate the result is incrementally more significant
-    /// @param evilness Degree to which this result is more significant
+    /// @brief Indicate the result is incrementally more significant.
+    /// @param evilness Degree to which this result is more significant.
     void increase_severity_score(uint32_t evilness) {
         _evilness += evilness;
     }
-    /// @brief Indicate how signficant this result is
-    /// @param evilness Degree of significance of this result
+    /// @brief Indicate how significant this result is.
+    /// @param evilness Degree of significance of this result.
     void set_severity_score(uint32_t evilness) {
         _evilness = evilness;
     }
-    /// @brief Return a number indicating the relative significance of this result
-    /// @return The relative significance of this result
+    /// @brief Return a number indicating the relative significance of this result.
+    /// @return The relative significance of this result.
     uint32_t severity_score() const {
         return _evilness;
     }
@@ -120,9 +120,9 @@ private:
 };
 
 
-/// @brief Base class for an Analyzer Result which spans a period
+/// @brief Base class for an Analyzer Result which spans a period.
 ///
-/// Examples would include a momentary attitude control loss
+/// Examples would include a momentary attitude control loss.
 class Analyzer_Result_Period : public Analyzer_Result {
 public:
     Analyzer_Result_Period() :
@@ -144,9 +144,9 @@ private:
     uint64_t _T_stop;
 };
 
-/// @brief Base class for an Analyzer Result which provides information derived over the entire period of data input
+/// @brief Base class for an Analyzer Result which provides information derived over the entire period of data input.
 ///
-/// Examples would include "How many bytes of the input were processed"
+/// Examples would include "How many bytes of the input were processed".
 class Analyzer_Result_Summary : public Analyzer_Result {
 public:
     Analyzer_Result_Summary() :
@@ -159,9 +159,9 @@ private:
 };
 
 
-/// @brief Base class for an Analyzer Result which does not span any time
+/// @brief Base class for an Analyzer Result which does not span any time.
 ///
-/// Examples would include a "Crash" event present in a log
+/// Examples would include a "Crash" event present in a log.
 class Analyzer_Result_Event : public Analyzer_Result {
 public:
     Analyzer_Result_Event() :
@@ -183,9 +183,9 @@ private:
 };
 
 
-/// @brief Base class for all analyzers
+/// @brief Base class for all analyzers.
 ///
-/// @description Extend this class to create a new analyzer
+/// @description Extend this class to create a new analyzer.
 ///
 /// An Analyzer tracks changes to a vehicle model over time to
 /// determine if anything untoward is happening.  "evaluate()" is
@@ -196,70 +196,74 @@ private:
 class Analyzer {
 
 public:
-    /// @brief Constructor for Analyzer
-    /// @param vehicle The vehicle model to be analysed
-    /// @param data_sources A mapping of abstract data source names to their concrete data sources (e.g. ATTITUDE -> [ ATT.Pitch, ATT.Roll ])
+    /// @brief Constructor for Analyzer.
+    /// @param vehicle The vehicle model to be analyzed.
+    /// @param data_sources A mapping of abstract data source names to their concrete data sources (e.g. ATTITUDE -> [ ATT.Pitch, ATT.Roll ]).
     Analyzer(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
         _vehicle(vehicle),
         _data_sources(data_sources)
         { }
 
     /// @brief Configure an analyzer from a .ini config file
-    /// @param config the configuration source
-    /// @return true if configuration succeeded
+    /// @param config The configuration source.
+    /// @return true if configuration succeeded.
     virtual bool configure(INIReader *config UNUSED) {
         return true;
     }
 
-    /// @brief a simple name this Analyzer is known by
+    /// @brief a simple name that used to refer to this Analyzer.
     virtual const std::string name() const = 0;
-    /// @brief Outlines the reason this test exists
+    /// @brief Outlines the reason this test exists.
     virtual const std::string description() const = 0;
 
-    /// @brief Provide analyzer output in the provided Json::Value
-    /// @param[out] root object to populate with output
+    /// @brief Provide analyzer output in the provided Json::Value.
+    /// @param[out] root Object to populate with output
     virtual void results_json_results(Json::Value &root) const;
 
-    /// @brief Return the analyzer's status represented as a string
+    /// @brief Return the analyzer's status represented as a string.
     const char *status_as_string() const {
         return _status_as_string(status());
     }
 
-    /// @brief return all results this analyzer has produced
+    /// @brief Return all results this analyzer has produced.
     std::vector<Analyzer_Result*> results() const {
         return _results;
     }
-    /// @brief return the number of results this analyzer has produced
+    /// @brief Return the number of results this analyzer has produced.
     uint16_t result_count() const {
         return _results.size();
     }
 
-    /// @brief returns a number hinting how significant this result may be
+    /// @brief Returns a number "score" indicating how significant this result may be.
     virtual uint32_t severity_score() const;
 
-    /// @brief called whenever the vehicle's state changes
+    /// @brief Called whenever the vehicle's state changes.
     virtual void evaluate() = 0;
 
-    /// @brief Called when no more input will be forthcoming
-    /// @param packet_count The number of packets processed to update the model
+    /// @brief Called when no more input will be forthcoming.
+    /// @param packet_count The number of packets processed to update the model.
     virtual void end_of_log(uint32_t packet_count UNUSED) { }
 
-    /// @brief Provide the Analyzer's overall status
-    /// @return The Analyzer overall status
+    /// @brief Provide the Analyzer's overall status.
+    /// @return The Analyzer overall status.
     analyzer_status status() const;
 
 protected:
-    // @brief Add a result for this Analyzer
-    // @param result The result to add
+    // @brief Add a result for this Analyzer.
+    // @param result The result to add.
     virtual void add_result(Analyzer_Result* result) {
         _results.push_back(result);
     }
 
-    /// @brief Provide the Analyzer Result's status
-    /// @return The Analyzer_Result's status
+    /// @brief Provide the Analyzer Result's status.
+    /// @return The Analyzer_Result's status.
     std::string to_string(double x);
 
+    /// @brief Vehicle model.
+    /// @details Updated by LA_MsgHandler* and analyzing_mavlink_message_handler, analyzed by analyzer_*.
     AnalyzerVehicle::Base *&_vehicle;
+    /// @brief Map from abstract data source to concrete data source.
+    /// @details e.g. BATTERY_REMAINING -> SYS_STATUS.battery_remaining.
     Data_Sources &_data_sources;
 
 private:

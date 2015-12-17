@@ -52,7 +52,7 @@ bool Copter::any_motor_running_fast() const
     return false;
 }
 
-std::set<uint8_t> Copter::motors_clipping_high()
+std::set<uint8_t> Copter::motors_clipping_high() const
 {
     std::set<uint8_t> ret;
     float max;
@@ -67,7 +67,7 @@ std::set<uint8_t> Copter::motors_clipping_high()
     return ret;
 }
 
-std::set<uint8_t> Copter::motors_clipping_low()
+std::set<uint8_t> Copter::motors_clipping_low() const
 {
     std::set<uint8_t> ret;
     float min;
