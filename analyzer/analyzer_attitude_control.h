@@ -30,7 +30,7 @@ class Analyzer_Attitude_Control : public Analyzer {
 public:
 
     Analyzer_Attitude_Control(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
-	Analyzer(vehicle,data_sources)
+    Analyzer(vehicle,data_sources)
     { }
 
     const std::string name() const override { return "Attitude Control"; }

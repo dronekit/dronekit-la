@@ -26,13 +26,13 @@ class Analyzer_Sensor_Health : public Analyzer {
 
 public:
     Analyzer_Sensor_Health(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
-	Analyzer(vehicle, data_sources)
+    Analyzer(vehicle, data_sources)
     { }
 
 
     const std::string name() const override { return "Sensor Health"; }
     const std::string description() const override {
-        return "A UAV can self-assess its sensors' health.  This test will FAIL if any sensor is detected as failed";
+        return "A UAV can self-assess its sensors' health.  This test will FAIL if any sensor is detected as failed.";
     }
 
     bool configure(INIReader *config) override;

@@ -28,14 +28,14 @@ class Analyzer_Ever_Armed : public Analyzer {
 public:
 
     Analyzer_Ever_Armed(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
-	Analyzer(vehicle,data_sources)
+    Analyzer(vehicle,data_sources)
     { }
 
     bool configure(INIReader *config);
 
     const std::string name() const override { return "Ever Armed"; }
     const std::string description() const override {
-        return "Vehicles typically need to progress through a sequence of arming steps before they can move.  This test will FAIL if the craft did not arm";
+        return "Vehicles typically need to progress through a sequence of arming steps before they can move.  This test will FAIL if the craft did not arm.";
     }
 
     void evaluate() override;

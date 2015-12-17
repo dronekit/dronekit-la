@@ -24,7 +24,7 @@ class Analyzer_Autopilot : public Analyzer {
 
 public:
     Analyzer_Autopilot(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
-	Analyzer(vehicle, data_sources),
+    Analyzer(vehicle, data_sources),
         _result_slices_max(NULL)
     { }
 
@@ -36,7 +36,7 @@ public:
 
     const std::string name() const override { return "AutoPilot Health"; }
     const std::string description() const override {
-        return "Many autopilots are capable of monitoring their own performance.  This test will FAIL if problems are detected with the autopilot";
+        return "Many autopilots are capable of monitoring their own performance.  This test will FAIL if problems are detected with the autopilot.";
     }
 
     bool configure(INIReader *config) override;
