@@ -17,12 +17,9 @@ Vagrant.configure(2) do |config|
         echo "[SPHINX-DOCS]: Installing pip ..."
         apt-get -y install python-pip
         easy_install -U pip
-        echo "[SPHINX-DOCS]: Installing Sphinx ... "
-        pip install sphinx
+        echo "[SPHINX-DOCS]: Installing DroneKit-LA requirements.txt ... "
         cd /vagrant
-        echo "[SPHINX-DOCS]: Installing SPHINX-DOCS theme ... "
-        pip install sphinx-3dr-theme
-        echo "[SPHINX-DOCS]: Installing Breath Extension (Doxygen->Spinx Bridge) ... "
+        pip install -r requirements.txt
         pip install breathe
         echo "[SPHINX-DOCS]: Installing DOxygen ..."
         apt-get -y install doxygen  
