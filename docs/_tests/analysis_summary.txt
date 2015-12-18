@@ -1,5 +1,5 @@
 DK-LA Version: Version: 0.3
-Git-Version: v0.1-136-g7173
+Git-Version: v0.1-156-g7b3e
 
 DK-LA HELP:
 
@@ -48,11 +48,11 @@ Velocity Estimate Divergence
 
 
 TEST: Any Parameters Seen
-Description: Autopilots store information on-board in the form of parameters.  For proper analysis, logs must contain this parameter information.  This test will FAIL if the input does not contain parameter information.
+Description: Autopilots store configuration settings known as 'parameters'. For proper analysis, logs must contain this parameter information. This test will FAIL if the input does not contain parameter information.
 * Pass: Parameters seen
 
 TEST: Good EKF
-Description: The Extended Kalman filter has many built-in checks to ensure it is funcitoning correctly.  This test will FAIL or WARN if EKF variances exceed the respective thresholds, or FAIL if the EKF status flags indicate errors.
+Description: The Extended Kalman Filter (EKF) has many built-in checks to ensure that it is functioning correctly.  This test will FAIL or WARN if EKF variances exceed the respective thresholds, or FAIL if the EKF status flags indicate errors.
 * Fail: The EKF status report indicates a problem with the EKF
 * Fail: pos_horiz_variance exceeds fail threshold
 * Fail: compass_variance exceeds fail threshold
@@ -63,7 +63,7 @@ Description: The Extended Kalman filter has many built-in checks to ensure it is
 * Warn: velocity_variance exceeds warn threshold
 
 TEST: Ever Armed
-Description: Vehicles typically need to progress through a sequence of arming steps before they can move.  This test will FAIL if the craft did not arm
+Description: Vehicles typically need to progress through a sequence of arming steps before they can move.  This test will FAIL if the craft did not arm.
 * Pass: The vehicle armed
 
 TEST: Attitude Control
@@ -72,35 +72,35 @@ Description: The autopilot reports both the craft's attitude and the attitude th
 * Warn: Desired attitude not achieved
 
 TEST: Battery
-Description: Many autpilots are capable of monitoring their flight batteries.  This test will FAIL if the battery level falls below the battery failsafe threshold level, or if a battery failsafe event is received.
+Description: Many autopilots are capable of monitoring their flight batteries.  This test will FAIL if the battery level falls below the battery failsafe threshold level, or if a battery failsafe event is received.
 * Pass: Battery never below failsafe
 
 TEST: AutoPilot Health
-Description: Many autopilots are capable of monitoring their own performance.  This test will FAIL if problems are detected with the autopilot
+Description: Many autopilots are capable of monitoring their own performance.  This test will FAIL if problems are detected with the autopilot.
 
 TEST: GPS Fix
-Description: The accuracy and precision of GPS messages can vary depending on many factors including weather, ionospheric disturbances and number of satellites visible.  This test will FAIL if the quality of the GPS information is poor
+Description: The accuracy and precision of GPS messages can vary depending on many factors including weather, ionospheric disturbances and number of satellites visible.  This test will FAIL if the quality of the GPS information is poor.
 * Fail: No 3D fix was ever acquired
 * Pass: First 3D GPS Fix Acquired
 
 TEST: Ever Flew
-Description: Determining whether a vehicle has ever flown in a log is done heuristically based on things like motor speeds.  This test will FAIL if the craft did not ever seem to fly
+Description: Determining whether a vehicle has ever flown in a log is done heuristically based on things like motor speeds.  This test will FAIL if the craft did not ever seem to fly.
 * Pass: The vehicle appeared to fly
 
 TEST: Velocity Estimate Divergence
-Description: A UAV typically has several estimates of its velocity.  This test will FAIL if the craft's velocity estimates diverge
+Description: A UAV typically has several estimates of its velocity.  This test will FAIL if the craft's velocity estimates diverge.
 
 TEST: Crash Test
-Description: Crashes are detected both heuristically and by explicit log messages.  This test will FAIL if the vehicle appears to crash
+Description: Crashes are detected both heuristically and by explicit log messages.  This test will FAIL if the vehicle appears to crash.
 * Fail: Vehicle is past maximum allowed angle and running its motors
 
 TEST: Altitude Estimate Divergence
-Description: A UAV often has several estimates of its Altitude.  This test will FAIL or WARN if the various vehicle's Altitude estimates diverge
+Description: A UAV often has several estimates of its Altitude.  This test will FAIL or WARN if the various vehicle's Altitude estimates diverge.
 * Fail: This altitude estimate differs from the canonical craft altitude
 * Warn: This altitude estimate differs from the canonical craft altitude
 
 TEST: Vehicle Definition
-Description: The vehicle type is normally automatically detected by dronekit-la from the log itself.  Sometimes the log does not contain sufficient information to make this determination.  This test will FAIL if the craft type is never defined
+Description: The vehicle type is normally automatically detected by dronekit-la from the log.  Sometimes the log does not contain sufficient information to make this determination.  This test will FAIL if the craft type is never defined
 * Pass: Vehicle was appropriately defined
 
 TEST: Brownout
@@ -108,23 +108,23 @@ Description: A log should not end while the vehicle appears to be moving under i
 * Fail: Log ended while craft still flying
 
 TEST: Position Estimate Divergence
-Description: A UAV often has several estimates of its Position.  This test will FAIL or WARN if the various vehicle's Position estimates diverge
+Description: A UAV often has several estimates of its Position.  This test will FAIL or WARN if the various vehicle's Position estimates diverge.
 * Fail: This position estimate differs from the canonical craft position
 
 TEST: Compass Vector Length
-Description: The strength and direction of the Earth's magnetic field should be relatively constant and lay within certain thresholds.  This test will FAIL or WARN if the compass vector length exceeds the respective threshold.  Possible causes include flying near large metal objects.
+Description: The strength and direction of the Earth's magnetic field should be relatively constant and lie within certain thresholds.  This test will FAIL or WARN if the compass vector length exceeds the respective threshold.  Possible causes include flying near large metal objects.
 
 TEST: Arming Checks
-Description: An autopilot checks many aspects of the aircraft's state before allowing it to be armed - for example, that it has a good GPS fix.  This test will FAIL if the craft ever arms when some arming checks are disabled
+Description: An autopilot checks many aspects of the aircraft's state before allowing it to be armed - for example, that it has a good GPS fix.  This test will FAIL if the craft ever arms when some arming checks are disabled.
 
 TEST: Sensor Health
-Description: A UAV can self-assess its sensors' health.  This test will FAIL if any sensor is detected as failed
+Description: A UAV can self-assess its sensors' health.  This test will FAIL if any sensor is detected as failed.
 * Fail: The craft's assessment of its sensors indicate a problem
 
 TEST: Attitude Estimate Divergence
-Description: A UAV often has several estimates of its Attitude.  This test will FAIL or WARN if the various vehicle's Attitude estimates diverge
+Description: A UAV often has several estimates of its Attitude.  This test will FAIL or WARN if the various vehicle's Attitude estimates diverge.
 * Fail: This attitude estimate differs from the canonical craft attitude
 
 TEST: Compass Offsets
-Description: Compass calibration process produces a set of parameters that specify expected compass discrepancies.  This test will WARN or FAIL depending on the degree that these compass offset parameters exceed specified thresholds.
+Description: Compass calibration produces a set of parameters that specify expected compass discrepancies.  This test will WARN or FAIL depending on the degree that these compass offset parameters exceed specified thresholds.
 * Fail: Compass offsets in parameters are out of bounds

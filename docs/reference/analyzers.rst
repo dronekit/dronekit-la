@@ -21,8 +21,7 @@ Each section lists a description of the analyzer, along with possible fails/warn
 Any Parameters Seen
 =================== 
 
-Autopilots store information on-board in the form of parameters.  For proper analysis, logs must contain this parameter information.  
-This test will FAIL if the input does not contain parameter information.
+Autopilots store configuration settings known as 'parameters'. For proper analysis, logs must contain this parameter information. This test will FAIL if the input does not contain parameter information.
 
 * Fail: No parameters present
 * Pass: Parameters present
@@ -67,6 +66,7 @@ Altitude Estimate Divergence
 A UAV often has several estimates of its altitude.  
 This test will FAIL or WARN if the various vehicle's Altitude estimates diverge..
 
+* Fail: This altitude estimate differs from the canonical craft altitude
 * Warn: This altitude estimate differs from the canonical craft altitude
 
     
@@ -104,7 +104,7 @@ This test will FAIL or WARN if the various vehicle's Attitude estimates diverge.
 Compass Offsets
 ===============
 
-Compass calibration process produces a set of parameters that specify expected compass discrepancies.  
+Compass calibration produces a set of parameters that specify expected compass discrepancies.  
 This test will WARN or FAIL depending on the degree that these compass offset parameters exceed specified thresholds.
 
 * Fail: Compass offsets in parameters are out of bounds
@@ -188,7 +188,7 @@ and whether it reaches the servo threshold required to take off.
 Good EKF
 ========
 
-The Extended Kalman filter has many built-in checks to ensure it is functioning correctly.  
+The Extended Kalman Filter (EKF) has many built-in checks to ensure that it is functioning correctly.  
 This test will FAIL or WARN if EKF variances exceed the respective thresholds, or FAIL if the EKF status flags indicate errors.
 
 For EKF status flag fails, the evidence field provides information about the specific estimates that are incorrect.
@@ -267,7 +267,6 @@ AutoPilot Health
 ================
 
 Many autopilots are capable of monitoring their own performance.  This test will FAIL if problems are detected with the autopilot.
-
 
 * Fail: Severe scheduler overruns
 
@@ -388,7 +387,7 @@ A UAV can self-assess its sensors' health.  This test will FAIL if any sensor is
 Vehicle Definition
 ==================
 
-The vehicle type is normally automatically detected by dronekit-la from the log itself.  
+The vehicle type is normally automatically detected by dronekit-la from the log.  
 Sometimes the log does not contain sufficient information to make this determination.  
 This test will FAIL if the craft type is never defined.
 
