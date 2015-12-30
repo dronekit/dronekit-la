@@ -210,11 +210,11 @@ Analyze *LogAnalyzer::create_analyze()
     if (_analyzer_names_to_run.size()) {
         analyze->set_analyzer_names_to_run(_analyzer_names_to_run);
     }
-    analyze->instantiate_analyzers(config());
 
-    if (_pure_output) {
-        analyze->set_pure_output(true);
-    }
+
+    analyze->set_pure_output(_pure_output);
+
+    analyze->instantiate_analyzers(config());
 
     return analyze;
 }

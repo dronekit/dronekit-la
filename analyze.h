@@ -50,7 +50,7 @@ public:
     void set_pure_output(bool value) {
         _pure_output = value;
     }
-    bool pure_output() {
+    bool pure_output() const {
         return _pure_output;
     }
 
