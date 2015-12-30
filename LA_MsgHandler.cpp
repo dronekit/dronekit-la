@@ -32,6 +32,10 @@ LA_MsgHandler::gpsinfo() {
     return _vehicle->gpsinfo(name());
 }
 
+AnalyzerVehicle::IMU* LA_MsgHandler::imu() {
+    return _vehicle->imu(name());
+}
+
 bool LA_MsgHandler::process_set_T(const uint8_t *msg)
 {
     uint64_t time_us;
@@ -244,6 +248,24 @@ void LA_MsgHandler_ERR::xprocess(const uint8_t *msg) {
     }
 }
 
+LA_MsgHandler_IMU::LA_MsgHandler_IMU(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+    LA_MsgHandler(name, f, analyze, vehicle) {
+
+    // add gyroscope data sources
+    _analyze->add_data_source(string_format("IMU_%s_GYR",name.c_str()),
+                              string_format("%s.GyrX",name.c_str()));
+    _analyze->add_data_source(string_format("IMU_%s_GYR",name.c_str()),
+                              string_format("%s.GyrY",name.c_str()));
+    _analyze->add_data_source(string_format("IMU_%s_GYR",name.c_str()),
+                              string_format("%s.GyrZ",name.c_str()));
+}
+
+void LA_MsgHandler_IMU::xprocess(const uint8_t *msg) {
+    Vector3f values;
+    require_field(msg, "Gyr", values);
+
+    imu()->set_gyr(T(), values);
+}
 
 bool LA_MsgHandler_GPS::find_T(const uint8_t *msg, uint64_t &T) {
     if (field_value(msg, "TimeUS", T)) {
@@ -348,9 +370,13 @@ void LA_MsgHandler_MAG::xprocess(const uint8_t *msg) {
 
 void LA_MsgHandler_PM::xprocess(const uint8_t *msg)
 {
-    _vehicle->autopilot_set_overruns(require_field_uint16_t(msg,"NLon"));
-    _vehicle->autopilot_set_loopcount(require_field_uint16_t(msg,"NLoop"));
-    _vehicle->autopilot_set_slices_max(require_field_uint32_t(msg,"MaxT"));
+    uint16_t nlon;
+    if (field_value(msg, "NLon", nlon)) {
+        // copter-style PM message
+        _vehicle->autopilot_set_overruns(nlon);
+        _vehicle->autopilot_set_loopcount(require_field_uint16_t(msg,"NLoop"));
+        _vehicle->autopilot_set_slices_max(require_field_uint32_t(msg,"MaxT"));
+    }
 }
 
 

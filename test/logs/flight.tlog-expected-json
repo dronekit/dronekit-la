@@ -17,7 +17,7 @@
   "severity-score": 2270, 
   "tests": {
     "Altitude Estimate Divergence": {
-      "description": "A UAV often has several estimates of its Altitude.  This test will FAIL or WARN if the various vehicle's Altitude estimates diverge", 
+      "description": "A UAV often has several estimates of its Altitude.  This test will FAIL or WARN if the various vehicle's Altitude estimates diverge.", 
       "evilness": 680, 
       "evilness-is-deprecated": 1, 
       "name": "Altitude Estimate Divergence", 
@@ -902,7 +902,7 @@
       "status": "FAIL"
     }, 
     "Any Parameters Seen": {
-      "description": "Autopilots store information on-board in the form of parameters.  For proper analysis, logs must contain this parameter information.  This test will FAIL if the input does not contain parameter information.", 
+      "description": "Autopilots store configuration settings known as 'parameters'. For proper analysis, logs must contain this parameter information. This test will FAIL if the input does not contain parameter information.", 
       "evilness": 0, 
       "evilness-is-deprecated": 1, 
       "name": "Any Parameters Seen", 
@@ -923,7 +923,7 @@
       "status": "PASS"
     }, 
     "Arming Checks": {
-      "description": "An autopilot checks many aspects of the aircraft's state before allowing it to be armed - for example, that it has a good GPS fix.  This test will FAIL if the craft ever arms when some arming checks are disabled", 
+      "description": "An autopilot checks many aspects of the aircraft's state before allowing it to be armed - for example, that it has a good GPS fix.  This test will FAIL if the craft ever arms when some arming checks are disabled.", 
       "evilness": 0, 
       "evilness-is-deprecated": 1, 
       "name": "Arming Checks", 
@@ -4257,7 +4257,7 @@
       "status": "FAIL"
     }, 
     "Attitude Estimate Divergence": {
-      "description": "A UAV often has several estimates of its Attitude.  This test will FAIL or WARN if the various vehicle's Attitude estimates diverge", 
+      "description": "A UAV often has several estimates of its Attitude.  This test will FAIL or WARN if the various vehicle's Attitude estimates diverge.", 
       "evilness": 60, 
       "evilness-is-deprecated": 1, 
       "name": "Attitude Estimate Divergence", 
@@ -4417,7 +4417,7 @@
       "status": "FAIL"
     }, 
     "AutoPilot Health": {
-      "description": "Many autopilots are capable of monitoring their own performance.  This test will FAIL if problems are detected with the autopilot", 
+      "description": "Many autopilots are capable of monitoring their own performance.  This test will FAIL if problems are detected with the autopilot.", 
       "evilness": 0, 
       "evilness-is-deprecated": 1, 
       "name": "AutoPilot Health", 
@@ -4426,7 +4426,7 @@
       "status": "PASS"
     }, 
     "Battery": {
-      "description": "Many autpilots are capable of monitoring their flight batteries.  This test will FAIL if the battery level falls below the battery failsafe threshold level, or if a battery failsafe event is received.", 
+      "description": "Many autopilots are capable of monitoring their flight batteries.  This test will FAIL if the battery level falls below the battery failsafe threshold level, or if a battery failsafe event is received.", 
       "evilness": 0, 
       "evilness-is-deprecated": 1, 
       "name": "Battery", 
@@ -4481,7 +4481,7 @@
       "status": "PASS"
     }, 
     "Compass Offsets": {
-      "description": "Compass calibration process produces a set of parameters that specify expected compass discrepancies.  This test will WARN or FAIL depending on the degree that these compass offset parameters exceed specified thresholds.", 
+      "description": "Compass calibration produces a set of parameters that specify expected compass discrepancies.  This test will WARN or FAIL depending on the degree that these compass offset parameters exceed specified thresholds.", 
       "evilness": 2, 
       "evilness-is-deprecated": 1, 
       "name": "Compass Offsets", 
@@ -4509,7 +4509,7 @@
       "status": "PASS"
     }, 
     "Compass Vector Length": {
-      "description": "The strength and direction of the Earth's magnetic field should be relatively constant and lay within certain thresholds.  This test will FAIL or WARN if the compass vector length exceeds the respective threshold.  Possible causes include flying near large metal objects.", 
+      "description": "The strength and direction of the Earth's magnetic field should be relatively constant and lie within certain thresholds.  This test will FAIL or WARN if the compass vector length exceeds the respective threshold.  Possible causes include flying near large metal objects.", 
       "evilness": 0, 
       "evilness-is-deprecated": 1, 
       "name": "Compass Vector Length", 
@@ -4518,7 +4518,7 @@
       "status": "PASS"
     }, 
     "Crash Test": {
-      "description": "Crashes are detected both heuristically and by explicit log messages.  This test will FAIL if the vehicle appears to crash", 
+      "description": "Crashes are detected both heuristically and by explicit log messages.  This test will FAIL if the vehicle appears to crash.", 
       "evilness": 0, 
       "evilness-is-deprecated": 1, 
       "name": "Crash Test", 
@@ -4551,7 +4551,7 @@
       "status": "PASS"
     }, 
     "Ever Armed": {
-      "description": "Vehicles typically need to progress through a sequence of arming steps before they can move.  This test will FAIL if the craft did not arm", 
+      "description": "Vehicles typically need to progress through a sequence of arming steps before they can move.  This test will FAIL if the craft did not arm.", 
       "evilness": 0, 
       "evilness-is-deprecated": 1, 
       "name": "Ever Armed", 
@@ -4575,7 +4575,7 @@
       "status": "PASS"
     }, 
     "Ever Flew": {
-      "description": "Determining whether a vehicle has ever flown in a log is done heuristically based on things like motor speeds.  This test will FAIL if the craft did not ever seem to fly", 
+      "description": "Determining whether a vehicle has ever flown in a log is done heuristically based on things like motor speeds.  This test will FAIL if the craft did not ever seem to fly.", 
       "evilness": 0, 
       "evilness-is-deprecated": 1, 
       "name": "Ever Flew", 
@@ -4604,7 +4604,7 @@
       "status": "PASS"
     }, 
     "GPS Fix": {
-      "description": "The accuracy and precision of GPS messages can vary depending on many factors including weather, ionospheric disturbances and number of satellites visible.  This test will FAIL if the quality of the GPS information is poor", 
+      "description": "The accuracy and precision of GPS messages can vary depending on many factors including weather, ionospheric disturbances and number of satellites visible.  This test will FAIL if the quality of the GPS information is poor.", 
       "evilness": 20, 
       "evilness-is-deprecated": 1, 
       "name": "GPS Fix", 
@@ -4635,7 +4635,7 @@
       "status": "FAIL"
     }, 
     "Good EKF": {
-      "description": "The Extended Kalman filter has many built-in checks to ensure it is funcitoning correctly.  This test will FAIL or WARN if EKF variances exceed the respective thresholds, or FAIL if the EKF status flags indicate errors.", 
+      "description": "The Extended Kalman Filter (EKF) has many built-in checks to ensure that it is functioning correctly.  This test will FAIL or WARN if EKF variances exceed the respective thresholds, or FAIL if the EKF status flags indicate errors.", 
       "evilness": 618, 
       "evilness-is-deprecated": 1, 
       "name": "Good EKF", 
@@ -5948,8 +5948,17 @@
       "severity-score": 618, 
       "status": "FAIL"
     }, 
+    "Gyro Drift": {
+      "description": "Gyroscopes sometimes start to register movement where there is none.  This test will FAIL or WARN if the any gyroscope's average acceleration on any axis begins to drift ", 
+      "evilness": 0, 
+      "evilness-is-deprecated": 1, 
+      "name": "Gyro Drift", 
+      "results": [], 
+      "severity-score": 0, 
+      "status": "PASS"
+    }, 
     "Position Estimate Divergence": {
-      "description": "A UAV often has several estimates of its Position.  This test will FAIL or WARN if the various vehicle's Position estimates diverge", 
+      "description": "A UAV often has several estimates of its Position.  This test will FAIL or WARN if the various vehicle's Position estimates diverge.", 
       "evilness": 50, 
       "evilness-is-deprecated": 1, 
       "name": "Position Estimate Divergence", 
@@ -6028,7 +6037,7 @@
       "status": "FAIL"
     }, 
     "Sensor Health": {
-      "description": "A UAV can self-assess its sensors' health.  This test will FAIL if any sensor is detected as failed", 
+      "description": "A UAV can self-assess its sensors' health.  This test will FAIL if any sensor is detected as failed.", 
       "evilness": 40, 
       "evilness-is-deprecated": 1, 
       "name": "Sensor Health", 
@@ -6106,7 +6115,7 @@
       "status": "FAIL"
     }, 
     "Vehicle Definition": {
-      "description": "The vehicle type is normally automatically detected by dronekit-la from the log itself.  Sometimes the log does not contain sufficient information to make this determination.  This test will FAIL if the craft type is never defined", 
+      "description": "The vehicle type is normally automatically detected by dronekit-la from the log.  Sometimes the log does not contain sufficient information to make this determination.  This test will FAIL if the craft type is never defined", 
       "evilness": 0, 
       "evilness-is-deprecated": 1, 
       "name": "Vehicle Definition", 
@@ -6129,7 +6138,7 @@
       "status": "PASS"
     }, 
     "Velocity Estimate Divergence": {
-      "description": "A UAV typically has several estimates of its velocity.  This test will FAIL if the craft's velocity estimates diverge", 
+      "description": "A UAV typically has several estimates of its velocity.  This test will FAIL if the craft's velocity estimates diverge.", 
       "evilness": 0, 
       "evilness-is-deprecated": 1, 
       "name": "Velocity Estimate Divergence", 
