@@ -8,7 +8,6 @@ Vagrant.configure(2) do |config|
      sudo apt-get update -y
      sudo apt-get install -y git
      sudo apt-get install -y build-essential
-     sudo apt-get install -y libjsoncpp-dev libjsoncpp0
      sudo apt-get install -y valgrind
    SHELL
 
