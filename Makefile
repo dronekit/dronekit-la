@@ -5,7 +5,7 @@ GIT_VERSION := $(shell git describe --abbrev=4 --dirty --always --tags)
 VPATH = ./util ./ini ./ini/cpp
 
 INCS = -I./util -I./ini -I./ini/cpp
-INCS += -Ijson
+INCS += -Ijsoncpp
 INCS += -I.  # for <DataFlash/DataFlash.h> in MsgHandler
 
 STD=-std=c++11
@@ -15,7 +15,7 @@ WARNFLAGS= -Wall -Werror -Wextra -Wunused -Wlogical-op -Wredundant-decls -D_FORT
 CFLAGS += $(INCS) -DGIT_VERSION=\"$(GIT_VERSION)\" $(WARNFLAGS) $(CSTD)
 CXXFLAGS += $(INCS) $(STD) -g -DGIT_VERSION=\"$(GIT_VERSION)\" $(STATIC) $(WARNFLAGS)
 
-SRCS_CPP += json/jsoncpp.cpp
+SRCS_CPP += jsoncpp/jsoncpp.cpp
 
 SRCS_CPP += INIReader.cpp
 SRCS_CPP += analyzer_util.cpp
@@ -85,7 +85,7 @@ $(IMAGETAGGER): $(OBJS) imagetagger.cpp mh_imagetagger.cpp
 	$(LINK.cpp) -o $(IMAGETAGGER) imagetagger.cpp mh_imagetagger.cpp $(OBJS) $(LIBS) $(DLIBS)
 
 clean:
-	$(RM) *.o *~ $(DATAFLASH_LOGGER) $(LOG_ANALYZER) $(IMAGETAGGER) analyzer/*.o json/jsoncpp.o
+	$(RM) *.o *~ $(DATAFLASH_LOGGER) $(LOG_ANALYZER) $(IMAGETAGGER) analyzer/*.o jsoncpp/jsoncpp.o
 
 test: clean all
 	./test/test.sh
