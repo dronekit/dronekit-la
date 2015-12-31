@@ -34,7 +34,7 @@ public:
 
     const std::string name() const override { return "Gyro Drift"; }
     const std::string description() const override {
-        return "Gyroscopes sometimes start to register movement where there is none.  This test will FAIL or WARN if the any gyroscope's average acceleration on any axis begins to drift ";
+        return "Gyroscopes sometimes start to register movement where there is none.  This test will FAIL or WARN if the any gyroscope's average acceleration on any axis begins to drift.";
     }
 
     bool configure(INIReader *config) override;
