@@ -1469,6 +1469,7 @@ bool OurReader::readString() {
 bool OurReader::readObject(Token& tokenStart) {
   Token tokenName;
   std::string name;
+  tokenStart = tokenStart;
   Value init(objectValue);
   currentValue().swapPayload(init);
   while (readToken(tokenName)) {
@@ -1522,6 +1523,7 @@ bool OurReader::readObject(Token& tokenStart) {
 }
 
 bool OurReader::readArray(Token& tokenStart) {
+  tokenStart = tokenStart;
   Value init(arrayValue);
   currentValue().swapPayload(init);
   skipSpaces();
@@ -2599,6 +2601,15 @@ bool Value::CZString::operator<(const CZString& other) const {
   return index_ < other.index_;
 }
 
+bool isEqual(const double x, const double y)
+{
+  return (fabs(x-y) < 0.0000000001);
+}
+bool isZero(const double x)
+{
+  return isEqual(x, 0.0f);
+}
+
 bool Value::CZString::operator==(const CZString& other) const {
   if (cstr_)
     return strcmp(cstr_, other.cstr_) == 0;
@@ -2897,7 +2908,7 @@ bool Value::operator==(const Value& other) const {
   case uintValue:
     return value_.uint_ == other.value_.uint_;
   case realValue:
-    return value_.real_ == other.value_.real_;
+    return isEqual(value_.real_, other.value_.real_);
   case booleanValue:
     return value_.bool_ == other.value_.bool_;
   case stringValue:
@@ -3114,7 +3125,7 @@ bool Value::asBool() const {
   case uintValue:
     return value_.uint_ ? true : false;
   case realValue:
-    return value_.real_ ? true : false;
+    return isZero(value_.real_) ? true : false;
   default:
     break;
   }
@@ -3124,7 +3135,7 @@ bool Value::asBool() const {
 bool Value::isConvertibleTo(ValueType other) const {
   switch (other) {
   case nullValue:
-    return (isNumeric() && asDouble() == 0.0) ||
+    return (isNumeric() && isZero(asDouble())) ||
            (type_ == booleanValue && value_.bool_ == false) ||
            (type_ == stringValue && asString() == "") ||
            (type_ == arrayValue && value_.map_->size() == 0) ||
@@ -3525,7 +3536,7 @@ Value::Members Value::getMemberNames() const {
 
 static bool IsIntegral(double d) {
   double integral_part;
-  return modf(d, &integral_part) == 0.0;
+  return isZero(modf(d, &integral_part));
 }
 
 bool Value::isNull() const { return type_ == nullValue; }
@@ -4036,7 +4047,7 @@ std::string valueToString(double value) {
     len = snprintf(buffer, sizeof(buffer), "%.17g", value);
   } else {
     // IEEE standard states that NaN values will not compare to themselves
-    if (value != value) {
+    if (isnan(value)) {
       len = snprintf(buffer, sizeof(buffer), "null");
     } else if (value < 0) {
       len = snprintf(buffer, sizeof(buffer), "-1e+9999");
