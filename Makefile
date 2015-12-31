@@ -1,19 +1,11 @@
-# To cross compile:
-#
-# Set up as usual for bitbake:
-# $ . setup-environment build
-#
-# In the build directory:
-# $ bitbake meta-ide-support
-# $ . tmp/environment-setup-cortexa9hf-vfp-neon-poky-linux-gnueabi
-#
-# Now a make in this directory should work.
+#!/usr/bin/make
 
 GIT_VERSION := $(shell git describe --abbrev=4 --dirty --always --tags)
 
 VPATH = ./util ./ini ./ini/cpp
 
 INCS = -I./util -I./ini -I./ini/cpp
+INCS += -Ijson
 INCS += -I.  # for <DataFlash/DataFlash.h> in MsgHandler
 
 STD=-std=c++11
@@ -23,7 +15,7 @@ WARNFLAGS= -Wall -Werror -Wextra -Wunused -Wlogical-op -Wredundant-decls -D_FORT
 CFLAGS += $(INCS) -DGIT_VERSION=\"$(GIT_VERSION)\" $(WARNFLAGS) $(CSTD)
 CXXFLAGS += $(INCS) $(STD) -g -DGIT_VERSION=\"$(GIT_VERSION)\" $(STATIC) $(WARNFLAGS)
 
-DLIBS += -ljsoncpp
+SRCS_CPP += json/jsoncpp.cpp
 
 SRCS_CPP += INIReader.cpp
 SRCS_CPP += analyzer_util.cpp
@@ -93,7 +85,7 @@ $(IMAGETAGGER): $(OBJS) imagetagger.cpp mh_imagetagger.cpp
 	$(LINK.cpp) -o $(IMAGETAGGER) imagetagger.cpp mh_imagetagger.cpp $(OBJS) $(LIBS) $(DLIBS)
 
 clean:
-	$(RM) *.o *~ $(DATAFLASH_LOGGER) $(LOG_ANALYZER) $(IMAGETAGGER) analyzer/*.o
+	$(RM) *.o *~ $(DATAFLASH_LOGGER) $(LOG_ANALYZER) $(IMAGETAGGER) analyzer/*.o json/jsoncpp.o
 
 test: clean all
 	./test/test.sh
