@@ -11,6 +11,7 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <fcntl.h>
+#include <stdio.h>
 #include <unistd.h>
 
 #include <regex>
@@ -74,7 +75,8 @@ void LogAnalyzer::parse_path(const char *path)
 
     int fd;
     if (streq(path, "-")) {
-        fd = fileno(stdin);
+        // fd = fileno(stdin);  // doesn't work on Cygwin
+        fd = 0;
     } else {
         fd = xopen(path, O_RDONLY);
     }

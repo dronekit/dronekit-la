@@ -4,6 +4,7 @@
 #include <stdio.h> // for snprintf
 #include <fcntl.h>
 #include <errno.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 #include "la-log.h"

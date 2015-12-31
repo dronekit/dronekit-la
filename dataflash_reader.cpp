@@ -2,6 +2,7 @@
 
 #include "LA_MsgHandler.h"
 
+#include <ctype.h>
 #include <string.h>
 
 void DataFlash_Reader::handle_format_message_received(const char *name, const struct log_Format &format, const char *msg)
@@ -45,10 +46,10 @@ uint32_t DataFlash_Reader::feed(const uint8_t *buf, const uint32_t len)
             struct log_Format &f = formats[defining_type];
             memcpy(&f, &buf[total_bytes_used], sizeof(struct log_Format));
             for (uint8_t i=0;i<4;i++) {
-                if (!isascii(f.name[i]) &&
+                if (!isprint(f.name[i]) &&
                     f.name[i] != '\0') {
-                    // name is assumed to be ascii; it looked like a
-                    // format message, but wasn't.
+                    // name is assumed to be printable ascii; it
+                    // looked like a format message, but wasn't.
                     total_bytes_used++;
                     count_bytes_skipped++;
                     goto SKIP;

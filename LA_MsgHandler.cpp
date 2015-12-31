@@ -1,5 +1,7 @@
 #include "LA_MsgHandler.h"
 
+#include <inttypes.h>
+
 bool LA_MsgHandler::find_T(const uint8_t *msg, uint64_t &T)
 {
     uint32_t time_ms;
@@ -47,7 +49,7 @@ bool LA_MsgHandler::process_set_T(const uint8_t *msg)
 
     // char name[1024];
     // string_for_labels(name, 1024);
-    // ::fprintf(stderr, "type=%s T=%lu\n", name, time_us);
+    // ::fprintf(stderr, "type=%s T=%" PRIu64 "\n", name, time_us);
 
     if (_vehicle->T()) {
         // if log-when-disarmed is not set then you may end up with
@@ -56,11 +58,11 @@ bool LA_MsgHandler::process_set_T(const uint8_t *msg)
         // uint64_t timestamp_max_delta = 100000000;
         uint64_t timestamp_max_delta = 1e010; // 1e10 ~= 167 minutes
         if (time_us < _vehicle->T()) {
-            ::fprintf(stderr, "Time going backwards? (%lu < %lu); skipping packet\n", time_us, _vehicle->T());
+            ::fprintf(stderr, "Time going backwards? (%" PRIu64 " < %" PRIu64 "); skipping packet\n", time_us, _vehicle->T());
             return false;
         }
         if (time_us - _vehicle->T() > timestamp_max_delta) { // 100 seconds
-            ::fprintf(stderr, "Message timestamp bad (%lu) (%lu - %lu > %lu); skipping packet\n", time_us, time_us, _vehicle->T(), timestamp_max_delta);
+            ::fprintf(stderr, "Message timestamp bad (%" PRIu64 ") (%" PRIu64 " - %" PRIu64 " > %" PRIu64 "); skipping packet\n", time_us, time_us, _vehicle->T(), timestamp_max_delta);
             return false;
         }
     }

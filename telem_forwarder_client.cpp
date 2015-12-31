@@ -1,10 +1,8 @@
 #include "telem_forwarder_client.h"
 
+#include <errno.h>
+#include <stdlib.h>
 #include <string.h>
-// #include <sys/socket.h>
-// #include <netinet/in.h>
-// #include <arpa/inet.h>
-
 
 #include "la-log.h"
 
