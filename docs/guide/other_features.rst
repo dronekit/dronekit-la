@@ -52,6 +52,7 @@ You can list them using the ``-l`` flag. At time of writing (DroneKit-LA 0.3) th
     Ever Flew
     Good EKF
     GPS Fix
+    Gyro Drift
     Attitude Control
     AutoPilot Health
     Battery
