@@ -8,9 +8,9 @@
   "maximum-altitude-absolute-units": "metres", 
   "maximum-altitude-relative": 14.1300048828125, 
   "maximum-altitude-relative-units": "metres", 
-  "maximum-distance-from-origin": 55.9482159093255, 
+  "maximum-distance-from-origin": 55.948215909325505, 
   "maximum-distance-from-origin-units": "metres", 
-  "maximum-velocity": 10.01072880274505, 
+  "maximum-velocity": 10.010728802745051, 
   "maximum-velocity-units": "metres/second", 
   "packet-count": 157284, 
   "packet_count": 157284, 
@@ -44,7 +44,7 @@
           "timestamp_stop": 1437196260039492
         }, 
         {
-          "duration": 24.59832382202148, 
+          "duration": 24.598323822021484, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-585.872703 metres", 
@@ -66,7 +66,7 @@
           "timestamp_stop": 1437196284637816
         }, 
         {
-          "duration": 1.413576006889343, 
+          "duration": 1.4135760068893433, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-4.679993 metres", 
@@ -129,7 +129,7 @@
           "timestamp_stop": 1437196323245120
         }, 
         {
-          "duration": 40.17575836181641, 
+          "duration": 40.175758361816406, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-585.883937 metres", 
@@ -151,7 +151,7 @@
           "timestamp_stop": 1437196447440036
         }, 
         {
-          "duration": 1.284603953361511, 
+          "duration": 1.2846039533615112, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-4.559998 metres", 
@@ -193,7 +193,7 @@
           "timestamp_stop": 1437196469172708
         }, 
         {
-          "duration": 41.14144134521484, 
+          "duration": 41.141441345214844, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-585.954061 metres", 
@@ -215,7 +215,7 @@
           "timestamp_stop": 1437196525077368
         }, 
         {
-          "duration": 41.62467193603516, 
+          "duration": 41.624671936035156, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-6.049988 metres", 
@@ -236,7 +236,7 @@
           "timestamp_stop": 1437196543443336
         }, 
         {
-          "duration": 2.427063941955566, 
+          "duration": 2.4270639419555664, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-5.010010 metres", 
@@ -257,7 +257,7 @@
           "timestamp_stop": 1437196547665144
         }, 
         {
-          "duration": 1.616631984710693, 
+          "duration": 1.6166319847106934, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-4.289978 metres", 
@@ -278,7 +278,7 @@
           "timestamp_stop": 1437196568191508
         }, 
         {
-          "duration": 2.098920106887817, 
+          "duration": 2.0989201068878174, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-4.750000 metres", 
@@ -320,7 +320,7 @@
           "timestamp_stop": 1437196572092156
         }, 
         {
-          "duration": 1.312355995178223, 
+          "duration": 1.3123559951782227, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-4.170044 metres", 
@@ -384,7 +384,7 @@
           "timestamp_stop": 1437196910309228
         }, 
         {
-          "duration": 13.45865631103516, 
+          "duration": 13.458656311035156, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-4.550049 metres", 
@@ -490,7 +490,7 @@
           "timestamp_stop": 1437197011617624
         }, 
         {
-          "duration": 2.138315916061401, 
+          "duration": 2.1383159160614014, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-8.809998 metres", 
@@ -532,7 +532,7 @@
           "timestamp_stop": 1437197021953880
         }, 
         {
-          "duration": 3.790647983551025, 
+          "duration": 3.7906479835510254, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=9.090210 metres", 
@@ -554,7 +554,7 @@
           "timestamp_stop": 1437197021953880
         }, 
         {
-          "duration": 17.31003570556641, 
+          "duration": 17.310035705566406, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-7.340027 metres", 
@@ -575,7 +575,7 @@
           "timestamp_stop": 1437197039263916
         }, 
         {
-          "duration": 19.24064445495605, 
+          "duration": 19.240644454956055, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-586.642581 metres", 
@@ -597,7 +597,7 @@
           "timestamp_stop": 1437197042126012
         }, 
         {
-          "duration": 5.455180168151855, 
+          "duration": 5.4551801681518555, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-585.989213 metres", 
@@ -619,7 +619,7 @@
           "timestamp_stop": 1437197070321628
         }, 
         {
-          "duration": 2.279887914657593, 
+          "duration": 2.2798879146575928, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=4.429993 metres", 
@@ -661,7 +661,7 @@
           "timestamp_stop": 1437197254284456
         }, 
         {
-          "duration": 11.20686817169189, 
+          "duration": 11.206868171691895, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-8.400024 metres", 
@@ -704,7 +704,7 @@
           "timestamp_stop": 1437197403634172
         }, 
         {
-          "duration": 255.7069702148438, 
+          "duration": 255.70697021484375, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=596.450000 metres", 
@@ -725,7 +725,7 @@
           "timestamp_stop": 1437197659327184
         }, 
         {
-          "duration": 43.16186904907227, 
+          "duration": 43.161869049072266, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-593.936234 metres", 
@@ -747,7 +747,7 @@
           "timestamp_stop": 1437197702489052
         }, 
         {
-          "duration": 11.03082847595215, 
+          "duration": 11.030828475952148, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-593.982375 metres", 
@@ -791,7 +791,7 @@
           "timestamp_stop": 1437198021616088
         }, 
         {
-          "duration": 15.34258365631104, 
+          "duration": 15.342583656311035, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-594.043468 metres", 
@@ -834,7 +834,7 @@
           "timestamp_stop": 1437198304037768
         }, 
         {
-          "duration": 178.3219299316406, 
+          "duration": 178.32192993164062, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-594.262982 metres", 
@@ -856,7 +856,7 @@
           "timestamp_stop": 1437198304080752
         }, 
         {
-          "duration": 1.8507399559021, 
+          "duration": 1.8507399559020996, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=592.959961 metres", 
@@ -1050,7 +1050,7 @@
           "timestamp_stop": 1437196300447296
         }, 
         {
-          "duration": 0.3451760113239288, 
+          "duration": 0.34517601132392883, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -1078,7 +1078,7 @@
           "timestamp_stop": 1437196303093436
         }, 
         {
-          "duration": 0.3709959983825684, 
+          "duration": 0.37099599838256836, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -1134,7 +1134,7 @@
           "timestamp_stop": 1437196314380160
         }, 
         {
-          "duration": 1.038344025611877, 
+          "duration": 1.0383440256118774, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -1162,7 +1162,7 @@
           "timestamp_stop": 1437196316632120
         }, 
         {
-          "duration": 1.239295959472656, 
+          "duration": 1.2392959594726562, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=10.000000", 
@@ -1190,7 +1190,7 @@
           "timestamp_stop": 1437196318745136
         }, 
         {
-          "duration": 0.2772719860076904, 
+          "duration": 0.27727198600769043, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=10.000000", 
@@ -1218,7 +1218,7 @@
           "timestamp_stop": 1437196334986372
         }, 
         {
-          "duration": 0.3982000052928925, 
+          "duration": 0.39820000529289246, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -1302,7 +1302,7 @@
           "timestamp_stop": 1437196359421964
         }, 
         {
-          "duration": 0.4551880061626434, 
+          "duration": 0.45518800616264343, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=10.000000", 
@@ -1330,7 +1330,7 @@
           "timestamp_stop": 1437196359936316
         }, 
         {
-          "duration": 0.4133439958095551, 
+          "duration": 0.41334399580955505, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -1526,7 +1526,7 @@
           "timestamp_stop": 1437196401762796
         }, 
         {
-          "duration": 1.638615965843201, 
+          "duration": 1.6386159658432007, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=10.000000", 
@@ -1612,7 +1612,7 @@
           "timestamp_stop": 1437196453939012
         }, 
         {
-          "duration": 0.3752839863300323, 
+          "duration": 0.37528398633003235, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -1696,7 +1696,7 @@
           "timestamp_stop": 1437196460610884
         }, 
         {
-          "duration": 1.663344025611877, 
+          "duration": 1.6633440256118774, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=10.000000", 
@@ -1809,7 +1809,7 @@
           "timestamp_stop": 1437196527940704
         }, 
         {
-          "duration": 0.4433520138263702, 
+          "duration": 0.44335201382637024, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=10.000000", 
@@ -1865,7 +1865,7 @@
           "timestamp_stop": 1437196532646728
         }, 
         {
-          "duration": 0.4131039977073669, 
+          "duration": 0.41310399770736694, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=10.000000", 
@@ -1949,7 +1949,7 @@
           "timestamp_stop": 1437196539033540
         }, 
         {
-          "duration": 0.2751359939575195, 
+          "duration": 0.27513599395751953, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -2005,7 +2005,7 @@
           "timestamp_stop": 1437196541435328
         }, 
         {
-          "duration": 2.045239925384521, 
+          "duration": 2.0452399253845215, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -2117,7 +2117,7 @@
           "timestamp_stop": 1437196552205040
         }, 
         {
-          "duration": 2.297996044158936, 
+          "duration": 2.2979960441589355, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -2315,7 +2315,7 @@
           "timestamp_stop": 1437197076578408
         }, 
         {
-          "duration": 1.037420034408569, 
+          "duration": 1.0374200344085693, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -2399,7 +2399,7 @@
           "timestamp_stop": 1437197085995232
         }, 
         {
-          "duration": 3.256328105926514, 
+          "duration": 3.2563281059265137, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=10.000000", 
@@ -2484,7 +2484,7 @@
           "timestamp_stop": 1437197092718184
         }, 
         {
-          "duration": 0.2905119955539703, 
+          "duration": 0.29051199555397034, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -2512,7 +2512,7 @@
           "timestamp_stop": 1437197097826228
         }, 
         {
-          "duration": 0.4240919947624207, 
+          "duration": 0.42409199476242065, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=10.000000", 
@@ -2568,7 +2568,7 @@
           "timestamp_stop": 1437197796048512
         }, 
         {
-          "duration": 0.3598519861698151, 
+          "duration": 0.35985198616981506, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -2652,7 +2652,7 @@
           "timestamp_stop": 1437197818006388
         }, 
         {
-          "duration": 0.3760040104389191, 
+          "duration": 0.37600401043891907, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -2736,7 +2736,7 @@
           "timestamp_stop": 1437197839261376
         }, 
         {
-          "duration": 0.2689999938011169, 
+          "duration": 0.26899999380111694, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -2764,7 +2764,7 @@
           "timestamp_stop": 1437197840294680
         }, 
         {
-          "duration": 1.78549599647522, 
+          "duration": 1.7854959964752197, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -2907,7 +2907,7 @@
           "timestamp_stop": 1437197871562772
         }, 
         {
-          "duration": 1.904340028762817, 
+          "duration": 1.9043400287628174, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=10.000000", 
@@ -3075,7 +3075,7 @@
           "timestamp_stop": 1437197882089296
         }, 
         {
-          "duration": 1.556707978248596, 
+          "duration": 1.5567079782485962, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -3103,7 +3103,7 @@
           "timestamp_stop": 1437197884624308
         }, 
         {
-          "duration": 1.298763990402222, 
+          "duration": 1.2987639904022217, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -3159,7 +3159,7 @@
           "timestamp_stop": 1437197887310432
         }, 
         {
-          "duration": 0.4135600030422211, 
+          "duration": 0.41356000304222107, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -3187,7 +3187,7 @@
           "timestamp_stop": 1437197908277608
         }, 
         {
-          "duration": 0.2560079991817474, 
+          "duration": 0.25600799918174744, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=10.000000", 
@@ -3215,7 +3215,7 @@
           "timestamp_stop": 1437197911467512
         }, 
         {
-          "duration": 0.3488320112228394, 
+          "duration": 0.34883201122283936, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -3243,7 +3243,7 @@
           "timestamp_stop": 1437197911881868
         }, 
         {
-          "duration": 0.4722639918327332, 
+          "duration": 0.47226399183273315, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=10.000000", 
@@ -3271,7 +3271,7 @@
           "timestamp_stop": 1437197914668948
         }, 
         {
-          "duration": 2.770351886749268, 
+          "duration": 2.7703518867492676, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -3299,7 +3299,7 @@
           "timestamp_stop": 1437197919218808
         }, 
         {
-          "duration": 0.3452839851379395, 
+          "duration": 0.34528398513793945, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -3607,7 +3607,7 @@
           "timestamp_stop": 1437197946244672
         }, 
         {
-          "duration": 0.2602080106735229, 
+          "duration": 0.26020801067352295, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -3635,7 +3635,7 @@
           "timestamp_stop": 1437197949021576
         }, 
         {
-          "duration": 0.4128080010414124, 
+          "duration": 0.41280800104141235, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=10.000000", 
@@ -3663,7 +3663,7 @@
           "timestamp_stop": 1437197950644816
         }, 
         {
-          "duration": 1.037732005119324, 
+          "duration": 1.0377320051193237, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=10.000000", 
@@ -3719,7 +3719,7 @@
           "timestamp_stop": 1437197954569132
         }, 
         {
-          "duration": 0.357151985168457, 
+          "duration": 0.35715198516845703, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=10.000000", 
@@ -3775,7 +3775,7 @@
           "timestamp_stop": 1437197957532300
         }, 
         {
-          "duration": 1.885560035705566, 
+          "duration": 1.8855600357055664, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=10.000000", 
@@ -3803,7 +3803,7 @@
           "timestamp_stop": 1437197960223040
         }, 
         {
-          "duration": 0.2903800010681152, 
+          "duration": 0.29038000106811523, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -3831,7 +3831,7 @@
           "timestamp_stop": 1437198047829164
         }, 
         {
-          "duration": 0.414220005273819, 
+          "duration": 0.41422000527381897, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -4224,7 +4224,7 @@
           "timestamp_stop": 1437198110706836
         }, 
         {
-          "duration": 240.9736480712891, 
+          "duration": 240.97364807128906, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -4263,7 +4263,7 @@
       "name": "Attitude Estimate Divergence", 
       "results": [
         {
-          "duration": 1.090304017066956, 
+          "duration": 1.0903040170669556, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=6.102463 degrees", 
@@ -4313,7 +4313,7 @@
           "timestamp_stop": 1437197906996780
         }, 
         {
-          "duration": 2.25379204750061, 
+          "duration": 2.2537920475006104, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=11.253748 degrees", 
@@ -4388,7 +4388,7 @@
           "timestamp_stop": 1437197946967508
         }, 
         {
-          "duration": 1.800851941108704, 
+          "duration": 1.8008519411087036, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=179.760494 degrees", 
@@ -4610,7 +4610,7 @@
       "name": "GPS Fix", 
       "results": [
         {
-          "duration": 1.117776036262512, 
+          "duration": 1.1177760362625122, 
           "duration-units": "seconds", 
           "evidence": [
             "satellites-visible: 5", 
@@ -4691,7 +4691,7 @@
           "timestamp_stop": 1437196260243564
         }, 
         {
-          "duration": 24.01811218261719, 
+          "duration": 24.018112182617188, 
           "duration-units": "seconds", 
           "evidence": [
             "flags=933", 
@@ -4784,7 +4784,7 @@
           "timestamp_stop": 1437196361727048
         }, 
         {
-          "duration": 1.032603979110718, 
+          "duration": 1.0326039791107178, 
           "duration-units": "seconds", 
           "evidence": [
             "max-variance=0.551661", 
@@ -4802,7 +4802,7 @@
           "timestamp_stop": 1437196365632820
         }, 
         {
-          "duration": 122.8085250854492, 
+          "duration": 122.80852508544922, 
           "duration-units": "seconds", 
           "evidence": [
             "flags=831", 
@@ -4821,7 +4821,7 @@
           "timestamp_stop": 1437196407070200
         }, 
         {
-          "duration": 40.15673446655273, 
+          "duration": 40.156734466552734, 
           "duration-units": "seconds", 
           "evidence": [
             "flags=933", 
@@ -4972,7 +4972,7 @@
           "timestamp_stop": 1437196546794808
         }, 
         {
-          "duration": 1.271512031555176, 
+          "duration": 1.2715120315551758, 
           "duration-units": "seconds", 
           "evidence": [
             "max-variance=0.627788", 
@@ -5030,7 +5030,7 @@
           "timestamp_stop": 1437196909895184
         }, 
         {
-          "duration": 21.58512878417969, 
+          "duration": 21.585128784179688, 
           "duration-units": "seconds", 
           "evidence": [
             "flags=831", 
@@ -5088,7 +5088,7 @@
           "timestamp_stop": 1437197021807804
         }, 
         {
-          "duration": 19.71920013427734, 
+          "duration": 19.719200134277344, 
           "duration-units": "seconds", 
           "evidence": [
             "flags=831", 
@@ -5107,7 +5107,7 @@
           "timestamp_stop": 1437197021807804
         }, 
         {
-          "duration": 3.480508089065552, 
+          "duration": 3.4805080890655518, 
           "duration-units": "seconds", 
           "evidence": [
             "max-variance=0.840967", 
@@ -5152,7 +5152,7 @@
           "timestamp_stop": 1437197022497076
         }, 
         {
-          "duration": 18.29055595397949, 
+          "duration": 18.290555953979492, 
           "duration-units": "seconds", 
           "evidence": [
             "flags=933", 
@@ -5191,7 +5191,7 @@
           "timestamp_stop": 1437197052641452
         }, 
         {
-          "duration": 18.09847259521484, 
+          "duration": 18.098472595214844, 
           "duration-units": "seconds", 
           "evidence": [
             "flags=831", 
@@ -5231,7 +5231,7 @@
           "timestamp_stop": 1437197069804476
         }, 
         {
-          "duration": 3.148596048355103, 
+          "duration": 3.1485960483551025, 
           "duration-units": "seconds", 
           "evidence": [
             "max-variance=0.683804", 
@@ -5249,7 +5249,7 @@
           "timestamp_stop": 1437197073412084
         }, 
         {
-          "duration": 0.4809679985046387, 
+          "duration": 0.48096799850463867, 
           "duration-units": "seconds", 
           "evidence": [
             "max-variance=0.580489", 
@@ -5267,7 +5267,7 @@
           "timestamp_stop": 1437197075941080
         }, 
         {
-          "duration": 0.4153000116348267, 
+          "duration": 0.41530001163482666, 
           "duration-units": "seconds", 
           "evidence": [
             "max-variance=0.506194", 
@@ -5340,7 +5340,7 @@
           "timestamp_stop": 1437197144050212
         }, 
         {
-          "duration": 1.098340034484863, 
+          "duration": 1.0983400344848633, 
           "duration-units": "seconds", 
           "evidence": [
             "max-variance=0.511064", 
@@ -5412,7 +5412,7 @@
           "timestamp_stop": 1437197151678152
         }, 
         {
-          "duration": 0.3502320051193237, 
+          "duration": 0.35023200511932373, 
           "duration-units": "seconds", 
           "evidence": [
             "max-variance=0.501068", 
@@ -5466,7 +5466,7 @@
           "timestamp_stop": 1437197345851600
         }, 
         {
-          "duration": 1.529428005218506, 
+          "duration": 1.5294280052185059, 
           "duration-units": "seconds", 
           "evidence": [
             "max-variance=0.632097", 
@@ -5484,7 +5484,7 @@
           "timestamp_stop": 1437197353525144
         }, 
         {
-          "duration": 247.1783752441406, 
+          "duration": 247.17837524414062, 
           "duration-units": "seconds", 
           "evidence": [
             "flags=933", 
@@ -5505,7 +5505,7 @@
           "timestamp_stop": 1437197354739716
         }, 
         {
-          "duration": 0.2241600006818771, 
+          "duration": 0.22416000068187714, 
           "duration-units": "seconds", 
           "evidence": [
             "flags=0", 
@@ -5553,7 +5553,7 @@
           "timestamp_stop": 1437197403872160
         }, 
         {
-          "duration": 255.7326965332031, 
+          "duration": 255.73269653320312, 
           "duration-units": "seconds", 
           "evidence": [
             "flags=165", 
@@ -5616,7 +5616,7 @@
           "timestamp_stop": 1437197850269444
         }, 
         {
-          "duration": 10.4959602355957, 
+          "duration": 10.495960235595703, 
           "duration-units": "seconds", 
           "evidence": [
             "flags=933", 
@@ -5637,7 +5637,7 @@
           "timestamp_stop": 1437197860765404
         }, 
         {
-          "duration": 118.0558547973633, 
+          "duration": 118.05585479736328, 
           "duration-units": "seconds", 
           "evidence": [
             "flags=831", 
@@ -5696,7 +5696,7 @@
           "timestamp_stop": 1437198076860368
         }, 
         {
-          "duration": 16.07488822937012, 
+          "duration": 16.074888229370117, 
           "duration-units": "seconds", 
           "evidence": [
             "flags=933", 
@@ -5772,7 +5772,7 @@
           "timestamp_stop": 1437198171163252
         }, 
         {
-          "duration": 1.817075967788696, 
+          "duration": 1.8170759677886963, 
           "duration-units": "seconds", 
           "evidence": [
             "max-variance=0.729652", 
@@ -5790,7 +5790,7 @@
           "timestamp_stop": 1437198197499888
         }, 
         {
-          "duration": 112.8619232177734, 
+          "duration": 112.86192321777344, 
           "duration-units": "seconds", 
           "evidence": [
             "flags=933", 
@@ -6010,7 +6010,7 @@
           "timestamp_stop": 1437196535127832
         }, 
         {
-          "duration": 1.569656014442444, 
+          "duration": 1.5696560144424438, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=4.972437 metres", 
@@ -6060,7 +6060,7 @@
           "timestamp_stop": 1437197354785840
         }, 
         {
-          "duration": 2.335135936737061, 
+          "duration": 2.3351359367370605, 
           "duration-units": "seconds", 
           "evilness": 10, 
           "evilness-is-deprecated": 1, 
@@ -6094,7 +6094,7 @@
           "timestamp_stop": 1437198304037768
         }, 
         {
-          "duration": 59.42296981811523, 
+          "duration": 59.422969818115234, 
           "duration-units": "seconds", 
           "evilness": 10, 
           "evilness-is-deprecated": 1, 
@@ -6148,7 +6148,7 @@
     }
   }, 
   "timestamp": "123456789", 
-  "total-distance-travelled": 1722.674176642179, 
+  "total-distance-travelled": 1722.6741766421787, 
   "total-distance-travelled-units": "metres", 
   "total-flight-time": 614.4847412109375, 
   "total-flight-time-units": "seconds"
