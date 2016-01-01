@@ -4,7 +4,13 @@
 #include <stdarg.h>
 #include <stdint.h>
 #include <stdio.h>
+#ifndef _WIN32
 #include <syslog.h>
+#else
+#define LOG_INFO 1
+#define LOG_ERR 2
+#define LOG_CRIT 3
+#endif
 #include <time.h>
 
 void la_log_syslog_open();

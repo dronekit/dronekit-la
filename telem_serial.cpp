@@ -1,5 +1,8 @@
 #include "telem_serial.h"
 
+#ifdef _WIN32
+#else
+
 #include "la-log.h"
 
 #include <errno.h>
@@ -204,3 +207,5 @@ bool Telem_Serial::send_message(const mavlink_message_t &msg)
     }
     return true;
 }
+
+#endif // _WIN32

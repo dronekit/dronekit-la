@@ -1,6 +1,9 @@
 #include "LA_MsgHandler.h"
 
-#include <inttypes.h>
+#define __STDC_FORMAT_MACROS 1 // for e.g. %PRIu64
+#include "inttypes.h"
+
+#include "la-log.h"
 
 bool LA_MsgHandler::find_T(const uint8_t *msg, uint64_t &T)
 {
@@ -58,11 +61,11 @@ bool LA_MsgHandler::process_set_T(const uint8_t *msg)
         // uint64_t timestamp_max_delta = 100000000;
         uint64_t timestamp_max_delta = 1e010; // 1e10 ~= 167 minutes
         if (time_us < _vehicle->T()) {
-            ::fprintf(stderr, "Time going backwards? (%" PRIu64 " < %" PRIu64 "); skipping packet\n", time_us, _vehicle->T());
+	    la_log(LOG_ERR, "Time going backwards? (%" PRIu64 " < %" PRIu64 "); skipping packet\n", time_us, _vehicle->T());
             return false;
         }
         if (time_us - _vehicle->T() > timestamp_max_delta) { // 100 seconds
-            ::fprintf(stderr, "Message timestamp bad (%" PRIu64 ") (%" PRIu64 " - %" PRIu64 " > %" PRIu64 "); skipping packet\n", time_us, time_us, _vehicle->T(), timestamp_max_delta);
+	    la_log(LOG_ERR, "Message timestamp bad (%" PRIu64 ") (%" PRIu64 " - %" PRIu64 " > %" PRIu64 "); skipping packet\n", time_us, time_us, _vehicle->T(), timestamp_max_delta);
             return false;
         }
     }

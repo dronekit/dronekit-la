@@ -2,6 +2,7 @@
 
 using namespace AnalyzerVehicle;
 
+#define __STDC_FORMAT_MACROS 1 // for e.g. %PRIu64
 #include "inttypes.h"
 
 #include "analyzer_util.h"

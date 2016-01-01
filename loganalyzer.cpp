@@ -5,7 +5,6 @@
 #include "heart.h"
 
 #include <iostream> // for cout
-#include <syslog.h>
 #include "la-log.h"
 
 #include <sys/stat.h>

@@ -6,7 +6,12 @@
 #include "mavlink/c_library/ardupilotmega/mavlink.h"
 #pragma GCC diagnostic pop
 
+#ifdef _WIN32
+#include "Winsock2.h"
+#else
 #include <sys/select.h>
+#endif
+
 #include "INIReader.h"
 
 class Telem_Client {

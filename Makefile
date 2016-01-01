@@ -8,6 +8,14 @@ INCS = -I./util -I./ini -I./ini/cpp
 INCS += -Ijsoncpp
 INCS += -I.  # for <DataFlash/DataFlash.h> in MsgHandler
 
+ifeq ($(OS),Windows_NT)
+CXX=i686-w64-mingw32-g++.exe
+CC=i686-w64-mingw32-gcc.exe
+LIBS += -lws2_32
+LIBS +=  -lpthread # for clock_gettime/clock_settime on Windows
+STATIC=-static
+endif
+
 STD=-std=c++11
 CSTD=-std=c11
 STATIC=-static

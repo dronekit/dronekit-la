@@ -2,7 +2,6 @@
 #define MAVLINK_READER_H
 
 #include <stdint.h>
-#include <netinet/in.h>
 
 #include "INIReader.h"
 #include "util.h"
