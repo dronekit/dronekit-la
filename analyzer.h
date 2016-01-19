@@ -11,7 +11,7 @@
 #define ANALYZER_H
 
 #include <jsoncpp/json/json.h> // libjsoncpp0 and libjsoncpp-dev on debian
-#include <jsoncpp/json/writer.h> // libjsoncpp0 and libjsoncpp-dev on debian
+// #include <jsoncpp/json/writer.h> // libjsoncpp0 and libjsoncpp-dev on debian
 
 #include "analyzervehicle.h"
 #include "INIReader.h"

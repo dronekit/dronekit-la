@@ -4,6 +4,7 @@
 #include <stdio.h> // for snprintf
 #include <fcntl.h>
 #include <errno.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 #include "la-log.h"
@@ -120,7 +121,7 @@ bool DataFlash_Logger::make_new_log_filename(char *buffer, uint8_t bufferlen)
     if ((fd = open(lastlog_buf, O_RDONLY)) == -1) {
         if (errno != ENOENT) {
             // what?
-            syslog(LOG_ERR, "Failed to open (%s) for reading: %s", lastlog_buf, strerror(errno));
+            la_log(LOG_ERR, "Failed to open (%s) for reading: %s", lastlog_buf, strerror(errno));
             return false;
         }
         num = 1;

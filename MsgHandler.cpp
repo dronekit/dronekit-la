@@ -154,7 +154,7 @@ bool MsgHandler::field_value(const uint8_t *msg, const char *label, Vector3f &re
 }
 
 
-void MsgHandler::string_for_labels(char *buffer, uint bufferlen)
+void MsgHandler::string_for_labels(char *buffer, uint8_t bufferlen)
 {
     memset(buffer, '\0', bufferlen);
     bufferlen--;
@@ -231,9 +231,9 @@ void MsgHandler::attitude_from_msg(uint8_t *msg,
 
 void MsgHandler::field_not_found(const uint8_t *msg, const char *label)
 {
-    char all_labels[256];
+    char all_labels[250];
     uint8_t type = msg[2];
-    string_for_labels(all_labels, 256);
+    string_for_labels(all_labels, 250);
     ::printf("Field (%s) not found for id=%d; options are (%s)\n",
              label, type, all_labels);
     abort();

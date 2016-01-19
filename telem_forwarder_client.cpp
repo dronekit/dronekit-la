@@ -1,12 +1,14 @@
 #include "telem_forwarder_client.h"
 
+#include <errno.h>
+#include <stdlib.h>
 #include <string.h>
-// #include <sys/socket.h>
-// #include <netinet/in.h>
-// #include <arpa/inet.h>
-
 
 #include "la-log.h"
+
+#ifdef _WIN32
+#include <ws2tcpip.h>
+#endif
 
 #define UNUSED __attribute__ ((unused))
 
@@ -86,8 +88,11 @@ void Telem_Forwarder_Client::pack_telem_forwarder_sockaddr(INIReader *config)
     la_log(LOG_INFO, "df-tfc: connecting to telem-forwarder at %s:%u", ip.c_str(), tf_port);
     memset(&sa_tf, 0, sizeof(sa_tf));
     sa_tf.sin_family = AF_INET;
-    //    sa_tf.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+#ifdef _WIN32
+    sa_tf.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+#else
     inet_aton(ip.c_str(), &sa_tf.sin_addr); // useful for debugging
+#endif
     sa_tf.sin_port = htons(tf_port);
 }
 
@@ -117,7 +122,7 @@ uint32_t Telem_Forwarder_Client::handle_recv()
     // ::printf("Receiving packet into position %u\n", _buflen_content);
     /* packet from telem_forwarder */
     socklen_t sa_len = sizeof(sa);
-    uint16_t res = recvfrom(fd_telem_forwarder, &_recv_buf[_recv_buflen_content], _recv_buflen-_recv_buflen_content, 0, (struct sockaddr*)&sa, &sa_len);
+    uint16_t res = recvfrom(fd_telem_forwarder, (char*)&_recv_buf[_recv_buflen_content], _recv_buflen-_recv_buflen_content, 0, (struct sockaddr*)&sa, &sa_len);
 
     /* We get one mavlink packet per udp datagram. Sanity checks here
        are: must be from solo's IP and have a valid mavlink header. */

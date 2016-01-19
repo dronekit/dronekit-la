@@ -4,6 +4,10 @@
 
 #include "format_reader.h"
 
+#ifdef _WIN32
+#include "Winsock2.h"
+#endif
+
 class Common_Tool {
 public:
     Common_Tool() :

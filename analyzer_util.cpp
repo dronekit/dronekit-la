@@ -1,7 +1,9 @@
 #include "analyzer_util.h"
+
+#define _USE_MATH_DEFINES
+#include <math.h>
 #include <sys/time.h>
 
-#include <math.h>
 
 void format_timestamp(char *buf, const uint8_t buflen, const uint64_t T)
 {

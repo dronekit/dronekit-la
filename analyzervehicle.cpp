@@ -2,6 +2,9 @@
 
 using namespace AnalyzerVehicle;
 
+#define __STDC_FORMAT_MACROS 1 // for e.g. %PRIu64
+#include "inttypes.h"
+
 #include "analyzer_util.h"
 #include "analyzervehicle_copter.h"
 #include "analyzervehicle_plane.h"
@@ -40,7 +43,7 @@ void Base::switch_vehicletype(Base *&_vehicle, vehicletype_t newtype) {
 void Base::set_T(const uint64_t time_us)
 {
     if (time_us < _T) {
-        ::fprintf(stderr, "time going backwards (%lu < %lu) (delta=%ld)\n", time_us, _T, time_us - _T);
+        ::fprintf(stderr, "time going backwards (%" PRIu64 " < %" PRIu64 ") (delta=%" PRIi64 ")\n", time_us, _T, time_us - _T);
         abort();
     }
     _T = time_us;

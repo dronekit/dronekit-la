@@ -25,7 +25,7 @@ public:
     MsgHandler(const struct log_Format &f);
 
     // retrieve a comma-separated list of all labels
-    void string_for_labels(char *buffer, uint bufferlen);
+    void string_for_labels(char *buffer, uint8_t bufferlen);
 
     bool field_value(const uint8_t *msg, const char *label, Vector3f &ret);
 

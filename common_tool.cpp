@@ -2,6 +2,7 @@
 
 #include <errno.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <unistd.h>
 
 #include "la-log.h"
