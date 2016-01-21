@@ -432,6 +432,22 @@ private:
 };
 
 
+class LA_MsgHandler_UBX3 : public LA_MsgHandler {
+
+public:
+
+    LA_MsgHandler_UBX3(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
+    }
+
+    void xprocess(const uint8_t *msg) override;
+
+private:
+
+    bool have_added_UBX3 = false;
+};
+
+
 class LA_MsgHandler_VIBE : public LA_MsgHandler {
 public:
     LA_MsgHandler_VIBE(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :

@@ -10,13 +10,17 @@ bool Analyzer_GPS_Fix::configure(INIReader *config) {
 
     _satellites_min = config->GetInteger("loganalyzer", "gpsfix::satellites_min", 5);
     _hdop_min = config->GetReal("loganalyzer", "gpsfix::hdop_min", 5.0f);
-    
+    _sacc_threshold_warn = config->GetReal("loganalyzer", "gpsfix::sacc::threshold_warn", 1.0f);
+    _sacc_threshold_fail = config->GetReal("loganalyzer", "gpsfix::sacc::threshold_fail", 1.5f);
 
     return true;
 }
 
 void Analyzer_GPS_Fix::end_of_log(uint32_t packet_count UNUSED)
 {
+    if (!_first_3D_fix_found) {
+        add_no_firstfixtime_result();
+    }
     if (_result != NULL) {
         close_result();
     }
@@ -28,6 +32,9 @@ bool Analyzer_GPS_Fix::gpsinfo_bad(AnalyzerVehicle::GPSInfo *gpsinfo) const
         return true;
     }
     if (gpsinfo->hdop() >= hdop_threshold()) {
+        return true;
+    }
+    if (gpsinfo->sacc() >= sacc_threshold_warn()) {
         return true;
     }
     return false;
@@ -115,18 +122,42 @@ void Analyzer_GPS_Fix::evaluate()
     }
 }
 
+void Analyzer_GPS_Fix::add_no_firstfixtime_result()
+{
+    Analyzer_GPS_No_FirstFixTime_Result *result =
+        new Analyzer_GPS_No_FirstFixTime_Result();
+
+    result->set_reason("No 3D fix was ever acquired");
+    result->increase_severity_score(20);
+    add_result(result);
+}
+
 void Analyzer_GPS_Fix::close_result()
 {
     _result->set_T_stop(_vehicle->T());
-    _result->set_reason("No 3D fix was ever acquired");
+
     _result->add_evidence(string_format("satellites-visible: %d", _result->satellites()));
     _result->add_evidence(string_format("HDop: %.2f", _result->hdop()));
+    _result->add_evidence(string_format("sAcc: %.2f", _result->sacc()));
     _result->add_evidence(string_format("satellites-visible-threshold: %d", satellites_visible_threshold()));
     _result->add_evidence(string_format("HDop-threshold: %f", hdop_threshold()));
+    _result->add_evidence(string_format("sAcc-warn-threshold: %f", sacc_threshold_warn()));
+    _result->add_evidence(string_format("sAcc-fail-threshold: %f", sacc_threshold_fail()));
+
+    if (_result->sacc() > sacc_threshold_fail()) {
+        _result->increase_severity_score(20);
+    } else if (_result->sacc() > sacc_threshold_warn()) {
+        _result->increase_severity_score(10);
+    }
+
+    if (_result->satellites() <= satellites_visible_threshold()) {
+        _result->increase_severity_score(10);
+    }
+    if (_result->hdop() >= hdop_threshold()) {
+        _result->increase_severity_score(10);
+    }
 
     _result->add_source(_data_sources.get(std::string("GPSINFO_") + _result->name()));
-
-    _result->increase_severity_score(20);
     add_result(_result);
     _result = NULL;
 }
@@ -139,6 +170,9 @@ void Analyzer_GPS_Fix::update_result(AnalyzerVehicle::GPSInfo *gpsinfo)
     if (_result->hdop() < gpsinfo->hdop()) {
         _result->set_hdop(gpsinfo->hdop());
     }
+    if (_result->sacc() < gpsinfo->sacc()) {
+        _result->set_sacc(gpsinfo->sacc());
+    }
 }
 
 void Analyzer_GPS_Fix::open_result(AnalyzerVehicle::GPSInfo *gpsinfo)
@@ -146,10 +180,10 @@ void Analyzer_GPS_Fix::open_result(AnalyzerVehicle::GPSInfo *gpsinfo)
     _result = new Analyzer_GPS_Fix_Result(gpsinfo->name());
     _result->set_T_start(_vehicle->T());
 
-    // take a somewhat negative attitude to our chances of success:
     _result->set_status(analyzer_status_fail);
-    _result->set_reason("GPS Fix was never acquired");
+    _result->set_reason("GPS Fix Is Bad");
 
     _result->set_satellites(gpsinfo->satellites());
     _result->set_hdop(gpsinfo->hdop());
+    _result->set_sacc(gpsinfo->sacc());
 }

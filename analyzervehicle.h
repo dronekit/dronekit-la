@@ -375,6 +375,9 @@ namespace AnalyzerVehicle {
         double hdop() { return _hdop; }
         void set_hdop(double hdop) { _hdop = hdop; }
 
+        double sacc() { return _sacc; }
+        void set_sacc(double sacc) { _sacc = sacc; }
+
         uint8_t satellites() { return _satellites_visible; }
         void set_satellites(uint8_t satellites) { _satellites_visible = satellites; }
 
@@ -382,6 +385,7 @@ namespace AnalyzerVehicle {
         std::string _name;
 
         double _hdop = 0;
+        double _sacc = 0;
         uint8_t _satellites_visible = 0;
         uint8_t _fix_type = 0;
     };
