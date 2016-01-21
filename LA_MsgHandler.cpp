@@ -297,6 +297,18 @@ void LA_MsgHandler_IMU::xprocess(const uint8_t *msg) {
     imu()->set_gyr(T(), values);
 }
 
+
+void LA_MsgHandler_GPA::xprocess(const uint8_t *msg)
+{
+    if (!have_added_GPA) {
+        _analyze->add_data_source(string_format("GPSINFO_%s", name().c_str()), "GPA.SAcc");
+        have_added_GPA = true;
+    }
+
+    gpsinfo()->set_sacc(require_field_uint16_t(msg, "SAcc")/100.0f);
+}
+
+
 bool LA_MsgHandler_GPS::find_T(const uint8_t *msg, uint64_t &T) {
     if (field_value(msg, "TimeUS", T)) {
         return true;

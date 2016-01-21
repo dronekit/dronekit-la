@@ -214,6 +214,23 @@ public:
     void xprocess(const uint8_t *msg) override;
 };
 
+
+class LA_MsgHandler_GPA : public LA_MsgHandler {
+
+public:
+
+    LA_MsgHandler_GPA(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
+    }
+
+    void xprocess(const uint8_t *msg) override;
+
+private:
+
+    bool have_added_GPA = false;
+};
+
+
 class LA_MsgHandler_GPS : public LA_MsgHandler {
 public:
     bool find_T(const uint8_t *msg, uint64_t &T) override;
