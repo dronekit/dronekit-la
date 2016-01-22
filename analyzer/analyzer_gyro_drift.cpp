@@ -23,7 +23,7 @@ bool Analyzer_Gyro_Drift::configure(INIReader *config) {
 
     _delta_fail = config->GetReal("loganalyzer", "gyro_drift::delta_fail", 0.1f);
     _delta_warn = config->GetReal("loganalyzer", "gyro_drift::delta_fail", 0.09f);
-    _delta_warn = config->GetReal("loganalyzer", "gyro_drift::avg_period", 2000000);
+    _gyr_avg_usec = config->GetReal("loganalyzer", "gyro_drift::avg_period", 2000000);
     _duration_min = config->GetReal("loganalyzer", "gyro_drift::duration_min", 500000);
 
     return true;
