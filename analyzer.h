@@ -204,6 +204,8 @@ public:
         _data_sources(data_sources)
         { }
 
+    virtual ~Analyzer() { }
+
     /// @brief Configure an analyzer from a .ini config file
     /// @param config The configuration source.
     /// @return true if configuration succeeded.

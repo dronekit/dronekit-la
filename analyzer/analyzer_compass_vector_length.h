@@ -21,13 +21,20 @@ private:
     const std::string _name;
 };
 
+
 class Analyzer_Compass_Vector_Length_Result_Long : public Analyzer_Result_Period {
     friend class Analyzer_Compass_Vector_Length;
+
 public:
+
     Analyzer_Compass_Vector_Length_Result_Long(std::string name) :
-        _name(name) { }
+        _name(name),
+        _length_max(0)
+        { }
+
     const std::string name() { return _name; };
     double length_max() { return _length_max; }
+
 private:
     const std::string _name;
     double _length_max;
