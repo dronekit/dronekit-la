@@ -44,7 +44,7 @@ void Base::set_T(const uint64_t time_us)
 {
     if (time_us < _T) {
         ::fprintf(stderr, "time going backwards (%" PRIu64 " < %" PRIu64 ") (delta=%" PRIi64 ")\n", time_us, _T, time_us - _T);
-        abort();
+       return;
     }
     _T = time_us;
     // ::fprintf(stderr, "Set T to (%lu)\n", T);
