@@ -212,6 +212,7 @@ void Analyze::configure_analyzer(INIReader *config, Analyzer *analyzer)
     } else {
         la_log(LOG_INFO, "Failed to configure (%s)", analyzer->name().c_str());
     }
+    analyzer->set_pure_output(pure_output());
 }
 
 void results_json_add_version(Json::Value &root)
@@ -274,13 +275,16 @@ void Analyze::results_json(Json::Value &root)
         tests[name]["severity-score"] = tests[name]["severity-score"].asLargestUInt() + analyzer->severity_score();
         if (!pure_output()) {
             tests[name]["evilness"] = tests[name]["severity-score"];
-            tests[name]["evilness-is-deprecated"] = 1;
+            tests[name]["evilness-is-deprecated"] = "Use severity-score";
         }
         total_evilness += analyzer->severity_score();
     }
     
-    root["evilness"] = total_evilness;
-    root["severity-score"] = root["evilness"];
+    root["severity-score"] = total_evilness;
+    if (!pure_output()) {
+        root["evilness"] = root["severity-score"];
+        root["evilness-is-deprecated"] = "Use severity-score";
+    }
     root["tests"] = tests;
     results_json_add_version(root);
 
