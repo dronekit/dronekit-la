@@ -110,7 +110,7 @@ After you have installed the :ref:`dronekit_la_setup_vagrant_prerequisites`:
        make clean
        make html
        
-    To just build files that have changed just do:
+   To just build files that have changed just do:
 
    .. code:: bash
    
