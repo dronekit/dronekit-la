@@ -1,79 +1,82 @@
-# DroneKit LA
+# DroneKit LogAnalyzer (LA)
 
-Log Analyzer for ArduPilot DataFlash logs and MAVLink telemetry logs
+![Logo](https://cloud.githubusercontent.com/assets/5368500/10805537/90dd4b14-7e22-11e5-9592-5925348a7df9.png)
 
 [![Circle CI](https://circleci.com/gh/dronekit/dronekit-la/tree/master.svg?style=svg)](https://circleci.com/gh/dronekit/dronekit-la/tree/master)
 
+Log Analyzer for ArduPilot DataFlash logs and MAVLink telemetry logs.
 
-## Building
+## Overview
 
-Requirements:
+DroneKit Log Analyzer (DroneKit-LA) is a powerful open source static analyzer for ArduPilot DataFlash logs and MAVLink telemetry logs.
+
+The tool can read and analyze several log formats, including telemetry logs (tlogs), dataflash binary logs (.BIN) and dataflash text dumps (.log), and output detailed error and warning information in several formats (json, text, summary). The output includes detailed information about the tests, including what tests were run, the results (pass, fail, warn), severity, and supporting evidence.
+
+DroneKit-LA is also fast, memory efficient and extensible. It supports numerous analyzers and can quickly analyzing even very large logs.
+
+The tool is written in C++ and can compile on a Linux computer or within a Vagrant-based Linux VM.
+
+
+The project documentation (including tool [download links]((http://la.dronekit.io/guide/getting_started.html#installing))) is available at [la.dronekit.io](http://la.dronekit.io/) logs for testing the tool can be found in the [/dronekit/dronekit-la-testdata](https://github.com/dronekit/dronekit-la-testdata) repository.
+
+
+
+## Getting Started
+
+The [Getting Started](http://la.dronekit.io/guide/getting_started.html) guide explains how to install DroneKit-LA on a Linux computer (or Linux VM), how to run the tool, and how to interpret the results.
+
+After installing, the tool, running an analysis can be as simple as entering the following command on a terminal:
+
+```bash
+# You only need to specify the target file for a dataflash log
+./dronekit-la log_file.bin
+
+# Additionally specify frame and model type for a Solo TLOG
+./dronekit-la a_log_file.tlog -f copter -m QUAD
+```
+
+The guide also lists all the other [command line arguments](http://la.dronekit.io/reference/command_line_reference.html), provides information about the [current set of analyzers](http://la.dronekit.io/reference/analyzers.html), and explains how you can extend DroneKit-LA to [get more information out of logs](http://la.dronekit.io/contributing/add_message_handler.html) and [add new analyzers](http://la.dronekit.io/contributing/add_analyzer.html).
+
+The [DroneKit Forums](http://discuss.dronekit.io) are the best place to ask for technical support on how to use the tool. You can also check out our [Gitter channel](https://gitter.im/dronekit/dronekit-la?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) though we prefer posts on the forums where possible.
+
+## Developer Setup
+
+You can build dronekit-la natively on Linux. The requirements are:
+
 - `build-essential` package
 - `g++` >= 4.8
 - `libjsoncpp-dev` && `libjsoncpp0`
 
-Use the `Makefile` in the root directory
+Use the `Makefile` in the **dronekit-la** root directory:
 
-```
+```bash
 make
 ```
+Both the tool and documentation can also be [built and run from within a Vagrant VM](http://la.dronekit.io/contributing/developer_setup_vagrant.html).
 
-## Adding new tests/analyzers
- - create a new header file for your test (e.g. analyzer_gyro_drift.h)
-  - copy in the contents of another, similar header file
-   - in this case, I chose analyzer_compass_vector_length.h as they're testing similar things and will both produce Analyer_Result_Period results
-  - replace all instances of e.g. "compass_vector_length" with "gyro_drift"
-  - trim out of the Result all variables and method definitions which don't look appropriate for your new test result
-  - sometimes multiple different result objects are generated for the one Analyzer  Remove these if not needed
-  - change the test name
-  - change the test description
- 
-## Adding new data sources
-There is a great deal of data in logs, and not all of it is currently made available for the analyzers to utilise.
-
-The method to take data from a data source and make it available to the analyzers differs based on the data source:
-
- - if there is no place in the vehicle to store the data (see analyzervehicle.h), add an appropriate field
-  - always bear in mind that this data may also come from some other place as well, so the abstraction should avoid coupling against the message type.
-
-### DataFlash logs
- - subclassing is used to handle different message types
- - In LA_MsgHandler.h, create a new subclass for the message type you are interested in
- - in LA_MsgHandler.cpp, create your implementation, updating the vehicle model as appropriate.
-
-### MAVLink (telemetry) logs
- - polymorphism is used to handle different message types
- - add declaration of new handle_decoded_message method to analyzing_mavlink_message_handler.h
- - add add_data_source lines to Analyzing_MAVlink_Message_Handler constructor in analyzing_mavlink_message_handler.cpp
- - add implementation of new handle_decoded_message to analyzing_mavlink_message_handler.cpp
-
-## Analyzers to Write:
- - analyzer_default_params_used
-   - fails if we ever need to use a default value (i.e. this log didn't give us parameters straight-up)
- - analyzer for time take to pass prearm checks
- - plane trims:
-  - here's an example of bad trims:
-RC1_MAX 1773.000000
-RC1_MIN 1078.000000
-RC1_REV -1.000000
-RC1_TRIM 1527.000000
- (there's ~500 to the left, ~250 to the right - that's probably a very bad thing)
-
- - accelerometer and gyro drift
- - accelerometer and gyro disagreement
- - check for obviously bad parameters (e.g. ANGLE_MAX < 1000)
-
- - work out what we use RATE for
-
- - detect GPS resets by position fix going low for some period of time
-
-## FIXMEs
- - the attitude control tests should ignore periods where the craft is not armed
- - the brownout report should give relative, not absolute, height at end of flight
- 
-    
+**Note:** At time of writing the process for building natively on Windows has [not yet been documented](https://github.com/dronekit/dronekit-la/issues/60).
 
 
-// - two fundamental types of test
-//  - is the software working correctly (EKF issues)
-//  - is the vehicle doing sensible things (attitude etc)
+
+## Users and contributors wanted!
+
+We'd love your [feedback and suggestions](https://github.com/dronekit/dronekit-la/issues) about this API and are eager to evolve it to meet your needs. Please feel free to create an issue to report bugs or feature requests.
+
+If you want to help more directly, see our [Contributing](http://la.dronekit.io/contributing/index.html) guidelines. We welcome all types of contributions but mostly contributions that would help us shrink our [issues list](https://github.com/dronekit/dronekit-la/issues).
+
+
+## Licence
+
+DroneKit-LA is made available under the permissive open source [Apache 2.0 License](http://la.dronekit.io/about/license.html).
+
+## Resources
+
+* **Documentation:** [http://la.dronekit.io/](http://la.dronekit.io/)
+* **Test Logs:** [/dronekit/dronekit-la-testdata](https://github.com/dronekit/dronekit-la-testdata)
+* **Forums:** TBD [http://discuss.dronekit.io/](http://discuss.dronekit.io)
+* **Gitter:** TBD [https://gitter.im/dronekit/dronekit-la](https://gitter.im/dronekit/dronekit-python?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) though we prefer posts on the forums where possible.
+
+
+***
+
+Copyright 2016 3D Robotics, Inc.
