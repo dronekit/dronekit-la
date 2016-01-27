@@ -72,7 +72,7 @@ To do this you will need:
       
   Download for your platform from `here <http://www.stack.nl/~dimitri/doxygen/download.html>`_.
       
-* `Breath <https://breathe.readthedocs.org/en/latest/>`_ - Plugin to import API definitions from XML into Sphinx documentation.
+* `Breathe <https://breathe.readthedocs.org/en/latest/>`_ - Plugin to import API definitions from XML into Sphinx documentation.
     
   This can be installed from the PyPi package repository as shown (the project is configured to use this plugin if it is present).
     
