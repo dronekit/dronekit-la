@@ -5950,7 +5950,7 @@
       "status": "FAIL"
     }, 
     "Gyro Drift": {
-      "description": "Gyroscopes sometimes start to register movement where there is none.  This test will FAIL or WARN if the any gyroscope's average acceleration on any axis begins to drift ", 
+      "description": "Gyroscopes sometimes start to register movement where there is none.  This test will FAIL or WARN if the any gyroscope's average acceleration on any axis begins to drift.", 
       "evilness": 0, 
       "evilness-is-deprecated": "Use severity-score", 
       "name": "Gyro Drift", 
