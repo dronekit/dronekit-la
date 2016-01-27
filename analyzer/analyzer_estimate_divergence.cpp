@@ -79,3 +79,25 @@ void Analyzer_Estimate_Divergence::close_result(std::string name)
     add_result(_result[name]);
     _result[name] = NULL;
 }
+
+void *xmalloc(size_t size)
+{
+    void *ret = malloc(size);
+    if (ret == NULL) {
+        perror("malloc");
+        abort();
+    }
+    return ret;
+}
+
+char *Analyzer_Estimate_Divergence::lc_stdstring(const std::string string) const
+{
+    size_t length = string.size();
+    char *ret = (char*)xmalloc(length+1);
+    string.copy(ret, length);
+    for (size_t i=0; i<=length; i++) {
+        ret[i] = tolower(ret[i]);
+    }
+    ret[length] = '\0';
+    return ret;
+}
