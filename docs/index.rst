@@ -2,11 +2,6 @@
 DroneKit Log Analyzer documentation!
 ===========================================
 
-.. warning:: 
-
-    These documents are under construction. The information has not been fully verified and the tool is not (at time of writing)
-    available.
-
 DroneKit Log Analyzer (DroneKit-LA) is a powerful open source *static analyzer* for ArduPilot logs.
 
 The tool can read and analyze several log formats, including telemetry logs (tlogs), dataflash binary logs (.BIN)
