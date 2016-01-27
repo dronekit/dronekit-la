@@ -8,20 +8,28 @@ INCS = -I./util -I./ini -I./ini/cpp
 INCS += -Ijsoncpp
 INCS += -I.  # for <DataFlash/DataFlash.h> in MsgHandler
 
+WARNFLAGS= -Wall -Werror -Wextra -Wunused -Wredundant-decls -D_FORTIFY_SOURCE=2 -Wfloat-equal -fstack-protector -Wformat -Werror=format-security -Werror=pointer-arith -Wpedantic
+
 ifeq ($(OS),Windows_NT)
-CXX=i686-w64-mingw32-g++.exe
-CC=i686-w64-mingw32-gcc.exe
-LIBS += -lws2_32
-LIBS +=  -lpthread # for clock_gettime/clock_settime on Windows
-STATIC=-static
+	CXX=i686-w64-mingw32-g++.exe
+	CC=i686-w64-mingw32-gcc.exe
+	LIBS += -lws2_32
+	LIBS +=  -lpthread # for clock_gettime/clock_settime on Windows
+	STATIC=-static
+else
+	UNAME_S := $(shell uname -s)
+	ifeq ($(UNAME_S),Darwin)
+	else
+		WARNFLAGS += -Wlogical-op
+		STATIC=-static
+	endif
 endif
 
 STD=-std=c++11
 CSTD=-std=c11
-STATIC=-static
 #GCOV=-fprofile-arcs -ftest-coverage
 #EFFCPP=-Weffc++
-WARNFLAGS= -Wall -Werror -Wextra -Wunused -Wlogical-op -Wredundant-decls -D_FORTIFY_SOURCE=2 -Wfloat-equal -fstack-protector -Wformat -Werror=format-security -Werror=pointer-arith -Wpedantic
+
 CFLAGS += $(INCS) -DGIT_VERSION=\"$(GIT_VERSION)\" $(WARNFLAGS) $(CSTD) $(GCOV)
 CXXFLAGS += $(INCS) $(STD) -g -DGIT_VERSION=\"$(GIT_VERSION)\" $(STATIC) $(WARNFLAGS) $(GCOV) $(EFFCPP)
 
@@ -69,7 +77,7 @@ SRCS_CPP += common_tool.cpp
 SRCS_CPP += telem_client.cpp
 SRCS_CPP += telem_forwarder_client.cpp
 SRCS_CPP += telem_serial.cpp
-SRCS_CPP += dataflash_logger.cpp 
+SRCS_CPP += dataflash_logger.cpp
 SRCS_CPP += analyzing_dataflash_message_handler.cpp
 SRCS_CPP += LA_MsgHandler.cpp
 SRCS_CPP += analyzing_mavlink_message_handler.cpp
