@@ -5,12 +5,12 @@
 #include "heart.h"
 
 #include <iostream> // for cout
-#include <syslog.h>
 #include "la-log.h"
 
 #include <sys/stat.h>
 #include <dirent.h>
 #include <fcntl.h>
+#include <stdio.h>
 #include <unistd.h>
 
 #include <regex>
@@ -74,7 +74,8 @@ void LogAnalyzer::parse_path(const char *path)
 
     int fd;
     if (streq(path, "-")) {
-        fd = fileno(stdin);
+        // fd = fileno(stdin);  // doesn't work on Cygwin
+        fd = 0;
     } else {
         fd = xopen(path, O_RDONLY);
     }
@@ -210,11 +211,11 @@ Analyze *LogAnalyzer::create_analyze()
     if (_analyzer_names_to_run.size()) {
         analyze->set_analyzer_names_to_run(_analyzer_names_to_run);
     }
-    analyze->instantiate_analyzers(config());
 
-    if (_pure_output) {
-        analyze->set_pure_output(true);
-    }
+
+    analyze->set_pure_output(_pure_output);
+
+    analyze->instantiate_analyzers(config());
 
     return analyze;
 }

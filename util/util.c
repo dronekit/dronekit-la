@@ -56,6 +56,8 @@ void clock_settime_us(clock_t clock_id, uint64_t t_us)
 #endif
 }
 
+#ifndef _WIN32
+
 /* buf must be at least 24 characters */
 const char *clock_tostr_r(uint64_t t_us, char *buf)
 {
@@ -83,6 +85,7 @@ const char *clock_gettime_str_r(clock_t clock_id, char *buf)
     return clock_tostr_r(clock_gettime_us(clock_id), buf);
 }
 
+#endif
 
 /* convert hex digit to integer */
 int hex_aton(char a)

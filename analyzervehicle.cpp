@@ -2,6 +2,9 @@
 
 using namespace AnalyzerVehicle;
 
+#define __STDC_FORMAT_MACROS 1 // for e.g. %PRIu64
+#include "inttypes.h"
+
 #include "analyzer_util.h"
 #include "analyzervehicle_copter.h"
 #include "analyzervehicle_plane.h"
@@ -40,8 +43,8 @@ void Base::switch_vehicletype(Base *&_vehicle, vehicletype_t newtype) {
 void Base::set_T(const uint64_t time_us)
 {
     if (time_us < _T) {
-        ::fprintf(stderr, "time going backwards (%lu < %lu) (delta=%ld)\n", time_us, _T, time_us - _T);
-        abort();
+        ::fprintf(stderr, "time going backwards (%" PRIu64 " < %" PRIu64 ") (delta=%" PRIi64 ")\n", time_us, _T, time_us - _T);
+       return;
     }
     _T = time_us;
     // ::fprintf(stderr, "Set T to (%lu)\n", T);
@@ -218,8 +221,78 @@ bool AnalyzerVehicle::IMU::acc_is_clipping() const
     if (T() - last_clip_time < 100000) { // FIXME: magic number
         return true;
     }
-    
+
     return false;
+}
+
+void AnalyzerVehicle::IMU::set_gyr(const uint64_t T, const Vector3f gyr)
+{
+    // ::fprintf(stderr, "Using timestamp (%lu) for timestamp\n", T);
+    _gyr_hist[_gyr_next].gyr = gyr;
+    _gyr_hist[_gyr_next].T = T;
+    _gyr_next++;
+    if (_gyr_next >= _gyr_hist_max) {
+        _gyr_next = 0;
+    }
+    _gyr_T = T; // FIXME: just take the most recent entry
+    if (_gyr_seen < _gyr_hist_max) {
+        _gyr_seen++;
+    }
+}
+
+bool AnalyzerVehicle::IMU::gyr_avg(const uint16_t count, Vector3f &ret) const {
+    uint16_t  offset = _gyr_next;
+    uint32_t used = 0;
+    ret = { };
+    if (count > _gyr_hist_max) {
+        ::fprintf(stderr, "insufficient history (%d > %d)", count, _gyr_hist_max);
+        abort();
+    }
+    if (_gyr_seen < count) {
+        return false;
+    }
+    while (used < count) {
+        if (offset == 0) {
+            offset = _gyr_hist_max-1;
+        } else {
+            offset--;
+        }
+        ret += _gyr_hist[offset].gyr;
+        used++;
+    }
+    ret /= used;
+    return true;
+}
+bool AnalyzerVehicle::IMU::gyr_avg(const uint64_t T, const uint64_t delta_T, Vector3f &ret) const {
+    uint16_t  offset = _gyr_next;
+    uint32_t used = 0;
+    ret = { };
+
+    if (delta_T > T) {
+        return false;
+    }
+    uint64_t not_before = T - delta_T;
+
+    while (true) {
+        if (used >= _gyr_seen) {
+            return false;
+        }
+        if (offset == 0) {
+            offset = _gyr_hist_max-1;
+        } else {
+            offset--;
+        }
+        if (_gyr_hist[offset].T < not_before) {
+            if (_gyr_hist[offset].T == 1000) {
+                abort();
+            }
+            break;
+        }
+        ret += _gyr_hist[offset].gyr;
+        used++;
+    }
+    ret /= used;
+    return true;
 }
 
 bool Base::any_acc_clipping() const

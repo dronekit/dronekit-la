@@ -1,5 +1,10 @@
 #include "LA_MsgHandler.h"
 
+#define __STDC_FORMAT_MACROS 1 // for e.g. %PRIu64
+#include "inttypes.h"
+
+#include "la-log.h"
+
 bool LA_MsgHandler::find_T(const uint8_t *msg, uint64_t &T)
 {
     uint32_t time_ms;
@@ -32,6 +37,10 @@ LA_MsgHandler::gpsinfo() {
     return _vehicle->gpsinfo(name());
 }
 
+AnalyzerVehicle::IMU* LA_MsgHandler::imu() {
+    return _vehicle->imu(name());
+}
+
 bool LA_MsgHandler::process_set_T(const uint8_t *msg)
 {
     uint64_t time_us;
@@ -43,7 +52,7 @@ bool LA_MsgHandler::process_set_T(const uint8_t *msg)
 
     // char name[1024];
     // string_for_labels(name, 1024);
-    // ::fprintf(stderr, "type=%s T=%lu\n", name, time_us);
+    // ::fprintf(stderr, "type=%s T=%" PRIu64 "\n", name, time_us);
 
     if (_vehicle->T()) {
         // if log-when-disarmed is not set then you may end up with
@@ -52,11 +61,11 @@ bool LA_MsgHandler::process_set_T(const uint8_t *msg)
         // uint64_t timestamp_max_delta = 100000000;
         uint64_t timestamp_max_delta = 1e010; // 1e10 ~= 167 minutes
         if (time_us < _vehicle->T()) {
-            ::fprintf(stderr, "Time going backwards? (%lu < %lu); skipping packet\n", time_us, _vehicle->T());
+	    la_log(LOG_ERR, "Time going backwards? (%" PRIu64 " < %" PRIu64 "); skipping packet\n", time_us, _vehicle->T());
             return false;
         }
         if (time_us - _vehicle->T() > timestamp_max_delta) { // 100 seconds
-            ::fprintf(stderr, "Message timestamp bad (%lu) (%lu - %lu > %lu); skipping packet\n", time_us, time_us, _vehicle->T(), timestamp_max_delta);
+	    la_log(LOG_ERR, "Message timestamp bad (%" PRIu64 ") (%" PRIu64 " - %" PRIu64 " > %" PRIu64 "); skipping packet\n", time_us, time_us, _vehicle->T(), timestamp_max_delta);
             return false;
         }
     }
@@ -244,6 +253,24 @@ void LA_MsgHandler_ERR::xprocess(const uint8_t *msg) {
     }
 }
 
+LA_MsgHandler_IMU::LA_MsgHandler_IMU(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+    LA_MsgHandler(name, f, analyze, vehicle) {
+
+    // add gyroscope data sources
+    _analyze->add_data_source(string_format("IMU_%s_GYR",name.c_str()),
+                              string_format("%s.GyrX",name.c_str()));
+    _analyze->add_data_source(string_format("IMU_%s_GYR",name.c_str()),
+                              string_format("%s.GyrY",name.c_str()));
+    _analyze->add_data_source(string_format("IMU_%s_GYR",name.c_str()),
+                              string_format("%s.GyrZ",name.c_str()));
+}
+
+void LA_MsgHandler_IMU::xprocess(const uint8_t *msg) {
+    Vector3f values;
+    require_field(msg, "Gyr", values);
+
+    imu()->set_gyr(T(), values);
+}
 
 bool LA_MsgHandler_GPS::find_T(const uint8_t *msg, uint64_t &T) {
     if (field_value(msg, "TimeUS", T)) {
@@ -348,9 +375,13 @@ void LA_MsgHandler_MAG::xprocess(const uint8_t *msg) {
 
 void LA_MsgHandler_PM::xprocess(const uint8_t *msg)
 {
-    _vehicle->autopilot_set_overruns(require_field_uint16_t(msg,"NLon"));
-    _vehicle->autopilot_set_loopcount(require_field_uint16_t(msg,"NLoop"));
-    _vehicle->autopilot_set_slices_max(require_field_uint32_t(msg,"MaxT"));
+    uint16_t nlon;
+    if (field_value(msg, "NLon", nlon)) {
+        // copter-style PM message
+        _vehicle->autopilot_set_overruns(nlon);
+        _vehicle->autopilot_set_loopcount(require_field_uint16_t(msg,"NLoop"));
+        _vehicle->autopilot_set_slices_max(require_field_uint32_t(msg,"MaxT"));
+    }
 }
 
 

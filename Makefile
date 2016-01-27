@@ -1,29 +1,31 @@
-# To cross compile:
-#
-# Set up as usual for bitbake:
-# $ . setup-environment build
-#
-# In the build directory:
-# $ bitbake meta-ide-support
-# $ . tmp/environment-setup-cortexa9hf-vfp-neon-poky-linux-gnueabi
-#
-# Now a make in this directory should work.
+#!/usr/bin/make
 
 GIT_VERSION := $(shell git describe --abbrev=4 --dirty --always --tags)
 
 VPATH = ./util ./ini ./ini/cpp
 
 INCS = -I./util -I./ini -I./ini/cpp
+INCS += -Ijsoncpp
 INCS += -I.  # for <DataFlash/DataFlash.h> in MsgHandler
+
+ifeq ($(OS),Windows_NT)
+CXX=i686-w64-mingw32-g++.exe
+CC=i686-w64-mingw32-gcc.exe
+LIBS += -lws2_32
+LIBS +=  -lpthread # for clock_gettime/clock_settime on Windows
+STATIC=-static
+endif
 
 STD=-std=c++11
 CSTD=-std=c11
 STATIC=-static
+#GCOV=-fprofile-arcs -ftest-coverage
+#EFFCPP=-Weffc++
 WARNFLAGS= -Wall -Werror -Wextra -Wunused -Wlogical-op -Wredundant-decls -D_FORTIFY_SOURCE=2 -Wfloat-equal -fstack-protector -Wformat -Werror=format-security -Werror=pointer-arith -Wpedantic
-CFLAGS += $(INCS) -DGIT_VERSION=\"$(GIT_VERSION)\" $(WARNFLAGS) $(CSTD)
-CXXFLAGS += $(INCS) $(STD) -g -DGIT_VERSION=\"$(GIT_VERSION)\" $(STATIC) $(WARNFLAGS)
+CFLAGS += $(INCS) -DGIT_VERSION=\"$(GIT_VERSION)\" $(WARNFLAGS) $(CSTD) $(GCOV)
+CXXFLAGS += $(INCS) $(STD) -g -DGIT_VERSION=\"$(GIT_VERSION)\" $(STATIC) $(WARNFLAGS) $(GCOV) $(EFFCPP)
 
-DLIBS += -ljsoncpp
+SRCS_CPP += jsoncpp/jsoncpp.cpp
 
 SRCS_CPP += INIReader.cpp
 SRCS_CPP += analyzer_util.cpp
@@ -50,6 +52,7 @@ SRCS_CPP += analyzer/analyzer_ever_armed.cpp
 SRCS_CPP += analyzer/analyzer_ever_flew.cpp
 SRCS_CPP += analyzer/analyzer_good_ekf.cpp
 SRCS_CPP += analyzer/analyzer_gps_fix.cpp
+SRCS_CPP += analyzer/analyzer_gyro_drift.cpp
 SRCS_CPP += analyzer/analyzer_notcrashed.cpp
 SRCS_CPP += analyzer/analyzer_sensor_health.cpp
 SRCS_CPP += analyzer/analyzer_estimate_divergence.cpp
@@ -92,7 +95,7 @@ $(IMAGETAGGER): $(OBJS) imagetagger.cpp mh_imagetagger.cpp
 	$(LINK.cpp) -o $(IMAGETAGGER) imagetagger.cpp mh_imagetagger.cpp $(OBJS) $(LIBS) $(DLIBS)
 
 clean:
-	$(RM) *.o *~ $(DATAFLASH_LOGGER) $(LOG_ANALYZER) $(IMAGETAGGER) analyzer/*.o
+	$(RM) *.o *~ $(DATAFLASH_LOGGER) $(LOG_ANALYZER) $(IMAGETAGGER) analyzer/*.o jsoncpp/jsoncpp.o
 
 test: clean all
 	./test/test.sh

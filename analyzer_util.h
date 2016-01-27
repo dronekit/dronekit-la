@@ -1,10 +1,20 @@
 #ifndef _ANALYZER_UTIL
 #define _ANALYZER_UTIL
 
-#include <string>
+#define _USE_MATH_DEFINES
+#include <errno.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <memory>
+#include <string>
+
+// TODO: work out why _USE_MATH_DEFINES is not working
+#ifndef M_PI
+# define M_PI           3.14159265358979323846  /* pi */
+#endif
 
 double earthradius();
 

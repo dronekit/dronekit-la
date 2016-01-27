@@ -103,24 +103,37 @@ After you have installed the :ref:`dronekit_la_setup_vagrant_prerequisites`:
        vagrant ssh
        cd /vagrant/docs/
        
-#. Build *all* the documentation as shown 
-   (if you just want to build files that have changed you can omit the ``make clean``):
+#. Build *all* the documentation as shown:
 
    .. code:: bash
    
        make clean
        make html
        
+   To just build files that have changed just do:
+
+   .. code:: bash
+   
+       make html
+    
+       
    The files will be built by :program:`Sphinx`, and will appear on the host system in 
    :file:`<clone-path>/dronekit-la/docs/\_build/html/`. To preview, simply open them in a Web browser.   
+
+.. tip::
+
+    The API Reference is built from strings in the header files which are extracted using Doxygen and then
+    imported using the Sphinx "Breathe" extension. If you change the strings you will need to re-run Doxgen
+    and Sphinx:    
   
-
-Once the VM is running, it is also possible to ssh into Vagrant and perform the build in one operation 
-(this is fairly slow!):
-
-.. code-block:: bash
-
-    vagrant ssh -c "cd /vagrant/docs && make html"
+   .. code-block:: bash
+   
+       vagrant ssh
+       cd /vagrant
+       doxygen doxygen/doxygen.conf
+       cd /docs
+       make clean
+       make html
 
 
 Closing and re-using the VM

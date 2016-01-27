@@ -351,16 +351,16 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
         std::smatch result;
         regex_search(x, result, perf_regex);
         std::string::size_type sz;
-        _vehicle->autopilot_set_overruns(stoi(result[1].str()));
-        _vehicle->autopilot_set_loopcount(stoi(result[2].str()));
-        _vehicle->autopilot_set_slices_max(stoi(result[3].str()));
-        _vehicle->autopilot_set_slices_min(stoi(result[4].str()));
+        // _vehicle->autopilot_set_overruns(strtol(result[1].str().c_str(),0,10));
+        // _vehicle->autopilot_set_loopcount(strtol(result[2].str().c_str(),0,10));
+        // _vehicle->autopilot_set_slices_max(strtol(result[3].str().c_str(),0,10));
+        // _vehicle->autopilot_set_slices_min(strtol(result[4].str().c_str(),0,10));
         // for (uint8_t i=0; i< result.size(); i++) {
-        //     ::fprintf(stderr, "%u: %s\n", i, result[i].str().c_str());
+        //     ::fprintf(stderr, "%u: %s\n", i, result[i].str().c_str().str().c_str(),0,10);
         // }
-        if (result[6].str().size()) {
-            _vehicle->autopilot_set_slices_avg(stoi(result[5].str())); 
-            _vehicle->autopilot_set_slices_stddev(stoi(result[6].str()));
-        }
+        // if (result[6].str().c_str().size()) {
+        //     _vehicle->autopilot_set_slices_avg(strtol(result[5].str().c_str(),0,10)); 
+        //     _vehicle->autopilot_set_slices_stddev(strtol(result[6].str().c_str(),0,10));
+        // }
     }
 }

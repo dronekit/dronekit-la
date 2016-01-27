@@ -1,8 +1,12 @@
 #include "INIReader.h"
 
+#ifdef _WIN32
+#include <Winsock2.h>
+#else
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#endif
 
 #include "telem_client.h"
 

@@ -18,7 +18,7 @@ namespace AnalyzerVehicle {
     /// @brief Abstraction of a vehicle attitude.
     class Attitude {
     public:
-       
+
         float roll() const { return _att[0]; };
         float pitch() const { return _att[1]; };
         float yaw() const { return _att[2]; };
@@ -357,7 +357,7 @@ namespace AnalyzerVehicle {
 
         uint16_t slices_stddev() { return _slices_stddev; }
         void set_slices_stddev(uint64_t T, uint16_t);
-        
+
     private:
         uint16_t _overruns;
         uint64_t _overruns_T = 0;
@@ -384,6 +384,20 @@ namespace AnalyzerVehicle {
         uint64_t T() const { return _T; };
         Vector3f &acc() { return _acc; }
         Vector3f &gyr() { return _gyr; }
+
+        /// @brief Retrieve average of gyroscopes by sample count.
+        /// @param count number of samples to average over.
+        /// @param[out] ret the returned average.
+        /// @return True if the average could be found.
+        bool gyr_avg(const uint16_t count, Vector3f &ret) const;
+
+        /// @brief Retrieve average of gyroscopes by time
+        /// @param T Highest timestamp to use (microseconds, typically _vehicle->T())
+        /// @param T_delta Time span over which to take average (microseconds).
+        /// @param[out] ret The returned average.
+        /// @return True if the average could be found.
+        bool gyr_avg(uint64_t T, uint64_t T_delta, Vector3f &ret) const;
+
         uint64_t acc_T() { // most recent timestamp of all components
             return _acc_T;
         }
@@ -391,7 +405,7 @@ namespace AnalyzerVehicle {
             return _gyr_T;
         }
         void set_acc_T(uint64_t acc_T) { _acc_T = acc_T; }
-        void set_gyr_T(uint64_t gyr_T) { _gyr_T = gyr_T; }
+        void set_gyr(uint64_t T, Vector3f values);
 
         void set_acc_clip_count(uint16_t count);
 
@@ -406,6 +420,15 @@ namespace AnalyzerVehicle {
         Vector3f _gyr = { };
         uint64_t _acc_T = 0;
         uint64_t _gyr_T = 0;
+
+        static const uint16_t _gyr_hist_max = 1000;
+        struct _timestamped_gyr_hist {
+            uint64_t T;
+            Vector3f gyr;
+        };
+        _timestamped_gyr_hist _gyr_hist[_gyr_hist_max] = { };
+        uint16_t _gyr_seen = 0;
+        uint16_t _gyr_next = 0;
 
         uint64_t _acc_clip_count_T;
         uint16_t _acc_clip_count;
@@ -438,7 +461,6 @@ public:
         _time_since_boot = time_since_boot;
         _time_since_boot_T = T();
     }
-    
     /// @brief Evaluation of whether the vehicle is flying.
     /// @return ``true`` if it is believed the vehicle is flying.
     virtual bool is_flying() const { return false; }

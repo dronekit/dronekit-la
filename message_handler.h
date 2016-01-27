@@ -6,6 +6,7 @@
 class Message_Handler {
 public:
     friend class Format_Reader;
+    virtual ~Message_Handler() { }
 
     virtual bool configure(INIReader *config UNUSED) { return true; }
 

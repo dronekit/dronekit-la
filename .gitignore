@@ -3,6 +3,12 @@
 dataflash_logger
 imagetagger
 dronekit-la
+dataflash_logger.exe
+imagetagger.exe
+dronekit-la.exe
 docs/_build/
 doxygen/xml/
 doxygen/doxygen_sqlite3.db
+*.gcov
+*.gcda
+*.gcno

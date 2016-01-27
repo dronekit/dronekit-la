@@ -18,8 +18,6 @@
 #include "mavlink/c_library/common/mavlink.h"
 #pragma GCC diagnostic pop
 
-#include <netinet/in.h>
-
 #include "message_handler.h"
 
 #define UNUSED __attribute__ ((unused))

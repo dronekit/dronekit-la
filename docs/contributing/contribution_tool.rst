@@ -15,7 +15,8 @@ This article provides a high level overview of how to contribute changes to the 
 Submitting changes
 ==================
 
-Contributors should fork the main `dronekit/dronekit-la/ <https://github.com/dronekit/dronekit-la>`_ 
+Contributors should create a sensibly name branch in the main 
+`dronekit/dronekit-la/ <https://github.com/dronekit/dronekit-la>`_ 
 repository and contribute changes back to the project master branch using pull requests:
 
 * Changes should be :ref:`tested locally <contributing-test-code>` before submission.

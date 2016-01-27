@@ -27,6 +27,12 @@ void Analyzing_DataFlash_Message_Handler::handle_format_message_received(const c
         handlers[new_msg_type] = new LA_MsgHandler_GPS(name, format, _analyze, _vehicle);
     } else if (streq(name, "GPS2")) {
         handlers[new_msg_type] = new LA_MsgHandler_GPS(name, format, _analyze, _vehicle);
+    } else if (streq(name, "IMU")) {
+        handlers[new_msg_type] = new LA_MsgHandler_IMU(name, format, _analyze, _vehicle);
+    } else if (streq(name, "IMU2")) {
+        handlers[new_msg_type] = new LA_MsgHandler_IMU(name, format, _analyze, _vehicle);
+    } else if (streq(name, "IMU3")) {
+        handlers[new_msg_type] = new LA_MsgHandler_IMU(name, format, _analyze, _vehicle);
     } else if (streq(name, "MAG")) {
         handlers[new_msg_type] = new LA_MsgHandler_MAG(name, format, _analyze, _vehicle);
     } else if (streq(name, "MAG2")) {
