@@ -1,10 +1,11 @@
-# DroneKit LogAnalyzer (LA)
+# DroneKit LA (Log Analyzer)
 
 ![Logo](https://cloud.githubusercontent.com/assets/5368500/10805537/90dd4b14-7e22-11e5-9592-5925348a7df9.png)
 
-[![Circle CI](https://circleci.com/gh/dronekit/dronekit-la/tree/master.svg?style=svg)](https://circleci.com/gh/dronekit/dronekit-la/tree/master)
+[![Circle CI](https://circleci.com/gh/dronekit/dronekit-la/tree/master.svg?style=svg)](https://circleci.com/gh/dronekit/dronekit-la/tree/master) <a href="https://gitter.im/dronekit/dronekit-la"><img align="right" src="https://badges.gitter.im/dronekit/dronekit-la.svg"></img></a><a href="https://discuss.dronekit.io/c/dronekit-la-log-analyzer"><img align="right" src="https://img.shields.io/badge/support-discuss.dronekit.io-blue.svg"></img></a>
 
-Log Analyzer for ArduPilot DataFlash logs and MAVLink telemetry logs.
+
+Log analyzer for ArduPilot DataFlash logs and MAVLink telemetry logs.
 
 ## Overview
 
@@ -37,7 +38,7 @@ After installing, the tool, running an analysis can be as simple as entering the
 
 The guide also lists all the other [command line arguments](http://la.dronekit.io/reference/command_line_reference.html), provides information about the [current set of analyzers](http://la.dronekit.io/reference/analyzers.html), and explains how you can extend DroneKit-LA to [get more information out of logs](http://la.dronekit.io/contributing/add_message_handler.html) and [add new analyzers](http://la.dronekit.io/contributing/add_analyzer.html).
 
-The [DroneKit Forums](http://discuss.dronekit.io) are the best place to ask for technical support on how to use the tool. You can also check out our [Gitter channel](https://gitter.im/dronekit/dronekit-la?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) though we prefer posts on the forums where possible.
+The [DroneKit Forums](https://discuss.dronekit.io/c/dronekit-la-log-analyzer) are the best place to ask for technical support on how to use the tool. You can also check out our [Gitter channel](https://gitter.im/dronekit/dronekit-la) though we prefer posts on the forums where possible.
 
 ## Developer Setup
 
@@ -73,8 +74,9 @@ DroneKit-LA is made available under the permissive open source [Apache 2.0 Licen
 
 * **Documentation:** [http://la.dronekit.io/](http://la.dronekit.io/)
 * **Test Logs:** [/dronekit/dronekit-la-testdata](https://github.com/dronekit/dronekit-la-testdata)
-* **Forums:** TBD [http://discuss.dronekit.io/](http://discuss.dronekit.io)
-* **Gitter:** TBD [https://gitter.im/dronekit/dronekit-la](https://gitter.im/dronekit/dronekit-python?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) though we prefer posts on the forums where possible.
+* **Open Issues:** [/dronkeit-la/issues](https://github.com/dronekit/dronekit-la/issues)
+* **Forums:** [https://discuss.dronekit.io](https://discuss.dronekit.io/c/dronekit-la-log-analyzer)
+* **Gitter:** [https://gitter.im/dronekit/dronekit-la](https://gitter.im/dronekit/dronekit-la) though we prefer posts on the forums where possible.
 
 
 ***
