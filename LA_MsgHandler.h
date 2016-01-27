@@ -213,7 +213,7 @@ public:
 
 class LA_MsgHandler_GPS : public LA_MsgHandler {
 public:
-    bool find_T(const uint8_t *msg, uint64_t &T);
+    bool find_T(const uint8_t *msg, uint64_t &T) override;
 
     LA_MsgHandler_GPS(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
         LA_MsgHandler(name, f, analyze, vehicle) {

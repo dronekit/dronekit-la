@@ -86,7 +86,7 @@ protected:
     uint64_t _delta_time_threshold = default_duration_min();
 
     virtual const std::string _config_tag() const = 0;
-    bool configure(INIReader *config);
+    bool configure(INIReader *config) override;
 
     Analyzer_Estimate_Divergence_Result *result_for_name(std::string name) {
         return _result[name];

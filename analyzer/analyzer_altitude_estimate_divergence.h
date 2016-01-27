@@ -24,7 +24,7 @@ public:
     Analyzer_Estimate_Divergence(vehicle,data_sources)
     { }
 
-    const std::string estimate_name() const {
+    const std::string estimate_name() const override {
         return "Altitude";
     };
 
@@ -46,10 +46,10 @@ public:
     double maximum_altitude() { return _max_alt; }
     double maximum_altitude_relative() { return _max_alt_rel; }
 
-    const std::string _config_tag() const {
+    const std::string _config_tag() const override {
         return std::string("altitude_estimate_divergence");
     }
-    
+
 private:
 
     double _max_alt = -1000;

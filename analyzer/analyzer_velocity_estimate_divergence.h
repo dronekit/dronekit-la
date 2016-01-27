@@ -31,7 +31,7 @@ public:
         return "A UAV typically has several estimates of its velocity.  This test will FAIL if the craft's velocity estimates diverge.";
     }
 
-    const std::string estimate_name() const {
+    const std::string estimate_name() const override {
         return "Velocity";
     };
 
@@ -49,7 +49,7 @@ public:
 
     double maximum_velocity() { return _maximum_velocity; }
 
-    const std::string _config_tag() const {
+    const std::string _config_tag() const override {
         return std::string("velocity_estimate_divergence");
     }
 

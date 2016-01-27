@@ -45,7 +45,7 @@ public:
     double total_distance_travelled() { return _total_distance_travelled; }
     double maximum_distance_from_origin() { return _maximum_distance_from_origin; }
 
-    const std::string _config_tag() const {
+    const std::string _config_tag() const override {
         return std::string("position_estimate_divergence");
     }
 
