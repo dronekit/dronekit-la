@@ -1,7 +1,7 @@
 {
   "bytes-dropped": 0, 
   "duration": "987654321", 
-  "evilness": 2270, 
+  "evilness": 2250, 
   "evilness-is-deprecated": "Use severity-score", 
   "format-version": "0.1", 
   "git_version": "some-hash", 
@@ -15,7 +15,7 @@
   "maximum-velocity-units": "metres/second", 
   "packet-count": 157284, 
   "packet_count": 157284, 
-  "severity-score": 2270, 
+  "severity-score": 2250, 
   "tests": {
     "Altitude Estimate Divergence": {
       "description": "A UAV often has several estimates of its Altitude.  This test will FAIL or WARN if the various vehicle's Altitude estimates diverge.", 
@@ -4637,37 +4637,10 @@
     }, 
     "Good EKF": {
       "description": "The Extended Kalman Filter (EKF) has many built-in checks to ensure that it is functioning correctly.  This test will FAIL or WARN if EKF variances exceed the respective thresholds, or FAIL if the EKF status flags indicate errors.", 
-      "evilness": 618, 
+      "evilness": 598, 
       "evilness-is-deprecated": "Use severity-score", 
       "name": "Good EKF", 
       "results": [
-        {
-          "duration": 8.492371559143066, 
-          "duration-units": "seconds", 
-          "evidence": [
-            "flags=0", 
-            "attitude estimate bad", 
-            "horizontal velocity estimate bad", 
-            "vertical velocity estimate bad", 
-            "horizontal position (relative) estimate bad", 
-            "horizontal position (absolute) estimate bad", 
-            "vertical position (absolute) estimate bad", 
-            "vertical position (above ground) estimate bad", 
-            "In constant position mode (no abs or rel position)", 
-            "Predicted horizontal position (relative) bad", 
-            "Predicted horizontal position (absolute) bad"
-          ], 
-          "evilness": 20, 
-          "evilness-is-deprecated": "Use severity-score", 
-          "reason": "The EKF status report indicates a problem with the EKF", 
-          "series": [
-            "EKF_STATUS_REPORT.flags"
-          ], 
-          "severity-score": 20, 
-          "status": "FAIL", 
-          "timestamp_start": 1437195919660684, 
-          "timestamp_stop": 1437195928153056
-        }, 
         {
           "duration": 332.0904846191406, 
           "duration-units": "seconds", 
@@ -5946,7 +5919,7 @@
           "timestamp_stop": 1437198363460736
         }
       ], 
-      "severity-score": 618, 
+      "severity-score": 598, 
       "status": "FAIL"
     }, 
     "Gyro Drift": {
