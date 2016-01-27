@@ -18,9 +18,9 @@ class MAVLink_Reader : public Format_Reader {
 public:
     MAVLink_Reader(INIReader *config) :
         Format_Reader(config),
-	err_skipped(0),
-	err_time_us(0),            /* last time we logged */
-	err_interval_us(1000000),  /* once per second max */
+	/* err_skipped(0), */
+	/* err_time_us(0),            /\* last time we logged *\/ */
+	/* err_interval_us(1000000),  /\* once per second max *\/ */
         _is_tlog(false)
     { }
 
@@ -35,9 +35,9 @@ protected:
 private:
     void handle_message_received(uint64_t timestamp, mavlink_message_t msg);
 
-    uint16_t err_skipped;
-    uint64_t err_time_us;
-    uint64_t err_interval_us;
+    /* uint16_t err_skipped; */
+    /* uint64_t err_time_us; */
+    /* uint64_t err_interval_us; */
 
     uint32_t packet_count = 0;
     uint8_t timestamp_offset = 0;

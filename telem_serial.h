@@ -10,19 +10,18 @@ public:
 
     uint32_t handle_read();
 
-    void configure(INIReader *config);
-    void init() override;
+    void configure(INIReader *config) override;
 
-    void pack_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds);
-    void handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds);
+    void pack_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds) override;
+    void handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds) override;
 
-    bool send_message(const mavlink_message_t &message);
+    bool send_message(const mavlink_message_t &message) override;
 
     void open_serial_port();
 
-    void do_writer_sends();
+    void do_writer_sends() override;
 
-    bool any_data_to_send() {
+    bool any_data_to_send() override {
         return _send_buf_start != _send_buf_stop;
     }
 
@@ -31,10 +30,10 @@ private:
 
     /* send buffer stuff: */
     uint8_t _send_buf[65536]; /* way too big */
-    uint32_t send_buf_size() const {
+    uint32_t send_buf_size() const override {
         return 65536;
     }
-    
+
     std::string serialPortName;
     uint32_t serialBaud;
     bool serialFlow;

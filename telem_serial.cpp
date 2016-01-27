@@ -14,9 +14,22 @@
 
 #define UNUSED __attribute__ ((unused))
 
-void Telem_Serial::init() {
-    open_serial_port();
-}
+//MACOSX doesn't define anything higher than 38400
+#ifndef B115200
+#define B115200 115200
+#endif
+
+#ifndef B500000
+#define B500000 500000
+#endif
+
+#ifndef B921600
+#define B921600 921600
+#endif
+
+#ifndef B1500000
+#define B1500000 1500000
+#endif
 
 void Telem_Serial::pack_select_fds(fd_set &fds_read,
                                    fd_set &fds_write UNUSED,
@@ -31,7 +44,7 @@ void Telem_Serial::pack_select_fds(fd_set &fds_read,
     }
 }
 
-        
+
 void Telem_Serial::handle_select_fds(fd_set &fds_read,
                                      fd_set &fds_write UNUSED,
                                      fd_set &fds_err,

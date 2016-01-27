@@ -177,7 +177,7 @@ namespace AnalyzerVehicle {
             _variances_T[name] = T;
         }
         uint64_t variance_T(std::string name) const;
-            
+
         void set_flags(uint64_t T, uint16_t flags) {
             _flags = flags;
             _flags_T = T;
@@ -198,7 +198,7 @@ namespace AnalyzerVehicle {
         uint16_t _flags = 0;
         uint64_t _flags_T = 0;
     };
-    
+
     // class AV_PosNED {
     // public:
     //     uint16_t N;
@@ -264,7 +264,7 @@ namespace AnalyzerVehicle {
         bool _failsafe_event = 0;
         uint64_t _failsafe_event_T = 0;
     };
-    
+
     /// @brief Information about the Navigation Controller's output.
     class AV_Nav {
     public:
@@ -325,13 +325,13 @@ namespace AnalyzerVehicle {
 
         uint8_t satellites() { return _satellites_visible; }
         void set_satellites(uint8_t satellites) { _satellites_visible = satellites; }
-        
+
     private:
         std::string _name;
 
         double _hdop = 0;
         uint8_t _satellites_visible = 0;
-        uint8_t _fix_type = 0;        
+        uint8_t _fix_type = 0;
     };
 
     /* may need to factor and subclass this for non-APM-on-PixHawk: */
@@ -596,7 +596,7 @@ public:
     uint16_t servo_output(uint8_t channel_number) const {
         return _servo_output[channel_number];
     }
-    
+
     /// @brief Set timestamp distinguishing logging events.
     /// @detail This may or may not be a real wall-clock time.
     /// @param time_us New timestamp (microseconds).
@@ -710,7 +710,7 @@ public:
     /// @brief Distance from canonical vehicle position to canonical origin.
     /// @return Distance from origin, or -1 if we just don't know.
     double distance_from_origin();
-    
+
     /// @brief Hardware diagnostics.
     /// @return Map of sensor name to its boolean health.
     std::map<const std::string, bool> sensors_health() {
@@ -897,7 +897,7 @@ public:
     /// @brief Set vehicle's original longitude.
     /// @param value New vehicle's original longitude.
     void set_origin_lon(double value) { _origin.set_lon(T(),value); }
-        
+
     /// @brief Vehicle origin.
     /// @return The vehicle's origin.
     Position& origin() { return _origin; }
@@ -970,14 +970,12 @@ private:
 
     /// @brief Copy state from another vehicle.
     void take_state(Base *old);
-    
+
     bool _vehicletype_is_forced = false;
     uint64_t _T = 0;
 
     uint64_t _time_since_boot;
     uint64_t _time_since_boot_T = 0;
-
-    vehicletype_t _vehicletype = invalid;
 
     bool _crashed = false; // vehicle's own estimate of whether it has crashed.
     uint64_t _crashed_T = 0; // last update time of vehicle's estimate.

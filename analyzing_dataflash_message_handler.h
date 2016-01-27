@@ -26,8 +26,8 @@ public:
         _analyze(analyze),
         _vehicle(vehicle) { }
 
-    void handle_format_message_received(const char *name, const struct log_Format &format, const char *msg);
-    void handle_message_received(const struct log_Format &format, const uint8_t *msg);
+    void handle_format_message_received(const char *name, const struct log_Format &format, const char *msg) override;
+    void handle_message_received(const struct log_Format &format, const uint8_t *msg) override;
 
     void end_of_log(uint32_t packet_count, uint64_t bytes_dropped = 0) override;
 
@@ -37,7 +37,7 @@ private:
     AnalyzerVehicle::Base *&_vehicle;
 
     #define MAX_FORMATS 256
-    struct LA_MsgHandler *handlers[MAX_FORMATS] = { };
+    class LA_MsgHandler *handlers[MAX_FORMATS] = { };
 
     // FIXME: find a general way to do this:
     bool have_pos = false;

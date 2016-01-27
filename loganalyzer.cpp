@@ -47,7 +47,7 @@ void LogAnalyzer::parse_path(const char *path)
     if (force_format() != log_format_none) {
         log_format = force_format();
     }
-    
+
     if (log_format == log_format_none) {
         if (do_stdin) {
             ::fprintf(stderr, "You asked to parse stdin but did not force a format type\n");
@@ -107,7 +107,7 @@ void LogAnalyzer::parse_path(const char *path)
     default:
         abort();
     }
-    
+
     delete _vehicle;
     _vehicle = NULL;
 }
@@ -283,11 +283,11 @@ void LogAnalyzer::expand_names_to_run()
          ++it) {
         // insert lambda here if you dare.
         std::vector<std::string> tmp = split((*it),',');
-        
+
         for (std::vector<std::string>::const_iterator iy = tmp.begin();
              iy != tmp.end();
              ++iy) {
-            std::string value = std::regex_replace(*iy, std::regex("^ +| +$|( ) +"), "$1");
+            std::string value = std::regex_replace(std::string(*iy), std::regex("^ +| +$|( ) +"), std::string("$1"));
             new_names.push_back(value);
         }
     }

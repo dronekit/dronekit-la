@@ -374,7 +374,7 @@ public:
                 _analyze->add_data_source("SERVO_OUTPUT", "RCOU.Chan7");
                 _analyze->add_data_source("SERVO_OUTPUT", "RCOU.Chan8");
             }
-        } 
+        }
     };
 
     void xprocess(const uint8_t *msg) override {

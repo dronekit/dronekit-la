@@ -46,7 +46,6 @@ public:
     void end_of_log(const uint32_t packet_count) override;
 
 private:
-    bool seen_packets = false;
 
     bool _old_is_flying = false;
 
