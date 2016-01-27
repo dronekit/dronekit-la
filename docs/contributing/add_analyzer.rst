@@ -68,10 +68,10 @@ The key information from the evaluation is typically saved as part of the new an
 The new analyzer should also define a results class (an instance of which is usually owned by your Analyzer-derived class).
 The results class must be derived from one of the base classes listed below:
 
-* :cpp:class:`Analyzer_Result`
-* :cpp:class:`Analyzer_Result_Period`
-* :cpp:class:`Analyzer_Result_Event`
-* :cpp:class:`Analyzer_Result_Summary`
+* :cpp:class:`Analyzer_Result` - Base class for analyzer results.
+* :cpp:class:`Analyzer_Result_Period` - Base class for an Analyzer Result which does not span any time.
+* :cpp:class:`Analyzer_Result_Event` - Base class for an Analyzer Result which spans a period.
+* :cpp:class:`Analyzer_Result_Summary`-  Base class for an Analyzer Result which provides information derived over the entire period of data input.
 
 .. todo:: Brief explanation of where each of the above are used.
 

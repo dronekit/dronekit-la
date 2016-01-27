@@ -86,11 +86,9 @@ The autopilot reports both the craft's attitude and the attitude the craft belie
 This test will FAIL or WARN if the vehicle's desired attitudes and achieved attitudes are 
 not within threshold delta values for more than a threshold time.
 
-The evidence provided includes the maximum difference between the desired/achieved roll and pitch
-and the duration of the test.
-
 * Fail: Desired attitude not achieved
 * Warn: Desired attitude not achieved
+* Warn: Vehicle attitude never set
 
 
 .. internalnotes
@@ -351,6 +349,9 @@ This test will FAIL or WARN if the any gyroscope's average acceleration on any a
     - defined in:
       https://github.com/dronekit/dronekit-la/blob/master/analyzer/analyzer_gyro_drift.cpp
       https://github.com/dronekit/dronekit-la/blob/master/analyzer/analyzer_gyro_drift.h
+      
+
+
 
 
 Position Estimate Divergence

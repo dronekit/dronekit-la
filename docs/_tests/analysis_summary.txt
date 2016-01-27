@@ -1,5 +1,5 @@
 DK-LA Version: Version: 0.3
-Git-Version: v0.1-162-g6df3
+Git-Version: v0.1-157-gbc10-dirty
 
 DK-LA HELP:
 
@@ -102,7 +102,7 @@ Description: Crashes are detected both heuristically and by explicit log message
 * Fail: Vehicle is past maximum allowed angle and running its motors
 
 TEST: Gyro Drift
-Description: Gyroscopes sometimes start to register movement where there is none.  This test will FAIL or WARN if the any gyroscope's average acceleration on any axis begins to drift 
+Description: Gyroscopes sometimes start to register movement where there is none.  This test will FAIL or WARN if the any gyroscope's average acceleration on any axis begins to drift.
 
 TEST: Vehicle Definition
 Description: The vehicle type is normally automatically detected by dronekit-la from the log.  Sometimes the log does not contain sufficient information to make this determination.  This test will FAIL if the craft type is never defined
