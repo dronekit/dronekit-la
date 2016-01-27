@@ -1,5 +1,7 @@
 # DroneKit LA
 
+[![Join the chat at https://gitter.im/dronekit/dronekit-la](https://badges.gitter.im/dronekit/dronekit-la.svg)](https://gitter.im/dronekit/dronekit-la?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Log Analyzer for ArduPilot DataFlash logs and MAVLink telemetry logs
 
 [![Circle CI](https://circleci.com/gh/dronekit/dronekit-la/tree/master.svg?style=svg)](https://circleci.com/gh/dronekit/dronekit-la/tree/master)
