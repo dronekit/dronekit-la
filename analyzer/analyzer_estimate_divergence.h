@@ -45,8 +45,14 @@ public:
     virtual const std::string name() const override {
         return string_format("%s Estimate Divergence", estimate_name().c_str());
     }
+    // return a buffer containing the c representation of string, lower-cased
+    // caller to free.
+    char *lc_stdstring(const std::string string) const;
     virtual const std::string description() const override {
-        return string_format("A UAV often has several estimates of its %s.  This test will FAIL or WARN if the various vehicle's %s estimates diverge.", estimate_name().c_str(), estimate_name().c_str());
+        char *lc_estimate_name = lc_stdstring(estimate_name());
+        const std::string ret = string_format("A UAV often has several estimates of its %s.  This test will FAIL or WARN if the various vehicle's %s estimates diverge.", lc_estimate_name, lc_estimate_name);
+        free(lc_estimate_name);
+        return ret;
     }
 
     // void evaluate() override;
