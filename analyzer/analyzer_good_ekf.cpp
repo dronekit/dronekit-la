@@ -217,9 +217,11 @@ void Analyzer_Good_EKF::open_result_flags(uint16_t flags)
 void Analyzer_Good_EKF::evaluate_flags()
 {
     if (_result_flags == NULL) {
-        if (ekf_flags_bad(_vehicle->ekf_flags())) {
-            // start a new incident
-            open_result_flags(_vehicle->ekf_flags());
+        if (_vehicle->ekf_flags_T()) {
+            if (ekf_flags_bad(_vehicle->ekf_flags())) {
+                // start a new incident
+                open_result_flags(_vehicle->ekf_flags());
+            }
         }
     } else {
         // ::fprintf(stderr, "flags: %d\n", _vehicle->ekf_flags());
