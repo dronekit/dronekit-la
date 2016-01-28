@@ -14,6 +14,9 @@
 //   }
 // }
 
+/// @brief Decode and handle a mavlink message.
+/// @param timestamp The time a mavlink packet arrived.
+/// @param msg The mavlink message.
 void MAVLink_Message_Handler::handle_message(uint64_t timestamp, mavlink_message_t &msg)
 {
     // ::fprintf(stderr, "msg.msgid=%u\n", msg.msgid);

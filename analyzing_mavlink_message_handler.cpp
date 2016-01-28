@@ -95,6 +95,7 @@ void Analyzing_MAVLink_Message_Handler::end_of_log(uint32_t packet_count, uint64
 
 
 void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_ahrs2_t &msg) {
+    _vehicle->set_T(T);
 
     double lat = msg.lat/(double)10000000.0f;
     double lng = msg.lng/(double)10000000.0f;
@@ -143,6 +144,8 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
 }
 
 void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_global_position_int_t &msg) {
+    _vehicle->set_T(T);
+
     _vehicle->position_estimate("GLOBAL_POSITION_INT")->set_lat(T, msg.lat/(double)10000000.0f);
     _vehicle->position_estimate("GLOBAL_POSITION_INT")->set_lon(T, msg.lon/(double)10000000.0f);
     _vehicle->altitude_estimate("GLOBAL_POSITION_INT")->set_alt(T, msg.alt/(double)1000.0f);
@@ -150,7 +153,6 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
     // GLOBAL_POSITION_INT is the "offical" position of the vehicle:
     double lat = msg.lat/(double)10000000.0f;
     double lon = msg.lon/(double)10000000.0f;
-    _vehicle->set_T(T);
     _vehicle->set_lat(lat);
     _vehicle->set_lon(lon);
     // and I'm assuming for ALT as well:
@@ -169,6 +171,8 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
 }
 
 void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_gps_raw_int_t &msg) {
+    _vehicle->set_T(T);
+
     _vehicle->position_estimate("GPS_RAW_INT")->set_lat(T, msg.lat/(double)10000000.0f);
     _vehicle->position_estimate("GPS_RAW_INT")->set_lon(T, msg.lon/(double)10000000.0f);
     _vehicle->altitude_estimate("GPS_RAW_INT")->set_alt(T, msg.alt/(double)1000.0f);

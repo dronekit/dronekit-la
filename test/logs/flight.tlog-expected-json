@@ -1,7 +1,7 @@
 {
   "bytes-dropped": 0, 
   "duration": "987654321", 
-  "evilness": 2250, 
+  "evilness": 2260, 
   "evilness-is-deprecated": "Use severity-score", 
   "format-version": "0.1", 
   "git_version": "some-hash", 
@@ -15,7 +15,7 @@
   "maximum-velocity-units": "metres/second", 
   "packet-count": 157284, 
   "packet_count": 157284, 
-  "severity-score": 2250, 
+  "severity-score": 2260, 
   "tests": {
     "Altitude Estimate Divergence": {
       "description": "A UAV often has several estimates of its altitude.  This test will FAIL or WARN if the various vehicle's altitude estimates diverge.", 
@@ -67,7 +67,7 @@
           "timestamp_stop": 1437196284637816
         }, 
         {
-          "duration": 1.4135760068893433, 
+          "duration": 1.4366199970245361, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-4.679993 metres", 
@@ -85,10 +85,10 @@
           "severity-score": 10, 
           "status": "WARN", 
           "timestamp_start": 1437196314739460, 
-          "timestamp_stop": 1437196316153036
+          "timestamp_stop": 1437196316176080
         }, 
         {
-          "duration": 0.5632920265197754, 
+          "duration": 0.5313119888305664, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-4.380005 metres", 
@@ -105,11 +105,11 @@
           ], 
           "severity-score": 10, 
           "status": "WARN", 
-          "timestamp_start": 1437196321907556, 
+          "timestamp_start": 1437196321939536, 
           "timestamp_stop": 1437196322470848
         }, 
         {
-          "duration": 0.5759119987487793, 
+          "duration": 0.5417400002479553, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-4.559998 metres", 
@@ -126,7 +126,7 @@
           ], 
           "severity-score": 10, 
           "status": "WARN", 
-          "timestamp_start": 1437196322669208, 
+          "timestamp_start": 1437196322703380, 
           "timestamp_stop": 1437196323245120
         }, 
         {
@@ -152,7 +152,7 @@
           "timestamp_stop": 1437196447440036
         }, 
         {
-          "duration": 1.2846039533615112, 
+          "duration": 1.2844959497451782, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-4.559998 metres", 
@@ -169,11 +169,11 @@
           ], 
           "severity-score": 10, 
           "status": "WARN", 
-          "timestamp_start": 1437196454424196, 
-          "timestamp_stop": 1437196455708800
+          "timestamp_start": 1437196454437204, 
+          "timestamp_stop": 1437196455721700
         }, 
         {
-          "duration": 0.5881800055503845, 
+          "duration": 0.56523597240448, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-4.880005 metres", 
@@ -190,7 +190,7 @@
           ], 
           "severity-score": 10, 
           "status": "WARN", 
-          "timestamp_start": 1437196468584528, 
+          "timestamp_start": 1437196468607472, 
           "timestamp_stop": 1437196469172708
         }, 
         {
@@ -216,7 +216,7 @@
           "timestamp_stop": 1437196525077368
         }, 
         {
-          "duration": 41.624671936035156, 
+          "duration": 41.6044921875, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-6.049988 metres", 
@@ -233,11 +233,11 @@
           ], 
           "severity-score": 20, 
           "status": "FAIL", 
-          "timestamp_start": 1437196501818664, 
-          "timestamp_stop": 1437196543443336
+          "timestamp_start": 1437196501871840, 
+          "timestamp_stop": 1437196543476332
         }, 
         {
-          "duration": 2.4270639419555664, 
+          "duration": 2.4539520740509033, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-5.010010 metres", 
@@ -255,10 +255,10 @@
           "severity-score": 20, 
           "status": "FAIL", 
           "timestamp_start": 1437196545238080, 
-          "timestamp_stop": 1437196547665144
+          "timestamp_stop": 1437196547692032
         }, 
         {
-          "duration": 1.6166319847106934, 
+          "duration": 1.578495979309082, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-4.289978 metres", 
@@ -275,11 +275,11 @@
           ], 
           "severity-score": 10, 
           "status": "WARN", 
-          "timestamp_start": 1437196566574876, 
+          "timestamp_start": 1437196566613012, 
           "timestamp_stop": 1437196568191508
         }, 
         {
-          "duration": 2.0989201068878174, 
+          "duration": 2.0598599910736084, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-4.750000 metres", 
@@ -296,11 +296,11 @@
           ], 
           "severity-score": 10, 
           "status": "WARN", 
-          "timestamp_start": 1437196568398708, 
+          "timestamp_start": 1437196568437768, 
           "timestamp_stop": 1437196570497628
         }, 
         {
-          "duration": 1.038383960723877, 
+          "duration": 1.0103759765625, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-4.369995 metres", 
@@ -317,11 +317,11 @@
           ], 
           "severity-score": 10, 
           "status": "WARN", 
-          "timestamp_start": 1437196571053772, 
+          "timestamp_start": 1437196571081780, 
           "timestamp_stop": 1437196572092156
         }, 
         {
-          "duration": 1.3123559951782227, 
+          "duration": 1.2724640369415283, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-4.170044 metres", 
@@ -338,11 +338,11 @@
           ], 
           "severity-score": 10, 
           "status": "WARN", 
-          "timestamp_start": 1437196588435168, 
+          "timestamp_start": 1437196588475060, 
           "timestamp_stop": 1437196589747524
         }, 
         {
-          "duration": 37.92805862426758, 
+          "duration": 37.928009033203125, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-6.620056 metres", 
@@ -359,8 +359,8 @@
           ], 
           "severity-score": 20, 
           "status": "FAIL", 
-          "timestamp_start": 1437196645497824, 
-          "timestamp_stop": 1437196683425884
+          "timestamp_start": 1437196645510772, 
+          "timestamp_stop": 1437196683438780
         }, 
         {
           "duration": 334.8738098144531, 
@@ -385,7 +385,7 @@
           "timestamp_stop": 1437196910309228
         }, 
         {
-          "duration": 13.458656311035156, 
+          "duration": 13.467692375183105, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-4.550049 metres", 
@@ -402,11 +402,11 @@
           ], 
           "severity-score": 10, 
           "status": "WARN", 
-          "timestamp_start": 1437196957439064, 
-          "timestamp_stop": 1437196970897720
+          "timestamp_start": 1437196957452008, 
+          "timestamp_stop": 1437196970919700
         }, 
         {
-          "duration": 0.6589760184288025, 
+          "duration": 0.6472640037536621, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-4.020020 metres", 
@@ -423,11 +423,11 @@
           ], 
           "severity-score": 10, 
           "status": "WARN", 
-          "timestamp_start": 1437196971172996, 
-          "timestamp_stop": 1437196971831972
+          "timestamp_start": 1437196971201884, 
+          "timestamp_stop": 1437196971849148
         }, 
         {
-          "duration": 5.243063926696777, 
+          "duration": 5.224244117736816, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-4.619995 metres", 
@@ -444,8 +444,8 @@
           ], 
           "severity-score": 10, 
           "status": "WARN", 
-          "timestamp_start": 1437196975476556, 
-          "timestamp_stop": 1437196980719620
+          "timestamp_start": 1437196975517548, 
+          "timestamp_stop": 1437196980741792
         }, 
         {
           "duration": 70.39749145507812, 
@@ -470,7 +470,7 @@
           "timestamp_stop": 1437197002639144
         }, 
         {
-          "duration": 1.106619954109192, 
+          "duration": 1.1355359554290771, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-5.510010 metres", 
@@ -488,10 +488,10 @@
           "severity-score": 20, 
           "status": "FAIL", 
           "timestamp_start": 1437197010511004, 
-          "timestamp_stop": 1437197011617624
+          "timestamp_stop": 1437197011646540
         }, 
         {
-          "duration": 2.1383159160614014, 
+          "duration": 2.123392105102539, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-8.809998 metres", 
@@ -508,7 +508,7 @@
           ], 
           "severity-score": 20, 
           "status": "FAIL", 
-          "timestamp_start": 1437197016024916, 
+          "timestamp_start": 1437197016039840, 
           "timestamp_stop": 1437197018163232
         }, 
         {
@@ -555,7 +555,7 @@
           "timestamp_stop": 1437197021953880
         }, 
         {
-          "duration": 17.310035705566406, 
+          "duration": 17.34507942199707, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-7.340027 metres", 
@@ -573,7 +573,7 @@
           "severity-score": 20, 
           "status": "FAIL", 
           "timestamp_start": 1437197021953880, 
-          "timestamp_stop": 1437197039263916
+          "timestamp_stop": 1437197039298960
         }, 
         {
           "duration": 19.240644454956055, 
@@ -620,7 +620,7 @@
           "timestamp_stop": 1437197070321628
         }, 
         {
-          "duration": 2.2798879146575928, 
+          "duration": 2.285939931869507, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=4.429993 metres", 
@@ -637,11 +637,11 @@
           ], 
           "severity-score": 10, 
           "status": "WARN", 
-          "timestamp_start": 1437197242213840, 
-          "timestamp_stop": 1437197244493728
+          "timestamp_start": 1437197242241728, 
+          "timestamp_stop": 1437197244527668
         }, 
         {
-          "duration": 2.214531898498535, 
+          "duration": 2.2024118900299072, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-4.580017 metres", 
@@ -658,11 +658,11 @@
           ], 
           "severity-score": 10, 
           "status": "WARN", 
-          "timestamp_start": 1437197252069924, 
-          "timestamp_stop": 1437197254284456
+          "timestamp_start": 1437197252098940, 
+          "timestamp_stop": 1437197254301352
         }, 
         {
-          "duration": 11.206868171691895, 
+          "duration": 11.215727806091309, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-8.400024 metres", 
@@ -679,8 +679,8 @@
           ], 
           "severity-score": 20, 
           "status": "FAIL", 
-          "timestamp_start": 1437197334707428, 
-          "timestamp_stop": 1437197345914296
+          "timestamp_start": 1437197334723472, 
+          "timestamp_stop": 1437197345939200
         }, 
         {
           "duration": 295.3475646972656, 
@@ -705,7 +705,7 @@
           "timestamp_stop": 1437197403634172
         }, 
         {
-          "duration": 255.70697021484375, 
+          "duration": 255.70460510253906, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=596.450000 metres", 
@@ -722,7 +722,7 @@
           ], 
           "severity-score": 20, 
           "status": "FAIL", 
-          "timestamp_start": 1437197403620208, 
+          "timestamp_start": 1437197403622580, 
           "timestamp_stop": 1437197659327184
         }, 
         {
@@ -814,7 +814,7 @@
           "timestamp_stop": 1437198093111268
         }, 
         {
-          "duration": 563.3909301757812, 
+          "duration": 563.3908081054688, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-11.840027 metres", 
@@ -831,8 +831,8 @@
           ], 
           "severity-score": 20, 
           "status": "FAIL", 
-          "timestamp_start": 1437197740646872, 
-          "timestamp_stop": 1437198304037768
+          "timestamp_start": 1437197740659900, 
+          "timestamp_stop": 1437198304050676
         }, 
         {
           "duration": 178.32192993164062, 
@@ -857,7 +857,7 @@
           "timestamp_stop": 1437198304080752
         }, 
         {
-          "duration": 1.8507399559020996, 
+          "duration": 1.8569159507751465, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=592.959961 metres", 
@@ -875,7 +875,7 @@
           "severity-score": 20, 
           "status": "FAIL", 
           "timestamp_start": 1437198304080752, 
-          "timestamp_stop": 1437198305931492
+          "timestamp_stop": 1437198305937668
         }, 
         {
           "duration": 59.37998580932617, 
@@ -4259,12 +4259,37 @@
     }, 
     "Attitude Estimate Divergence": {
       "description": "A UAV often has several estimates of its attitude.  This test will FAIL or WARN if the various vehicle's attitude estimates diverge.", 
-      "evilness": 60, 
+      "evilness": 70, 
       "evilness-is-deprecated": "Use severity-score", 
       "name": "Attitude Estimate Divergence", 
       "results": [
         {
-          "duration": 1.0903040170669556, 
+          "duration": 0.5421320199966431, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "max-delta=18.202660 degrees", 
+            "delta-threshold=10.000000 degrees", 
+            "delta-time-threshold=0.500000 seconds"
+          ], 
+          "evilness": 10, 
+          "evilness-is-deprecated": "Use severity-score", 
+          "name": "AHRS2", 
+          "reason": "This attitude estimate differs from the canonical craft attitude", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "AHRS2.roll", 
+            "AHRS2.pitch", 
+            "AHRS2.yaw"
+          ], 
+          "severity-score": 10, 
+          "status": "FAIL", 
+          "timestamp_start": 1437196468531416, 
+          "timestamp_stop": 1437196469073548
+        }, 
+        {
+          "duration": 1.0818920135498047, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=6.102463 degrees", 
@@ -4285,11 +4310,11 @@
           ], 
           "severity-score": 10, 
           "status": "WARN", 
-          "timestamp_start": 1437197905261028, 
+          "timestamp_start": 1437197905269440, 
           "timestamp_stop": 1437197906351332
         }, 
         {
-          "duration": 0.6454480290412903, 
+          "duration": 0.6404600143432617, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=5.681783 degrees", 
@@ -4310,11 +4335,11 @@
           ], 
           "severity-score": 10, 
           "status": "WARN", 
-          "timestamp_start": 1437197906351332, 
+          "timestamp_start": 1437197906356320, 
           "timestamp_stop": 1437197906996780
         }, 
         {
-          "duration": 2.2537920475006104, 
+          "duration": 2.243475914001465, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=11.253748 degrees", 
@@ -4335,7 +4360,7 @@
           ], 
           "severity-score": 10, 
           "status": "FAIL", 
-          "timestamp_start": 1437197906996780, 
+          "timestamp_start": 1437197907007096, 
           "timestamp_stop": 1437197909250572
         }, 
         {
@@ -4364,7 +4389,7 @@
           "timestamp_stop": 1437197946135128
         }, 
         {
-          "duration": 0.8323799967765808, 
+          "duration": 0.8263880014419556, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=9.106996 degrees", 
@@ -4385,11 +4410,11 @@
           ], 
           "severity-score": 10, 
           "status": "WARN", 
-          "timestamp_start": 1437197946135128, 
-          "timestamp_stop": 1437197946967508
+          "timestamp_start": 1437197946147128, 
+          "timestamp_stop": 1437197946973516
         }, 
         {
-          "duration": 1.8008519411087036, 
+          "duration": 1.80702805519104, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=179.760494 degrees", 
@@ -4411,10 +4436,10 @@
           "severity-score": 10, 
           "status": "FAIL", 
           "timestamp_start": 1437198304130640, 
-          "timestamp_stop": 1437198305931492
+          "timestamp_stop": 1437198305937668
         }
       ], 
-      "severity-score": 60, 
+      "severity-score": 70, 
       "status": "FAIL"
     }, 
     "AutoPilot Health": {
@@ -4611,7 +4636,7 @@
       "name": "GPS Fix", 
       "results": [
         {
-          "duration": 1.1177760362625122, 
+          "duration": 1.1369160413742065, 
           "duration-units": "seconds", 
           "evidence": [
             "satellites-visible: 5", 
@@ -4628,8 +4653,8 @@
           ], 
           "severity-score": 20, 
           "status": "FAIL", 
-          "timestamp_start": 1437196188365124, 
-          "timestamp_stop": 1437196189482900
+          "timestamp_start": 1437196188368948, 
+          "timestamp_stop": 1437196189505864
         }
       ], 
       "severity-score": 20, 
@@ -5938,7 +5963,7 @@
       "name": "Position Estimate Divergence", 
       "results": [
         {
-          "duration": 0.5680879950523376, 
+          "duration": 0.5840280055999756, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=7.350034 metres", 
@@ -5958,10 +5983,10 @@
           "severity-score": 20, 
           "status": "FAIL", 
           "timestamp_start": 1437196534459612, 
-          "timestamp_stop": 1437196535027700
+          "timestamp_stop": 1437196535043640
         }, 
         {
-          "duration": 0.6682199835777283, 
+          "duration": 0.674239993095398, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=7.350034 metres", 
@@ -5981,10 +6006,10 @@
           "severity-score": 20, 
           "status": "FAIL", 
           "timestamp_start": 1437196534459612, 
-          "timestamp_stop": 1437196535127832
+          "timestamp_stop": 1437196535133852
         }, 
         {
-          "duration": 1.5696560144424438, 
+          "duration": 1.5926519632339478, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=4.972437 metres", 
@@ -6004,7 +6029,7 @@
           "severity-score": 10, 
           "status": "WARN", 
           "timestamp_start": 1437197058833976, 
-          "timestamp_stop": 1437197060403632
+          "timestamp_stop": 1437197060426628
         }
       ], 
       "severity-score": 50, 

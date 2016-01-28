@@ -53,7 +53,6 @@ public:
     virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_system_time_t &msg UNUSED) { }
     virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_vfr_hud_t &msg UNUSED) { }
 
-
 protected:
     uint8_t system_id;
     uint8_t component_id;
