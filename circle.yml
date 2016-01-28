@@ -6,7 +6,6 @@ machine:
 
 dependencies:
   pre:
-    - sudo apt-get install -y libjsoncpp-dev libjsoncpp0
     - git submodule init
     - git submodule update
 
