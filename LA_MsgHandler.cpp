@@ -384,6 +384,14 @@ void LA_MsgHandler_PM::xprocess(const uint8_t *msg)
     }
 }
 
+void LA_MsgHandler_POWR::xprocess(const uint8_t *msg)
+{
+    double vcc;
+    if (field_value(msg, "Vcc", vcc)) {
+        _vehicle->autopilot_set_vcc(vcc / 100.0f);
+    }
+}
+
 
 void LA_MsgHandler_VIBE::xprocess(const uint8_t *msg)
 {

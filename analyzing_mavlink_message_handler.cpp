@@ -31,6 +31,8 @@ Analyzing_MAVLink_Message_Handler::Analyzing_MAVLink_Message_Handler(Analyze *an
 
     _analyze->add_data_source("AUTOPILOT_SCHEDULING", "STATUSTEXT.text");
 
+    _analyze->add_data_source("AUTOPILOT_VCC", "POWER_STATUS.Vcc");
+
     _analyze->add_data_source("BATTERY_REMAINING", "SYS_STATUS.battery_remaining");
 
     _analyze->add_data_source("CRASHED", "HEARTBEAT.system_status");
@@ -215,6 +217,14 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
     char buf[17] = { };
     memcpy(buf, msg.param_id, 16);
     _vehicle->param_set(buf, msg.param_value);
+
+    _analyze->evaluate_all();
+}
+
+void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_power_status_t &msg) {
+    _vehicle->set_T(T);
+
+    _vehicle->autopilot_set_vcc(msg.Vcc/1000.0f);
 
     _analyze->evaluate_all();
 }

@@ -352,3 +352,9 @@ void AnalyzerVehicle::AutoPilot::set_slices_stddev(uint64_t T, uint16_t slices_s
     _slices_stddev = slices_stddev;
     _slices_stddev_T = T;
 }
+
+void AnalyzerVehicle::AutoPilot::set_vcc(uint64_t T, double vcc)
+{
+    _vcc = vcc;
+    _vcc_T = T;
+}

@@ -358,6 +358,10 @@ namespace AnalyzerVehicle {
         uint16_t slices_stddev() { return _slices_stddev; }
         void set_slices_stddev(uint64_t T, uint16_t);
 
+        double vcc() { return _vcc; }
+        uint64_t vcc_T() { return _vcc_T; }
+        void set_vcc(uint64_t T, double);
+
     private:
         uint16_t _overruns;
         uint64_t _overruns_T = 0;
@@ -371,6 +375,9 @@ namespace AnalyzerVehicle {
         uint64_t _slices_avg_T = 0;
         uint16_t _slices_stddev;
         uint64_t _slices_stddev_T = 0;
+
+        double _vcc;
+        uint64_t _vcc_T = 0;
     };
 
     /// @brief Accelerometer and gyroscope information from onboard IMUs.
@@ -808,6 +815,13 @@ public:
     void autopilot_set_slices_stddev(uint16_t slices) {
         _autopilot.set_slices_stddev(T(), slices);
     }
+
+    /// @brief Set vcc of autopilot
+    /// @param vcc vcc supplied to autopilot
+    void autopilot_set_vcc(double slices) {
+        _autopilot.set_vcc(T(), slices);
+    }
+
 
     /// @brief Information from global positioning systems.
     /// @return Map from GPS name to GPS information object.

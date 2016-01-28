@@ -48,8 +48,12 @@ public:
 private:
 
     bool _old_is_flying = false;
+    double _lowest_voltage = 100000000.0f; // volts
+    double _highest_voltage = 0; // volts
 
     double max_last_relative_altitude = 5.0f; // metres
+    double _min_low_voltage; // volts
+    double _max_voltage_delta; // volts
 
     Analyzer_Truncated_Log_Result _result;
 };
