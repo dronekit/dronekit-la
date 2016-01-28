@@ -3,9 +3,7 @@
 ![Logo](https://cloud.githubusercontent.com/assets/5368500/10805537/90dd4b14-7e22-11e5-9592-5925348a7df9.png)
 
 [![Circle CI](https://circleci.com/gh/dronekit/dronekit-la.svg?style=shield&label=linux&circle-token=2f1c8245d20fd28c5234a7a3ecefef697aa5a8b5)](https://circleci.com/gh/dronekit/dronekit-la)
-[![Travis CI](https://img.shields.io/travis/dronekit/dronekit-la/master.svg?label=travisci)](https://travis-ci.org/dronekit/dronekit-la)
-[![Chat](https://badges.gitter.im/dronekit/dronekit-la.svg)](https://gitter.im/dronekit/dronekit-la)
-[![Support](https://img.shields.io/badge/support-discuss.dronekit.io-blue.svg)](https://discuss.dronekit.io/c/dronekit-la-log-analyzer)
+[![Travis CI](https://img.shields.io/travis/dronekit/dronekit-la/master.svg?label=travisci)](https://travis-ci.org/dronekit/dronekit-la) <a href="https://gitter.im/dronekit/dronekit-la"><img align="right" src="https://badges.gitter.im/dronekit/dronekit-la.svg"></img></a> <a href="https://discuss.dronekit.io/c/dronekit-la-log-analyzer"><img align="right" src="https://img.shields.io/badge/support-discuss.dronekit.io-blue.svg"></img></a>
 
 Log analyzer for ArduPilot DataFlash logs and MAVLink telemetry logs.
 
