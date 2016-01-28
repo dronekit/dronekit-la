@@ -18,7 +18,7 @@ DroneKit-LA is also fast, memory efficient and extensible. It supports numerous 
 The tool is written in C++ and can compile on a Linux computer or within a Vagrant-based Linux VM.
 
 
-The project documentation (including tool [download links]((http://la.dronekit.io/guide/getting_started.html#installing))) is available at [la.dronekit.io](http://la.dronekit.io/) logs for testing the tool can be found in the [/dronekit/dronekit-la-testdata](https://github.com/dronekit/dronekit-la-testdata) repository.
+The project documentation (including tool [download links]((http://la.dronekit.io/guide/getting_started.html#installing))) is available at [la.dronekit.io](http://la.dronekit.io/) logs for testing the tool can be found in the [dronekit-la-testdata](https://github.com/dronekit/dronekit-la-testdata) repository.
 
 
 
@@ -42,26 +42,29 @@ The [DroneKit Forums](https://discuss.dronekit.io/c/dronekit-la-log-analyzer) ar
 
 ## Developer Setup
 
-You can build dronekit-la natively on Linux. The requirements are:
-
-- `build-essential` package
-- `g++` >= 4.8
-- `libjsoncpp-dev` && `libjsoncpp0`
-
-Use the `Makefile` in the **dronekit-la** root directory:
+You can build dronekit-la natively on Linux or Mac OS X using the `Makefile` in the **dronekit-la** root directory:
 
 ```bash
 make
 ```
-Both the tool and documentation can also be [built and run from within a Vagrant VM](http://la.dronekit.io/contributing/developer_setup_vagrant.html).
 
-**Note:** At time of writing the process for building natively on Windows has [not yet been documented](https://github.com/dronekit/dronekit-la/issues/60).
+You will first need to install the following tools/libraries for each platform:
+
+* Mac OSX: XCode Developer tools.
+* Linux:
+
+  - `build-essential` package
+  - `g++` >= 4.8
+  - `libjsoncpp-dev` && `libjsoncpp0`
+* Windows: [Not yet documented](https://github.com/dronekit/dronekit-la/issues/60).
+
+Both the tool and documentation can also be [built and run from within a Vagrant VM](http://la.dronekit.io/contributing/developer_setup_vagrant.html).
 
 
 
 ## Users and contributors wanted!
 
-We'd love your [feedback and suggestions](https://github.com/dronekit/dronekit-la/issues) about this API and are eager to evolve it to meet your needs. Please feel free to create an issue to report bugs or feature requests.
+We'd love your [feedback and suggestions](https://github.com/dronekit/dronekit-la/issues) about this tool and are eager to evolve it to meet your needs. Please feel free to create an issue to report bugs or feature requests.
 
 If you want to help more directly, see our [Contributing](http://la.dronekit.io/contributing/index.html) guidelines. We welcome all types of contributions but mostly contributions that would help us shrink our [issues list](https://github.com/dronekit/dronekit-la/issues).
 

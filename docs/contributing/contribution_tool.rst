@@ -55,6 +55,37 @@ commands to do so on Linux would be:
     sudo easy_install -U pip
     sudo pip install sphinx sphinx-3dr-theme
 
+To build you just clone the repository and call *make* from its root:
+
+.. code-block:: bash
+
+    # Get the repo
+    git clone https://github.com/dronekit/dronekit-la.git
+    cd dronekit-la
+
+    # Build the tool
+    make
+
+
+Building on Mac OSX
+-------------------
+
+First install the `XCode Developer Tools <https://developer.apple.com/xcode/download/>`_.
+
+To build *dronekit-la*, you can then just clone the repository and call *make* from its root:
+
+.. code-block:: bash
+
+    # Get the repo
+    git clone https://github.com/dronekit/dronekit-la.git
+    cd dronekit-la
+
+    # Build the tool
+    make
+
+
+
+
 .. _contributing-test-code:
 
 Testing changes
