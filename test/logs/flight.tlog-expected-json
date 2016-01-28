@@ -4475,37 +4475,6 @@
       "severity-score": 0, 
       "status": "PASS"
     }, 
-    "Brownout": {
-      "description": "A log should not end while the vehicle appears to be moving under its own power.  This test will FAIL if the vehicle still appears to be moving when the log ends.", 
-      "evilness": 0, 
-      "evilness-is-deprecated": "Use severity-score", 
-      "name": "Brownout", 
-      "results": [
-        {
-          "evidence": [
-            "Final altitude -0.050000 metres"
-          ], 
-          "evilness": 0, 
-          "evilness-is-deprecated": "Use severity-score", 
-          "reason": "No brownout detected", 
-          "series": [
-            "SERVO_OUTPUT_RAW.servo1_raw", 
-            "SERVO_OUTPUT_RAW.servo2_raw", 
-            "SERVO_OUTPUT_RAW.servo3_raw", 
-            "SERVO_OUTPUT_RAW.servo4_raw", 
-            "SERVO_OUTPUT_RAW.servo5_raw", 
-            "SERVO_OUTPUT_RAW.servo6_raw", 
-            "SERVO_OUTPUT_RAW.servo7_raw", 
-            "SERVO_OUTPUT_RAW.servo8_raw", 
-            "GLOBAL_POSITION_INT.alt"
-          ], 
-          "severity-score": 0, 
-          "status": "PASS"
-        }
-      ], 
-      "severity-score": 0, 
-      "status": "PASS"
-    }, 
     "Compass Offsets": {
       "description": "Compass calibration produces a set of parameters that specify expected compass discrepancies.  This test will WARN or FAIL depending on the degree that these compass offset parameters exceed specified thresholds.", 
       "evilness": 2, 
@@ -6112,6 +6081,37 @@
       ], 
       "severity-score": 40, 
       "status": "FAIL"
+    }, 
+    "Truncated Log": {
+      "description": "A log should not end while the vehicle appears to be moving under its own power.  This test will FAIL if the vehicle still appears to be moving when the log ends.", 
+      "evilness": 0, 
+      "evilness-is-deprecated": "Use severity-score", 
+      "name": "Truncated Log", 
+      "results": [
+        {
+          "evidence": [
+            "Final altitude -0.050000 metres"
+          ], 
+          "evilness": 0, 
+          "evilness-is-deprecated": "Use severity-score", 
+          "reason": "Log truncation not detected", 
+          "series": [
+            "SERVO_OUTPUT_RAW.servo1_raw", 
+            "SERVO_OUTPUT_RAW.servo2_raw", 
+            "SERVO_OUTPUT_RAW.servo3_raw", 
+            "SERVO_OUTPUT_RAW.servo4_raw", 
+            "SERVO_OUTPUT_RAW.servo5_raw", 
+            "SERVO_OUTPUT_RAW.servo6_raw", 
+            "SERVO_OUTPUT_RAW.servo7_raw", 
+            "SERVO_OUTPUT_RAW.servo8_raw", 
+            "GLOBAL_POSITION_INT.alt"
+          ], 
+          "severity-score": 0, 
+          "status": "PASS"
+        }
+      ], 
+      "severity-score": 0, 
+      "status": "PASS"
     }, 
     "Vehicle Definition": {
       "description": "The vehicle type is normally automatically detected by dronekit-la from the log.  Sometimes the log does not contain sufficient information to make this determination.  This test will FAIL if the craft type is never defined", 

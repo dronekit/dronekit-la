@@ -10,7 +10,7 @@
 #include "analyzer/analyzer_attitude_control.h"
 #include "analyzer/analyzer_autopilot.h"
 #include "analyzer/analyzer_battery.h"
-#include "analyzer/analyzer_brownout.h"
+#include "analyzer/analyzer_truncated_log.h"
 #include "analyzer/analyzer_compass_offsets.h"
 #include "analyzer/analyzer_compass_vector_length.h"
 #include "analyzer/analyzer_ever_armed.h"
@@ -156,11 +156,11 @@ void Analyze::instantiate_analyzers(INIReader *config)
         la_log(LOG_INFO, "Failed to create analyzer_battery");
     }
 
-    Analyzer_Brownout *analyzer_brownout = new Analyzer_Brownout(vehicle,_data_sources);
-    if (analyzer_brownout != NULL) {
-        configure_analyzer(config, analyzer_brownout);
+    Analyzer_Truncated_Log *analyzer_truncated_log = new Analyzer_Truncated_Log(vehicle,_data_sources);
+    if (analyzer_truncated_log != NULL) {
+        configure_analyzer(config, analyzer_truncated_log);
     } else {
-        la_log(LOG_INFO, "Failed to create analyzer_brownout");
+        la_log(LOG_INFO, "Failed to create analyzer_truncated_log");
     }
 
     analyzer_position_estimate_divergence = new Analyzer_Position_Estimate_Divergence(vehicle,_data_sources);

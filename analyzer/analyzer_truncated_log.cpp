@@ -1,20 +1,22 @@
-#include "analyzer_brownout.h"
+#include "analyzer_truncated_log.h"
 
 #include "util.h"
 #include "analyzer_util.h"
 
-bool Analyzer_Brownout::configure(INIReader *config)
+bool Analyzer_Truncated_Log::configure(INIReader *config)
 {
     if (!Analyzer::configure(config)) {
 	return false;
     }
 
-    max_last_relative_altitude = config->GetReal("loganalyzer", "brownout::max_last_relative_altitude", 15.0f);
+    max_last_relative_altitude = config->GetReal("loganalyzer", "truncated_log::max_last_relative_altitude", 15.0f);
+    _min_low_voltage = config->GetReal("loganalyzer", "truncated_log::low_voltage", 4.6f);
+    _max_voltage_delta = config->GetReal("loganalyzer", "truncated_log::max_voltage_delta", 4.6f);
 
     return true;
 }
 
-void Analyzer_Brownout::evaluate()
+void Analyzer_Truncated_Log::evaluate()
 {
     bool new_is_flying = _vehicle->is_flying();
     if (new_is_flying && !_old_is_flying) {
@@ -23,9 +25,18 @@ void Analyzer_Brownout::evaluate()
     } else if (!new_is_flying && _old_is_flying) {
         _old_is_flying = new_is_flying;
     }
+    double vcc  =_vehicle->autopilot().vcc();
+    if (_vehicle->autopilot().vcc_T()) {
+        if (vcc > _highest_voltage) {
+            _highest_voltage = vcc;
+        }
+        if (vcc < _lowest_voltage) {
+            _lowest_voltage = vcc;
+        }
+    }
 }
 
-void Analyzer_Brownout::end_of_log(const uint32_t packet_count UNUSED)
+void Analyzer_Truncated_Log::end_of_log(const uint32_t packet_count UNUSED)
 {
     double last_altitude = _vehicle->altitude();
     _result.set_last_altitude(last_altitude);
@@ -47,11 +58,24 @@ void Analyzer_Brownout::end_of_log(const uint32_t packet_count UNUSED)
             _result.add_source(_data_sources.get("ALTITUDE"));
             _result.set_reason("Log ended while craft still flying");
             _result.add_evidence("Vehicle still flying");
+
+            _result.add_source(_data_sources.get("AUTOPILOT_VCC"));
+            if (_vehicle->autopilot().vcc_T()) {
+                if (_lowest_voltage < _min_low_voltage) {
+                    _result.add_evidence(string_format("Low AutoPilot Voltage (%0.2f < %0.2f", _lowest_voltage, _min_low_voltage));
+                } else {
+                    _result.add_evidence(string_format("AutoPilot Voltage OK (%0.2f > %0.2f)", _lowest_voltage, _min_low_voltage));
+                }
+                double voltage_delta = _highest_voltage - _lowest_voltage;
+                if (voltage_delta > _max_voltage_delta) {
+                    _result.add_evidence(string_format("AutoPilot Voltage Delta BAD (%0.2f > %0.2f)", voltage_delta, _max_voltage_delta));
+                }
+            }
         } else {
             _result.set_status(analyzer_status_ok);
             _result.add_source(_data_sources.get("SERVO_OUTPUT"));
             _result.add_source(_data_sources.get("ALTITUDE"));
-            _result.set_reason("No brownout detected");
+            _result.set_reason("Log truncation not detected");
         }
     } else {
         _result.set_status(analyzer_status_warn);

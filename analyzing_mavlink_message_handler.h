@@ -39,6 +39,7 @@ private:
     virtual void handle_decoded_message(uint64_t T, mavlink_heartbeat_t &msg) override;
     virtual void handle_decoded_message(uint64_t T, mavlink_nav_controller_output_t &msg) override;
     virtual void handle_decoded_message(uint64_t T, mavlink_param_value_t &msg) override;    
+    virtual void handle_decoded_message(uint64_t T, mavlink_power_status_t &msg) override;
     virtual void handle_decoded_message(uint64_t T, mavlink_scaled_pressure_t &msg) override;
     virtual void handle_decoded_message(uint64_t T, mavlink_scaled_pressure2_t &msg) override;
     virtual void handle_decoded_message(uint64_t T, mavlink_servo_output_raw_t &msg) override;

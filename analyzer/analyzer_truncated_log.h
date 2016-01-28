@@ -1,16 +1,16 @@
-#ifndef ANALYZER_BROWNOUT_H
-#define ANALYZER_BROWNOUT_H
+#ifndef ANALYZER_TRUNCATED_LOG_H
+#define ANALYZER_TRUNCATED_LOG_H
 
 /*
- * analyzer_brownout
+ * analyzer_truncated_log
  *
  */
 
 #include "analyzer.h"
 
-class Analyzer_Brownout_Result : public Analyzer_Result_Summary {
+class Analyzer_Truncated_Log_Result : public Analyzer_Result_Summary {
 public:
-    Analyzer_Brownout_Result() :
+    Analyzer_Truncated_Log_Result() :
         Analyzer_Result_Summary()
         { }
 
@@ -28,15 +28,15 @@ private:
 };
 
 
-class Analyzer_Brownout : public Analyzer {
+class Analyzer_Truncated_Log : public Analyzer {
 
 public:
 
-    Analyzer_Brownout(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
+    Analyzer_Truncated_Log(AnalyzerVehicle::Base *&vehicle, Data_Sources &data_sources) :
     Analyzer(vehicle,data_sources)
     { }
 
-    const std::string name() const override { return "Brownout"; }
+    const std::string name() const override { return "Truncated Log"; }
     const std::string description() const override {
         return "A log should not end while the vehicle appears to be moving under its own power.  This test will FAIL if the vehicle still appears to be moving when the log ends.";
     }
@@ -48,10 +48,14 @@ public:
 private:
 
     bool _old_is_flying = false;
+    double _lowest_voltage = 100000000.0f; // volts
+    double _highest_voltage = 0; // volts
 
     double max_last_relative_altitude = 5.0f; // metres
+    double _min_low_voltage; // volts
+    double _max_voltage_delta; // volts
 
-    Analyzer_Brownout_Result _result;
+    Analyzer_Truncated_Log_Result _result;
 };
 
 #endif

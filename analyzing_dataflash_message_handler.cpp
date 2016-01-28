@@ -57,6 +57,8 @@ void Analyzing_DataFlash_Message_Handler::handle_format_message_received(const c
         if (ahr2_handler != NULL) {
             ahr2_handler->set_canonical_for_position(false);
         }
+    } else if (streq(name, "POWR")) {
+        handlers[new_msg_type] = new LA_MsgHandler_POWR(name, format, _analyze, _vehicle);
     } else if (streq(name, "RCOU")) {
         handlers[new_msg_type] = new LA_MsgHandler_RCOU(name, format, _analyze, _vehicle);
     } else if (streq(name, "STAT")) {
