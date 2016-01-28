@@ -21,12 +21,6 @@ you first create an issue in Github so it can be tracked and discussed!
 The topics below explain how to :doc:`contribute to the tool <contribution_tool>` or the 
 :doc:`documentation <contribution_docs>`:
 
-.. todo::
-
-   If we work out how to set up a development environment add to end of last sentence: , and how to set up a 
-   :ref:`development environment on Linux <dronekit_development_linux>` or :ref:`Windows <dronekit_development_windows>`.
-
-
 .. toctree::
     :maxdepth: 1
 
@@ -38,7 +32,3 @@ The topics below explain how to :doc:`contribute to the tool <contribution_tool>
     ../reference/analyser_reference
     ../reference/message_handlers_reference
 
-
-
-
-   
