@@ -1,0 +1,31 @@
+language: cpp
+compiler:
+- clang
+- gcc
+os: osx
+git:
+  submodules: false
+before_install:
+- echo $LANG
+- echo $LC_ALL
+- echo $TRAVIS_OS_NAME
+- uname -s
+- echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+- sed -e 's/git@github.com:/git:\/\/github.com\//' -i '' .gitmodules
+- git submodule update --init --recursive || echo "yes"
+- brew tap homebrew/versions
+- brew update
+- brew list
+- brew unlink json-c
+- brew install jsoncpp
+install:
+- export CC="gcc-4.9"
+- export CXX="g++-4.9"
+- gcc -v
+- g++ -v
+script:
+- make
+- ./test/test.py --submodules dronekit-la-testdata
+env:
+  global:
+  - LANG="en_US.UTF-8"

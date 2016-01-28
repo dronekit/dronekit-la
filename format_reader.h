@@ -42,8 +42,6 @@ protected:
 
 private:
 
-    bool sighup_received = false;
-
     uint64_t next_tenthhz_time;
     uint64_t next_1hz_time;
     uint64_t next_10hz_time;

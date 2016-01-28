@@ -31,7 +31,7 @@ public:
     Analyzer(vehicle,data_sources)
     { }
 
-    bool configure(INIReader *config);
+    bool configure(INIReader *config) override;
 
     const std::string name() const override { return "Ever Armed"; }
     const std::string description() const override {

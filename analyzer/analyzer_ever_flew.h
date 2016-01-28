@@ -45,8 +45,8 @@ public:
 
     virtual ~Analyzer_Ever_Flew() { }
 
-    const std::string name() const { return "Ever Flew"; }
-    const std::string description() const {
+    const std::string name() const override { return "Ever Flew"; }
+    const std::string description() const override {
         return "Determining whether a vehicle has ever flown in a log is done heuristically based on things like motor speeds.  This test will FAIL if the craft did not ever seem to fly.";
     }
 

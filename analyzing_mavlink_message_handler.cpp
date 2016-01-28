@@ -30,7 +30,7 @@ Analyzing_MAVLink_Message_Handler::Analyzing_MAVLink_Message_Handler(Analyze *an
     _analyze->add_data_source("ATTITUDE_ESTIMATE_AHRS2", "AHRS2.yaw");
 
     _analyze->add_data_source("AUTOPILOT_SCHEDULING", "STATUSTEXT.text");
-        
+
     _analyze->add_data_source("BATTERY_REMAINING", "SYS_STATUS.battery_remaining");
 
     _analyze->add_data_source("CRASHED", "HEARTBEAT.system_status");
@@ -79,7 +79,7 @@ Analyzing_MAVLink_Message_Handler::Analyzing_MAVLink_Message_Handler(Analyze *an
 
     _analyze->add_data_source("POSITION_ESTIMATE_GPS_RAW_INT", "GPS_RAW_INT.lat");
     _analyze->add_data_source("POSITION_ESTIMATE_GPS_RAW_INT", "GPS_RAW_INT.lon");
-        
+
     _analyze->add_data_source("VELOCITY_GROUND", "GLOBAL_POSITION_INT.vx");
     _analyze->add_data_source("VELOCITY_GROUND", "GLOBAL_POSITION_INT.vy");
     _analyze->add_data_source("VELOCITY_GROUND", "GLOBAL_POSITION_INT.vz");
@@ -229,7 +229,7 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message_scaled_pressure(u
             gnd_temp,
             press_abs,
             temperature);
-        
+
         double alt = _vehicle->origin_altitude() + relalt;
         // ::fprintf(stderr, "SCALED_PRESSURE alt=%f\n", alt);
         _vehicle->altitude_estimate(name)->set_alt(T, alt);
@@ -298,7 +298,7 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
             _vehicle->sensor_set_healthy(name, msg.onboard_control_sensors_health & mask);
         }
     }
-    
+
     _analyze->evaluate_all();
 }
 
@@ -350,7 +350,7 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
         std::regex perf_regex("PERF: ([0-9]+)/([0-9]+) ([0-9]+) ([0-9]+)(?: ([0-9]+) ([0-9]+))?");
         std::smatch result;
         regex_search(x, result, perf_regex);
-        std::string::size_type sz;
+        //std::string::size_type sz;
         // _vehicle->autopilot_set_overruns(strtol(result[1].str().c_str(),0,10));
         // _vehicle->autopilot_set_loopcount(strtol(result[2].str().c_str(),0,10));
         // _vehicle->autopilot_set_slices_max(strtol(result[3].str().c_str(),0,10));
@@ -359,7 +359,7 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
         //     ::fprintf(stderr, "%u: %s\n", i, result[i].str().c_str().str().c_str(),0,10);
         // }
         // if (result[6].str().c_str().size()) {
-        //     _vehicle->autopilot_set_slices_avg(strtol(result[5].str().c_str(),0,10)); 
+        //     _vehicle->autopilot_set_slices_avg(strtol(result[5].str().c_str(),0,10));
         //     _vehicle->autopilot_set_slices_stddev(strtol(result[6].str().c_str(),0,10));
         // }
     }

@@ -25,7 +25,7 @@ public:
     virtual void configure(INIReader *config) = 0;
     virtual void handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds) = 0;
 
-    virtual void init() = 0;
+    virtual void init() { }
 
     virtual void do_writer_sends() = 0;
     virtual bool send_message(const mavlink_message_t &message) = 0;
@@ -45,7 +45,7 @@ public:
     virtual uint32_t send_buf_size() const = 0;
 
 private:
-         
+
 };
 
 #endif

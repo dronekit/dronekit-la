@@ -60,33 +60,33 @@ private:
 #pragma GCC diagnostic ignored "-Wpedantic"
     std::map<const std::string, ekf_variance> _variances = {
         { "velocity", {
-            name: "velocity_variance",
-            threshold_warn: 0.5f,
-            threshold_fail: 1.0f,
+            .name = "velocity_variance",
+            .threshold_warn = 0.5f,
+            .threshold_fail = 1.0f,
             }
         },
         { "pos_horiz", {
-            name: "pos_horiz_variance",
-            threshold_warn: 0.5f,
-            threshold_fail: 1.0f,
+            .name = "pos_horiz_variance",
+            .threshold_warn = 0.5f,
+            .threshold_fail = 1.0f,
             }
         },
         { "pos_vert", {
-            name: "pos_vert_variance",
-            threshold_warn: 0.5f,
-            threshold_fail: 1.0f,
+            .name = "pos_vert_variance",
+            .threshold_warn = 0.5f,
+            .threshold_fail = 1.0f,
             }
         },
         { "compass", {
-            name: "compass_variance",
-            threshold_warn: 0.5f,
-            threshold_fail: 1.0f,
+            .name = "compass_variance",
+            .threshold_warn = 0.5f,
+            .threshold_fail = 1.0f,
             }
         },
         { "terrain_alt", {
-            name: "terrain_alt_variance",
-            threshold_warn: 0.5f,
-            threshold_fail: 1.0f,
+            .name = "terrain_alt_variance",
+            .threshold_warn = 0.5f,
+            .threshold_fail = 1.0f,
             }
         }
     };
@@ -100,7 +100,7 @@ private:
         { "terrain_alt", NULL }
     };
 
-    void evaluate_variance(struct ekf_variance &variance, double value);
+    void evaluate_variance(class ekf_variance &variance, double value);
     void evaluate_variances();
     void evaluate_flags();
     void evaluate() override;

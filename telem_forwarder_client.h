@@ -19,13 +19,13 @@ public:
     uint32_t handle_recv();
     void init() override;
 
-    void configure(INIReader *config);
-    void pack_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds);
-    void handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds);
+    void configure(INIReader *config) override;
+    void pack_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds) override;
+    void handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds) override;
 
-    void do_writer_sends();
-    bool send_message(const mavlink_message_t &msg);
-    bool any_data_to_send() {
+    void do_writer_sends() override;
+    bool send_message(const mavlink_message_t &msg) override;
+    bool any_data_to_send() override {
         return _send_buf_start != _send_buf_stop;
     }
 
@@ -41,7 +41,7 @@ private:
 
     /* send buffer stuff: */
     mavlink_message_t _send_buf[256]; // way too bug?
-    uint32_t send_buf_size() const {
+    uint32_t send_buf_size() const override {
         return 256;
     }
 };

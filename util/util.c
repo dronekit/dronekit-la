@@ -12,49 +12,65 @@
 
 #endif
 
+#define UNUSED __attribute__ ((unused))
+
 /* Get current wall-clock time and return it in microseconds since the Unix
  * epoch.
  *
  * CLOCK_REALTIME should be used to get the system's best guess at real time.
  * CLOCK_MONOTONIC should be used when jumps in time would cause trouble.
  */
-uint64_t clock_gettime_us(clock_t clock_id)
-{
 #ifdef __APPLE__
+uint64_t clock_gettime_us(clock_t clock_id UNUSED)
+{
     clock_serv_t cclock;
     mach_timespec_t ts;
 
     host_get_clock_service(mach_host_self(), SYSTEM_CLOCK, &cclock);
     clock_get_time(cclock, &ts);
     mach_port_deallocate(mach_task_self(), cclock);
-#else
-    struct timespec ts;
-    clock_gettime(clock_id, &ts);
-#endif
+
     return (uint64_t)ts.tv_sec * 1000000ULL + (ts.tv_nsec + 500) / 1000;
 }
+#else
+uint64_t clock_gettime_us(clock_t clock_id)
+{
+    struct timespec ts;
+
+    clock_gettime(clock_id, &ts);
+
+    return (uint64_t)ts.tv_sec * 1000000ULL + (ts.tv_nsec + 500) / 1000;
+}
+#endif
 
 /* Set clock.
  * This is usually used with CLOCK_REALTIME.
  */
-void clock_settime_us(clock_t clock_id, uint64_t t_us)
-{
 #ifdef __APPLE__
+void clock_settime_us(clock_t clock_id UNUSED, uint64_t t_us)
+{
     mach_timespec_t ts;
-#else
-    struct timespec ts;
-#endif
+
     ts.tv_sec = t_us / 1000000;
     ts.tv_nsec = (t_us % 1000000) * 1000;
-#ifdef __APPLE__
+
     clock_serv_t cclock;
     host_get_clock_service(mach_host_self(), SYSTEM_CLOCK, &cclock);
     clock_set_time(cclock, ts);
     mach_port_deallocate(mach_task_self(), cclock);
-#else
-    clock_settime(clock_id, &ts);
-#endif
 }
+#else
+void clock_settime_us(clock_t clock_id, uint64_t t_us)
+{
+    struct timespec ts;
+
+    ts.tv_sec = t_us / 1000000;
+    ts.tv_nsec = (t_us % 1000000) * 1000;
+
+    clock_settime(clock_id, &ts);
+}
+#endif
+
 
 #ifndef _WIN32
 

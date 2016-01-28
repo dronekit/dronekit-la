@@ -25,7 +25,7 @@ public:
     Analyzer_Estimate_Divergence(vehicle,data_sources)
     { }
 
-    const std::string estimate_name() const {
+    const std::string estimate_name() const override {
         return "Attitude";
     };
 
@@ -41,7 +41,7 @@ public:
 
     void end_of_log(const uint32_t packet_count) override;
 
-    const std::string _config_tag() const {
+    const std::string _config_tag() const override {
         return std::string("attitude_estimate_divergence");
     }
 

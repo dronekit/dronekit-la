@@ -104,7 +104,7 @@ bool Base::param(const char *name, float &ret) const
     }
     ret = param(name);
     return true;
-}    
+}
 
 float Base::param(const std::string name) const
 {
@@ -127,8 +127,8 @@ void Base::param_set(const char *name, const float value)
 
 void Base::take_state(Base *old)
 {
-    _param = old->_param;
-    _param_modtime = old->_param_modtime;
+  _param.insert(old->_param.begin(), old->_param.end());
+  _param_modtime.insert(old->_param_modtime.begin(), old->_param_modtime.end());
 }
 
 bool Base::param_seen(const std::string name) const
