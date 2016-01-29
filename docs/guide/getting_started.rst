@@ -6,28 +6,21 @@ Getting Started
 
 This topic explains how to download and install DroneKit-LA and how to perform some basic analysis operations.
 
-.. note:: 
-
-    This first release can only be run on Linux! These instructions have been tested on Ubuntu 14.04.3 LTS
-    and Ubuntu 15.10 running in a virtual machine.
-
 
 Installing 
 ==========
 
-To install DroneKit-LA on your Linux computer:
+To install DroneKit-LA on your computer:
 
-#. Download :download:`dronekit-la_0.3_amd64.deb <../downloads/dronekit-la_0.3_amd64.deb>`.
-#. Open the file (double-click in UI) to launch it in the *Ubuntu Software Center*. 
-   Then select the **Install** button.
-   
-   .. tip:: 
-   
-       You can also install on the terminal using the command:
-       
-       .. code-block:: python
-       
-           sudo dpkg -i dronekit-la_0.3_amd64.deb
+#. Download the installation file for your OS from the `Github release page <https://github.com/dronekit/dronekit-la/releases/latest>`_.
+#. Install the tool by running the installer/extracting the files. 
+
+.. note::
+
+    The installer files (e.g. **.deb**) set up paths on your computer so that you can run *dronekit-la*
+    from anywhere. If using the tarball/zip archives, run the *dronekit-la* from the folder
+    where you extracted the executable.
+
 
 
 Running the tool
