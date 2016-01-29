@@ -44,8 +44,8 @@ This test will FAIL if the input does not contain parameter information.
 Altitude Estimate Divergence
 ============================
 
-A UAV often has several estimates of its Altitude.  
-This test will FAIL or WARN if the various vehicle's Altitude estimates diverge.
+A UAV often has several estimates of its altitude.  
+This test will FAIL or WARN if the various vehicle's altitude estimates diverge.
 
 * Fail: This altitude estimate differs from the canonical craft altitude
 * Warn: This altitude estimate differs from the canonical craft altitude
@@ -102,8 +102,8 @@ not within threshold delta values for more than a threshold time.
 Attitude Estimate Divergence
 ============================
 
-A UAV often has several estimates of its Attitude.  
-This test will FAIL or WARN if the various vehicle's Attitude estimates diverge.
+A UAV often has several estimates of its attitude.  
+This test will FAIL or WARN if the various vehicle's attitude estimates diverge.
 
 * Fail: This attitude estimate differs from the canonical craft attitude.
 * Warn: This attitude estimate differs from the canonical craft attitude. 
@@ -357,7 +357,7 @@ This test will FAIL or WARN if the any gyroscope's average acceleration on any a
 Position Estimate Divergence
 ============================
 
-A UAV often has several estimates of its Position.  This test will FAIL or WARN if the various vehicle's Position estimates diverge.
+A UAV often has several estimates of its position.  This test will FAIL or WARN if the various vehicle's position estimates diverge.
 
 * Fail: This position estimate differs from the canonical craft position
 * Warn: This position estimate differs from the canonical craft position
