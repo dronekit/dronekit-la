@@ -32,6 +32,8 @@ repository and contribute changes back to the project master branch using pull r
 Building the Tool
 =================
 
+DroneKit-LA is built in the same way on all platforms; by cloning the repository and then calling ``make`` in its root directory. The only differences are in the dependencies required to build on each platform.
+
 Building using Vagrant
 ----------------------
 
@@ -55,7 +57,7 @@ commands to do so on Linux would be:
     sudo easy_install -U pip
     sudo pip install sphinx sphinx-3dr-theme
 
-To build you just clone the repository and call *make* from its root:
+To build *dronekit-la*, you can then just clone the repository and call *make* from its root:
 
 .. code-block:: bash
 
@@ -83,7 +85,33 @@ To build *dronekit-la*, you can then just clone the repository and call *make* f
     # Build the tool
     make
 
+    
+Building on Windows
+-------------------
 
+You can build *dronekit-la* natively on Windows from within `Cygwin <https://cygwin.com/install.html>`_.
+
+First set up the dependencies:
+
+* `Download and install Cygwin <http://cygwin.com/setup-x86.exe>`_ (install for all users)
+* Install the following packages:
+
+  * Devel / git
+  * Devel / make
+  * Devel / mingw64-x86_64-gcc-g++
+
+* Open the *Cygwin Terminal*
+  
+To build *dronekit-la*, you can then just clone the repository and call *make* from its root:
+
+.. code-block:: bash
+
+    # Get the repo
+    git clone https://github.com/dronekit/dronekit-la.git
+    cd dronekit-la
+
+    # Build the tool
+    make
 
 
 .. _contributing-test-code:
