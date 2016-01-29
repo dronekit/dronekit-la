@@ -157,29 +157,6 @@ threshold level, or if a battery failsafe event is received.
 
 
 
-Brownout
-========
-
-A log should not end while the vehicle appears to be moving under its own power.  
-This test will FAIL if the vehicle still appears to be moving when the log ends.
-
-* Fail: Log ended while craft still flying
-* Warn: Altitude never changed
-* Pass: No brownout detected
-
-.. note::
-
-   There are several possible causes for a truncated log (including power failure due to brownout,
-   running out of memory for the log file, or failure of the logging sub-system). Failing this test
-   does not necessarily mean a brownout actually occurred.
-
-
-.. internalnotes
-
-    - defined in:
-      https://github.com/dronekit/dronekit-la/blob/master/analyzer/analyzer_brownout.cpp
-      https://github.com/dronekit/dronekit-la/blob/master/analyzer/analyzer_brownout.h
-
 
 
 Compass Offsets
@@ -387,6 +364,29 @@ A UAV can self-assess its sensors' health.  This test will FAIL if any sensor is
       https://github.com/dronekit/dronekit-la/blob/master/analyzer/analyzer_sensor_health.h
 
 
+Truncated Log
+=============
+
+A log should not end while the vehicle appears to be moving under its own power.  
+This test will FAIL if the vehicle still appears to be moving when the log ends.
+
+* Fail: Log ended while craft still flying
+* Warn: Altitude never changed
+
+
+.. note::
+
+   There are several possible causes for a truncated log (including power failure due to brownout,
+   running out of memory for the log file, or failure of the logging sub-system). 
+
+
+.. internalnotes
+
+    - defined in:
+      https://github.com/dronekit/dronekit-la/blob/prep-for-0.5/analyzer/analyzer_truncated_log.cpp
+      https://github.com/dronekit/dronekit-la/blob/prep-for-0.5/analyzer/analyzer_truncated_log.h
+      
+      
 .. _analyzer_listing_vehicle_definition:
 
 Vehicle Definition

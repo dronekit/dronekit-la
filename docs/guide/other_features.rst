@@ -56,7 +56,7 @@ You can list them using the ``-l`` flag. At time of writing (DroneKit-LA 0.3) th
     Attitude Control
     AutoPilot Health
     Battery
-    Brownout
+    Truncated Log
     Position Estimate Divergence
     Crash Test
     Sensor Health
