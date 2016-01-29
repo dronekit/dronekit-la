@@ -12,7 +12,7 @@
 // if you modify this, modify the debian metadata using e.g.
 // debchange -r -e  (FIXME)
 
-#define DRONEKIT_LA_VERSION "0.3"
+#define DRONEKIT_LA_VERSION "0.5"
 
 #include "INIReader.h"
 
