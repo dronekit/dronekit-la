@@ -3,7 +3,7 @@
 ![Logo](https://cloud.githubusercontent.com/assets/5368500/10805537/90dd4b14-7e22-11e5-9592-5925348a7df9.png)
 
 [![Circle CI](https://circleci.com/gh/dronekit/dronekit-la.svg?style=shield&label=linux&circle-token=2f1c8245d20fd28c5234a7a3ecefef697aa5a8b5)](https://circleci.com/gh/dronekit/dronekit-la)
-[![Travis CI](https://img.shields.io/travis/dronekit/dronekit-la/master.svg?label=travisci)](https://travis-ci.org/dronekit/dronekit-la) <a href="https://gitter.im/dronekit/dronekit-la"><img align="right" src="https://badges.gitter.im/dronekit/dronekit-la.svg"></img></a> <a href="https://discuss.dronekit.io/c/dronekit-la-log-analyzer"><img align="right" src="https://img.shields.io/badge/support-discuss.dronekit.io-blue.svg"></img></a>
+[![Travis CI](https://img.shields.io/travis/dronekit/dronekit-la/master.svg?label=travisci)](https://travis-ci.org/dronekit/dronekit-la)<a href="https://gitter.im/dronekit/dronekit-la"><img align="right" src="https://badges.gitter.im/dronekit/dronekit-la.svg"></img></a><a href="https://discuss.dronekit.io/c/dronekit-la-log-analyzer"><img align="right" src="https://img.shields.io/badge/support-discuss.dronekit.io-blue.svg"></img></a>
 
 Log analyzer for ArduPilot DataFlash logs and MAVLink telemetry logs.
 
@@ -15,7 +15,7 @@ The tool can read and analyze several log formats, including telemetry logs (tlo
 
 DroneKit-LA is also fast, memory efficient and extensible. It supports numerous analyzers and can quickly analyzing even very large logs.
 
-The tool is written in C++ and can compile on a Linux computer or within a Vagrant-based Linux VM.
+The tool is written in C++ and can compile on a Linux, Mac OSX or Windows computer or within a Vagrant-based Linux VM.
 
 
 The project documentation (including tool [download links]((http://la.dronekit.io/guide/getting_started.html#installing))) is available at [la.dronekit.io](http://la.dronekit.io/) logs for testing the tool can be found in the [dronekit-la-testdata](https://github.com/dronekit/dronekit-la-testdata) repository.
@@ -24,7 +24,7 @@ The project documentation (including tool [download links]((http://la.dronekit.i
 
 ## Getting Started
 
-The [Getting Started](http://la.dronekit.io/guide/getting_started.html) guide explains how to install DroneKit-LA on a Linux computer (or Linux VM), how to run the tool, and how to interpret the results.
+The [Getting Started](http://la.dronekit.io/guide/getting_started.html) guide explains how to install DroneKit-LA, how to run the tool, and how to interpret the results.
 
 After installing, the tool, running an analysis can be as simple as entering the following command on a terminal:
 
@@ -42,21 +42,13 @@ The [DroneKit Forums](https://discuss.dronekit.io/c/dronekit-la-log-analyzer) ar
 
 ## Developer Setup
 
-You can build dronekit-la natively on Linux or Mac OS X using the `Makefile` in the **dronekit-la** root directory:
+You can build dronekit-la natively on Linux, Mac OS X or Windows using the `Makefile` in the **dronekit-la** root directory:
 
 ```bash
 make
 ```
 
-You will first need to install the following tools/libraries for each platform:
-
-* Mac OSX: XCode Developer tools.
-* Linux:
-
-  - `build-essential` package
-  - `g++` >= 4.8
-  - `libjsoncpp-dev` && `libjsoncpp0`
-* Windows: [Not yet documented](https://github.com/dronekit/dronekit-la/issues/60).
+The dependencies for building each platform are different, as documented in the guide: [Contributing to DroneKit-LA](http://la.dronekit.io/contributing/contribution_tool.html#building-the-tool).
 
 Both the tool and documentation can also be [built and run from within a Vagrant VM](http://la.dronekit.io/contributing/developer_setup_vagrant.html).
 
