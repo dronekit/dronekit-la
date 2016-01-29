@@ -1,5 +1,5 @@
-DK-LA Version: Version: 0.3
-Git-Version: v0.1-200-g2d60
+DK-LA Version: Version: 0.5
+Git-Version: v0.1-221-g67b8
 
 DK-LA HELP:
 
@@ -40,7 +40,7 @@ Gyro Drift
 Attitude Control
 AutoPilot Health
 Battery
-Brownout
+Truncated Log
 Position Estimate Divergence
 Crash Test
 Sensor Health
@@ -77,6 +77,10 @@ Description: The autopilot reports both the craft's attitude and the attitude th
 * Fail: Desired attitude not achieved
 * Warn: Desired attitude not achieved
 
+TEST: Truncated Log
+Description: A log should not end while the vehicle appears to be moving under its own power.  This test will FAIL if the vehicle still appears to be moving when the log ends.
+* Fail: Log ended while craft still flying
+
 TEST: Battery
 Description: Many autopilots are capable of monitoring their flight batteries.  This test will FAIL if the battery level falls below the battery failsafe threshold level, or if a battery failsafe event is received.
 * Pass: Battery never below failsafe
@@ -93,9 +97,8 @@ TEST: Ever Flew
 Description: Determining whether a vehicle has ever flown in a log is done heuristically based on things like motor speeds.  This test will FAIL if the craft did not ever seem to fly.
 * Pass: The vehicle appeared to fly
 
-TEST: Sensor Health
-Description: A UAV can self-assess its sensors' health.  This test will FAIL if any sensor is detected as failed.
-* Fail: The craft's assessment of its sensors indicate a problem
+TEST: Velocity Estimate Divergence
+Description: A UAV typically has several estimates of its velocity.  This test will FAIL if the craft's velocity estimates diverge.
 
 TEST: Crash Test
 Description: Crashes are detected both heuristically and by explicit log messages.  This test will FAIL if the vehicle appears to crash.
@@ -108,10 +111,6 @@ TEST: Vehicle Definition
 Description: The vehicle type is normally automatically detected by dronekit-la from the log.  Sometimes the log does not contain sufficient information to make this determination.  This test will FAIL if the craft type is never defined
 * Pass: Vehicle was appropriately defined
 
-TEST: Brownout
-Description: A log should not end while the vehicle appears to be moving under its own power.  This test will FAIL if the vehicle still appears to be moving when the log ends.
-* Fail: Log ended while craft still flying
-
 TEST: Position Estimate Divergence
 Description: A UAV often has several estimates of its position.  This test will FAIL or WARN if the various vehicle's position estimates diverge.
 * Fail: This position estimate differs from the canonical craft position
@@ -122,8 +121,9 @@ Description: The strength and direction of the Earth's magnetic field should be 
 TEST: Arming Checks
 Description: An autopilot checks many aspects of the aircraft's state before allowing it to be armed - for example, that it has a good GPS fix.  This test will FAIL if the craft ever arms when some arming checks are disabled.
 
-TEST: Velocity Estimate Divergence
-Description: A UAV typically has several estimates of its velocity.  This test will FAIL if the craft's velocity estimates diverge.
+TEST: Sensor Health
+Description: A UAV can self-assess its sensors' health.  This test will FAIL if any sensor is detected as failed.
+* Fail: The craft's assessment of its sensors indicate a problem
 
 TEST: Attitude Estimate Divergence
 Description: A UAV often has several estimates of its attitude.  This test will FAIL or WARN if the various vehicle's attitude estimates diverge.
