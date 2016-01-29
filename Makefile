@@ -11,8 +11,8 @@ INCS += -I.  # for <DataFlash/DataFlash.h> in MsgHandler
 WARNFLAGS= -Wall -Werror -Wextra -Wunused -Wredundant-decls -D_FORTIFY_SOURCE=2 -Wfloat-equal -fstack-protector -Wformat -Werror=format-security -Werror=pointer-arith -Wpedantic
 
 ifeq ($(OS),Windows_NT)
-	CXX=i686-w64-mingw32-g++.exe
-	CC=i686-w64-mingw32-gcc.exe
+	CXX=x86_64-w64-mingw32-g++.exe
+	CC=x86_64-w64-mingw32-gcc.exe
 	LIBS += -lws2_32
 	LIBS +=  -lpthread # for clock_gettime/clock_settime on Windows
 	STATIC=-static
@@ -114,3 +114,7 @@ install-dronekit-la: dronekit-la
 	install -D dronekit-la $(DESTDIR)/usr/bin/dronekit-la
 
 install: install-dronekit-la
+
+VERSION=0.5
+windows-zip: dronekit-la
+	zip dronekit-la-$(VERSION).zip dronekit-la.exe README.md LICENSE
