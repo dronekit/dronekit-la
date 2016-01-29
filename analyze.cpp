@@ -21,6 +21,7 @@
 #include "analyzer/analyzer_position_estimate_divergence.h"
 #include "analyzer/analyzer_sensor_health.h"
 #include "analyzer/analyzer_vehicle_definition.h"
+#include "analyzer/analyzer_velocity_estimate_divergence.h"
 
 #include "la-log.h"
 

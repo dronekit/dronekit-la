@@ -31,6 +31,10 @@ AnalyzerVehicle::PositionEstimate*
 LA_MsgHandler::position_estimate() {
     return _vehicle->position_estimate(name());
 }
+AnalyzerVehicle::VelocityEstimate*
+LA_MsgHandler::velocity_estimate() {
+    return _vehicle->velocity_estimate(name());
+}
 
 AnalyzerVehicle::GPSInfo*
 LA_MsgHandler::gpsinfo() {
@@ -186,6 +190,11 @@ LA_MsgHandler_EKF1::LA_MsgHandler_EKF1(std::string name,
     _analyze->add_data_source("POSITION_ESTIMATE_EKF1", "EKF1.PE");
 
     _analyze->add_data_source("ALTITUDE_ESTIMATE_EKF1", "EKF1.PD");
+
+    _analyze->add_data_source("VELOCITY_ESTIMATE_EKF1", "EKF1.VN");
+    _analyze->add_data_source("VELOCITY_ESTIMATE_EKF1", "EKF1.VE");
+    _analyze->add_data_source("VELOCITY_ESTIMATE_EKF1", "EKF1.VD");
+
 }
 
 void LA_MsgHandler_EKF1::xprocess(const uint8_t *msg) {
@@ -219,13 +228,22 @@ void LA_MsgHandler_EKF1::xprocess(const uint8_t *msg) {
         _vehicle->altitude_estimate("EKF1")->set_alt(T(), origin_alt - posD);
     }
 
-    // currently EKF1 is canonical for velocity:
     {
-        _vehicle->vel().set_x(T(), require_field_float(msg, "VN"));
-        _vehicle->vel().set_y(T(), require_field_float(msg, "VE"));
-        _vehicle->vel().set_z(T(), require_field_float(msg, "VD"));
+        double vn = require_field_float(msg, "VN");
+        double ve = require_field_float(msg, "VE");
+        double vd = require_field_float(msg, "VD");
+
+        _vehicle->velocity_estimate("EKF1")->velocity().set_x(T(), vn);
+        _vehicle->velocity_estimate("EKF1")->velocity().set_y(T(), ve);
+        _vehicle->velocity_estimate("EKF1")->velocity().set_z(T(), vd);
+
+        // set EKF1 as canonical for velocity:
+        // Sadly, NTUN isn't updated if we're not using the nav controller
+        _vehicle->vel().set_x(T(), vn);
+        _vehicle->vel().set_y(T(), ve);
+        _vehicle->vel().set_z(T(), vd);
     }
-    
+
 }
 
 #define ERROR_SUBSYSTEM_FAILSAFE_BATT       6
@@ -290,6 +308,10 @@ void LA_MsgHandler_GPS::xprocess(const uint8_t *msg) {
     position_estimate()->set_lat(T(), Lat/(double)10000000.0f);
     position_estimate()->set_lon(T(), Lng/(double)10000000.0f);
     altitude_estimate()->set_alt(T(), Alt/(double)100.0f);
+
+    uint32_t Spd = require_field_int32_t(msg, "Spd")/(double)100.0f;
+    velocity_estimate()->velocity().set_scalar(T(), Spd);
+    velocity_estimate()->velocity().set_is2D_scalar(true); // FIXME: use VZ if available?
 
     uint8_t nsats;
     if (field_value(msg, "NSats", nsats) ||

@@ -128,14 +128,40 @@ namespace AnalyzerVehicle {
     /// @brief Abstraction of a vehicle velocity.
     class Velocity {
     public:
+        bool is_0d() {
+            return ! is_equal(_velocity_scalar, -1.0f);
+        }
+        bool is_2d() {
+            if (is_0d()) {
+                return false;
+            }
+            if (_is_2d_scalar) {
+                return true;
+            }
+            return is_equal(_velocity[2], -1.0f);
+        }
+        bool is_3d() {
+            if (is_0d()) {
+                return false;
+            }
+            if (is_2d()) {
+                return false;
+            }
+            return true;
+        }
+        double size_2d() {
+            return sqrt(_velocity[0]*_velocity[0] + _velocity[1] * _velocity[1]);;
+        }
         double size() {
-            if (! is_equal(_velocity_scalar, -1.0f)) {
+            if (is_0d()) {
                 return _velocity_scalar;
             }
-            if (! is_equal(_velocity[2], -1.0f)) {
+            if (is_3d()) {
+                // this is the 3D case
                 return _velocity.len();
             }
-            return sqrt(_velocity[0]*_velocity[0] + _velocity[1] * _velocity[1]);
+            // this is the 2D case
+            return size_2d();
         }
 
         void set_x(uint64_t T, double x) {
@@ -160,6 +186,12 @@ namespace AnalyzerVehicle {
         uint64_t velocity_modtime() {
             return _velocity_modtime;
         }
+        void set_is2D_scalar(const bool value) {
+            _is_2d_scalar = value;
+        }
+        bool is2D_scalar() {
+            return _is_2d_scalar;
+        }
 
     private:
         // only one of these two should be set:
@@ -167,6 +199,8 @@ namespace AnalyzerVehicle {
         double _velocity_scalar = -1;
         bool _have_components = false;
         uint64_t _velocity_modtime = 0;
+
+        bool _is_2d_scalar = false;
     };
 
     /// @brief State information for a base Extended Kalman Filter.
@@ -250,6 +284,24 @@ namespace AnalyzerVehicle {
     private:
         const std::string _name;
         Position _position = { };
+    };
+
+    /// @brief Velocity according to some sensor or algorithm.
+    class VelocityEstimate {
+    public:
+        VelocityEstimate(const std::string name) :
+            _name(name)
+            { }
+        VelocityEstimate() :
+            _name(NULL),
+            _velocity({})
+            { }
+        const std::string name() { return _name; }
+        Velocity &velocity() { return _velocity; }
+
+    private:
+        const std::string _name;
+        Velocity _velocity = { };
     };
 
     /// @brief Information on a vehicle battery.
@@ -714,6 +766,16 @@ public:
         return _altitude_estimates[name];
     };
 
+    /// @brief Retrieve named velocity estimate.
+    /// @param name Name of velocity estimate to retrieve.
+    /// @return A velocity estimate.
+    VelocityEstimate *velocity_estimate(const std::string name) {
+        if (_velocity_estimates.count(name) == 0) {
+            _velocity_estimates[name] = new VelocityEstimate(name);
+        }
+        return _velocity_estimates[name];
+    };
+
     /// @brief Distance from canonical vehicle position to canonical origin.
     /// @return Distance from origin, or -1 if we just don't know.
     double distance_from_origin();
@@ -778,6 +840,12 @@ public:
     const std::map<const std::string, PositionEstimate*> &position_estimates() {
         return _position_estimates;
     }
+    /// @brief Velocity estimates.
+    /// @return Map of velocity estimate name to velocity estimate.
+    const std::map<const std::string, VelocityEstimate*> &velocity_estimates() {
+        return _velocity_estimates;
+    }
+
 
     /// @brief Autopilot status information.
     /// @return Object containing autopilot status information.
@@ -1001,6 +1069,7 @@ private:
     std::map<const std::string, PositionEstimate*> _position_estimates;
     std::map<const std::string, AttitudeEstimate*> _attitude_estimates;
     std::map<const std::string, AltitudeEstimate*> _altitude_estimates;
+    std::map<const std::string, VelocityEstimate*> _velocity_estimates;
 
     std::map<const std::string, GPSInfo*> _gpsinfo;
     std::map<const std::string, Compass*> _compasses;
