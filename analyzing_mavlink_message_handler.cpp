@@ -82,9 +82,14 @@ Analyzing_MAVLink_Message_Handler::Analyzing_MAVLink_Message_Handler(Analyze *an
     _analyze->add_data_source("POSITION_ESTIMATE_GPS_RAW_INT", "GPS_RAW_INT.lat");
     _analyze->add_data_source("POSITION_ESTIMATE_GPS_RAW_INT", "GPS_RAW_INT.lon");
 
-    _analyze->add_data_source("VELOCITY_GROUND", "GLOBAL_POSITION_INT.vx");
-    _analyze->add_data_source("VELOCITY_GROUND", "GLOBAL_POSITION_INT.vy");
-    _analyze->add_data_source("VELOCITY_GROUND", "GLOBAL_POSITION_INT.vz");
+    // this is ground velocity
+    _analyze->add_data_source("VELOCITY", "GLOBAL_POSITION_INT.vx");
+    _analyze->add_data_source("VELOCITY", "GLOBAL_POSITION_INT.vy");
+    _analyze->add_data_source("VELOCITY", "GLOBAL_POSITION_INT.vz");
+
+    _analyze->add_data_source("VELOCITY_ESTIMATE_GPS_RAW_INT", "GPS_RAW_INT.vel");
+
+    _analyze->add_data_source("VELOCITY_ESTIMATE_VFR_HUD", "VFR_HUD.groundspeed");
 
     _analyze->add_data_source("VEHICLE_DEFINITION", "STATUSTEXT.text");
     _analyze->add_data_source("SYSTEM_TIME", "SYSTEM_TIME.boot_time_ms");
@@ -182,6 +187,11 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
     _vehicle->gpsinfo("GPS_RAW_INT")->set_satellites(msg.satellites_visible);
     _vehicle->gpsinfo("GPS_RAW_INT")->set_hdop(msg.eph/(double)100.0f);
     _vehicle->gpsinfo("GPS_RAW_INT")->set_fix_type(msg.fix_type);
+
+    if (msg.vel != UINT16_MAX) {
+        _vehicle->velocity_estimate("GPS_RAW_INT")->velocity().set_scalar(T, msg.vel / (double)100.0f);
+        _vehicle->velocity_estimate("GPS_RAW_INT")->velocity().set_is2D_scalar(true);
+    }
 
     _analyze->evaluate_all();
 }
@@ -329,7 +339,11 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
     // vfr_hud is a relative altitude, set_alt sets absolute altitude
 //    _vehicle->set_alt(msg.alt);
 
-    // _analyze->evaluate_all();
+    {
+        _vehicle->velocity_estimate("VFR_HUD")->velocity().set_scalar(T, msg.groundspeed);
+        _vehicle->velocity_estimate("VFR_HUD")->velocity().set_is2D_scalar(true);
+    }
+    _analyze->evaluate_all();
 }
 
 void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_statustext_t &msg) {

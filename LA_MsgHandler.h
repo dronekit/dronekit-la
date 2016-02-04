@@ -81,6 +81,8 @@ protected:
     /// @brief convenience function producing an estimate to be used for state
     AnalyzerVehicle::PositionEstimate* position_estimate();
     /// @brief convenience function producing an estimate to be used for state
+    AnalyzerVehicle::VelocityEstimate* velocity_estimate();
+    /// @brief convenience function producing an estimate to be used for state
     AnalyzerVehicle::GPSInfo* gpsinfo();
     /// @brief convenience function producing IMU to be used for state
     AnalyzerVehicle::IMU* imu();
@@ -228,6 +230,8 @@ public:
             string_format("%s.NSats",name.c_str()));
         _analyze->add_data_source(string_format("GPSINFO_FIXTYPE_%s",name.c_str()),
             string_format("%s.Status",name.c_str()));
+
+        _analyze->add_data_source(string_format("VELOCITY_ESTIMATE_%s",name.c_str()), string_format("%s.Spd",name.c_str()));
     };
     void xprocess(const uint8_t *msg) override;
 };
