@@ -36,12 +36,6 @@ public:
         AnalyzerVehicle::Velocity &estimate);
     void evaluate() override;
 
-    void open_result(std::string name, double delta);
-    void update_result(std::string name, double delta);
-    void close_result(std::string name);
-
-    void end_of_log(const uint32_t packet_count) override;
-
     double maximum_velocity() { return _maximum_velocity; }
 
     const std::string _config_tag() const override {
@@ -52,9 +46,14 @@ public:
     double default_delta_fail() const override { return 5.0f; }
     uint64_t default_duration_min() const override { return 500000; }
 
+protected:
+
+    Analyzer_Velocity_Estimate_Divergence_Result* new_result_object(const std::string name) override;
+    void open_result_add_data_sources(const std::string name) override;
+
 private:
 
-    std::map<const std::string, Analyzer_Velocity_Estimate_Divergence_Result*> _result = { };
+    const char *units() override { return "metres/second"; }
 
     double _maximum_velocity = 0;
 };

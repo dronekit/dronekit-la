@@ -40,15 +40,19 @@ public:
         AnalyzerVehicle::Altitude oestimate);
     void evaluate() override;
 
-    void update_result_set_status(Analyzer_Estimate_Divergence_Result*) override;
-    void open_result(std::string name, double delta);
-    void close_result_add_evidence(Analyzer_Estimate_Divergence_Result *result) override;
     double maximum_altitude() { return _max_alt; }
     double maximum_altitude_relative() { return _max_alt_rel; }
 
     const std::string _config_tag() const override {
         return std::string("altitude_estimate_divergence");
     }
+
+    const char *units() override { return "metres"; }
+
+protected:
+
+    Analyzer_Altitude_Estimate_Divergence_Result* new_result_object(const std::string name) override;
+    virtual void open_result_add_data_sources(const std::string name) override;
 
 private:
 

@@ -57,7 +57,12 @@ public:
 
     // void evaluate() override;
 
-    // void open_result(std::string name, double delta);
+    virtual const char *units() = 0;
+
+    virtual void open_result_add_data_sources(const std::string name UNUSED) { }
+
+    virtual void open_result(const std::string name, double delta);
+
     virtual void update_result_set_status(Analyzer_Estimate_Divergence_Result *result);
     void update_result(std::string name, double delta);
     void close_result(std::string name);
@@ -69,6 +74,8 @@ public:
     virtual uint64_t default_duration_min() const { return 0; }
 
 protected:
+
+    virtual Analyzer_Estimate_Divergence_Result* new_result_object(const std::string name UNUSED) = 0;
 
     double delta_fail() {
         return _delta_fail;
@@ -95,8 +102,15 @@ protected:
                              Analyzer_Estimate_Divergence_Result *result) {
         _result[name] = result;
     }
-private:
+
+    std::string estimate_name_lc();
+
     std::map<const std::string, Analyzer_Estimate_Divergence_Result*> _result;
+
+    virtual uint8_t severity_score_fail() { return 20; }
+    virtual uint8_t severity_score_warn() { return 10; }
+
+private:
 };
 
 #endif

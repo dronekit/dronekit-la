@@ -2,6 +2,8 @@
 
 #include "analyzer_util.h"
 
+#include <algorithm>
+
 bool Analyzer_Estimate_Divergence::configure(INIReader *config) {
     if (!Analyzer::configure(config)) {
         return false;
@@ -31,6 +33,17 @@ void Analyzer_Estimate_Divergence::end_of_log(const uint32_t packet_count UNUSED
     }
 }
 
+void Analyzer_Estimate_Divergence::open_result(const std::string name,
+                                                        double delta)
+{
+    _result[name] = new_result_object(name);
+    _result[name]->set_reason(string_format("This %s estimate differs from the canonical craft %s", estimate_name_lc().c_str(), estimate_name_lc().c_str()));
+    _result[name]->set_T_start(_vehicle->T());
+    _result[name]->set_max_delta(0);
+    open_result_add_data_sources(name);
+    update_result(name, delta);
+}
+
 void Analyzer_Estimate_Divergence::update_result_set_status(Analyzer_Estimate_Divergence_Result *result)
 {
     if (fabs(result->max_delta()) >= delta_fail()) {
@@ -50,18 +63,25 @@ void Analyzer_Estimate_Divergence::update_result(std::string name, double delta)
 
         if (result->status() == analyzer_status_fail) {
             result->set_delta_threshold(delta_fail());
-            result->set_severity_score(20);
+            result->set_severity_score(severity_score_fail());
         } else if (result->status() == analyzer_status_warn) {
             result->set_delta_threshold(delta_warn());
-            result->set_severity_score(10);
+            result->set_severity_score(severity_score_warn());
         }
     }
 }
 
+std::string Analyzer_Estimate_Divergence::estimate_name_lc()
+{
+    std::string ret = estimate_name();
+    std::transform(ret.begin(), ret.end(), ret.begin(), ::tolower);
+    return ret;
+}
+
 void Analyzer_Estimate_Divergence::close_result_add_evidence(Analyzer_Estimate_Divergence_Result *result)
 {
-    result->add_evidence(string_format("max-delta=%f metres", result->max_delta()));
-    result->add_evidence(string_format("delta-threshold=%f metres", result->delta_threshold()));
+    result->add_evidence(string_format("max-delta=%f %s", result->max_delta(), units()));
+    result->add_evidence(string_format("delta-threshold=%f %s", result->delta_threshold(), units()));
     result->add_evidence(string_format("delta-time-threshold=%f seconds", delta_time_threshold() / 1000000.0f));
 }
 
