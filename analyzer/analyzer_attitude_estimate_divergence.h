@@ -39,18 +39,22 @@ public:
         AnalyzerVehicle::Attitude estimate);
     void evaluate() override;
 
-    void end_of_log(const uint32_t packet_count) override;
 
     const std::string _config_tag() const override {
         return std::string("attitude_estimate_divergence");
     }
 
+protected:
+
+    const char *units() override { return "degrees"; }
+    Analyzer_Attitude_Estimate_Divergence_Result* new_result_object(const std::string name) override;
+    void open_result_add_data_sources(const std::string name) override;
+
+    uint8_t severity_score_fail() override { return 10; }
+    uint8_t severity_score_warn() override { return 10; }
+
 private:
 
-    void open_result(std::string name, double delta);
-    void update_result(std::string name, double delta);
-    void close_result(std::string name);
-    std::map<const std::string, Analyzer_Attitude_Estimate_Divergence_Result*> _result;
 };
 
 #endif

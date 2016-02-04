@@ -2,16 +2,13 @@
 
 #include "analyzer_util.h"
 
+Analyzer_Altitude_Estimate_Divergence_Result* Analyzer_Altitude_Estimate_Divergence::new_result_object(const std::string name)
+{
+    return new Analyzer_Altitude_Estimate_Divergence_Result(name);
+}
+
 void Analyzer_Altitude_Estimate_Divergence::end_of_log(const uint32_t packet_count)
 {
-    // auto next = _result.begin();
-    // while (next != _result.end()) {
-    //     auto current = next;
-    //     next++;
-    //     if ((*current).second != NULL) {
-    //         close_result((*current).first);
-    //     }
-    // }
     Analyzer_Estimate_Divergence::end_of_log(packet_count);
 
     AnalyzerVehicle::Altitude alt = _vehicle->alt();
@@ -56,33 +53,10 @@ void Analyzer_Altitude_Estimate_Divergence::evaluate_estimate(
     }
 }
 
-void Analyzer_Altitude_Estimate_Divergence::update_result_set_status(Analyzer_Estimate_Divergence_Result *result)
+void Analyzer_Altitude_Estimate_Divergence::open_result_add_data_sources(const std::string name)
 {
-    if (fabs(result->max_delta()) > delta_fail()) {
-        result->set_status(analyzer_status_fail);
-        result->set_severity_score(10);
-    } else {
-        result->set_status(analyzer_status_warn);
-        result->set_severity_score(5);
-    }
-}
-
-void Analyzer_Altitude_Estimate_Divergence::open_result(const std::string name,
-                                                        double delta)
-{
-    Analyzer_Altitude_Estimate_Divergence_Result *result =
-        new Analyzer_Altitude_Estimate_Divergence_Result(name);
-    result->set_reason("This altitude estimate differs from the canonical craft altitude");
-    result->set_T_start(_vehicle->T());
-    result->set_max_delta(0);
-    result->add_source(_data_sources.get("ALTITUDE"));
-    result->add_source(_data_sources.get(std::string("ALTITUDE_ESTIMATE_") + name));
-    set_result_for_name(name, result);
-    update_result(name, delta);
-}
-
-void Analyzer_Altitude_Estimate_Divergence::close_result_add_evidence(Analyzer_Estimate_Divergence_Result *result) {
-    Analyzer_Estimate_Divergence::close_result_add_evidence(result);
+    _result[name]->add_source(_data_sources.get("ALTITUDE"));
+    _result[name]->add_source(_data_sources.get(std::string("ALTITUDE_ESTIMATE_") + name));
 }
 
 void Analyzer_Altitude_Estimate_Divergence::evaluate()

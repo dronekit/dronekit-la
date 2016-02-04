@@ -2,64 +2,16 @@
 
 #include "analyzer_util.h"
 
-void Analyzer_Attitude_Estimate_Divergence::end_of_log(const uint32_t packet_count UNUSED)
+Analyzer_Attitude_Estimate_Divergence_Result* Analyzer_Attitude_Estimate_Divergence::new_result_object(const std::string name)
 {
-    auto next = _result.begin();
-    while (next != _result.end()) {
-        auto current = next;
-        next++;
-        if ((*current).second != NULL) {
-            close_result((*current).first);
-        }
-    }
+    return new Analyzer_Attitude_Estimate_Divergence_Result(name);
 }
 
-void Analyzer_Attitude_Estimate_Divergence::open_result(std::string name,
-                                                        double delta)
+void Analyzer_Attitude_Estimate_Divergence::open_result_add_data_sources(const std::string name)
 {
-    _result[name] = new Analyzer_Attitude_Estimate_Divergence_Result(name);
-    _result[name]->set_reason("This attitude estimate differs from the canonical craft attitude");
-    _result[name]->set_T_start(_vehicle->T());
-    _result[name]->set_max_delta(0);
     _result[name]->add_source(_data_sources.get("ATTITUDE"));
     _result[name]->add_source(_data_sources.get(std::string("ATTITUDE_ESTIMATE_") + name));
-    update_result(name, delta);
 }
-
-void Analyzer_Attitude_Estimate_Divergence::update_result(std::string name,
-                                                          double delta)
-{
-    if (delta > _result[name]->max_delta()) {
-        _result[name]->set_max_delta(delta);
-        if (delta >= delta_fail()) {
-            _result[name]->set_delta_threshold(delta_fail());
-            _result[name]->set_status(analyzer_status_fail);
-        } else if (delta >= delta_warn()) {
-            _result[name]->set_status(analyzer_status_warn);
-            _result[name]->set_delta_threshold(delta_warn());
-        }
-    }
-}
-
-void Analyzer_Attitude_Estimate_Divergence::close_result(std::string name)
-{
-    _result[name]->set_T_stop(_vehicle->T());
-    if (_result[name]->duration() < delta_time_threshold()) {
-        // event was too short; ignore it
-        delete _result[name];
-        _result[name] = NULL;
-        return;
-    }
-    
-    _result[name]->add_evidence(string_format("max-delta=%f degrees", _result[name]->max_delta()));
-    _result[name]->add_evidence(string_format("delta-threshold=%f degrees", _result[name]->delta_threshold()));
-    _result[name]->add_evidence(string_format("delta-time-threshold=%f seconds", delta_time_threshold() / 1000000.0f));
-    _result[name]->set_severity_score(10);
-
-    add_result(_result[name]);
-    _result[name] = NULL;
-}
-
 
 double angle_delta(double a, double b)
 {
