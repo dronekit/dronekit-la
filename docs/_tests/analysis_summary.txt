@@ -1,5 +1,5 @@
 DK-LA Version: Version: 0.5
-Git-Version: v0.1-221-g67b8
+Git-Version: v0.5-8-ge70d
 
 DK-LA HELP:
 
@@ -50,6 +50,7 @@ Velocity Estimate Divergence
 
 TEST: Any Parameters Seen
 Description: Autopilots store configuration settings known as 'parameters'. For proper analysis, logs must contain this parameter information. This test will FAIL if the input does not contain parameter information.
+* Fail: No parameters seen
 * Pass: Parameters seen
 
 TEST: Good EKF
@@ -61,6 +62,7 @@ Description: The Extended Kalman Filter (EKF) has many built-in checks to ensure
 * Fail: velocity_variance exceeds fail threshold
 * Warn: compass_variance exceeds warn threshold
 * Warn: pos_horiz_variance exceeds warn threshold
+* Warn: pos_vert_variance exceeds warn threshold
 * Warn: velocity_variance exceeds warn threshold
 
 TEST: Altitude Estimate Divergence
@@ -70,6 +72,7 @@ Description: A UAV often has several estimates of its altitude.  This test will 
 
 TEST: Ever Armed
 Description: Vehicles typically need to progress through a sequence of arming steps before they can move.  This test will FAIL if the craft did not arm.
+* Fail: The vehicle never armed
 * Pass: The vehicle armed
 
 TEST: Attitude Control
@@ -80,13 +83,16 @@ Description: The autopilot reports both the craft's attitude and the attitude th
 TEST: Truncated Log
 Description: A log should not end while the vehicle appears to be moving under its own power.  This test will FAIL if the vehicle still appears to be moving when the log ends.
 * Fail: Log ended while craft still flying
+* Pass: Log truncation not detected
 
 TEST: Battery
 Description: Many autopilots are capable of monitoring their flight batteries.  This test will FAIL if the battery level falls below the battery failsafe threshold level, or if a battery failsafe event is received.
+* Fail: Battery fell below failsafe threshold
 * Pass: Battery never below failsafe
 
 TEST: AutoPilot Health
 Description: Many autopilots are capable of monitoring their own performance.  This test will FAIL if problems are detected with the autopilot.
+* Fail: Severe scheduler overruns
 
 TEST: GPS Fix
 Description: The accuracy and precision of GPS messages can vary depending on many factors including weather, ionospheric disturbances and number of satellites visible.  This test will FAIL if the quality of the GPS information is poor.
@@ -95,17 +101,22 @@ Description: The accuracy and precision of GPS messages can vary depending on ma
 
 TEST: Ever Flew
 Description: Determining whether a vehicle has ever flown in a log is done heuristically based on things like motor speeds.  This test will FAIL if the craft did not ever seem to fly.
+* Fail: The vehicle never seemed to take off
 * Pass: The vehicle appeared to fly
 
 TEST: Velocity Estimate Divergence
-Description: A UAV typically has several estimates of its velocity.  This test will FAIL if the craft's velocity estimates diverge.
+Description: A UAV often has several estimates of its velocity.  This test will FAIL or WARN if the various vehicle's velocity estimates diverge.
+* Fail: This velocity estimate differs from the canonical craft velocity
+* Warn: This velocity estimate differs from the canonical craft velocity
 
 TEST: Crash Test
 Description: Crashes are detected both heuristically and by explicit log messages.  This test will FAIL if the vehicle appears to crash.
 * Fail: Vehicle is past maximum allowed angle and running its motors
+* Pass: Never crashed
 
 TEST: Gyro Drift
 Description: Gyroscopes sometimes start to register movement where there is none.  This test will FAIL or WARN if the any gyroscope's average acceleration on any axis begins to drift.
+* Fail: Gyroscope readings differ from first gyroscope
 
 TEST: Vehicle Definition
 Description: The vehicle type is normally automatically detected by dronekit-la from the log.  Sometimes the log does not contain sufficient information to make this determination.  This test will FAIL if the craft type is never defined
@@ -114,9 +125,14 @@ Description: The vehicle type is normally automatically detected by dronekit-la 
 TEST: Position Estimate Divergence
 Description: A UAV often has several estimates of its position.  This test will FAIL or WARN if the various vehicle's position estimates diverge.
 * Fail: This position estimate differs from the canonical craft position
+* Warn: This position estimate differs from the canonical craft position
 
 TEST: Compass Vector Length
 Description: The strength and direction of the Earth's magnetic field should be relatively constant and lie within certain thresholds.  This test will FAIL or WARN if the compass vector length exceeds the respective threshold.  Possible causes include flying near large metal objects.
+* Fail: Compass Vector Length above threshold
+* Fail: Compass Vector Length below threshold
+* Fail: Compass Vector Length delta exceeds threshold
+* Warn: Compass Vector Length above threshold
 
 TEST: Arming Checks
 Description: An autopilot checks many aspects of the aircraft's state before allowing it to be armed - for example, that it has a good GPS fix.  This test will FAIL if the craft ever arms when some arming checks are disabled.
@@ -128,7 +144,10 @@ Description: A UAV can self-assess its sensors' health.  This test will FAIL if 
 TEST: Attitude Estimate Divergence
 Description: A UAV often has several estimates of its attitude.  This test will FAIL or WARN if the various vehicle's attitude estimates diverge.
 * Fail: This attitude estimate differs from the canonical craft attitude
+* Warn: This attitude estimate differs from the canonical craft attitude
 
 TEST: Compass Offsets
 Description: Compass calibration produces a set of parameters that specify expected compass discrepancies.  This test will WARN or FAIL depending on the degree that these compass offset parameters exceed specified thresholds.
 * Fail: Compass offsets in parameters are out of bounds
+* Warn: Compass offsets in parameters are out of bounds
+* Pass: Compass offsets in parameters look reasonable

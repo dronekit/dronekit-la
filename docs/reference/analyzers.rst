@@ -371,7 +371,7 @@ A log should not end while the vehicle appears to be moving under its own power.
 This test will FAIL if the vehicle still appears to be moving when the log ends.
 
 * Fail: Log ended while craft still flying
-* Warn: Altitude never changed
+* Pass: Log truncation not detected
 
 
 .. note::
@@ -430,12 +430,12 @@ This test will FAIL if the craft type is never defined.
 
 Velocity Estimate Divergence
 ============================
+   
+Description: A UAV often has several estimates of its velocity.  
+This test will FAIL or WARN if the various vehicle's velocity estimates diverge.
 
-.. warning:: 
-
-    Currently no implementation (dronekit-la 0.3)
-    
-A UAV typically has several estimates of its velocity.  This test will FAIL if the craft's velocity estimates diverge.
+* Fail: This velocity estimate differs from the canonical craft velocity
+* Warn: This velocity estimate differs from the canonical craft velocity
 
 
 .. internalnotes
