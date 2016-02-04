@@ -82,16 +82,16 @@ def process_files(filelist):
             if not name_test in tests_summary:
                 tests_summary[name_test]=dict()
                 tests_summary[name_test]['description']=testcontents['description']
-                for result in testcontents['results']:
-                    #print result['status']
-                    if not result['status'] in tests_summary[name_test]:
-                        #print "made it"
-                        tests_summary[name_test][result['status']]=set() #set of warning reasons
-                    if 'reason' in result:
-                        tests_summary[name_test][result['status']].add(result['reason'])
-                    else:
-                        tests_summary[name_test][result['status']].add("ISSUE: NO REASON GIVEN")
-                    #print 'RESULT: %s' %result
+                
+            for result in testcontents['results']:
+                #print result['status']
+                if not result['status'] in tests_summary[name_test]:
+                    tests_summary[name_test][result['status']]=set() #set of warning reasons
+                if 'reason' in result:
+                    tests_summary[name_test][result['status']].add(result['reason'])
+                else:
+                    tests_summary[name_test][result['status']].add("ISSUE: NO REASON GIVEN")
+                #print 'RESULT: %s' %result
 
     return tests_summary
 
@@ -151,10 +151,4 @@ print 'OUTPUTFILE: %s' % output_file
 
 with open(output_file,'w') as file_out:
    file_out.write(outputlogstring) 
-
-
-
-
-
-                
 
