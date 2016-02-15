@@ -1033,7 +1033,9 @@ private:
     /// @brief Timestamps parameters were last set.
     std::map<const std::string, uint64_t> _param_modtime;
     /// @brief Values for parameters if they haven't been seen from a log.
-    std::map<const std::string, float> _param_defaults = {};
+    std::map<const std::string, float> _param_defaults = {
+        { "AHRS_EKF_TYPE", 1.0 }
+    };
     /// @brief Map from sensor name to its health.
     std::map<const std::string, bool> _sensors_health = {};
 

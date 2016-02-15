@@ -177,6 +177,7 @@ void LA_MsgHandler_ATT::xprocess(const uint8_t *msg) {
 }
 
 
+// TODO: if a third Kalman filter exists, factor this EKF1 and NKF1
 LA_MsgHandler_EKF1::LA_MsgHandler_EKF1(std::string name,
                                        const struct log_Format &f,
                                        Analyze *analyze,
@@ -237,11 +238,13 @@ void LA_MsgHandler_EKF1::xprocess(const uint8_t *msg) {
         _vehicle->velocity_estimate("EKF1")->velocity().set_y(T(), ve);
         _vehicle->velocity_estimate("EKF1")->velocity().set_z(T(), vd);
 
-        // set EKF1 as canonical for velocity:
-        // Sadly, NTUN isn't updated if we're not using the nav controller
-        _vehicle->vel().set_x(T(), vn);
-        _vehicle->vel().set_y(T(), ve);
-        _vehicle->vel().set_z(T(), vd);
+        if (int(_vehicle->require_param_with_defaults("AHRS_EKF_TYPE")) == 1) {
+            // set EKF1 as canonical for velocity:
+            // Sadly, NTUN isn't updated if we're not using the nav controller
+            _vehicle->vel().set_x(T(), vn);
+            _vehicle->vel().set_y(T(), ve);
+            _vehicle->vel().set_z(T(), vd);
+        }
     }
 
 }
@@ -393,6 +396,78 @@ void LA_MsgHandler_MAG::xprocess(const uint8_t *msg) {
     if (field_value(msg, "Health", healthy)) {
         _vehicle->sensor_set_healthy(_name, healthy);
     }
+}
+
+// TODO: if a third Kalman filter exists, factor this EKF1 and NKF1
+LA_MsgHandler_NKF1::LA_MsgHandler_NKF1(std::string name,
+                                       const struct log_Format &f,
+                                       Analyze *analyze,
+                                       AnalyzerVehicle::Base *&vehicle) :
+    LA_MsgHandler(name, f, analyze, vehicle) {
+    _analyze->add_data_source("ATTITUDE_ESTIMATE_NKF1", "NKF1.Roll");
+    _analyze->add_data_source("ATTITUDE_ESTIMATE_NKF1", "NKF1.Pitch");
+    _analyze->add_data_source("ATTITUDE_ESTIMATE_NKF1", "NKF1.Yaw");
+
+    _analyze->add_data_source("POSITION_ESTIMATE_NKF1", "NKF1.PN");
+    _analyze->add_data_source("POSITION_ESTIMATE_NKF1", "NKF1.PE");
+
+    _analyze->add_data_source("ALTITUDE_ESTIMATE_NKF1", "NKF1.PD");
+
+    _analyze->add_data_source("VELOCITY_ESTIMATE_NKF1", "NKF1.VN");
+    _analyze->add_data_source("VELOCITY_ESTIMATE_NKF1", "NKF1.VE");
+    _analyze->add_data_source("VELOCITY_ESTIMATE_NKF1", "NKF1.VD");
+
+}
+
+void LA_MsgHandler_NKF1::xprocess(const uint8_t *msg) {
+    int16_t Roll = require_field_int16_t(msg, "Roll");
+    int16_t Pitch = require_field_int16_t(msg, "Pitch");
+    float Yaw = require_field_float(msg, "Yaw");
+
+    _vehicle->attitude_estimate("NKF1")->set_roll(T(), Roll/(double)100.0f);
+    _vehicle->attitude_estimate("NKF1")->set_pitch(T(), Pitch/(double)100.0f);
+    _vehicle->attitude_estimate("NKF1")->set_yaw(T(), Yaw-180);
+
+    // these are all relative; need to work out an origin:
+    if (_vehicle->origin_lat_T() != 0) {
+        double posN = require_field_float(msg, "PN");
+        double posE = require_field_float(msg, "PE");
+        double origin_lat = _vehicle->origin_lat();
+        double origin_lon = _vehicle->origin_lon();
+
+        double lat = 0;
+        double lon = 0;
+        gps_offset(origin_lat, origin_lon, posE, posN, lat, lon);
+        // ::fprintf(stderr, "%f+%f / %f+%f = %f / %f\n",
+        //           origin_lat, posE, origin_lon, posN, lat, lon);
+
+        _vehicle->position_estimate("NKF1")->set_lat(T(), lat);
+        _vehicle->position_estimate("NKF1")->set_lon(T(), lon);
+    }
+    if (_vehicle->origin_altitude_T() != 0) {
+        double posD = require_field_float(msg, "PD");
+        double origin_alt = _vehicle->origin_altitude();
+        _vehicle->altitude_estimate("NKF1")->set_alt(T(), origin_alt - posD);
+    }
+
+    {
+        double vn = require_field_float(msg, "VN");
+        double ve = require_field_float(msg, "VE");
+        double vd = require_field_float(msg, "VD");
+
+        _vehicle->velocity_estimate("NKF1")->velocity().set_x(T(), vn);
+        _vehicle->velocity_estimate("NKF1")->velocity().set_y(T(), ve);
+        _vehicle->velocity_estimate("NKF1")->velocity().set_z(T(), vd);
+
+        if (int(_vehicle->require_param_with_defaults("AHRS_EKF_TYPE")) == 2) {
+            // set NKF1 as canonical for velocity:
+            // Sadly, NTUN isn't updated if we're not using the nav controller
+            _vehicle->vel().set_x(T(), vn);
+            _vehicle->vel().set_y(T(), ve);
+            _vehicle->vel().set_z(T(), vd);
+        }
+    }
+
 }
 
 void LA_MsgHandler_PM::xprocess(const uint8_t *msg)
