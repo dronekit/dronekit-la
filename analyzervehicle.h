@@ -611,7 +611,7 @@ public:
     /// @brief Timestamp at which a parameter was last modified (microseconds).
     /// @param name Parameter modification time to retrieve.
     /// @return Parameter modification time (microseconds).
-    uint64_t param_modtime(const std::string name) const;
+    uint64_t param_T(const std::string name) const;
     /// @brief Set a parameter.
     /// @param name Parameter to set.
     /// @param value New value of parameter.
@@ -1031,7 +1031,7 @@ private:
     /// @brief Parameters that have been set.
     std::map<const std::string, float> _param;
     /// @brief Timestamps parameters were last set.
-    std::map<const std::string, uint64_t> _param_modtime;
+    std::map<const std::string, uint64_t> _param_T;
     /// @brief Values for parameters if they haven't been seen from a log.
     std::map<const std::string, float> _param_defaults = {
         { "AHRS_EKF_TYPE", 1.0 }
