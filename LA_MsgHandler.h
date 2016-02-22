@@ -113,6 +113,7 @@ private:
     bool _canonical_for_position = true;
     bool _canonical_for_origin = true;
     bool _was_armed = false;
+    bool _was_canonical_for_position = false;
 };
 
 class LA_MsgHandler_ATT : public LA_MsgHandler {
@@ -318,9 +319,9 @@ class LA_MsgHandler_PM : public LA_MsgHandler {
 public:
     LA_MsgHandler_PM(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
         LA_MsgHandler(name, f, analyze, vehicle) {
-        _analyze->add_data_source("AUTOPILOT_SCHEDULING", "MSG.NLon");
-        _analyze->add_data_source("AUTOPILOT_SCHEDULING", "MSG.NLoop");
-        _analyze->add_data_source("AUTOPILOT_SCHEDULING", "MSG.MaxT");
+        _analyze->add_data_source("AUTOPILOT_SCHEDULING", "PM.NLon");
+        _analyze->add_data_source("AUTOPILOT_SCHEDULING", "PM.NLoop");
+        _analyze->add_data_source("AUTOPILOT_SCHEDULING", "PM.MaxT");
     };
 
     void xprocess(const uint8_t *msg) override;
@@ -344,6 +345,7 @@ public:
         LA_MsgHandler(name, f, analyze, vehicle) {
         _analyze->add_data_source("POSITION_ESTIMATE_POS", "POS.Lat");
         _analyze->add_data_source("POSITION_ESTIMATE_POS", "POS.Lng");
+        _analyze->add_data_source("ALTITUDE", "POS.Alt");
     };
     void xprocess(const uint8_t *msg) override {
         int32_t Lat = require_field_int32_t(msg, "Lat");

@@ -126,6 +126,10 @@ void LA_MsgHandler_AHR2::xprocess(const uint8_t *msg) {
         _vehicle->set_altitude(Alt);
     }
     if (canonical_for_origin()) {
+        if (!_was_canonical_for_position) {
+            _was_canonical_for_position = true;
+            _analyze->add_data_source("ALTITUDE", "AHR2.Alt");
+        }
         if (_vehicle->is_armed()) {
             if (!_was_armed) {
                 _was_armed = true;
