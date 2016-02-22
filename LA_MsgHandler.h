@@ -271,6 +271,13 @@ public:
     void xprocess(const uint8_t *msg) override;
 };
 
+class LA_MsgHandler_NKF1 : public LA_MsgHandler {
+public:
+    LA_MsgHandler_NKF1(std::string name, const struct log_Format &f,
+                       Analyze *analyze, AnalyzerVehicle::Base *&vehicle);
+    void xprocess(const uint8_t *msg) override;
+};
+
 class LA_MsgHandler_ORGN : public LA_MsgHandler {
 public:
     LA_MsgHandler_ORGN(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
