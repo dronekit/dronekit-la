@@ -106,6 +106,16 @@ bool Base::param(const char *name, float &ret) const
     return true;
 }
 
+bool Base::param(const std::string name, float &ret) const
+{
+    const char *xname = name.c_str();
+    if (!param_seen(xname)) {
+        return false;
+    }
+    ret = param(xname);
+    return true;
+}
+
 float Base::param(const std::string name) const
 {
     const std::string x = std::string(name);
@@ -207,7 +217,7 @@ void AnalyzerVehicle::IMU::set_acc_clip_count(uint16_t count)
         _acc_clip_count = count;
         _acc_clip_count_T = _T;
     } else if (count < _acc_clip_count) {
-        fprintf(stderr, "Weird: clip count going bacwards");
+        // fprintf(stderr, "Weird: clip count going bacwards");
     }
 }
 

@@ -18,6 +18,7 @@
 #include "analyzer/analyzer_gps_fix.h"
 #include "analyzer/analyzer_gyro_drift.h"
 #include "analyzer/analyzer_notcrashed.h"
+#include "analyzer/analyzer_parameters.h"
 #include "analyzer/analyzer_position_estimate_divergence.h"
 #include "analyzer/analyzer_sensor_health.h"
 #include "analyzer/analyzer_vehicle_definition.h"
@@ -176,6 +177,13 @@ void Analyze::instantiate_analyzers(INIReader *config)
         configure_analyzer(config, analyzer_notcrashed);
     } else {
         la_log(LOG_INFO, "Failed to create analyzer_not_crashed");
+    }
+
+    Analyzer_Parameters *analyzer_parameters = new Analyzer_Parameters(vehicle,_data_sources);
+    if (analyzer_parameters != NULL) {
+        configure_analyzer(config, analyzer_parameters);
+    } else {
+        la_log(LOG_INFO, "Failed to create analyzer_parameters");
     }
 
     Analyzer_Sensor_Health *analyzer_sensor_health = new Analyzer_Sensor_Health(vehicle,_data_sources);

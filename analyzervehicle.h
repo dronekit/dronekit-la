@@ -602,6 +602,12 @@ public:
     /// @param[out] ret Parameter value.
     /// @return ``true`` if the parameter has been seen in the log.
     bool param(const char *name, float &ret) const;
+    /// @brief Retrieve parameter value.
+    /// @detail Returns parameter value ONLY from input, not from defaults.
+    /// @param name Parameter value to retrieve.
+    /// @param[out] ret Parameter value.
+    /// @return ``true`` if the parameter has been seen in the log.
+    bool param(const std::string name, float &ret) const;
     /// @brief Number of parameters seen.
     /// @return Number of parameters seen in input.
     uint16_t param_count() const { return _param.size(); };
