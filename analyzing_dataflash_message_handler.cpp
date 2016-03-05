@@ -15,6 +15,8 @@ void Analyzing_DataFlash_Message_Handler::handle_format_message_received(const c
         handlers[new_msg_type] = new LA_MsgHandler_ATT(name, format, _analyze, _vehicle);
     } else if (streq(name, "BARO")) {
         handlers[new_msg_type] = new LA_MsgHandler_BARO(name, format, _analyze, _vehicle);
+    } else if (streq(name, "CURR")) {
+        handlers[new_msg_type] = new LA_MsgHandler_CURR(name, format, _analyze, _vehicle);
     } else if (streq(name, "EKF1")) {
         handlers[new_msg_type] = new LA_MsgHandler_EKF1(name, format, _analyze, _vehicle);
     } else if (streq(name, "EKF4")) {

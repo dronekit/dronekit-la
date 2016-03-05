@@ -57,6 +57,7 @@ SRCS_CPP += analyzer/analyzer_compass_offsets.cpp
 SRCS_CPP += analyzer/analyzer_compass_vector_length.cpp
 SRCS_CPP += analyzer/analyzer_ever_armed.cpp
 SRCS_CPP += analyzer/analyzer_ever_flew.cpp
+SRCS_CPP += analyzer/analyzer_fs_batt.cpp
 SRCS_CPP += analyzer/analyzer_good_ekf.cpp
 SRCS_CPP += analyzer/analyzer_gps_fix.cpp
 SRCS_CPP += analyzer/analyzer_gyro_drift.cpp

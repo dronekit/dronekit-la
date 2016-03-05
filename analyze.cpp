@@ -14,6 +14,7 @@
 #include "analyzer/analyzer_compass_offsets.h"
 #include "analyzer/analyzer_compass_vector_length.h"
 #include "analyzer/analyzer_ever_armed.h"
+#include "analyzer/analyzer_fs_batt.h"
 #include "analyzer/analyzer_good_ekf.h"
 #include "analyzer/analyzer_gps_fix.h"
 #include "analyzer/analyzer_gyro_drift.h"
@@ -112,6 +113,13 @@ void Analyze::instantiate_analyzers(INIReader *config)
         la_log(LOG_INFO, "Failed to create analyzer_ever_flew");
     }
 
+
+    Analyzer_FS_Batt *analyzer_fs_batt = new Analyzer_FS_Batt(vehicle,_data_sources);
+    if (analyzer_fs_batt != NULL) {
+        configure_analyzer(config, analyzer_fs_batt);
+    } else {
+        la_log(LOG_INFO, "Failed to create analyzer_fs_batt");
+    }
 
     Analyzer_Good_EKF *analyzer_good_ekf = new Analyzer_Good_EKF(vehicle,_data_sources);
     if (analyzer_good_ekf != NULL) {
