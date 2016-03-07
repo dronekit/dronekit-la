@@ -315,6 +315,9 @@ namespace AnalyzerVehicle {
 
         bool _failsafe_event = 0;
         uint64_t _failsafe_event_T = 0;
+
+        double _voltage; // volts
+        uint64_t _voltage_T = 0;
     };
 
     /// @brief Information about the Navigation Controller's output.
@@ -790,6 +793,23 @@ public:
     /// @param value New health value of sensor.
     void sensor_set_healthy(std::string name, bool value) {
         _sensors_health[name] = value;
+    }
+
+    /// @brief Indicate current battery voltage.
+    /// @param voltage current battery voltage
+    void set_battery_voltage(double voltage) {
+        _battery._voltage = voltage;
+        _battery._voltage_T = T();
+    }
+    /// @brief Current battery voltage.
+    /// @return Current battery voltage (volts).
+    float battery_voltage() {
+        return _battery._voltage;
+    }
+    /// @brief Battery voltage modification time.
+    /// @return Timestamp when battery voltage was last modified (microseconds).
+    uint64_t battery_voltage_T() {
+        return _battery._voltage_T;
     }
 
     /// @brief Indicate amount of flight battery remaining.

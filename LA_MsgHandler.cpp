@@ -181,6 +181,19 @@ void LA_MsgHandler_ATT::xprocess(const uint8_t *msg) {
 }
 
 
+LA_MsgHandler_CURR::LA_MsgHandler_CURR(std::string name,
+                                       const struct log_Format &f,
+                                       Analyze *analyze,
+                                       AnalyzerVehicle::Base *&vehicle) :
+    LA_MsgHandler(name, f, analyze, vehicle) {
+    _analyze->add_data_source("BATTERY_VOLTAGE", "CURR.Curr");
+}
+
+void LA_MsgHandler_CURR::xprocess(const uint8_t *msg) {
+    float volts = require_field_float(msg, "Volt") / 100.0f;
+    _vehicle->set_battery_voltage(volts);
+}
+
 // TODO: if a third Kalman filter exists, factor this EKF1 and NKF1
 LA_MsgHandler_EKF1::LA_MsgHandler_EKF1(std::string name,
                                        const struct log_Format &f,

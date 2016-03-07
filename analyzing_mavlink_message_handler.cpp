@@ -34,6 +34,7 @@ Analyzing_MAVLink_Message_Handler::Analyzing_MAVLink_Message_Handler(Analyze *an
     _analyze->add_data_source("AUTOPILOT_VCC", "POWER_STATUS.Vcc");
 
     _analyze->add_data_source("BATTERY_REMAINING", "SYS_STATUS.battery_remaining");
+    _analyze->add_data_source("BATTERY_VOLTAGE", "SYS_STATUS.voltage_battery");
 
     _analyze->add_data_source("CRASHED", "HEARTBEAT.system_status");
 
@@ -307,6 +308,7 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
     _vehicle->set_T(T);
 
     _vehicle->set_battery_remaining(msg.battery_remaining);
+    _vehicle->set_battery_voltage(msg.voltage_battery / 1000.0f);
 
     for (std::map<const std::string, const uint64_t>::const_iterator it = _sensor_masks.begin();
          it != _sensor_masks.end();

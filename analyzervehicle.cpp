@@ -112,7 +112,7 @@ float Base::param(const std::string name) const
     // ::fprintf(stderr, "Looking for (%s)\n", name);
     auto it = _param.find(name);
     if (it == _param.end()) {
-        ::fprintf(stderr, "asked for unseen parameter");
+        ::fprintf(stderr, "asked for unseen parameter (%s)", name.c_str());
         abort();
     }
     return it->second;

@@ -139,6 +139,14 @@ public:
 };
 
 
+class LA_MsgHandler_CURR : public LA_MsgHandler {
+public:
+    LA_MsgHandler_CURR(std::string name, const struct log_Format &f,
+                       Analyze *analyze, AnalyzerVehicle::Base *&vehicle);
+    void xprocess(const uint8_t *msg) override;
+};
+
+
 class LA_MsgHandler_EKF1 : public LA_MsgHandler {
 public:
     LA_MsgHandler_EKF1(std::string name, const struct log_Format &f,

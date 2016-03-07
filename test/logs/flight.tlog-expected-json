@@ -4598,6 +4598,15 @@
       "severity-score": 0, 
       "status": "PASS"
     }, 
+    "FS Batt": {
+      "description": "A lower-limit may be specified for the the UAV battery voltage.  This test will FAIL if this value is not within a certain delta of the actual battery voltage.  This can happen e.g. if a craft is switched from running on 3S batteries to 4S batteries.", 
+      "evilness": 0, 
+      "evilness-is-deprecated": "Use severity-score", 
+      "name": "FS Batt", 
+      "results": [], 
+      "severity-score": 0, 
+      "status": "PASS"
+    }, 
     "GPS Fix": {
       "description": "The accuracy and precision of GPS messages can vary depending on many factors including weather, ionospheric disturbances and number of satellites visible.  This test will FAIL if the quality of the GPS information is poor.", 
       "evilness": 20, 
