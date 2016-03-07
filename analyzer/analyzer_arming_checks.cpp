@@ -38,7 +38,7 @@ void Analyzer_Arming_Checks::evaluate()
                 Analyzer_Arming_Checks_Result();
             result->set_status(analyzer_status_fail);
             result->set_reason("Some of the arming checks were disabled when the craft was  armed");
-            result->add_evidence(string_format("Arming flags: %u", result->arming_check()));
+            result->add_evidence(string_format("Arming flags: %u", arming_check));
             result->add_source(_data_sources.get("PARAM"));
             result->add_source(_data_sources.get("ARMING"));
 
