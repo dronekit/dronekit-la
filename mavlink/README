@@ -1,7 +1,0 @@
-Update this directory from the ardupilot-solo tree like this:
-
-e.g:
-
-ARDUPILOT_SOLO=/home/pbarker/rc/solo/ardupilot-solo
-ARDUPILOT_SOLO_MAVLINK_1_0=$ARDUPILOT_SOLO/libraries/GCS_MAVLink/include/mavlink/v1.0
-rsync -aP --delete $ARDUPILOT_SOLO_MAVLINK_1_0/ c_library
