@@ -25,6 +25,8 @@ public:
         return _send_buf_start != _send_buf_stop;
     }
 
+    void init() override;
+
 private:
     int fd;
 
