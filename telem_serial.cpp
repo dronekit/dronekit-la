@@ -150,6 +150,11 @@ uint32_t Telem_Serial::handle_read()
     return res;
 }
 
+void Telem_Serial::init()
+{
+    open_serial_port();
+}
+
 void Telem_Serial::configure(INIReader *config)
 {
     serialPortName = config->Get("solo","telemDev","/dev/ttymxc1");

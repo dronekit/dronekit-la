@@ -26,6 +26,7 @@ void DataFlash_Logger_Program::usage()
     ::printf(" -c filepath      use config file filepath\n");
     ::printf(" -h               display usage information\n");
     ::printf(" -d               debug mode\n");
+    ::printf(" -s               use serial port\n");
     ::printf("\n");
     ::printf("Example: %s\n", program_name());
     exit(0);
