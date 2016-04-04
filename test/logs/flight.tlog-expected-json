@@ -1,7 +1,7 @@
 {
   "bytes-dropped": 0, 
   "duration": "987654321", 
-  "evilness": 2260, 
+  "evilness": 2265, 
   "evilness-is-deprecated": "Use severity-score", 
   "format-version": "0.1", 
   "git_version": "some-hash", 
@@ -9,13 +9,13 @@
   "maximum-altitude-absolute-units": "metres", 
   "maximum-altitude-relative": 14.1300048828125, 
   "maximum-altitude-relative-units": "metres", 
-  "maximum-distance-from-origin": 55.948215909325505, 
+  "maximum-distance-from-origin": 55.96320875703313, 
   "maximum-distance-from-origin-units": "metres", 
   "maximum-velocity": 10.010728802745051, 
   "maximum-velocity-units": "metres/second", 
-  "packet-count": 157284, 
-  "packet_count": 157284, 
-  "severity-score": 2260, 
+  "packet-count": 163851, 
+  "packet_count": 163851, 
+  "severity-score": 2265, 
   "tests": {
     "Altitude Estimate Divergence": {
       "description": "A UAV often has several estimates of its altitude.  This test will FAIL or WARN if the various vehicle's altitude estimates diverge.", 
@@ -109,7 +109,7 @@
           "timestamp_stop": 1437196322470848
         }, 
         {
-          "duration": 0.5417400002479553, 
+          "duration": 0.547648012638092, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-4.559998 metres", 
@@ -127,7 +127,7 @@
           "severity-score": 10, 
           "status": "WARN", 
           "timestamp_start": 1437196322703380, 
-          "timestamp_stop": 1437196323245120
+          "timestamp_stop": 1437196323251028
         }, 
         {
           "duration": 40.175758361816406, 
@@ -470,7 +470,7 @@
           "timestamp_stop": 1437197002639144
         }, 
         {
-          "duration": 1.1355359554290771, 
+          "duration": 0.9642840027809143, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-5.510010 metres", 
@@ -487,11 +487,11 @@
           ], 
           "severity-score": 20, 
           "status": "FAIL", 
-          "timestamp_start": 1437197010511004, 
+          "timestamp_start": 1437197010682256, 
           "timestamp_stop": 1437197011646540
         }, 
         {
-          "duration": 2.123392105102539, 
+          "duration": 2.1465320587158203, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=-8.809998 metres", 
@@ -509,7 +509,7 @@
           "severity-score": 20, 
           "status": "FAIL", 
           "timestamp_start": 1437197016039840, 
-          "timestamp_stop": 1437197018163232
+          "timestamp_stop": 1437197018186372
         }, 
         {
           "duration": 3.405503988265991, 
@@ -533,7 +533,7 @@
           "timestamp_stop": 1437197021953880
         }, 
         {
-          "duration": 3.7906479835510254, 
+          "duration": 3.767508029937744, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=9.090210 metres", 
@@ -551,7 +551,7 @@
           ], 
           "severity-score": 20, 
           "status": "FAIL", 
-          "timestamp_start": 1437197018163232, 
+          "timestamp_start": 1437197018186372, 
           "timestamp_stop": 1437197021953880
         }, 
         {
@@ -934,7 +934,7 @@
     }, 
     "Attitude Control": {
       "description": "The autopilot reports both the craft's attitude and the attitude the craft believes it should be at.  This test will FAIL or WARN if the vehicle's desired attitudes and achieved attitudes are not within threshold delta values for more than a threshold time.", 
-      "evilness": 800, 
+      "evilness": 805, 
       "evilness-is-deprecated": "Use severity-score", 
       "name": "Attitude Control", 
       "results": [
@@ -1107,7 +1107,7 @@
           "timestamp_stop": 1437196305173208
         }, 
         {
-          "duration": 1.928760051727295, 
+          "duration": 1.9227559566497803, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=10.000000", 
@@ -1131,7 +1131,7 @@
           ], 
           "severity-score": 10, 
           "status": "FAIL", 
-          "timestamp_start": 1437196312451400, 
+          "timestamp_start": 1437196312457404, 
           "timestamp_stop": 1437196314380160
         }, 
         {
@@ -1697,7 +1697,7 @@
           "timestamp_stop": 1437196460610884
         }, 
         {
-          "duration": 1.6633440256118774, 
+          "duration": 1.6683080196380615, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=10.000000", 
@@ -1723,7 +1723,7 @@
           "severity-score": 10, 
           "status": "FAIL", 
           "timestamp_start": 1437196468613748, 
-          "timestamp_stop": 1437196470277092
+          "timestamp_stop": 1437196470282056
         }, 
         {
           "duration": 0.3591800034046173, 
@@ -2539,6 +2539,34 @@
           "status": "FAIL", 
           "timestamp_start": 1437197099081832, 
           "timestamp_stop": 1437197099505924
+        }, 
+        {
+          "duration": 0.34141600131988525, 
+          "duration-units": "seconds", 
+          "evidence": [
+            "threshold=5.000000", 
+            "threshold-duration=0.250000 seconds", 
+            "Max-Delta=8.670817 degrees", 
+            "Roll-at-Max-Delta=-12.390818 degrees", 
+            "Desired-Roll-at-Max-Delta=-3.720000 degrees", 
+            "Pitch-at-Max-Delta=-3.140969 degrees", 
+            "Desired-Pitch-at-Max-Delta=-3.180000 degrees"
+          ], 
+          "evilness": 5, 
+          "evilness-is-deprecated": "Use severity-score", 
+          "reason": "Desired attitude not achieved", 
+          "series": [
+            "ATTITUDE.roll", 
+            "ATTITUDE.pitch", 
+            "ATTITUDE.yaw", 
+            "NAV_CONTROLLER_OUTPUT.nav_roll", 
+            "NAV_CONTROLLER_OUTPUT.nav_pitch", 
+            "NAV_CONTROLLER_OUTPUT.nav_bearing"
+          ], 
+          "severity-score": 5, 
+          "status": "WARN", 
+          "timestamp_start": 1437197103968760, 
+          "timestamp_stop": 1437197104310176
         }, 
         {
           "duration": 0.6936479806900024, 
@@ -3748,7 +3776,7 @@
           "timestamp_stop": 1437197956117580
         }, 
         {
-          "duration": 0.3671320080757141, 
+          "duration": 0.3902199864387512, 
           "duration-units": "seconds", 
           "evidence": [
             "threshold=5.000000", 
@@ -3772,8 +3800,8 @@
           ], 
           "severity-score": 5, 
           "status": "WARN", 
-          "timestamp_start": 1437197957165168, 
-          "timestamp_stop": 1437197957532300
+          "timestamp_start": 1437197957176100, 
+          "timestamp_stop": 1437197957566320
         }, 
         {
           "duration": 1.8855600357055664, 
@@ -4254,7 +4282,7 @@
           "timestamp_stop": 1437198363460736
         }
       ], 
-      "severity-score": 800, 
+      "severity-score": 805, 
       "status": "FAIL"
     }, 
     "Attitude Estimate Divergence": {
@@ -4364,7 +4392,7 @@
           "timestamp_stop": 1437197909250572
         }, 
         {
-          "duration": 0.7861040234565735, 
+          "duration": 0.7856360077857971, 
           "duration-units": "seconds", 
           "evidence": [
             "max-delta=16.738728 degrees", 
@@ -4385,8 +4413,8 @@
           ], 
           "severity-score": 10, 
           "status": "FAIL", 
-          "timestamp_start": 1437197945349024, 
-          "timestamp_stop": 1437197946135128
+          "timestamp_start": 1437197945355508, 
+          "timestamp_stop": 1437197946141144
         }, 
         {
           "duration": 0.8263880014419556, 
@@ -4553,7 +4581,7 @@
       "results": [
         {
           "evidence": [
-            "Armed at 1437196284268592"
+            "Armed at 1437196284271532"
           ], 
           "evilness": 0, 
           "evilness-is-deprecated": "Use severity-score", 
@@ -4563,7 +4591,7 @@
           ], 
           "severity-score": 0, 
           "status": "PASS", 
-          "timestamp-first-armed": 1437196284268592
+          "timestamp-first-armed": 1437196284271532
         }
       ], 
       "severity-score": 0, 
@@ -6147,8 +6175,8 @@
     }
   }, 
   "timestamp": "123456789", 
-  "total-distance-travelled": 1722.6741766421787, 
+  "total-distance-travelled": 1722.7782859277077, 
   "total-distance-travelled-units": "metres", 
-  "total-flight-time": 614.4847412109375, 
+  "total-flight-time": 614.5028076171875, 
   "total-flight-time-units": "seconds"
 }
