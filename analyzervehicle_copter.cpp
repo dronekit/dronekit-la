@@ -103,6 +103,9 @@ void Copter::set_frame_type(copter_frame_type frame_type)
     case frame_type_y6:
         _num_motors = 6;
         break;
+    case frame_type_hexa:
+        _num_motors = 6;
+        break;
     case invalid:
         ::fprintf(stderr, "Invalid frame type");
         abort();
@@ -131,6 +134,8 @@ void Copter::set_frame(const char *frame_config_string)
         set_frame_type(AnalyzerVehicle::Copter::frame_type_quad);
     } else if (strstr(frame_config_string, "Y6")) {
         set_frame_type(AnalyzerVehicle::Copter::frame_type_y6);
+    } else if (strstr(frame_config_string, "HEXA")) {
+        set_frame_type(AnalyzerVehicle::Copter::frame_type_hexa);
     } else {
         ::fprintf(stderr, "Unknown frame (%s)\n", frame_config_string);
         abort();
