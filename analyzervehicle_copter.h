@@ -64,6 +64,8 @@ namespace AnalyzerVehicle {
             invalid = 0,
             frame_type_quad = 19,
             frame_type_y6,
+            frame_type_hexa,
+            frame_type_octa,
         };
         /// @brief set copter frame type
         /// @param frame_type new copter frame type
