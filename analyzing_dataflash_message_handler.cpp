@@ -23,6 +23,10 @@ void Analyzing_DataFlash_Message_Handler::handle_format_message_received(const c
         handlers[new_msg_type] = new LA_MsgHandler_ERR(name, format, _analyze, _vehicle);
     } else if (streq(name, "EV")) {
         handlers[new_msg_type] = new LA_MsgHandler_EV(name, format, _analyze, _vehicle);
+    } else if (streq(name, "GPA")) {
+        handlers[new_msg_type] = new LA_MsgHandler_GPA(name, format, _analyze, _vehicle);
+    } else if (streq(name, "GPA2")) {
+        handlers[new_msg_type] = new LA_MsgHandler_GPA(name, format, _analyze, _vehicle);
     } else if (streq(name, "GPS")) {
         handlers[new_msg_type] = new LA_MsgHandler_GPS(name, format, _analyze, _vehicle);
     } else if (streq(name, "GPS2")) {
@@ -65,6 +69,8 @@ void Analyzing_DataFlash_Message_Handler::handle_format_message_received(const c
         handlers[new_msg_type] = new LA_MsgHandler_RCOU(name, format, _analyze, _vehicle);
     } else if (streq(name, "STAT")) {
         handlers[new_msg_type] = new LA_MsgHandler_STAT(name, format, _analyze, _vehicle);
+    } else if (streq(name, "UBX3")) {
+        handlers[new_msg_type] = new LA_MsgHandler_UBX3(name, format, _analyze, _vehicle);
     } else if (streq(name, "VIBE")) {
         handlers[new_msg_type] = new LA_MsgHandler_VIBE(name, format, _analyze, _vehicle);
     } else {

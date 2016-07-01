@@ -1,7 +1,7 @@
 {
   "bytes-dropped": 0, 
   "duration": "987654321", 
-  "evilness": 2265, 
+  "evilness": 2255, 
   "evilness-is-deprecated": "Use severity-score", 
   "format-version": "0.1", 
   "git_version": "some-hash", 
@@ -15,7 +15,7 @@
   "maximum-velocity-units": "metres/second", 
   "packet-count": 163851, 
   "packet_count": 163851, 
-  "severity-score": 2265, 
+  "severity-score": 2255, 
   "tests": {
     "Altitude Estimate Divergence": {
       "description": "A UAV often has several estimates of its altitude.  This test will FAIL or WARN if the various vehicle's altitude estimates diverge.", 
@@ -4628,7 +4628,7 @@
     }, 
     "GPS Fix": {
       "description": "The accuracy and precision of GPS messages can vary depending on many factors including weather, ionospheric disturbances and number of satellites visible.  This test will FAIL if the quality of the GPS information is poor.", 
-      "evilness": 20, 
+      "evilness": 10, 
       "evilness-is-deprecated": "Use severity-score", 
       "name": "GPS Fix", 
       "results": [
@@ -4638,23 +4638,26 @@
           "evidence": [
             "satellites-visible: 5", 
             "HDop: 4.72", 
+            "sAcc: 0.00", 
             "satellites-visible-threshold: 5", 
-            "HDop-threshold: 5.000000"
+            "HDop-threshold: 5.000000", 
+            "sAcc-warn-threshold: 1.000000", 
+            "sAcc-fail-threshold: 1.500000"
           ], 
-          "evilness": 20, 
+          "evilness": 10, 
           "evilness-is-deprecated": "Use severity-score", 
-          "reason": "No 3D fix was ever acquired", 
+          "reason": "GPS Fix Is Bad", 
           "series": [
             "GPS_RAW_INT.satellites_visible", 
             "GPS_RAW_INT.eph"
           ], 
-          "severity-score": 20, 
+          "severity-score": 10, 
           "status": "FAIL", 
           "timestamp_start": 1437196188368948, 
           "timestamp_stop": 1437196189505864
         }
       ], 
-      "severity-score": 20, 
+      "severity-score": 10, 
       "status": "FAIL"
     }, 
     "Good EKF": {

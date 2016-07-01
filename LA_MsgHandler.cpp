@@ -297,6 +297,18 @@ void LA_MsgHandler_IMU::xprocess(const uint8_t *msg) {
     imu()->set_gyr(T(), values);
 }
 
+
+void LA_MsgHandler_GPA::xprocess(const uint8_t *msg)
+{
+    if (!have_added_GPA) {
+        _analyze->add_data_source(string_format("GPSINFO_%s", name().c_str()), "GPA.SAcc");
+        have_added_GPA = true;
+    }
+
+    gpsinfo()->set_sacc(require_field_uint16_t(msg, "SAcc")/100.0f);
+}
+
+
 bool LA_MsgHandler_GPS::find_T(const uint8_t *msg, uint64_t &T) {
     if (field_value(msg, "TimeUS", T)) {
         return true;
@@ -490,6 +502,35 @@ void LA_MsgHandler_POWR::xprocess(const uint8_t *msg)
     double vcc;
     if (field_value(msg, "Vcc", vcc)) {
         _vehicle->autopilot_set_vcc(vcc / 100.0f);
+    }
+}
+
+
+void LA_MsgHandler_UBX3::xprocess(const uint8_t *msg)
+{
+    // map from instance number to GPS2 etc:
+    char gps_name[5] = {};
+    strncpy(gps_name, "GPS", 3);
+    const uint8_t instance = require_field_uint8_t(msg, "Instance");
+    switch(instance) {
+    case 0:
+        break;
+    default:
+        gps_name[3] = instance+1;
+    };
+
+    if (!have_added_UBX3) {
+        // We currently have no way to provide an instance number as
+        // part of the data source
+        _analyze->add_data_source(string_format("GPSINFO_%s", gps_name), "UBX3.sAcc");
+        have_added_UBX3 = true;
+    }
+
+    AnalyzerVehicle::GPSInfo *gpsinfo = _vehicle->gpsinfo(gps_name);
+    double value = require_field_float(msg, "sAcc");
+    if(!is_equal(value, 320.0f)) {
+        // 320 is a magic value meaning, "uninitialised"...
+        gpsinfo->set_sacc(value);
     }
 }
 

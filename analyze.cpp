@@ -24,6 +24,8 @@
 #include "analyzer/analyzer_vehicle_definition.h"
 #include "analyzer/analyzer_velocity_estimate_divergence.h"
 
+#include "analyzer/analyzer_issue_sacc.h"
+
 #include "la-log.h"
 
 void Analyze::set_analyzer_names_to_run(const std::vector<std::string> run_these)
@@ -207,12 +209,19 @@ void Analyze::instantiate_analyzers(INIReader *config)
         la_log(LOG_INFO, "Failed to create analyzer_velocity_estimate_divergence");
     }
 
+    // issue-specific analyzers are not run by default:
+    Analyzer_Issue_Sacc * analyzer_issue_sacc = new Analyzer_Issue_Sacc(vehicle, _data_sources);
+    if (analyzer_issue_sacc != NULL) {
+        configure_analyzer(config, analyzer_issue_sacc, false);
+    } else {
+        la_log(LOG_INFO, "Failed to create analyzer_issue_sacc");
+    }
 }
 
 
-void Analyze::configure_analyzer(INIReader *config, Analyzer *analyzer)
+void Analyze::configure_analyzer(INIReader *config, Analyzer *analyzer, bool run_default)
 {
-    if (_use_names_to_run &&
+    if ((!run_default || _use_names_to_run) &&
         !_names_to_run[analyzer->name()]) {
         return;
     }

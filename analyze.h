@@ -73,7 +73,7 @@ private:
                                    MAVLink_Message_Handler *handler,
                                    const char *handler_name);
 
-    void configure_analyzer(INIReader *config, Analyzer *handler);
+    void configure_analyzer(INIReader *config, Analyzer *handler, bool run_default=true);
 
     void results_json_add_statistics(Json::Value &root);
     void results_json(Json::Value &root);
