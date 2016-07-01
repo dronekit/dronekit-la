@@ -18,9 +18,8 @@ ifeq ($(OS),Windows_NT)
 	LIBS +=  -lpthread # for clock_gettime/clock_settime on Windows
 	STATIC=-static
 else
-	UNAME_S := $(shell uname -s)
-	ifeq ($(UNAME_S),Darwin)
-	else
+	CC_VERSION := $(shell $(CC) --version)
+	ifeq ($(findstring clang, $(CC_VERSION)),)
 		WARNFLAGS += -Wlogical-op
 		STATIC=-static
 	endif
