@@ -23,6 +23,7 @@ else
 		WARNFLAGS += -Wlogical-op
 		STATIC=-static
 	endif
+	LIBS += -lrt # for clock_gettime/clock_settime on older glibcs
 endif
 
 STD=-std=c++11
