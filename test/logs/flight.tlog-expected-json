@@ -5953,6 +5953,15 @@
       "severity-score": 0, 
       "status": "PASS"
     }, 
+    "Parameters": {
+      "description": "Autopilots store configuration settings known as 'parameters'. This test detects some common configuration issues present in these parameters.", 
+      "evilness": 0, 
+      "evilness-is-deprecated": "Use severity-score", 
+      "name": "Parameters", 
+      "results": [], 
+      "severity-score": 0, 
+      "status": "PASS"
+    }, 
     "Position Estimate Divergence": {
       "description": "A UAV often has several estimates of its position.  This test will FAIL or WARN if the various vehicle's position estimates diverge.", 
       "evilness": 50, 
