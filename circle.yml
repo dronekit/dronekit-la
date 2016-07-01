@@ -1,6 +1,8 @@
 machine:
   pre:
     - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 20
+    - sudo apt-get install -y python-dev python-pip doxygen # for docs
+    - sudo easy_install -U pip
 
 dependencies:
   pre:
@@ -9,6 +11,9 @@ dependencies:
 
 test:
   override:
+    - pip install -r requirements.txt
+    - pip install breathe
     - make -j8
     - ./test/test.py --submodules dronekit-la-testdata
-
+    - doxygen doxygen/doxygen.conf
+    - cd docs && make html
