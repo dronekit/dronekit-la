@@ -602,6 +602,12 @@ public:
     /// @param[out] ret Parameter value.
     /// @return ``true`` if the parameter has been seen in the log.
     bool param(const char *name, float &ret) const;
+    /// @brief Retrieve parameter value.
+    /// @detail Returns parameter value ONLY from input, not from defaults.
+    /// @param name Parameter value to retrieve.
+    /// @param[out] ret Parameter value.
+    /// @return ``true`` if the parameter has been seen in the log.
+    bool param(const std::string name, float &ret) const;
     /// @brief Number of parameters seen.
     /// @return Number of parameters seen in input.
     uint16_t param_count() const { return _param.size(); };
@@ -611,7 +617,7 @@ public:
     /// @brief Timestamp at which a parameter was last modified (microseconds).
     /// @param name Parameter modification time to retrieve.
     /// @return Parameter modification time (microseconds).
-    uint64_t param_modtime(const std::string name) const;
+    uint64_t param_T(const std::string name) const;
     /// @brief Set a parameter.
     /// @param name Parameter to set.
     /// @param value New value of parameter.
@@ -1031,7 +1037,7 @@ private:
     /// @brief Parameters that have been set.
     std::map<const std::string, float> _param;
     /// @brief Timestamps parameters were last set.
-    std::map<const std::string, uint64_t> _param_modtime;
+    std::map<const std::string, uint64_t> _param_T;
     /// @brief Values for parameters if they haven't been seen from a log.
     std::map<const std::string, float> _param_defaults = {
         { "AHRS_EKF_TYPE", 1.0 }

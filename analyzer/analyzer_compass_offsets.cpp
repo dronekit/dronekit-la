@@ -29,17 +29,17 @@ bool Analyzer_Compass_Offsets::new_compass_results()
         return false;
     }
 
-    if (_vehicle->param_modtime(p_x) == modtime_compass_ofs[0] &&
-        _vehicle->param_modtime(p_y) == modtime_compass_ofs[1] &&
-        _vehicle->param_modtime(p_z) == modtime_compass_ofs[2]) {
+    if (_vehicle->param_T(p_x) == modtime_compass_ofs[0] &&
+        _vehicle->param_T(p_y) == modtime_compass_ofs[1] &&
+        _vehicle->param_T(p_z) == modtime_compass_ofs[2]) {
         // nothing has changed; at time of writing we get called for
         // every parameter which is set (low-bandwidth, so *shrug*)
         return false;
     }
 
-    modtime_compass_ofs[0] = _vehicle->param_modtime(p_x);
-    modtime_compass_ofs[1] = _vehicle->param_modtime(p_y);
-    modtime_compass_ofs[2] = _vehicle->param_modtime(p_z);
+    modtime_compass_ofs[0] = _vehicle->param_T(p_x);
+    modtime_compass_ofs[1] = _vehicle->param_T(p_y);
+    modtime_compass_ofs[2] = _vehicle->param_T(p_z);
 
     return true;
 }

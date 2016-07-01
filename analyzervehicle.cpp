@@ -71,12 +71,12 @@ bool Base::param_with_defaults(const char *name, float &ret) const
     return param_default(name, ret);
 }
 
-uint64_t Base::param_modtime(const std::string name) const {
-    auto it = _param_modtime.find(name);
-    if (it != _param_modtime.end()) {
+uint64_t Base::param_T(const std::string name) const {
+    auto it = _param_T.find(name);
+    if (it != _param_T.end()) {
         return it->second;
     }
-    ::fprintf(stderr, "param_modtime called for non-existant parameter (%s)\n", name.c_str());
+    ::fprintf(stderr, "param_T called for non-existant parameter (%s)\n", name.c_str());
     return 0;
 }
 
@@ -106,6 +106,16 @@ bool Base::param(const char *name, float &ret) const
     return true;
 }
 
+bool Base::param(const std::string name, float &ret) const
+{
+    const char *xname = name.c_str();
+    if (!param_seen(xname)) {
+        return false;
+    }
+    ret = param(xname);
+    return true;
+}
+
 float Base::param(const std::string name) const
 {
     const std::string x = std::string(name);
@@ -122,13 +132,13 @@ void Base::param_set(const char *name, const float value)
 {
     // ::fprintf(stderr, "T=%lu %s=%f\n", T(), name, value);
     _param[name] = value;
-    _param_modtime[name] = T();
+    _param_T[name] = T();
 }
 
 void Base::take_state(Base *old)
 {
   _param.insert(old->_param.begin(), old->_param.end());
-  _param_modtime.insert(old->_param_modtime.begin(), old->_param_modtime.end());
+  _param_T.insert(old->_param_T.begin(), old->_param_T.end());
 }
 
 bool Base::param_seen(const std::string name) const
@@ -207,7 +217,7 @@ void AnalyzerVehicle::IMU::set_acc_clip_count(uint16_t count)
         _acc_clip_count = count;
         _acc_clip_count_T = _T;
     } else if (count < _acc_clip_count) {
-        fprintf(stderr, "Weird: clip count going bacwards");
+        // fprintf(stderr, "Weird: clip count going bacwards");
     }
 }
 
