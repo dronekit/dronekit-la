@@ -21,6 +21,14 @@
 #include "analyzing_dataflash_message_handler.h"
 #include "analyzing_mavlink_message_handler.h"
 
+
+// http://stackoverflow.com/questions/874134/find-if-string-ends-with-another-string-in-c
+inline bool ends_with(std::string const & value, std::string const & ending)
+{
+    if (ending.size() > value.size()) return false;
+    return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+}
+
 void LogAnalyzer::parse_path(const char *path)
 {
     create_vehicle_from_commandline_arguments();
@@ -33,14 +41,14 @@ void LogAnalyzer::parse_path(const char *path)
     log_format_t log_format = log_format_none;
     if (!strcmp(path, "-")) {
         do_stdin = true;
-    } else if (strstr(path, ".BIN") ||
-               strstr(path, ".bin")) {
+    } else if (ends_with(path, ".BIN") ||
+               ends_with(path, ".bin")) {
         log_format = log_format_df;
-    } else if (strstr(path, ".log") ||
-               strstr(path, ".LOG")) {
+    } else if (ends_with(path, ".log") ||
+               ends_with(path, ".LOG")) {
         log_format = log_format_log;
-    } else if (strstr(path, ".tlog") ||
-               strstr(path, ".TLOG")) {
+    } else if (ends_with(path, ".tlog") ||
+               ends_with(path, ".TLOG")) {
         log_format = log_format_tlog;
     }
 
