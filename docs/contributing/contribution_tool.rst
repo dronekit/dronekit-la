@@ -64,6 +64,8 @@ To build *dronekit-la*, you can then just clone the repository and call *make* f
     # Get the repo
     git clone https://github.com/dronekit/dronekit-la.git
     cd dronekit-la
+    git sumodule init
+    git submodule update
 
     # Build the tool
     make
@@ -80,6 +82,8 @@ To build *dronekit-la*, you can then just clone the repository and call *make* f
 
     # Get the repo
     git clone https://github.com/dronekit/dronekit-la.git
+    git sumodule init
+    git submodule update
     cd dronekit-la
 
     # Build the tool
@@ -109,6 +113,8 @@ To build *dronekit-la*, you can then just clone the repository and call *make* f
     # Get the repo
     git clone https://github.com/dronekit/dronekit-la.git
     cd dronekit-la
+    git sumodule init
+    git submodule update
 
     # Build the tool
     make
