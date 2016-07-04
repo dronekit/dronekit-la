@@ -23,7 +23,10 @@ else
 		WARNFLAGS += -Wlogical-op
 		STATIC=-static
 	endif
-	LIBS += -lrt # for clock_gettime/clock_settime on older glibcs
+	UNAME_S := $(shell uname -s)
+        ifneq ($(UNAME_S),Darwin)
+		LIBS += -lrt # for clock_gettime/clock_settime on older glibcs
+	endif
 endif
 
 STD=-std=c++11
