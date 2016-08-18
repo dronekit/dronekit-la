@@ -494,7 +494,7 @@ namespace AnalyzerVehicle {
         uint16_t _gyr_next = 0;
 
         uint64_t _acc_clip_count_T;
-        uint16_t _acc_clip_count;
+        uint16_t _acc_clip_count = 0;
     };
 
 /// @brief Base class from which all vehicles inherit.

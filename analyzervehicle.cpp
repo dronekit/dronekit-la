@@ -211,7 +211,7 @@ uint64_t AnalyzerVehicle::IMU::last_acc_clip_time() const
 }
 
 // set the number of times this acc has clipped
-void AnalyzerVehicle::IMU::set_acc_clip_count(uint16_t count)
+void AnalyzerVehicle::IMU::set_acc_clip_count(const uint16_t count)
 {
     if (count > _acc_clip_count) {
         _acc_clip_count = count;
