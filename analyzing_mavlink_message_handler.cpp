@@ -369,6 +369,8 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
             break;
         case AnalyzerVehicle::Base::vehicletype_t::plane:
             break;
+        case AnalyzerVehicle::Base::vehicletype_t::rover:
+            break;
         case AnalyzerVehicle::Base::vehicletype_t::invalid:
             break;
         }

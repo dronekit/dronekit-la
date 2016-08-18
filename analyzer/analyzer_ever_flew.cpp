@@ -75,6 +75,8 @@ void Analyzer_Ever_Flew::end_of_log(const uint32_t packet_count UNUSED)
             break;
         case AnalyzerVehicle::Base::vehicletype_t::plane:
             break;
+        case AnalyzerVehicle::Base::vehicletype_t::rover:
+            break;
         case AnalyzerVehicle::Base::vehicletype_t::invalid:
             _result.add_evidence("Vehicle type was never defined");
             break;

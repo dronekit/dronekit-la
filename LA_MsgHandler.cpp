@@ -368,6 +368,8 @@ void LA_MsgHandler_MSG::xprocess(const uint8_t *msg) {
             newtype = AnalyzerVehicle::Base::vehicletype_t::copter;
         } else if (strstr(msg_message, "ArduPlane")) {
             newtype = AnalyzerVehicle::Base::vehicletype_t::plane;
+        } else if (strstr(msg_message, "APM:Rover")) {
+            newtype = AnalyzerVehicle::Base::vehicletype_t::rover;
         }
         if (newtype != AnalyzerVehicle::Base::vehicletype_t::invalid) {
             AnalyzerVehicle::Base::switch_vehicletype(_vehicle, newtype);
@@ -380,6 +382,8 @@ void LA_MsgHandler_MSG::xprocess(const uint8_t *msg) {
             }
             break;
         case AnalyzerVehicle::Base::vehicletype_t::plane:
+            break;
+        case AnalyzerVehicle::Base::vehicletype_t::rover:
             break;
         case AnalyzerVehicle::Base::vehicletype_t::invalid:
             ::fprintf(stderr, "unhandled message (%s)\n", msg_message);

@@ -540,6 +540,7 @@ public:
         invalid = 0,
         copter = 17,
         plane = 19,
+        rover = 27,
     };
     /// @brief Vehicle type forced status.
     /// @detail Sometimes the vehicle type can not be determined from a log and must be forced.

@@ -77,6 +77,7 @@ SRCS_CPP += analyzer/analyzer_vehicle_definition.cpp
 SRCS_CPP += analyzer/analyzer_velocity_estimate_divergence.cpp
 SRCS_CPP += analyzervehicle_copter.cpp
 SRCS_CPP += analyzervehicle_plane.cpp
+SRCS_CPP += analyzervehicle_rover.cpp
 SRCS_CPP += analyzervehicle.cpp
 SRCS_CPP += la-log.cpp
 SRCS_CPP += common_tool.cpp
