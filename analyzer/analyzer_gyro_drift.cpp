@@ -29,12 +29,12 @@ bool Analyzer_Gyro_Drift::configure(INIReader *config) {
     return true;
 }
 
-void Analyzer_Gyro_Drift::open_result(const AnalyzerVehicle::IMU *first,
+void Analyzer_Gyro_Drift::open_result(const std::string result_key,
+                                      const AnalyzerVehicle::IMU *first,
                                       const AnalyzerVehicle::IMU *imu,
                                       const uint8_t axis,
                                       const double delta)
 {
-    const std::string result_key = (imu->name() + "_").append(1,('X' + axis));
 
     _result[result_key] = new Analyzer_Gyro_Drift_Result(imu->name());
 
@@ -65,12 +65,13 @@ void Analyzer_Gyro_Drift::update_result(Analyzer_Gyro_Drift_Result *result, cons
     }
 }
 
-void Analyzer_Gyro_Drift::close_result(Analyzer_Gyro_Drift_Result *result)
+void Analyzer_Gyro_Drift::close_result(const std::string result_key,
+                                      Analyzer_Gyro_Drift_Result *result)
 {
     result->set_T_stop(_vehicle->T());
 
     if (result->duration() < _duration_min) {
-        _result.erase(result->name());
+        _result.erase(result_key);
         delete result;
         return;
     }
@@ -81,8 +82,17 @@ void Analyzer_Gyro_Drift::close_result(Analyzer_Gyro_Drift_Result *result)
                                        rad_to_deg(result->_max_delta)));
     result->add_evidence("max-delta-units=degrees/second");
 
+    if (result->status() == analyzer_status_fail) {
+        result->add_evidence(string_format("threshold=%f",
+                                           rad_to_deg(_delta_fail)));
+    } else {
+        result->add_evidence(string_format("threshold=%f",
+                                           rad_to_deg(_delta_warn)));
+    }
+    result->add_evidence("threshold-units=degrees/second");
+
     add_result(result);
-    _result.erase(result->name());
+    _result.erase(result_key);
 }
 
 void Analyzer_Gyro_Drift::evaluate_gyro(const AnalyzerVehicle::IMU *first,
@@ -102,7 +112,7 @@ void Analyzer_Gyro_Drift::evaluate_gyro(const AnalyzerVehicle::IMU *first,
 
     for (uint8_t i=0; i<3; i++) {
         const double delta = fabs(deltas[i]);
-        const bool problem = (delta > 0.09f);
+        const bool problem = (delta > _delta_warn);
 
         const std::string result_key = (imu->name() + "_").append(1,('X' + i));
 
@@ -111,12 +121,12 @@ void Analyzer_Gyro_Drift::evaluate_gyro(const AnalyzerVehicle::IMU *first,
                 // incident is underway
                 update_result(_result[result_key], delta);
             } else {
-                open_result(first, imu, i, delta);
+                open_result(result_key, first, imu, i, delta);
             }
         } else {
             // close any open result:
-            if (_result.count(imu->name())) {
-                close_result(_result[result_key]);
+            if (_result.count(result_key)) {
+                close_result(result_key, _result[result_key]);
             }
         }
     }
@@ -146,7 +156,7 @@ void Analyzer_Gyro_Drift::close_results()
     while (next != _result.end()) {
         auto current = next;
         next++;
-        close_result((*current).second);
+        close_result((*current).first, (*current).second);
     }
 }
 

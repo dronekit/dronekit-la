@@ -56,13 +56,14 @@ private:
 
     void end_of_log(uint32_t packet_count) override;
 
-    void open_result(const AnalyzerVehicle::IMU *first,
+    void open_result(const std::string result_key,
+                     const AnalyzerVehicle::IMU *first,
                      const AnalyzerVehicle::IMU *imu,
                      const uint8_t axis,
                      const double delta);
     void update_result(Analyzer_Gyro_Drift_Result *result, const Vector3f acc_delta);
     void update_result(Analyzer_Gyro_Drift_Result *, double length);
-    void close_result(Analyzer_Gyro_Drift_Result *);
+    void close_result(const std::string result_key, Analyzer_Gyro_Drift_Result *);
 
     void close_results();
 };
