@@ -153,17 +153,18 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
 void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_global_position_int_t &msg) {
     _vehicle->set_T(T);
 
-    _vehicle->position_estimate("GLOBAL_POSITION_INT")->set_lat(T, msg.lat/(double)10000000.0f);
-    _vehicle->position_estimate("GLOBAL_POSITION_INT")->set_lon(T, msg.lon/(double)10000000.0f);
-    _vehicle->altitude_estimate("GLOBAL_POSITION_INT")->set_alt(T, msg.alt/(double)1000.0f);
-
     // GLOBAL_POSITION_INT is the "offical" position of the vehicle:
     double lat = msg.lat/(double)10000000.0f;
     double lon = msg.lon/(double)10000000.0f;
-    _vehicle->set_lat(lat);
-    _vehicle->set_lon(lon);
     // and I'm assuming for ALT as well:
     double alt = msg.alt/(double)1000.0f;
+
+    _vehicle->position_estimate("GLOBAL_POSITION_INT")->set_lat(T, lat);
+    _vehicle->position_estimate("GLOBAL_POSITION_INT")->set_lon(T, lon);
+    _vehicle->altitude_estimate("GLOBAL_POSITION_INT")->set_alt(T, alt);
+
+    _vehicle->set_lat(lat);
+    _vehicle->set_lon(lon);
     _vehicle->set_altitude(alt);
     if (_vehicle->origin_altitude_T() == 0) {
         _vehicle->set_origin_altitude(alt);
