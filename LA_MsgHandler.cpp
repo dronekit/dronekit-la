@@ -305,7 +305,7 @@ void LA_MsgHandler_GPA::xprocess(const uint8_t *msg)
         have_added_GPA = true;
     }
 
-    gpsinfo()->set_sacc(require_field_uint16_t(msg, "SAcc")/100.0f);
+    _vehicle->gpsinfo(_gps_name)->set_sacc(require_field_uint16_t(msg, "SAcc")/100.0f);
 }
 
 

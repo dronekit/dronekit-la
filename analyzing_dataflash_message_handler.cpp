@@ -24,9 +24,9 @@ void Analyzing_DataFlash_Message_Handler::handle_format_message_received(const c
     } else if (streq(name, "EV")) {
         handlers[new_msg_type] = new LA_MsgHandler_EV(name, format, _analyze, _vehicle);
     } else if (streq(name, "GPA")) {
-        handlers[new_msg_type] = new LA_MsgHandler_GPA(name, format, _analyze, _vehicle);
+        handlers[new_msg_type] = new LA_MsgHandler_GPA(name, "GPS", format, _analyze, _vehicle);
     } else if (streq(name, "GPA2")) {
-        handlers[new_msg_type] = new LA_MsgHandler_GPA(name, format, _analyze, _vehicle);
+        handlers[new_msg_type] = new LA_MsgHandler_GPA(name, "GPS2", format, _analyze, _vehicle);
     } else if (streq(name, "GPS")) {
         handlers[new_msg_type] = new LA_MsgHandler_GPS(name, format, _analyze, _vehicle);
     } else if (streq(name, "GPS2")) {

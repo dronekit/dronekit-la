@@ -219,8 +219,9 @@ class LA_MsgHandler_GPA : public LA_MsgHandler {
 
 public:
 
-    LA_MsgHandler_GPA(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
-        LA_MsgHandler(name, f, analyze, vehicle) {
+    LA_MsgHandler_GPA(const std::string name, const std::string gps_name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle),
+        _gps_name(gps_name) {
     }
 
     void xprocess(const uint8_t *msg) override;
@@ -228,6 +229,7 @@ public:
 private:
 
     bool have_added_GPA = false;
+    const std::string _gps_name;
 };
 
 
