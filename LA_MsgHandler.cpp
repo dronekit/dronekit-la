@@ -554,7 +554,7 @@ void LA_MsgHandler_VIBE::xprocess(const uint8_t *msg)
         AnalyzerVehicle::IMU *imu = _vehicle->imu(imu_name);
 
         const std::string field_name = string_format("Clip%d", i);
-        const uint16_t count = require_field_uint16_t(msg, field_name.c_str());
+        const uint32_t count = require_field_uint32_t(msg, field_name.c_str());
         imu->set_acc_clip_count(count);
     }
 }
