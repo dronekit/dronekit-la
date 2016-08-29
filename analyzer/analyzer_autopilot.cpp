@@ -16,7 +16,7 @@ void Analyzer_Autopilot::end_of_log(uint32_t packet_count UNUSED)
 
 void Analyzer_Autopilot::close_result_slices_max()
 {
-    _result_slices_max->add_evidence(string_format("slices-max-threshold=%u", _result_slices_max->_slices_max_max));
+    _result_slices_max->add_evidence(string_format("slices-max-threshold=%llu", _result_slices_max->_slices_max_max));
     _result_slices_max->set_T_stop(_vehicle->T());
     add_result(_result_slices_max);
     _result_slices_max = NULL;

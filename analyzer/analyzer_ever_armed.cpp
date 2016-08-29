@@ -31,7 +31,7 @@ void Analyzer_Ever_Armed::evaluate()
         _result.set_arm_time(_vehicle->T());
         _result.set_status(analyzer_status_ok);
         _result.set_reason("The vehicle armed");
-        _result.add_evidence(string_format("Armed at %lu", _result.arm_time()));
+        _result.add_evidence(string_format("Armed at %llu", _result.arm_time()));
     }
 }
 
