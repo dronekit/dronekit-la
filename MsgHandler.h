@@ -140,12 +140,15 @@ inline void MsgHandler::field_value_for_type_at_offset(const uint8_t *msg,
                                                        uint8_t offset,
                                                        bool &ret)
 {
-    float value;
     switch (type) {
-    case 'f':
-        value = (((float*)&msg[offset])[0]);
+    case 'f': {
+	char dest[16]; //
+	const uint8_t to_copy = size_for_type(type);
+	memcpy(dest, &msg[offset], to_copy);
+        const float value = (((float*)&dest)[0]);
         ret = ! is_zero(value);
         break;
+    }
     default:
         _field_value_for_type_at_offset(msg, type, offset, ret);
     }
@@ -153,45 +156,56 @@ inline void MsgHandler::field_value_for_type_at_offset(const uint8_t *msg,
 
 template<typename R>
 inline void MsgHandler::_field_value_for_type_at_offset(const uint8_t *msg,
-                                                        uint8_t type,
-                                                        uint8_t offset,
+                                                        const uint8_t type,
+                                                        const uint8_t offset,
                                                         R &ret)
 {
-    /* we register the types - add_field_type - so can we do without
+    uint8_t to_copy = size_for_type(type);
+    //  char dest[to_copy]; // forbidden by ISO
+    char dest[16]; //
+
+    if (sizeof(R) < to_copy) {
+            // we should never ask to e.g. store a uint16 from a msg into e.g. a uint8
+	::fprintf(stderr, "Internal error: destination too small");
+	abort();
+    }
+    memcpy(dest, &msg[offset], to_copy);
+
+  /* we register the types - add_field_type - so can we do without
      * this switch statement somehow? */
     switch (type) {
     case 'B':
-        ret = (R)(((uint8_t*)&msg[offset])[0]);
+        ret = (R)(((uint8_t*)&dest)[0]);
         break;
     case 'c':
     case 'h':
-        ret = (R)(((int16_t*)&msg[offset])[0]);
+        ret = (R)(((int16_t*)&dest)[0]);
         break;
     case 'H':
-        ret = (R)(((uint16_t*)&msg[offset])[0]);
+        ret = (R)(((uint16_t*)&dest)[0]);
         break;
     case 'C':
-        ret = (R)(((uint16_t*)&msg[offset])[0]);
+        ret = (R)(((uint16_t*)&dest)[0]);
         break;
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wfloat-equal"
     case 'f':
-        ret = (R)(((float*)&msg[offset])[0]);
+        ret = (R)(((float*)&dest)[0]);
         break;
 #pragma GCC diagnostic pop
     case 'I':
     case 'E':
-        ret = (R)(((uint32_t*)&msg[offset])[0]);
+        ret = (R)(((uint32_t*)&dest)[0]);
         break;
     case 'L':
     case 'e':
-        ret = (R)(((int32_t*)&msg[offset])[0]);
+        ret = (R)(((int32_t*)&dest)[0]);
         break;
     case 'q':
-        ret = (R)(((int64_t*)&msg[offset])[0]);
+        ret = (R)(((int64_t*)&dest)[0]);
         break;
     case 'Q':
-        ret = (R)(((uint64_t*)&msg[offset])[0]);
+        ret = (R)(((uint64_t*)&dest)[0]);
         break;
     default:
         ::printf("Unhandled format type (%c)\n", type);
