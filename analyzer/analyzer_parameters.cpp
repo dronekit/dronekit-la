@@ -80,9 +80,45 @@ void Analyzer_Parameters::evaluate_trivial()
         }
     }
 }
+
+// make sure someone running a PixHawk hasn't just copied parameters
+// from an APM:
+void Analyzer_Parameters::evaluate_log_bitmask()
+{
+    float log_bitmask;
+    const AnalyzerVehicle::AutoPilot::AutoPilotHardware hw = _vehicle->autopilot().hardware();
+    if (_vehicle->param("LOG_BITMASK", log_bitmask) &&
+        hw != AnalyzerVehicle::AutoPilot::AutoPilotHardware::UNKNOWN) {
+        bool bad = (hw == AnalyzerVehicle::AutoPilot::AutoPilotHardware::PX4V2 &&
+                    is_equal(log_bitmask, log_bitmask_apm_default));
+        if (bad) {
+            if (_log_bitmask_bad_apm == nullptr) {
+                _log_bitmask_bad_apm = new Analyzer_Parameters_Result();
+                _log_bitmask_bad_apm->set_T_start(_vehicle->T());
+
+                _log_bitmask_bad_apm->add_source(_data_sources.get("PARAM"));
+
+                _log_bitmask_bad_apm->set_status(analyzer_status_fail);
+                _log_bitmask_bad_apm->set_reason("AutoPilot is PixHawk hardware, log bitmask is APM default");
+                _log_bitmask_bad_apm->add_evidence("autopilot=PX4v2");
+                _log_bitmask_bad_apm->add_evidence(string_format("LOG_BITMASK=%f", log_bitmask));
+
+                add_result(_log_bitmask_bad_apm);
+            }
+        } else {
+            if (_log_bitmask_bad_apm != nullptr) {
+                _log_bitmask_bad_apm->set_T_stop(_vehicle->T());
+                _log_bitmask_bad_apm = nullptr;
+            }
+        }
+    }
+}
+
 void Analyzer_Parameters::evaluate()
 {
     evaluate_trivial();
+
+    evaluate_log_bitmask();
 }
 
 void Analyzer_Parameters::end_of_log(const uint32_t packet_count UNUSED)
@@ -92,6 +128,9 @@ void Analyzer_Parameters::end_of_log(const uint32_t packet_count UNUSED)
         auto current = next;
         next++;
         close_result_trivial(current->first);
+    }
+    if (_log_bitmask_bad_apm != nullptr) {
+        _log_bitmask_bad_apm->set_T_stop(_vehicle->T());
     }
 }
 

@@ -390,6 +390,11 @@ void LA_MsgHandler_MSG::xprocess(const uint8_t *msg) {
             // abort();
         }
     }
+
+    // see if we can find an autopilot type:
+    if (strstr(msg_message, "PX4v2 ")) {
+        _vehicle->autopilot().set_hardware(AnalyzerVehicle::AutoPilot::AutoPilotHardware::PX4V2);
+    }
 }
 
 void LA_MsgHandler_STAT::xprocess(const uint8_t *msg)

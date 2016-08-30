@@ -104,6 +104,8 @@ public:
     void update_result_trivial(const std::string name, const double value, const Param_Constraint_Trivial &constraints);
     void close_result_trivial(const std::string name);
 
+    void evaluate_log_bitmask();
+
 protected:
 
     bool configure(INIReader *config) override;
@@ -113,6 +115,9 @@ private:
     std::map<const std::string, Analyzer_Parameters_Result*> _open_results;
 
     bool _enable_ANGLE_MAX_check;
+
+    const float log_bitmask_apm_default = 830;
+    Analyzer_Parameters_Result *_log_bitmask_bad_apm = nullptr;
 };
 
 #endif

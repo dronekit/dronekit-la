@@ -394,6 +394,10 @@ namespace AnalyzerVehicle {
     /// @brief Information about the AutoPilot.
     class AutoPilot {
     public:
+        typedef enum {
+            UNKNOWN,
+            PX4V2,
+        } AutoPilotHardware;
         uint16_t overruns() { return _overruns; }
         uint16_t overruns_T() { return _overruns_T; }
         void set_overruns(uint64_t T, uint16_t);
@@ -418,6 +422,9 @@ namespace AnalyzerVehicle {
         uint64_t vcc_T() { return _vcc_T; }
         void set_vcc(uint64_t T, double);
 
+        void set_hardware(const AutoPilotHardware hw) { _hardware = hw; }
+        AutoPilotHardware hardware() const { return _hardware; }
+
     private:
         uint16_t _overruns;
         uint64_t _overruns_T = 0;
@@ -434,6 +441,8 @@ namespace AnalyzerVehicle {
 
         double _vcc;
         uint64_t _vcc_T = 0;
+
+        AutoPilotHardware _hardware = UNKNOWN;
     };
 
     /// @brief Accelerometer and gyroscope information from onboard IMUs.
