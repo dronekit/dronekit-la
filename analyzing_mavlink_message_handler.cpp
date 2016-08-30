@@ -356,7 +356,7 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
             newtype = AnalyzerVehicle::Base::vehicletype_t::copter;
         } else if (strstr(msg.text, "ArduPlane")) {
             newtype = AnalyzerVehicle::Base::vehicletype_t::plane;
-        } else if (strstr(msg_message, "APM:Rover")) {
+        } else if (strstr(msg.text, "APM:Rover")) {
             newtype = AnalyzerVehicle::Base::vehicletype_t::rover;
         }
         if (newtype != AnalyzerVehicle::Base::vehicletype_t::invalid) {
