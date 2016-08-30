@@ -396,7 +396,18 @@ public:
     LA_MsgHandler_RCOU(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
         LA_MsgHandler(name, f, analyze, vehicle) {
         // FIXME:
-        if (find_field_info("Ch1")) {
+        if (find_field_info("C1")) {
+            _analyze->add_data_source("SERVO_OUTPUT", "RCOU.C1");
+            _analyze->add_data_source("SERVO_OUTPUT", "RCOU.C2");
+            _analyze->add_data_source("SERVO_OUTPUT", "RCOU.C3");
+            _analyze->add_data_source("SERVO_OUTPUT", "RCOU.C4");
+            if (find_field_info("C5")) {
+                _analyze->add_data_source("SERVO_OUTPUT", "RCOU.C5");
+                _analyze->add_data_source("SERVO_OUTPUT", "RCOU.C6");
+                _analyze->add_data_source("SERVO_OUTPUT", "RCOU.C7");
+                _analyze->add_data_source("SERVO_OUTPUT", "RCOU.C8");
+            }
+        } else if (find_field_info("Ch1")) {
             _analyze->add_data_source("SERVO_OUTPUT", "RCOU.Ch1");
             _analyze->add_data_source("SERVO_OUTPUT", "RCOU.Ch2");
             _analyze->add_data_source("SERVO_OUTPUT", "RCOU.Ch3");
@@ -422,13 +433,16 @@ public:
     };
 
     void xprocess(const uint8_t *msg) override {
+        char lbl[3] = "Cx";
         char label[4] = "Chx";
         char longlabel[6] = "Chanx";
         uint16_t value;
         for (uint8_t i=1; i<8; i++) {
+            lbl[1] = '0' + i;
             label[2] = '0' + i;
             longlabel[4] = '0' + i;
-            if (!field_value(msg, label, value) &&
+            if (!field_value(msg, lbl, value) &&
+                !field_value(msg, label, value) &&
                 !field_value(msg, longlabel, value)) {
                 break;
             }
