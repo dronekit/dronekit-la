@@ -55,6 +55,46 @@ namespace AnalyzerVehicle {
         }
     };
 
+    /// @brief Abstraction of a vehicle attitude rates.
+    class AttitudeRate {
+    public:
+        // all in degrees/second:
+        float roll() const { return _att[0]; };
+        float pitch() const { return _att[1]; };
+        float yaw() const { return _att[2]; };
+        uint64_t roll_modtime() const {
+            return get_att_modtime(0);
+        }
+        uint64_t pitch_modtime() const {
+            return get_att_modtime(1);
+        }
+        uint64_t yaw_modtime() const {
+            return get_att_modtime(2);
+        }
+        void set_roll(uint64_t T, float roll) {
+            _set_att_attrib(0, T, roll);
+        }
+        void set_pitch(uint64_t T, float pitch) {
+            _set_att_attrib(1, T, pitch);
+        }
+        void set_yaw(uint64_t T, float yaw) {
+            _set_att_attrib(2, T, yaw);
+        }
+
+    private:
+        // all in degrees:
+        float _att[3];
+        uint64_t _att_modtime[3];
+
+        void _set_att_attrib(uint8_t offset, uint64_t T, float value) {
+            _att[offset] = value;
+            _att_modtime[offset] = T;
+        }
+        uint64_t get_att_modtime(uint8_t offset) const {
+            return _att_modtime[offset];
+        }
+    };
+
     /// @brief Abstraction of a vehicle altitude.
     class Altitude {
     public:
@@ -958,6 +998,9 @@ public:
     /// @brief Canonical vehicle attitude.
     /// @return The vehicle's current canonical attitude.
     const Attitude& att() const { return _att; };
+    /// @brief Canonical vehicle attitude rates.
+    /// @return The vehicle's current canonical attitude rates.
+    const AttitudeRate& rate() const { return _rate; };
     /// @brief Canonical vehicle position.
     /// @return The vehicle's current canonical position.
     const Position& pos() const { return _pos; };
@@ -971,6 +1014,9 @@ public:
     /// @brief Canonical vehicle attitude.
     /// @return The vehicle's current canonical attitude.
     Attitude& att() { return _att; };
+    /// @brief Canonical vehicle attitude rates.
+    /// @return The vehicle's current canonical attitude rates.
+    AttitudeRate& rate() { return _rate; };
     /// @brief Canonical vehicle position.
     /// @return The vehicle's current canonical position.
     Position& pos() { return _pos; };
@@ -1060,6 +1106,7 @@ private:
     std::map<const std::string, bool> _sensors_health = {};
 
     Attitude _att = { };
+    AttitudeRate _rate = { };
     Position _pos = { };
     Altitude _alt = { };
     Velocity _vel = { };

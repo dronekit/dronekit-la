@@ -403,6 +403,14 @@ public:
     }
 };
 
+
+class LA_MsgHandler_RATE : public LA_MsgHandler {
+public:
+    LA_MsgHandler_RATE(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle);
+    void xprocess(const uint8_t *msg) override;
+};
+
+
 class LA_MsgHandler_RCOU : public LA_MsgHandler {
 public:
     LA_MsgHandler_RCOU(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :

@@ -523,6 +523,36 @@ void LA_MsgHandler_POWR::xprocess(const uint8_t *msg)
 }
 
 
+LA_MsgHandler_RATE::LA_MsgHandler_RATE(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+    LA_MsgHandler(name, f, analyze, vehicle) {
+    _analyze->add_data_source("RATE", "RATE.R");
+    _analyze->add_data_source("RATE", "RATE.P");
+    _analyze->add_data_source("RATE", "RATE.Y");
+    // _analyze->add_data_source("DESRATE", "RATE.DesR");
+    // _analyze->add_data_source("DESRATE", "RATE.DesP");
+    // _analyze->add_data_source("DESRATE", "RATE.DesY");
+}
+
+void LA_MsgHandler_RATE::xprocess(const uint8_t *msg) {
+    // float DesRoll = require_field_float(msg, "DesR");
+    float Roll = require_field_float(msg, "R");
+    // float DesPitch = require_field_float(msg, "DesP");
+    float Pitch = require_field_float(msg, "P");
+    // ufloat DesYaw = require_field_ufloat(msg, "DesY");
+    float Yaw = require_field_float(msg, "Y");
+
+    // _vehicle->set_roll(rad_to_deg(Roll/100.0f));
+    // _vehicle->set_pitch(rad_to_deg(Pitch/100.0f));
+    _vehicle->rate().set_roll(_vehicle->T(), Roll);
+    _vehicle->rate().set_pitch(_vehicle->T(), Pitch);
+    _vehicle->rate().set_yaw(_vehicle->T(), Yaw);
+
+    // _vehicle->set_desroll((float)DesRoll/(double)100.0f);
+    // _vehicle->set_despitch((float)DesPitch/(double)100.0f);
+    // _vehicle->set_desyaw(DesYaw);
+}
+
+
 void LA_MsgHandler_UBX3::xprocess(const uint8_t *msg)
 {
     // map from instance number to GPS2 etc:
