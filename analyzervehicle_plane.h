@@ -37,6 +37,32 @@ namespace AnalyzerVehicle {
             return plane;
         }
 
+        typedef enum {
+            UNKNOWN=65536,
+            MANUAL = 0,
+            QSTABILIZE = 17,
+            QHOVER = 18,
+            QLOITER = 19,
+            QLAND = 20,
+            QRTL = 21,
+        } flightmode_t;
+
+        /// @brief Return current flight mode
+        /// @return current flight mode
+        flightmode_t mode() const { return _mode; }
+        /// @brief set current flight mode
+        void set_mode(const flightmode_t mode) { _mode = mode; }
+
+        /// @brief Return true currently in vertical flight mode
+        /// @return true if in vertical flight mode, false otherwise
+        bool in_q_mode() const {
+            return (mode() == QSTABILIZE ||
+                    mode() == QHOVER ||
+                    mode() == QLOITER ||
+                    mode() == QLAND ||
+                    mode() == QRTL);
+        }
+
     protected:
 
     private:
@@ -45,6 +71,8 @@ namespace AnalyzerVehicle {
         std::map<const std::string, float> _param_defaults = {
             // { "ANGLE_MAX", 3000.0f } // degrees*100
         };
+
+        flightmode_t _mode = UNKNOWN;
     };
 
 } // end namepsace

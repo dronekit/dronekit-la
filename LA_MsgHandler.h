@@ -280,6 +280,18 @@ public:
     void xprocess(const uint8_t *msg) override;
 };
 
+
+class LA_MsgHandler_MODE : public LA_MsgHandler {
+public:
+    LA_MsgHandler_MODE(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
+        _analyze->add_data_source("MODE", "MODE.Mode");
+    };
+
+    void xprocess(const uint8_t *mode) override;
+};
+
+
 class LA_MsgHandler_MSG : public LA_MsgHandler {
 public:
     LA_MsgHandler_MSG(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :

@@ -183,6 +183,7 @@ inline void MsgHandler::_field_value_for_type_at_offset(const uint8_t *msg,
   /* we register the types - add_field_type - so can we do without
      * this switch statement somehow? */
     switch (type) {
+    case 'M':
     case 'B':
         ret = (R)dest.u8;
         break;

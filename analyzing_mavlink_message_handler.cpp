@@ -1,4 +1,5 @@
 #include "analyzing_mavlink_message_handler.h"
+#include "analyzervehicle_plane.h"
 
 #include <regex>
 
@@ -206,6 +207,9 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
         return;
     }
 
+    if (_vehicle->vehicletype() == AnalyzerVehicle::Base::vehicletype_t::plane) {
+        ((AnalyzerVehicle::Plane*&)_vehicle)->set_mode((AnalyzerVehicle::Plane::flightmode_t)msg.custom_mode);
+    }
     _vehicle->set_armed(msg.base_mode & MAV_MODE_FLAG_SAFETY_ARMED);
     _vehicle->set_crashed(msg.system_status == MAV_STATE_EMERGENCY);
 

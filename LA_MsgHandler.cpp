@@ -358,6 +358,14 @@ bool LA_MsgHandler_GYR::find_T(const uint8_t *msg, uint64_t &T) {
     return false;
 }
 
+void LA_MsgHandler_MODE::xprocess(const uint8_t *msg) {
+    uint8_t mode = require_field_uint8_t(msg, "Mode");
+
+    if (_vehicle->vehicletype() == AnalyzerVehicle::Base::vehicletype_t::plane) {
+        ((AnalyzerVehicle::Plane*&)_vehicle)->set_mode((AnalyzerVehicle::Plane::flightmode_t)mode);
+    }
+}
+
 void LA_MsgHandler_MSG::xprocess(const uint8_t *msg) {
     char msg_message[160];
     require_field(msg, "Message", msg_message, sizeof(msg_message));
