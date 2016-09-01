@@ -437,7 +437,7 @@ public:
         char label[4] = "Chx";
         char longlabel[6] = "Chanx";
         uint16_t value;
-        for (uint8_t i=1; i<8; i++) {
+        for (uint8_t i=1; i<=8; i++) {
             lbl[1] = '0' + i;
             label[2] = '0' + i;
             longlabel[4] = '0' + i;
