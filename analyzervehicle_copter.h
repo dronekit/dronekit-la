@@ -40,6 +40,9 @@ namespace AnalyzerVehicle {
         /// @brief Supply number of motors configured on this vehicle.
         uint8_t num_motors() const { return _num_motors; }
 
+        /// @brief get current PWM output of motor i
+        uint8_t servo_output(const uint8_t i) const { return _servo_output[i]; }
+
         /// @brief Indicate if any of the vehicle motors appears to be running at flight speed.
         /// @return True if any motor is running fast enough to indicate flight.
         bool any_motor_running_fast() const;

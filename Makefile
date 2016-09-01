@@ -67,6 +67,7 @@ SRCS_CPP += analyzer/analyzer_estimate_divergence.cpp
 SRCS_CPP += analyzer/analyzer_altitude_estimate_divergence.cpp
 SRCS_CPP += analyzer/analyzer_attitude_estimate_divergence.cpp
 SRCS_CPP += analyzer/analyzer_position_estimate_divergence.cpp
+SRCS_CPP += analyzer/analyzer_motorbalance.cpp
 SRCS_CPP += analyzer/analyzer_truncated_log.cpp
 SRCS_CPP += analyzer/analyzer_vehicle_definition.cpp
 SRCS_CPP += analyzer/analyzer_velocity_estimate_divergence.cpp

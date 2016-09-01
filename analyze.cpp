@@ -21,6 +21,7 @@
 #include "analyzer/analyzer_parameters.h"
 #include "analyzer/analyzer_position_estimate_divergence.h"
 #include "analyzer/analyzer_sensor_health.h"
+#include "analyzer/analyzer_motorbalance.h"
 #include "analyzer/analyzer_vehicle_definition.h"
 #include "analyzer/analyzer_velocity_estimate_divergence.h"
 
@@ -158,6 +159,13 @@ void Analyze::instantiate_analyzers(INIReader *config)
         configure_analyzer(config, analyzer_battery);
     } else {
         la_log(LOG_INFO, "Failed to create analyzer_battery");
+    }
+
+    Analyzer_MotorBalance *analyzer_motorbalance = new Analyzer_MotorBalance(vehicle,_data_sources);
+    if (analyzer_motorbalance != NULL) {
+        configure_analyzer(config, analyzer_motorbalance);
+    } else {
+        la_log(LOG_INFO, "Failed to create analyzer_motorbalance");
     }
 
     Analyzer_Truncated_Log *analyzer_truncated_log = new Analyzer_Truncated_Log(vehicle,_data_sources);
