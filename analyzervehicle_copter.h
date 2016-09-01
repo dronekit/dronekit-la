@@ -87,10 +87,12 @@ namespace AnalyzerVehicle {
         // parameter defaults:
         std::map<const std::string, float> _param_defaults = {
             { "ANGLE_MAX", 3000.0f }, // degrees*100
-            { "MOT_SPIN_ARMED", 75.0f } // pwm-delta
+            { "MOT_SPIN_ARMED", 75.0f }, // pwm-delta
+            { "MOT_SPIN_ARM", 0.1f } // fractional delta
         };
         std::map<const std::string, float> _param_defaults_quad = {
             { "RC3_MIN", 1000.0f },
+            { "RC3_MAX", 2000.0f },
             { "RCOU1_MIN", 1200.0f },
             { "RCOU1_MAX", 1800.0f },
             { "RCOU2_MIN", 1200.0f },

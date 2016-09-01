@@ -37,9 +37,17 @@ bool Copter::is_flying() const
 
 uint16_t Copter::is_flying_motor_threshold() const
 {
-    double rc3_min = require_param_with_defaults("RC3_MIN");
-    double mot_spin_armed = require_param_with_defaults("MOT_SPIN_ARMED");
-    return rc3_min + mot_spin_armed + 10; // the 10 is a random number...
+    const double rc3_min = require_param_with_defaults("RC3_MIN");
+    const double rc3_max = require_param_with_defaults("RC3_MAX");
+    uint16_t mot_spin_armed;
+    if (param_seen("MOT_SPIN_ARMED")) {
+        mot_spin_armed = require_param_with_defaults("MOT_SPIN_ARMED");
+    } else {
+        // ArduCopter moved to using a fraction for armed motor spin:
+        double fraction_of_throttle = require_param_with_defaults("MOT_SPIN_ARM");
+        mot_spin_armed = (rc3_max-rc3_min)*fraction_of_throttle;
+    }
+    return rc3_min + mot_spin_armed + 20; // the 20 is a random number...
 }
 
 bool Copter::any_motor_running_fast() const
