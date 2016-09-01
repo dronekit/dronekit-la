@@ -82,6 +82,26 @@ private:
     double _value;
 };
 
+class Analyzer_Parameters_Result_RC : public Analyzer_Result_Period{
+public:
+    Analyzer_Parameters_Result_RC() :
+        Analyzer_Result_Period()
+        { }
+
+    void set_min(const uint16_t min) { _min = min; }
+    void set_max(const uint16_t max) { _max = max; }
+    void set_trim(const uint16_t trim) { _trim = trim; }
+    uint16_t min() { return _min; }
+    uint16_t max() { return _max; }
+    uint16_t trim() { return _trim; }
+
+private:
+
+    double _min;
+    double _max;
+    double _trim;
+};
+
 class Analyzer_Parameters : public Analyzer {
 
 public:
@@ -104,6 +124,11 @@ public:
     void update_result_trivial(const std::string name, const double value, const Param_Constraint_Trivial &constraints);
     void close_result_trivial(const std::string name);
 
+    void open_result_rc_channel(const std::string name, const uint16_t min, const uint16_t max, const uint16_t trim);
+    void update_result_rc_channel(const std::string name, const uint16_t min, const uint16_t max, const uint16_t trim);
+    void close_result_rc_channel(const std::string name);
+    void evaluate_rc_channels();
+
     void evaluate_log_bitmask();
 
 protected:
@@ -113,6 +138,7 @@ protected:
 private:
 
     std::map<const std::string, Analyzer_Parameters_Result*> _open_results;
+    std::map<const std::string, Analyzer_Parameters_Result_RC*> _open_results_rc_channels;
 
     bool _enable_ANGLE_MAX_check;
 

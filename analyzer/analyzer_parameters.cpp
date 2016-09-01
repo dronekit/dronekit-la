@@ -114,11 +114,100 @@ void Analyzer_Parameters::evaluate_log_bitmask()
     }
 }
 
+
+void Analyzer_Parameters::open_result_rc_channel(const std::string name, const uint16_t min, const uint16_t max, const uint16_t trim)
+{
+    Analyzer_Parameters_Result_RC *result = new Analyzer_Parameters_Result_RC();
+    _open_results_rc_channels[name] = result;
+
+    result->set_T_start(_vehicle->T());
+
+    result->add_source(_data_sources.get("PARAM"));
+
+    result->set_min(min);
+    result->set_max(max);
+    result->set_trim(trim);
+    result->set_status(analyzer_status_fail);
+    result->add_evidence(string_format("name=%s", name.c_str()));
+    result->set_reason(string_format("%s parameters do not make sense", name.c_str()));
+    ::fprintf(stderr, "min=%u max=%u trim=%u\n", min, max, trim);
+    if (min > max) {
+        result->add_evidence("Minimum greater than maximum");
+        result->add_evidence(string_format("min=%u", min));
+        result->add_evidence(string_format("max=%u", max));
+    }
+    if (trim < min) {
+        result->add_evidence("Trim less than minimum");
+        result->add_evidence(string_format("min=%u", min));
+        result->add_evidence(string_format("trim=%u", trim));
+    }
+    if (trim > max) {
+        result->add_evidence("Trim greater than maximum");
+        result->add_evidence(string_format("max=%u", max));
+        result->add_evidence(string_format("trim=%u", trim));
+    }
+
+    add_result(result);
+}
+
+void Analyzer_Parameters::update_result_rc_channel(const std::string name, const uint16_t min, const uint16_t max, const uint16_t trim)
+{
+    Analyzer_Parameters_Result_RC *result = _open_results_rc_channels[name];
+    if (min != result->min() ||
+        max != result->max() ||
+        trim != result->trim()) {
+        close_result_rc_channel(name);
+        open_result_rc_channel(name, min, max, trim);
+    }
+}
+void Analyzer_Parameters::close_result_rc_channel(const std::string name)
+{
+    if (_open_results_rc_channels[name] != NULL) { // FIXME: this is a hack
+        _open_results_rc_channels[name]->set_T_stop(_vehicle->T());
+        _open_results.erase(name);
+    }
+}
+
+// make sure someone running a PixHawk hasn't just copied parameters
+// from an APM:
+void Analyzer_Parameters::evaluate_rc_channels()
+{
+    for (uint8_t channel=1; channel<=14; channel++) {
+        float min;
+        float max;
+        float trim;
+        const std::string name = string_format("RC%u", channel);
+        const std::string name_min = string_format("RC%u_MIN", channel);
+        const std::string name_max = string_format("RC%u_MAX", channel);
+        const std::string name_trim = string_format("RC%u_TRIM", channel);
+        if (! _vehicle->param(name_min, min) ||
+            ! _vehicle->param(name_max, max) |
+            ! _vehicle->param(name_trim, trim)) {
+            continue;
+        }
+        bool bad = (max < min ||
+                    trim < min ||
+                    trim > max);
+        if (bad) {
+            if (!_open_results_rc_channels[name]) {
+                open_result_rc_channel(name, min, max, trim);
+            }
+            update_result_rc_channel(name, min, max, trim);
+        } else {
+            if (_open_results_rc_channels[name]) {
+                _open_results_rc_channels[name]->set_T_stop(_vehicle->T());
+                _open_results_rc_channels[name] = nullptr;
+            }
+        }
+    }
+}
+
 void Analyzer_Parameters::evaluate()
 {
     evaluate_trivial();
 
     evaluate_log_bitmask();
+    evaluate_rc_channels();
 }
 
 void Analyzer_Parameters::end_of_log(const uint32_t packet_count UNUSED)
@@ -131,6 +220,12 @@ void Analyzer_Parameters::end_of_log(const uint32_t packet_count UNUSED)
     }
     if (_log_bitmask_bad_apm != nullptr) {
         _log_bitmask_bad_apm->set_T_stop(_vehicle->T());
+    }
+    auto xnext = _open_results_rc_channels.begin();
+    while (xnext != _open_results_rc_channels.end()) {
+        auto current = xnext;
+        xnext++;
+        close_result_rc_channel(current->first);
     }
 }
 
