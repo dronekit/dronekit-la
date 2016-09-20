@@ -72,12 +72,13 @@ private:
     void evaluate() override;
     void evaluate_gps(AnalyzerVehicle::GPSInfo *gpsinfo);
 
-    Analyzer_GPS_Fix_Result *_result = NULL;
-    void close_result();
+    std::map<const std::string, Analyzer_GPS_Fix_Result*> _result;
+    void close_result(const std::string result_key,
+                      Analyzer_GPS_Fix_Result *result);
     void open_result(AnalyzerVehicle::GPSInfo *gpsinfo);
     void update_result(AnalyzerVehicle::GPSInfo *gpsinfo);
-
-    void end_of_log(uint32_t packet_count) override;
+    void close_results();
+    void end_of_log(const uint32_t packet_count) override;
 
     uint8_t satellites_visible_threshold() const { return _satellites_min; }
     double hdop_threshold() const { return _hdop_min; }
@@ -93,10 +94,18 @@ private:
 
     uint8_t _satellites_min = 5;
     double _hdop_min = 5.0f;
-    
-    bool _first_3D_fix_found = false;
-    uint64_t _first_3D_fix_T = 0;
-    bool _non_3dfix_seen = false;
+
+    class FirstFixInfo {
+    public:
+        bool first_3D_fix_found = false;
+        uint64_t first_3D_fix_T = 0;
+        bool non_3dfix_seen = false;
+    };
+    std::map<const std::string, FirstFixInfo*> _result_ff;
+    void close_result_ff(const std::string result_key, FirstFixInfo *info);
+    void close_results_ff();
+    void add_no_firstfixtime_result(const std::string result_key,
+                                    FirstFixInfo *info);
 
     float _sacc_threshold_warn = 1.0f;
     float _sacc_threshold_fail = 1.5f;
