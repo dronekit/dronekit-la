@@ -8,7 +8,7 @@
 extern "C" {
 #endif
 
-#ifdef __APPLE__
+#if defined(__APPLE__) && !defined(CLOCK_MONOTONIC)
 
 #define CLOCK_MONOTONIC 1
 
