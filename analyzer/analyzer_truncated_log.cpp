@@ -42,11 +42,11 @@ void Analyzer_Truncated_Log::end_of_log(const uint32_t packet_count UNUSED)
     _result.set_last_altitude(last_altitude);
 
     if (_vehicle->alt_modtime() > 0) {
-        _result.add_evidence(string_format("Final altitude %f metres", _result.last_altitude()));
+        double last_relative_altitude = _result.last_altitude() - _result.takeoff_altitude();
+        _result.add_evidence(string_format("Final relative altitude %f metres", last_relative_altitude));
         if (_vehicle->is_flying()) {
 
             _result.add_evidence(string_format("Takeoff altitude %f metres", _result.takeoff_altitude()));
-            double last_relative_altitude = _result.last_altitude() - _result.takeoff_altitude();
             _result.add_evidence(string_format("Final relative altitude %f metres", last_relative_altitude));
 
             _result.set_status(analyzer_status_fail);
