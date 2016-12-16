@@ -62,9 +62,10 @@ void Analyzer_Position_Estimate_Divergence::evaluate()
         evaluate_estimate((*it).first, pos, estimate);
     }
 
-    if (!prevpos.is_zero_zero() &&
-        !pos.is_zero_zero()) {
-        _total_distance_travelled += prevpos.horizontal_distance_to(pos);
+    if (!pos.is_zero_zero()) {
+        if (!prevpos.is_zero_zero()) {
+            _total_distance_travelled += prevpos.horizontal_distance_to(pos);
+        }
         const double dfo = _vehicle->distance_from_origin();
         if (!is_equal(dfo, -1)) {
             if (dfo > _maximum_distance_from_origin) {
