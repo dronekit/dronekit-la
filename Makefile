@@ -81,6 +81,7 @@ SRCS_CPP += common_tool.cpp
 SRCS_CPP += telem_client.cpp
 SRCS_CPP += telem_forwarder_client.cpp
 SRCS_CPP += telem_serial.cpp
+SRCS_CPP += telem_udp.cpp
 SRCS_CPP += dataflash_logger.cpp
 SRCS_CPP += analyzing_dataflash_message_handler.cpp
 SRCS_CPP += LA_MsgHandler.cpp

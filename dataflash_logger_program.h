@@ -50,5 +50,9 @@ private:
 
     void create_telem_forwarder_client();
     void create_serial_client();
+    void create_udp_client();
 
+    bool udp_port = false;
+    // uint8_t _writer_buf[_writer_buflen] = { };
+    uint32_t canary = 9876543;
 };

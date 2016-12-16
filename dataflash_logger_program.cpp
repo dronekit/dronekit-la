@@ -5,6 +5,7 @@
 #include "mavlink_reader.h"
 #include "telem_forwarder_client.h"
 #include "telem_serial.h"
+#include "telem_udp.h"
 
 #include "la-log.h"
 
@@ -27,6 +28,7 @@ void DataFlash_Logger_Program::usage()
     ::printf(" -h               display usage information\n");
     ::printf(" -d               debug mode\n");
     ::printf(" -s               use serial port\n");
+    ::printf(" -u               use UDP port\n");
     ::printf("\n");
     ::printf("Example: %s\n", program_name());
     exit(0);
@@ -127,6 +129,21 @@ void DataFlash_Logger_Program::create_telem_forwarder_client()
     client->telem_client->init();
 }
 
+void DataFlash_Logger_Program::create_udp_client()
+{
+    client = new DLP_Client();
+    client->reader = new MAVLink_Reader(config());
+    if (client->reader == NULL) {
+        la_log(LOG_ERR, "Failed to create reader from (%s)\n", config_filename);
+        exit(1);
+    }
+
+    client->telem_client = new Telem_UDP();
+
+    client->telem_client->configure(config());
+    client->telem_client->init();
+}
+
 void DataFlash_Logger_Program::run()
 {
     init_config();
@@ -140,6 +157,8 @@ void DataFlash_Logger_Program::run()
 
     if (serial_port) {
         create_serial_client();
+    } else if (udp_port) {
+        create_udp_client();
     } else {
         create_telem_forwarder_client();
     }
@@ -176,7 +195,7 @@ void DataFlash_Logger_Program::parse_arguments(int argc, char *argv[])
     _argc = argc;
     _argv = argv;
 
-    while ((opt = getopt(argc, argv, "hc:ds")) != -1) {
+    while ((opt = getopt(argc, argv, "hc:dsu")) != -1) {
         switch(opt) {
         case 'h':
             usage();
@@ -189,6 +208,9 @@ void DataFlash_Logger_Program::parse_arguments(int argc, char *argv[])
             break;
         case 's':
             serial_port = true;
+            break;
+        case 'u':
+            udp_port = true;
             break;
         }
     }
