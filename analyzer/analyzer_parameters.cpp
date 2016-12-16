@@ -202,12 +202,18 @@ void Analyzer_Parameters::evaluate_rc_channels()
     }
 }
 
+void Analyzer_Parameters::evaluate_fs_thr_value()
+{
+    // (e.g.) rc3_min must be below fs_thr_value
+}
+
 void Analyzer_Parameters::evaluate()
 {
     evaluate_trivial();
 
     evaluate_log_bitmask();
     evaluate_rc_channels();
+    evaluate_fs_thr_value();
 }
 
 void Analyzer_Parameters::end_of_log(const uint32_t packet_count UNUSED)

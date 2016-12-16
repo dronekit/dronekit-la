@@ -130,6 +130,7 @@ public:
     void evaluate_rc_channels();
 
     void evaluate_log_bitmask();
+    void evaluate_fs_thr_value();
 
 protected:
 
