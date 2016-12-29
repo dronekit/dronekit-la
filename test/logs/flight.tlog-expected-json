@@ -5956,6 +5956,15 @@
       "severity-score": 0, 
       "status": "PASS"
     }, 
+    "Motor Balance": {
+      "description": "Detects copter balance and twist issues", 
+      "evilness": 0, 
+      "evilness-is-deprecated": "Use severity-score", 
+      "name": "Motor Balance", 
+      "results": [], 
+      "severity-score": 0, 
+      "status": "PASS"
+    }, 
     "Parameters": {
       "description": "Autopilots store configuration settings known as 'parameters'. This test detects some common configuration issues present in these parameters.", 
       "evilness": 0, 
@@ -6130,7 +6139,7 @@
       "results": [
         {
           "evidence": [
-            "Final altitude -0.050000 metres"
+            "Final relative altitude -594.740002 metres"
           ], 
           "evilness": 0, 
           "evilness-is-deprecated": "Use severity-score", 
