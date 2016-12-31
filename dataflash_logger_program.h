@@ -36,5 +36,4 @@ private:
 
     bool debug_mode = false;
     bool serial_port = false;
-    // uint8_t _writer_buf[_writer_buflen] = { };
 };
