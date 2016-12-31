@@ -176,7 +176,7 @@ void LogAnalyzer::run_live_analysis()
 {
     reader = new MAVLink_Reader(config());
 
-    _client = new Telem_Forwarder_Client(_client_recv_buf, sizeof(_client_recv_buf));
+    _client = new Telem_Forwarder_Client();
     _client->configure(config());
 
     writer = new MAVLink_Writer(config());

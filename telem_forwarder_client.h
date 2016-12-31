@@ -12,8 +12,8 @@
 
 class Telem_Forwarder_Client : public Telem_Client {
 public:
-    Telem_Forwarder_Client(uint8_t *recv_buf, uint32_t recv_buflen) :
-        Telem_Client(recv_buf, recv_buflen)
+    Telem_Forwarder_Client() :
+        Telem_Client()
         { }
 
     uint32_t handle_recv();

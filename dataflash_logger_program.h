@@ -32,9 +32,8 @@ private:
     long _argc = 0;
     char **_argv = NULL;
 
-    uint8_t _client_recv_buf[512] = { }; // FIXME constant was TELEM_PKT_MAX
-
     Telem_Client *client = NULL;
+
     bool debug_mode = false;
     bool serial_port = false;
     // uint8_t _writer_buf[_writer_buflen] = { };

@@ -4,8 +4,8 @@
 
 class Telem_Serial : public Telem_Client {
 public:
-    Telem_Serial(uint8_t *recv_buf, uint32_t recv_buflen) :
-        Telem_Client(recv_buf, recv_buflen)
+    Telem_Serial() :
+        Telem_Client()
         { }
 
     uint32_t handle_read();

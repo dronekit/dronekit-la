@@ -99,9 +99,9 @@ void DataFlash_Logger_Program::run()
     }
 
     if (serial_port) {
-        client = new Telem_Serial(_client_recv_buf, sizeof(_client_recv_buf));
+        client = new Telem_Serial();
     } else {
-        client = new Telem_Forwarder_Client(_client_recv_buf, sizeof(_client_recv_buf));
+        client = new Telem_Forwarder_Client();
     }
     client->configure(config());
     client->init();
