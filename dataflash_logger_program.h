@@ -47,4 +47,8 @@ private:
 
     bool debug_mode = false;
     bool serial_port = false;
+
+    void create_telem_forwarder_client();
+    void create_serial_client();
+
 };

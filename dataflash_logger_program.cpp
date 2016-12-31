@@ -97,6 +97,36 @@ void DataFlash_Logger_Program::handle_select_fds(fd_set &fds_read, fd_set &fds_w
     client->do_writer_sends();
 }
 
+void DataFlash_Logger_Program::create_serial_client()
+{
+    client = new DLP_Client();
+    client->reader = new MAVLink_Reader(config());
+    if (client->reader == NULL) {
+        la_log(LOG_ERR, "Failed to create reader from (%s)\n", config_filename);
+        exit(1);
+    }
+
+    client->telem_client = new Telem_Serial();
+
+    client->telem_client->configure(config());
+    client->telem_client->init();
+}
+
+void DataFlash_Logger_Program::create_telem_forwarder_client()
+{
+    client = new DLP_Client();
+    client->reader = new MAVLink_Reader(config());
+    if (client->reader == NULL) {
+        la_log(LOG_ERR, "Failed to create reader from (%s)\n", config_filename);
+        exit(1);
+    }
+
+    client->telem_client = new Telem_Forwarder_Client();
+
+    client->telem_client->configure(config());
+    client->telem_client->init();
+}
+
 void DataFlash_Logger_Program::run()
 {
     init_config();
@@ -108,20 +138,11 @@ void DataFlash_Logger_Program::run()
     la_log(LOG_INFO, "dataflash_logger starting: built " __DATE__ " " __TIME__);
     signal(SIGHUP, ::sighup_handler);
 
-    client = new DLP_Client();
-    client->reader = new MAVLink_Reader(config());
-    if (client->reader == NULL) {
-        la_log(LOG_ERR, "Failed to create reader from (%s)\n", config_filename);
-        exit(1);
-    }
-
     if (serial_port) {
-        client->telem_client = new Telem_Serial();
+        create_serial_client();
     } else {
-        client->telem_client = new Telem_Forwarder_Client();
+        create_telem_forwarder_client();
     }
-    client->telem_client->configure(config());
-    client->telem_client->init();
 
     _writer = new MAVLink_Writer(config());
     if (_writer == NULL) {
