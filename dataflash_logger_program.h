@@ -34,8 +34,6 @@ private:
 
     uint8_t _client_recv_buf[512] = { }; // FIXME constant was TELEM_PKT_MAX
 
-    static const uint32_t _client_buflen = 65536; // FIXME constant
-
     Telem_Client *client = NULL;
     bool debug_mode = false;
     bool serial_port = false;
