@@ -39,14 +39,42 @@ void sighup_handler(int signal)
     logger.sighup_handler(signal);
 }
 
-void DataFlash_Logger_Program::do_idle_callbacks()
+void DLP_Client::do_idle_callbacks()
 {
     reader->do_idle_callbacks();
+}
+void DLP_Client::sighup_handler()
+{
+    reader->sighup_handler();
+}
+void DLP_Client::pack_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds)
+{
+    telem_client->pack_select_fds(fds_read, fds_write, fds_err, nfds);
+}
+void DLP_Client::do_writer_sends()
+{
+    telem_client->do_writer_sends();
+}
+void DLP_Client::handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds) {
+    telem_client->handle_select_fds(fds_read, fds_write, fds_err, nfds);
+
+    // FIXME: find a more interesting way of doing this...  we should
+    // probably rejig things so that the client is a mavlink_reader
+    // and simply produces mavlink_message_t's itself, rather than us
+    // handing off the a dedicated parser object here.
+    reader->feed(telem_client->_recv_buf, telem_client->_recv_buflen_content);
+    telem_client->_recv_buflen_content = 0;
+}
+
+
+void DataFlash_Logger_Program::do_idle_callbacks()
+{
+    client->do_idle_callbacks();
 }
 
 void DataFlash_Logger_Program::sighup_received_tophalf()
 {
-    reader->sighup_handler();
+    client->sighup_handler();
 }
 
 uint32_t DataFlash_Logger_Program::select_timeout_us() {
@@ -61,24 +89,12 @@ void DataFlash_Logger_Program::pack_select_fds(fd_set &fds_read, fd_set &fds_wri
     client->pack_select_fds(fds_read, fds_write, fds_err, nfds);
 }
 
-void DataFlash_Logger_Program::do_writer_sends()
-{
-    client->do_writer_sends();
-}
-
 void DataFlash_Logger_Program::handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds)
 {
     client->handle_select_fds(fds_read, fds_write, fds_err, nfds);
 
-    // FIXME: find a more interesting way of doing this...  we should
-    // probably rejig things so that the client is a mavlink_reader
-    // and simply produces mavlink_message_t's itself, rather than us
-    // handing off the a dedicated parser object here.
-    reader->feed(client->_recv_buf, client->_recv_buflen_content);
-    client->_recv_buflen_content = 0;
-
     // handle data *to* e.g. telem_forwarder
-    do_writer_sends();
+    client->do_writer_sends();
 }
 
 void DataFlash_Logger_Program::run()
@@ -92,38 +108,39 @@ void DataFlash_Logger_Program::run()
     la_log(LOG_INFO, "dataflash_logger starting: built " __DATE__ " " __TIME__);
     signal(SIGHUP, ::sighup_handler);
 
-    reader = new MAVLink_Reader(config());
-    if (reader == NULL) {
+    client = new DLP_Client();
+    client->reader = new MAVLink_Reader(config());
+    if (client->reader == NULL) {
         la_log(LOG_ERR, "Failed to create reader from (%s)\n", config_filename);
         exit(1);
     }
 
     if (serial_port) {
-        client = new Telem_Serial();
+        client->telem_client = new Telem_Serial();
     } else {
-        client = new Telem_Forwarder_Client();
+        client->telem_client = new Telem_Forwarder_Client();
     }
-    client->configure(config());
-    client->init();
+    client->telem_client->configure(config());
+    client->telem_client->init();
 
     _writer = new MAVLink_Writer(config());
     if (_writer == NULL) {
         la_log(LOG_ERR, "Failed to create writer from (%s)\n", config_filename);
         exit(1);
     }
-    _writer->add_client(client);
+    _writer->add_client(client->telem_client);
 
     // instantiate message handlers:
     DataFlash_Logger *dataflash_logger = new DataFlash_Logger(_writer);
     if (dataflash_logger != NULL) {
-        reader->add_message_handler(dataflash_logger, "DataFlash_Logger");
+        client->reader->add_message_handler(dataflash_logger, "DataFlash_Logger");
     } else {
         la_log(LOG_INFO, "Failed to create dataflash logger");
     }
 
     Heart *heart= new Heart(_writer);
     if (heart != NULL) {
-        reader->add_message_handler(heart, "Heart");
+        client->reader->add_message_handler(heart, "Heart");
     } else {
         la_log(LOG_INFO, "Failed to create heart");
     }
