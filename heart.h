@@ -18,7 +18,7 @@ public:
 	MAVLink_Message_Handler(),
         _mavlink_writer(mavlink_writer),
 	last_heartbeat_time(0),
-	heartbeat_interval(5000000) // microseconds
+	heartbeat_interval(1000000) // microseconds
     { }
 
     void idle_10Hz();
