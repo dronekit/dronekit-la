@@ -21,12 +21,8 @@ else
 	CC_VERSION := $(shell $(CC) --version)
 	ifeq ($(findstring clang, $(CC_VERSION)),)
 		WARNFLAGS += -Wlogical-op
-		STATIC=-static
 	endif
 	UNAME_S := $(shell uname -s)
-        ifneq ($(UNAME_S),Darwin)
-		LIBS += -lrt # for clock_gettime/clock_settime on older glibcs
-	endif
 endif
 
 STD=-std=c++11
