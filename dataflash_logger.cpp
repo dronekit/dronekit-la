@@ -9,7 +9,7 @@
 
 #include "la-log.h"
 #include "util.h"
-#include "mavlink/c_library/common/mavlink.h"
+#include "mavlink_c_library/common/mavlink.h"
 
 void DataFlash_Logger::sighup_received()
 {

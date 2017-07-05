@@ -6,8 +6,7 @@ VPATH = ./util ./ini ./ini/cpp
 
 INCS = -I./util -I./ini -I./ini/cpp
 INCS += -Ijsoncpp
-INCS += -I.  # for <DataFlash/DataFlash.h> in MsgHandler
-INCS += -Imodules # for e.g. mavlink
+INCS += -I.
 
 WARNFLAGS= -Wall -Werror -Wextra -Wunused -Wredundant-decls -D_FORTIFY_SOURCE=2 -Wfloat-equal -fstack-protector -Wformat -Werror=format-security -Werror=pointer-arith -Wpedantic
 
@@ -96,10 +95,10 @@ IMAGETAGGER = imagetagger
 
 all: $(LOG_ANALYZER)
 
-modules/mavlink/c_library/protocol.h: modules/mavlink/message_definitions/v1.0/common.xml modules/mavlink/message_definitions/v1.0/ardupilotmega.xml
-	cd modules/mavlink && python pymavlink/tools/mavgen.py --lang=C --wire-protocol=1.0 --output=c_library message_definitions/v1.0/ardupilotmega.xml
+mavlink_c_library/protocol.h: modules/mavlink/message_definitions/v1.0/common.xml modules/mavlink/message_definitions/v1.0/ardupilotmega.xml
+	cd modules/mavlink && python pymavlink/tools/mavgen.py --lang=C --wire-protocol=1.0 --output=../../mavlink_c_library message_definitions/v1.0/ardupilotmega.xml
 
-mavlink-headers: modules/mavlink/c_library/protocol.h
+mavlink-headers: mavlink_c_library/protocol.h
 
 $(OBJS): mavlink-headers
 
@@ -114,7 +113,7 @@ $(IMAGETAGGER): $(OBJS) imagetagger.cpp mh_imagetagger.cpp
 
 clean:
 	$(RM) *.o *~ $(DATAFLASH_LOGGER) $(LOG_ANALYZER) $(IMAGETAGGER) analyzer/*.o jsoncpp/jsoncpp.o
-	$(RM) -rf modules/mavlink/c_library
+	$(RM) -rf mavlink_c_library
 
 test: clean all
 	./test/test.sh

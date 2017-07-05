@@ -6,8 +6,8 @@
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
-#include "mavlink/c_library/ardupilotmega/mavlink.h"
-#include "mavlink/c_library/common/mavlink.h"
+#include "mavlink_c_library/ardupilotmega/mavlink.h"
+#include "mavlink_c_library/common/mavlink.h"
 #pragma GCC diagnostic pop
 
 #include "analyzer_util.h"

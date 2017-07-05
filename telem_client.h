@@ -3,7 +3,7 @@
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
-#include "mavlink/c_library/ardupilotmega/mavlink.h"
+#include "mavlink_c_library/ardupilotmega/mavlink.h"
 #pragma GCC diagnostic pop
 
 #ifdef _WIN32
