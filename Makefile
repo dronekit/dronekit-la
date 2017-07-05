@@ -34,8 +34,8 @@ CSTD=-std=c11
 #GCOV=-fprofile-arcs -ftest-coverage
 #EFFCPP=-Weffc++
 
-CFLAGS += $(INCS) -DGIT_VERSION=\"$(GIT_VERSION)\" $(WARNFLAGS) $(CSTD) $(GCOV)
-CXXFLAGS += $(INCS) $(STD) -g -DGIT_VERSION=\"$(GIT_VERSION)\" $(STATIC) $(WARNFLAGS) $(GCOV) $(EFFCPP)
+CFLAGS += $(INCS) -O2 -DGIT_VERSION=\"$(GIT_VERSION)\" $(WARNFLAGS) $(CSTD) $(GCOV)
+CXXFLAGS += $(INCS) $(STD) -O2 -g -DGIT_VERSION=\"$(GIT_VERSION)\" $(STATIC) $(WARNFLAGS) $(GCOV) $(EFFCPP)
 
 SRCS_CPP += jsoncpp/jsoncpp.cpp
 
