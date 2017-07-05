@@ -12,3 +12,4 @@ doxygen/doxygen_sqlite3.db
 *.gcov
 *.gcda
 *.gcno
+/mavlink_c_library
