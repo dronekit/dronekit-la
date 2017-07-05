@@ -142,10 +142,9 @@ inline void MsgHandler::field_value_for_type_at_offset(const uint8_t *msg,
 {
     switch (type) {
     case 'f': {
-	char dest[16]; //
-	const uint8_t to_copy = size_for_type(type);
-	memcpy(dest, &msg[offset], to_copy);
-        const float value = (((float*)&dest)[0]);
+        float value = 0;
+        const uint8_t to_copy = size_for_type(type);
+        memcpy((void *)&value, &msg[offset], to_copy);
         ret = ! is_zero(value);
         break;
     }
@@ -161,51 +160,61 @@ inline void MsgHandler::_field_value_for_type_at_offset(const uint8_t *msg,
                                                         R &ret)
 {
     uint8_t to_copy = size_for_type(type);
-    //  char dest[to_copy]; // forbidden by ISO
-    char dest[16]; //
+    union {
+        uint8_t u8;
+        int16_t i16;
+        int32_t i32;
+        int64_t i64;
+        uint16_t u16;
+        uint32_t u32;
+        uint64_t u64;
+        float f;
+    } dest;
+
+    memset(&dest, 0, sizeof(dest));
 
     if (sizeof(R) < to_copy) {
             // we should never ask to e.g. store a uint16 from a msg into e.g. a uint8
 	::fprintf(stderr, "Internal error: destination too small");
 	abort();
     }
-    memcpy(dest, &msg[offset], to_copy);
+    memcpy(&dest, &msg[offset], to_copy);
 
   /* we register the types - add_field_type - so can we do without
      * this switch statement somehow? */
     switch (type) {
     case 'B':
-        ret = (R)(((uint8_t*)&dest)[0]);
+        ret = (R)dest.u8;
         break;
     case 'c':
     case 'h':
-        ret = (R)(((int16_t*)&dest)[0]);
+        ret = (R)dest.i16;
         break;
     case 'H':
-        ret = (R)(((uint16_t*)&dest)[0]);
+        ret = (R)dest.u16;
         break;
     case 'C':
-        ret = (R)(((uint16_t*)&dest)[0]);
+        ret = (R)dest.u16;
         break;
+    case 'f':
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wfloat-equal"
-    case 'f':
-        ret = (R)(((float*)&dest)[0]);
-        break;
+        ret = (R)dest.f;
 #pragma GCC diagnostic pop
+        break;
     case 'I':
     case 'E':
-        ret = (R)(((uint32_t*)&dest)[0]);
+        ret = (R)dest.u32;
         break;
     case 'L':
     case 'e':
-        ret = (R)(((int32_t*)&dest)[0]);
+        ret = (R)dest.i32;
         break;
     case 'q':
-        ret = (R)(((int64_t*)&dest)[0]);
+        ret = (R)dest.i64;
         break;
     case 'Q':
-        ret = (R)(((uint64_t*)&dest)[0]);
+        ret = (R)dest.u64;
         break;
     default:
         ::printf("Unhandled format type (%c)\n", type);
