@@ -8,6 +8,8 @@
 
 #include "analyzer.h"
 
+#include <functional>
+
 class Analyzer_Gyro_Drift_Result : public Analyzer_Result_Period {
     friend class Analyzer_Gyro_Drift;
 public:

@@ -8,6 +8,8 @@
 
 #include "analyzer.h"
 
+#include <functional>
+
 class Analyzer_Compass_Vector_Length_Result_Short : public Analyzer_Result_Period {
     friend class Analyzer_Compass_Vector_Length;
 public:
