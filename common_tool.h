@@ -18,7 +18,7 @@ public:
 
     void sighup_handler(int signal);
 
-    void parse_fd(Format_Reader *reader, int fd);
+    void parse_fd(Format_Reader *reader, int fd, ssize_t fd_size);
 
 protected:
     class INIReader *config() { return _config; };

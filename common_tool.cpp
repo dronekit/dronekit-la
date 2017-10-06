@@ -5,6 +5,8 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <unistd.h>
+#define __STDC_FORMAT_MACROS 1 // for e.g. %PRIu64
+#include <inttypes.h>
 
 #include "la-log.h"
 
@@ -137,10 +139,13 @@ void Common_Tool::select_loop()
     } /* while (1) */
 }
 
-void Common_Tool::parse_fd(Format_Reader *reader, int fd)
+void Common_Tool::parse_fd(Format_Reader *reader, int fd, ssize_t fd_size)
 {
     char buf[1<<16];
     ssize_t buf_start = 0;
+    size_t total_bytes_read = 0;
+    const time_t start_time = time(NULL);
+    time_t printed_duration = 1;
     while (true) {
         ssize_t bytes_read = read(fd, &buf[buf_start], sizeof(buf)-buf_start);
         if (bytes_read == -1) { 
@@ -151,6 +156,19 @@ void Common_Tool::parse_fd(Format_Reader *reader, int fd)
             while (reader->feed((uint8_t*)buf, buf_start+bytes_read)) {
             }
             break;
+        }
+        total_bytes_read += bytes_read;
+        if (fd_size != -1) {
+            const uint32_t now = time(NULL);
+            const uint32_t duration = now-start_time;
+            const uint8_t percent = (100*total_bytes_read/fd_size);
+            if (duration != 0 && duration != printed_duration) {
+                const uint64_t rate = total_bytes_read/duration;
+                const uint64_t remaining_time = (fd_size-total_bytes_read)/rate;
+                ::fprintf(stderr, "\r%u%% %" PRIu64 " bytes/second remaining=%" PRIu64 " seconds     ",
+                          percent, rate, remaining_time);
+                printed_duration = duration;
+            }
         }
 
         bytes_read += buf_start;
@@ -170,6 +188,7 @@ void Common_Tool::parse_fd(Format_Reader *reader, int fd)
         memcpy(&buf[0], (uint8_t*)(&(buf[total_bytes_used])), bytes_read-total_bytes_used);
         buf_start = bytes_read-total_bytes_used;
     }
+    ::fprintf(stderr, "\n");
 
     reader->end_of_log();
 

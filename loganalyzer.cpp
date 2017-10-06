@@ -12,6 +12,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 
 #include <regex>
 
@@ -81,18 +82,26 @@ void LogAnalyzer::parse_path(const char *path)
     }
 
     int fd;
+    ssize_t fd_size = -1;
     if (streq(path, "-")) {
         // fd = fileno(stdin);  // doesn't work on Cygwin
         fd = 0;
     } else {
         fd = xopen(path, O_RDONLY);
+
+        struct stat buf;
+        if (fstat(fd, &buf) == -1) {
+            ::fprintf(stderr, "fstat failed: %s\n", strerror(errno));
+        } else {
+            fd_size = buf.st_size;
+        }
     }
 
     if (output_style == Analyze::OUTPUT_BRIEF) {
         printf("%25s: ", path);
     }
 
-    parse_fd(reader, fd);
+    parse_fd(reader, fd, fd_size);
 
     if (!streq(path, "-")) {
         close(fd);
