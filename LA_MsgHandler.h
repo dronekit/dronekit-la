@@ -345,6 +345,10 @@ public:
         _analyze->add_data_source("ORIGIN", "ORGN.Alt");
     };
     void xprocess(const uint8_t *msg) override {
+        uint8_t origin_type = require_field_uint8_t(msg, "Type");
+        if (origin_type != 0) { // ekf origin
+            return;
+        }
         int32_t Lat = require_field_int32_t(msg, "Lat");
         int32_t Lng = require_field_int32_t(msg, "Lng");
         float Alt = require_field_float(msg, "Alt");
