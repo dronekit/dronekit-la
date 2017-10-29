@@ -273,6 +273,12 @@ namespace AnalyzerVehicle {
         uint64_t _flags_T = 0;
     };
 
+    /// @brief State information for a base Extended Kalman Filter.
+    class NKF : public EKF {
+    public:
+    private:
+    };
+
     // class AV_PosNED {
     // public:
     //     uint16_t N;
@@ -630,7 +636,7 @@ public:
     }
     /// @brief EKF status flags.
     /// @return EKF self-assessment status flags.
-    uint16_t ekf_flags() {
+    uint16_t ekf_flags() const {
         return _ekf.flags();
     }
 
@@ -643,6 +649,37 @@ public:
     /// @return Returns all EKF variances as a map from name to value.
     std::map<const std::string, double> ekf_variances() {
         return _ekf.variances();
+    }
+
+    /// @brief Set a variance value by name.
+    /// @param name Name of variance to set (e.g. "pos_horiz").
+    /// @param value New value of the variance.
+    void nkf_set_variance(const char *name, double value) {
+        _nkf.set_variance(T(), name, value);
+    }
+    uint64_t nkf_variance_T(std::string name) const {
+        return _nkf.variance_T(name);
+    }
+    /// @brief Set NKF (EKFv2) status flags.
+    /// @param flags NKF (EKFv2 self-assessment status flags.
+    void nkf_set_flags(uint16_t flags) {
+        _nkf.set_flags(T(), flags);
+    }
+    /// @brief NKF status flags.
+    /// @return NKF self-assessment status flags.
+    uint16_t nkf_flags() const {
+        return _nkf.flags();
+    }
+
+    /// @brief NKF (EKF2) status flags modification time.
+    /// @return timestamp Timestamp at which the NKF self-assessment flags were last changed (microseconds).
+    uint64_t nkf_flags_T() const {
+        return _nkf.flags_T();
+    }
+    /// @brief All NKF (EKF2) variances.
+    /// @return Returns all NKF (EKF2) variances as a map from name to value.
+    std::map<const std::string, double> nkf_variances() {
+        return _nkf.variances();
     }
 
     /// @brief Retrieve parameter value.
@@ -1116,6 +1153,7 @@ private:
     Altitude _origin_altitude = { };
 
     EKF _ekf;
+    NKF _nkf;
 
     bool _armed = false;
 

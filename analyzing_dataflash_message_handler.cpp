@@ -49,6 +49,8 @@ void Analyzing_DataFlash_Message_Handler::handle_format_message_received(const c
         handlers[new_msg_type] = new LA_MsgHandler_MSG(name, format, _analyze, _vehicle);
     } else if (streq(name, "NKF1")) {
         handlers[new_msg_type] = new LA_MsgHandler_NKF1(name, format, _analyze, _vehicle);
+    } else if (streq(name, "NKF4")) {
+        handlers[new_msg_type] = new LA_MsgHandler_NKF4(name, format, _analyze, _vehicle);
     } else if (streq(name, "ORGN")) {
         have_orgn = true;
         handlers[new_msg_type] = new LA_MsgHandler_ORGN(name, format, _analyze, _vehicle);

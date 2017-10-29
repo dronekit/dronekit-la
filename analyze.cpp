@@ -15,6 +15,7 @@
 #include "analyzer/analyzer_compass_vector_length.h"
 #include "analyzer/analyzer_ever_armed.h"
 #include "analyzer/analyzer_good_ekf.h"
+#include "analyzer/analyzer_good_nkf.h"
 #include "analyzer/analyzer_gps_fix.h"
 #include "analyzer/analyzer_gyro_drift.h"
 #include "analyzer/analyzer_notcrashed.h"
@@ -122,6 +123,13 @@ void Analyze::instantiate_analyzers(INIReader *config)
         configure_analyzer(config, analyzer_good_ekf);
     } else {
         la_log(LOG_INFO, "Failed to create analyzer_good_ekf");
+    }
+
+    Analyzer_Good_NKF *analyzer_good_nkf = new Analyzer_Good_NKF(vehicle,_data_sources);
+    if (analyzer_good_nkf != NULL) {
+        configure_analyzer(config, analyzer_good_nkf);
+    } else {
+        la_log(LOG_INFO, "Failed to create analyzer_good_nkf");
     }
 
     Analyzer_GPS_Fix *analyzer_gps_fix = new Analyzer_GPS_Fix(vehicle,_data_sources);
