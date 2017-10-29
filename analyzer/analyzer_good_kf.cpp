@@ -208,7 +208,7 @@ void Analyzer_Good_KF::open_result_flags(uint16_t flags)
         _result_flags->increase_severity_score(1);
         _result_flags->add_evidence("vertical position (above ground) estimate bad");
     }
-    if (!(flags & EKF_CONST_POS_MODE)) {
+    if (flags & EKF_CONST_POS_MODE) {
         _result_flags->increase_severity_score(1);
         _result_flags->add_evidence("In constant position mode (no abs or rel position)");
     }
