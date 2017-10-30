@@ -145,7 +145,7 @@ void Common_Tool::parse_fd(Format_Reader *reader, int fd, ssize_t fd_size)
     ssize_t buf_start = 0;
     size_t total_bytes_read = 0;
     const time_t start_time = time(NULL);
-    time_t printed_duration = 1;
+    uint32_t printed_duration = 1;
     while (true) {
         ssize_t bytes_read = read(fd, &buf[buf_start], sizeof(buf)-buf_start);
         if (bytes_read == -1) { 
@@ -159,7 +159,7 @@ void Common_Tool::parse_fd(Format_Reader *reader, int fd, ssize_t fd_size)
         }
         total_bytes_read += bytes_read;
         if (fd_size != -1) {
-            const uint32_t now = time(NULL);
+            const time_t now = time(NULL);
             const uint32_t duration = now-start_time;
             const uint8_t percent = (100*total_bytes_read/fd_size);
             if (duration != 0 && duration != printed_duration) {
