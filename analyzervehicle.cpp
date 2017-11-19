@@ -143,6 +143,7 @@ void Base::take_state(Base *old)
 {
   _param.insert(old->_param.begin(), old->_param.end());
   _param_T.insert(old->_param_T.begin(), old->_param_T.end());
+  set_armed(old->is_armed());
 }
 
 bool Base::param_seen(const std::string name) const
