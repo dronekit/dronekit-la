@@ -64,7 +64,7 @@ public:
 
     std::vector<class Image_Info*> get_image_info(const char *dirpath);
 
-    void parse_filepath(const char *filepath);
+    void parse_path(const char *filepath);
     void run();
 
     void parse_arguments(int argc, char *argv[]);
@@ -76,7 +76,7 @@ private:
 
     int64_t _time_offset;
 
-    MAVLink_Reader *reader;
+    Format_Reader *reader;
     long _argc;
     char **_argv;
     const char *program_name();
@@ -87,6 +87,24 @@ private:
     void instantiate_message_handlers(INIReader *config,
                                       int fd_telem_forwarder,
                                       struct sockaddr_in *sa_tf);
+
+    int xopen(const char *filepath, uint8_t mode);
+
+    enum log_format_t {
+        log_format_none = 19,
+        log_format_tlog,
+        log_format_log, // text dump of dflog
+        log_format_df,
+    };
+    log_format_t _force_format = log_format_none;
+    log_format_t force_format() { return _force_format; }
+
+    void prep_for_df();
+    void prep_for_log();
+    void prep_for_tlog();
+    void cleanup_after_df();
+    void cleanup_after_log();
+    void cleanup_after_tlog();
 };
 
 #endif

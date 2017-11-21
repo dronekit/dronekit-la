@@ -10,8 +10,8 @@
 class MH_ImageTagger : public MAVLink_Message_Handler {
 
 public:
-    MH_ImageTagger(int fd, struct sockaddr_in *sa, std::vector<ImageTagger::Image_Info*> images, int64_t time_offset) :
-	MAVLink_Message_Handler(fd, sa),
+    MH_ImageTagger(std::vector<ImageTagger::Image_Info*> images, int64_t time_offset) :
+	MAVLink_Message_Handler(),
         _images(images),
         _time_offset(time_offset),
         _start_image(_images.begin())

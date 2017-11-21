@@ -243,7 +243,7 @@ void Analyzer_MotorBalance::end_of_log_motors_x(const uint16_t *const averages)
 }
 
 
-void Analyzer_MotorBalance::add_motor_result(const uint8_t motornum, uint16_t motoraverage, uint16_t motorsaverage)
+void Analyzer_MotorBalance::add_motor_result(const uint8_t motornum, uint16_t motorsaverage, uint16_t motoraverage)
 {
     Analyzer_MotorBalance_Result_Motor *result = new Analyzer_MotorBalance_Result_Motor();
     result->add_source(_data_sources.get("RATE"));

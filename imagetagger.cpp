@@ -4,6 +4,9 @@
 
 #include "mavlink_reader.h"
 
+#include "dataflash_reader.h"
+#include "dataflash_textdump_reader.h"
+
 #include <syslog.h>
 #include "la-log.h"
 
@@ -14,16 +17,135 @@
 
 #include <algorithm>
 
-void ImageTagger::parse_filepath(const char *filepath)
+// copied in from loganalyzer.cpp; maybe use CommonTool or something?
+// http://stackoverflow.com/questions/874134/find-if-string-ends-with-another-string-in-c
+inline bool ends_with(std::string const & value, std::string const & ending)
 {
-    int fd = open(filepath, O_RDONLY);
+    if (ending.size() > value.size()) return false;
+    return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+}
+
+void ImageTagger::parse_path(const char *path)
+{
+    bool do_stdin = false;
+
+    log_format_t log_format = log_format_none;
+    if (!strcmp(path, "-")) {
+        do_stdin = true;
+    } else if (ends_with(path, ".BIN") ||
+               ends_with(path, ".bin")) {
+        log_format = log_format_df;
+    } else if (ends_with(path, ".log") ||
+               ends_with(path, ".LOG")) {
+        log_format = log_format_log;
+    } else if (ends_with(path, ".tlog") ||
+               ends_with(path, ".TLOG")) {
+        log_format = log_format_tlog;
+    }
+
+    if (force_format() != log_format_none) {
+        log_format = force_format();
+    }
+
+    if (log_format == log_format_none) {
+        if (do_stdin) {
+            ::fprintf(stderr, "You asked to parse stdin but did not force a format type\n");
+        } else {
+            ::fprintf(stderr, "Unable to determine log type from filename (%s); try -i?\n", path);
+        }
+        usage();
+        exit(1);
+    }
+
+    switch (log_format) {
+    case log_format_tlog:
+        prep_for_tlog();
+        break;
+    case log_format_df:
+        prep_for_df();
+        break;
+    case log_format_log:
+        prep_for_log();
+        break;
+    default:
+        abort();
+    }
+
+    int fd;
+    ssize_t fd_size = -1;
+    if (streq(path, "-")) {
+        // fd = fileno(stdin);  // doesn't work on Cygwin
+        fd = 0;
+    } else {
+        fd = xopen(path, O_RDONLY);
+
+        struct stat buf;
+        if (fstat(fd, &buf) == -1) {
+            ::fprintf(stderr, "fstat failed: %s\n", strerror(errno));
+        } else {
+            fd_size = buf.st_size;
+        }
+    }
+
+    parse_fd(reader, fd, fd_size);
+
+    if (!streq(path, "-")) {
+        close(fd);
+    }
+
+    switch (log_format) {
+    case log_format_tlog:
+        cleanup_after_tlog();
+        break;
+    case log_format_df:
+        cleanup_after_df();
+        break;
+    case log_format_log:
+        cleanup_after_log();
+        break;
+    default:
+        abort();
+    }
+}
+int ImageTagger::xopen(const char *filepath, const uint8_t mode)
+{
+    int fd = open(filepath, mode);
     if (fd == -1) {
         fprintf(stderr, "Failed to open (%s): %s\n", filepath, strerror(errno));
         exit(1);
     }
-
-    return parse_fd(reader, fd);
+    return fd;
 }
+
+void ImageTagger::prep_for_tlog()
+{
+    reader = new MAVLink_Reader(config());
+    ((MAVLink_Reader*)reader)->set_is_tlog(true);
+}
+
+void ImageTagger::prep_for_df()
+{
+    reader = new DataFlash_Reader(config());
+}
+
+void ImageTagger::prep_for_log()
+{
+    reader = new DataFlash_TextDump_Reader(config());
+}
+
+void ImageTagger::cleanup_after_tlog()
+{
+    reader->clear_message_handlers();
+}
+void ImageTagger::cleanup_after_df()
+{
+    reader->clear_message_handlers();
+}
+void ImageTagger::cleanup_after_log()
+{
+    reader->clear_message_handlers();
+}
+// end copied in from loganalyzer.py
 
 uint64_t find_image_timesstamp(const std::string path)
 {
@@ -157,7 +279,6 @@ void ImageTagger::run()
     // signal(SIGHUP, sighup_handler);
 
     reader = new MAVLink_Reader(config());
-    reader->set_is_tlog(true);
 
     if (_imagedir == NULL) {
         usage();
@@ -183,7 +304,7 @@ void ImageTagger::run()
     //     ::fprintf(stderr,"%s\n", (*it)->path.c_str());
     // }
 
-    MH_ImageTagger *tagger = new MH_ImageTagger(-1, NULL, images, _time_offset);
+    MH_ImageTagger *tagger = new MH_ImageTagger(images, _time_offset);
     if (tagger != NULL) {
         reader->add_message_handler(tagger, "Tagger");
     } else {
@@ -191,7 +312,7 @@ void ImageTagger::run()
         abort();
     }
 
-    parse_filepath(_pathname);
+    parse_path(_pathname);
 
     for (std::vector<ImageTagger::Image_Info*>::iterator it = images.begin();
          it != images.end(); ++it) {

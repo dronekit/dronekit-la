@@ -80,7 +80,7 @@ private:
     void evaluate() override;
 
     void add_axis_result(const char *axis, const uint16_t imbalance, const uint16_t imbalance_warn, const uint16_t imbalance_fail);
-    void add_motor_result(const uint8_t motornum, uint16_t motoraverage, uint16_t motorsaverage);
+    void add_motor_result(const uint8_t motornum, uint16_t motorsaverage, uint16_t motoraverage);
 
     void end_of_log_motors_x(const uint16_t * const averages);
     void end_of_log_motors();
