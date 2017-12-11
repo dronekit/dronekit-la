@@ -246,6 +246,10 @@ void DataFlash_Logger::logging_stop()
 
 void DataFlash_Logger::handle_message(uint64_t timestamp, mavlink_message_t &msg)
 {
+    if (!logging_started && msg.msgid == MAVLINK_MSG_ID_HEARTBEAT) {
+        la_log(LOG_INFO, "Heartbeat received from %u/%u", msg.sysid, msg.compid);
+    }
+
     most_recent_sender_system_id = msg.sysid;
     most_recent_sender_component_id = msg.compid;
     MAVLink_Message_Handler::handle_message(timestamp, msg);
