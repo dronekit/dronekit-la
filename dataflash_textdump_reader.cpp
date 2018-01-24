@@ -6,6 +6,8 @@
 #include "stdlib.h"
 #include "string.h"
 
+#include "tools.h"
+
 // BT 42 EN
 std::vector<std::string> split_line(const uint8_t *line, uint32_t len)
 {
@@ -86,6 +88,7 @@ void DataFlash_TextDump_Reader::handle_line(const uint8_t *line, uint32_t len)
             break;
         case 'E':
             value_integer *= 100;
+            FALLTHROUGH;
         case 'I':
             *((uint32_t*)&buf[buf_offset]) = value_integer; // FIXME
             buf_offset += sizeof(uint32_t);
@@ -96,23 +99,27 @@ void DataFlash_TextDump_Reader::handle_line(const uint8_t *line, uint32_t len)
             break;
         case 'e':
             value_integer *= 100;
+            FALLTHROUGH;
         case 'i':
             *((int32_t*)&buf[buf_offset]) = value_integer; // FIXME
             buf_offset += sizeof(int32_t);
             break;
         case 'c':
             value_integer *= 100;
+            FALLTHROUGH;
         case 'h':
             *((int16_t*)&buf[buf_offset]) = value_integer; // FIXME
             buf_offset += sizeof(int16_t);
             break;
         case 'C':
             value_integer *= 100;
+            FALLTHROUGH;
         case 'H':
             *((uint16_t*)&buf[buf_offset]) = value_integer; // FIXME
             buf_offset += sizeof(uint16_t);
             break;
         case 'B':
+            FALLTHROUGH;
         case 'M':
             *((uint8_t*)&buf[buf_offset]) = value_integer; // FIXME
             buf_offset += sizeof(uint8_t);
