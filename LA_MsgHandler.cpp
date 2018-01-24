@@ -263,6 +263,8 @@ LA_MsgHandler_ERR::LA_MsgHandler_ERR(std::string name, const struct log_Format &
     _analyze->add_data_source("BATTERY_FAILSAFE", "ERR.ECode");
     _analyze->add_data_source("CRASH", "ERR.Subsys");
     _analyze->add_data_source("CRASH", "ERR.ECode");
+    _analyze->add_data_source("ERRORFLAGS", "ERR.Subsys");
+    _analyze->add_data_source("ERRORFLAGS", "ERR.ECode");
 }
 
 void LA_MsgHandler_ERR::xprocess(const uint8_t *msg) {
@@ -274,6 +276,9 @@ void LA_MsgHandler_ERR::xprocess(const uint8_t *msg) {
         break;
     case ERROR_SUBSYSTEM_CRASH:
         _vehicle->set_crashed(ecode);
+        break;
+    default:
+        _vehicle->set_subsys_error_code(subsys, ecode);
         break;
     }
 }

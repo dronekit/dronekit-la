@@ -22,6 +22,7 @@
 #include "analyzer/analyzer_parameters.h"
 #include "analyzer/analyzer_position_estimate_divergence.h"
 #include "analyzer/analyzer_sensor_health.h"
+#include "analyzer/analyzer_subsys_errors.h"
 #include "analyzer/analyzer_motorbalance.h"
 #include "analyzer/analyzer_vehicle_definition.h"
 #include "analyzer/analyzer_velocity_estimate_divergence.h"
@@ -209,6 +210,13 @@ void Analyze::instantiate_analyzers(INIReader *config)
         configure_analyzer(config, analyzer_sensor_health);
     } else {
         la_log(LOG_INFO, "Failed to create analyzer_sensor_health");
+    }
+
+    Analyzer_Subsys_Errors *analyzer_subsys_errors = new Analyzer_Subsys_Errors(vehicle,_data_sources);
+    if (analyzer_subsys_errors != NULL) {
+        configure_analyzer(config, analyzer_subsys_errors);
+    } else {
+        la_log(LOG_INFO, "Failed to create analyzer_subsys_errors");
     }
 
     Analyzer_Vehicle_Definition *analyzer_vehicle_definition = new Analyzer_Vehicle_Definition(vehicle,_data_sources);

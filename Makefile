@@ -54,6 +54,7 @@ SRCS_CPP += analyzer/analyzer_autopilot.cpp
 SRCS_CPP += analyzer/analyzer_battery.cpp
 SRCS_CPP += analyzer/analyzer_compass_offsets.cpp
 SRCS_CPP += analyzer/analyzer_compass_vector_length.cpp
+SRCS_CPP += analyzer/analyzer_subsys_errors.cpp
 SRCS_CPP += analyzer/analyzer_ever_armed.cpp
 SRCS_CPP += analyzer/analyzer_ever_flew.cpp
 SRCS_CPP += analyzer/analyzer_good_kf.cpp
