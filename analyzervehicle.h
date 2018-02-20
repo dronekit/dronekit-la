@@ -273,8 +273,14 @@ namespace AnalyzerVehicle {
         uint64_t _flags_T = 0;
     };
 
-    /// @brief State information for a base Extended Kalman Filter.
+    /// @brief State information for a second-edition Extended Kalman Filter.
     class NKF : public EKF {
+    public:
+    private:
+    };
+
+    /// @brief State information for a third-edition Extended Kalman Filter.
+    class XKF : public NKF {
     public:
     private:
     };
@@ -680,6 +686,38 @@ public:
     /// @return Returns all NKF (EKF2) variances as a map from name to value.
     std::map<const std::string, double> nkf_variances() {
         return _nkf.variances();
+    }
+
+
+    /// @brief Set a variance value by name.
+    /// @param name Name of variance to set (e.g. "pos_horiz").
+    /// @param value New value of the variance.
+    void xkf_set_variance(const char *name, double value) {
+        _xkf.set_variance(T(), name, value);
+    }
+    uint64_t xkf_variance_T(std::string name) const {
+        return _xkf.variance_T(name);
+    }
+    /// @brief Set XKF (EKF3) status flags.
+    /// @param flags XKF (EKF3 self-assessment status flags.
+    void xkf_set_flags(uint16_t flags) {
+        _xkf.set_flags(T(), flags);
+    }
+    /// @brief XKF status flags.
+    /// @return XKF self-assessment status flags.
+    uint16_t xkf_flags() const {
+        return _xkf.flags();
+    }
+
+    /// @brief XKF (EKF3) status flags modification time.
+    /// @return timestamp Timestamp at which the XKF self-assessment flags were last changed (microseconds).
+    uint64_t xkf_flags_T() const {
+        return _xkf.flags_T();
+    }
+    /// @brief All XKF (EKF3) variances.
+    /// @return Returns all XKF (EKF3) variances as a map from name to value.
+    std::map<const std::string, double> xkf_variances() {
+        return _xkf.variances();
     }
 
     /// @brief Retrieve parameter value.
@@ -1234,6 +1272,7 @@ private:
 
     EKF _ekf;
     NKF _nkf;
+    XKF _xkf;
 
     bool _armed = false;
 

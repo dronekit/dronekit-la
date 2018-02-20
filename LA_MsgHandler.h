@@ -336,6 +336,39 @@ public:
     }
 };
 
+class LA_MsgHandler_XKF1 : public LA_MsgHandler {
+public:
+    LA_MsgHandler_XKF1(std::string name, const struct log_Format &f,
+                       Analyze *analyze, AnalyzerVehicle::Base *&vehicle);
+    void xprocess(const uint8_t *msg) override;
+};
+
+class LA_MsgHandler_XKF4 : public LA_MsgHandler {
+public:
+    LA_MsgHandler_XKF4(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :
+        LA_MsgHandler(name, f, analyze, vehicle) {
+        _analyze->add_data_source("XKF_FLAGS", "XKF4.SS");
+        _analyze->add_data_source("XKF_VARIANCES_velocity_variance", "XKF4.SV");
+        _analyze->add_data_source("XKF_VARIANCES_pos_horiz_variance", "XKF4.SP");
+        _analyze->add_data_source("XKF_VARIANCES_pos_vert_variance", "XKF4.SH");
+        _analyze->add_data_source("XKF_VARIANCES_pos_compass_variance", "XKF4.SM");
+        _analyze->add_data_source("XKF_VARIANCES_terrain_alt_variance", "XKF4.SVT");
+    };
+    void xprocess(const uint8_t *msg) override {
+        _vehicle->xkf_set_variance("velocity", require_field_uint16_t(msg, "SV") / (double)100.0f);
+        _vehicle->xkf_set_variance("pos_horiz", require_field_uint16_t(msg, "SP") / (double)100.0f);
+        _vehicle->xkf_set_variance("pos_vert", require_field_uint16_t(msg, "SH") / (double)100.0f);
+        _vehicle->xkf_set_variance("compass", require_field_uint16_t(msg, "SM") / (double)100.0f);
+        _vehicle->xkf_set_variance("terrain_alt", require_field_uint16_t(msg, "SVT") / (double)100.0f);
+
+        // FIXME: this will always be present
+        uint16_t ss;
+        if (field_value(msg, "SS", ss)) {
+            _vehicle->xkf_set_flags(ss);
+        }
+    }
+};
+
 class LA_MsgHandler_ORGN : public LA_MsgHandler {
 public:
     LA_MsgHandler_ORGN(std::string name, const struct log_Format &f, Analyze *analyze, AnalyzerVehicle::Base *&vehicle) :

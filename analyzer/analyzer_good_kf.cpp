@@ -177,7 +177,7 @@ void Analyzer_Good_KF::open_result_flags(uint16_t flags)
     _result_flags->set_reason(string_format("The %s status report indicates a problem with the EKF", shortname().c_str()));
     _result_flags->set_flags(this->flags());
 
-    _result_flags->add_evidence(string_format("flags=%d", flags));
+    _result_flags->add_evidence(string_format("flags=%u", flags));
     // TODO: put the flags and the "bad" descrption into a structure
     _result_flags->increase_severity_score(10);
     if (!(flags & EKF_ATTITUDE)) {
@@ -219,6 +219,10 @@ void Analyzer_Good_KF::open_result_flags(uint16_t flags)
     if (!(flags & EKF_PRED_POS_HORIZ_ABS)) {
         _result_flags->increase_severity_score(1);
         _result_flags->add_evidence("Predicted horizontal position (absolute) bad");
+    }
+    if (flags & (1<<15)) {
+        _result_flags->increase_severity_score(1);
+        _result_flags->add_evidence("GPS is glitching");
     }
 
     if (_vehicle->any_acc_clipping()) {
