@@ -11,6 +11,7 @@ public:
     uint32_t handle_read();
 
     void configure(INIReader *config) override;
+    void set_serial(std::string path, uint32_t baud, bool flow);
 
     void pack_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds) override;
     void handle_select_fds(fd_set &fds_read, fd_set &fds_write, fd_set &fds_err, uint8_t &nfds) override;

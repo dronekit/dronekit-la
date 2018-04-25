@@ -59,7 +59,7 @@ void Telem_Serial::handle_select_fds(fd_set &fds_read,
     if (FD_ISSET(fd, &fds_read)) {
         FD_CLR(fd, &fds_read);
         _recv_buflen_content = handle_read();
-        // ::fprintf(stderr, "received %u bytes\n", _buflen_content);
+        // ::fprintf(stderr, "received %u bytes\n", _recv_buflen_content);
     }
 }
 
@@ -157,11 +157,17 @@ void Telem_Serial::init()
 
 void Telem_Serial::configure(INIReader *config)
 {
-    serialPortName = config->Get("solo","telemDev","/dev/ttymxc1");
-    serialBaud = config->GetInteger("solo", "telemBaud", 57600);
-    serialFlow = config->GetBoolean("solo", "telemFlow", true);
+    set_serial(config->Get("solo","telemDev","/dev/ttymxc1"),
+               config->GetInteger("solo", "telemBaud", 57600),
+               config->GetBoolean("solo", "telemFlow", true));
 }
 
+void Telem_Serial::set_serial(std::string port, uint32_t baud, bool flow)
+{
+    serialPortName = port;
+    serialBaud = baud;
+    serialFlow = flow;
+}
 
 void Telem_Serial::do_writer_sends()
 {

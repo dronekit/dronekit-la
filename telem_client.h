@@ -37,7 +37,7 @@ public:
     // FIXME: scope
     uint8_t _recv_buf[512]; // receive buffer
     const uint32_t _recv_buflen = sizeof(_recv_buf); // receive buffer len
-    uint32_t _recv_buflen_content = 0;
+    int32_t _recv_buflen_content = 0;
 
     virtual uint32_t send_buf_size() const = 0;
 

@@ -41,6 +41,8 @@ public:
     virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_gps_raw_int_t &msg UNUSED) { }
     virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_global_position_int_t &msg UNUSED) { }
     virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_heartbeat_t &msg UNUSED) { }
+    virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_log_entry_t &msg UNUSED) { }
+    virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_log_data_t &msg UNUSED) { }
     virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_mount_status_t &msg UNUSED) { }
     virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_nav_controller_output_t &msg UNUSED) { }
     virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_param_value_t &msg UNUSED) { }

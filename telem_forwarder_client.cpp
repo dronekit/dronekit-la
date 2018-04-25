@@ -85,7 +85,12 @@ void Telem_Forwarder_Client::pack_telem_forwarder_sockaddr(INIReader *config)
     uint16_t tf_port = config->GetInteger("solo", "telem_forward_port", 14560);
     std::string ip = config->Get("solo", "soloIp", "127.0.0.1");
 
-    la_log(LOG_INFO, "df-tfc: connecting to telem-forwarder at %s:%u", ip.c_str(), tf_port);
+    set_address(ip, tf_port);
+}
+
+void Telem_Forwarder_Client::set_address(std::string ip, uint16_t port)
+{
+    la_log(LOG_INFO, "df-tfc: connecting to telem-forwarder at %s:%u", ip.c_str(), port);
     memset(&sa_tf, 0, sizeof(sa_tf));
     sa_tf.sin_family = AF_INET;
 #ifdef _WIN32
@@ -93,7 +98,7 @@ void Telem_Forwarder_Client::pack_telem_forwarder_sockaddr(INIReader *config)
 #else
     inet_aton(ip.c_str(), &sa_tf.sin_addr); // useful for debugging
 #endif
-    sa_tf.sin_port = htons(tf_port);
+    sa_tf.sin_port = htons(port);
 }
 
 bool Telem_Forwarder_Client::sane_telem_forwarder_packet(uint8_t *pkt, uint16_t pktlen)

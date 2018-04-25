@@ -70,6 +70,18 @@ void MAVLink_Message_Handler::handle_message(uint64_t timestamp, mavlink_message
         handle_decoded_message(timestamp, decoded);
         break;
     }
+    case MAVLINK_MSG_ID_LOG_DATA: {
+        mavlink_log_data_t decoded;
+        mavlink_msg_log_data_decode(&msg, &decoded);
+        handle_decoded_message(timestamp, decoded);
+        break;
+    }
+    case MAVLINK_MSG_ID_LOG_ENTRY: {
+        mavlink_log_entry_t decoded;
+        mavlink_msg_log_entry_decode(&msg, &decoded);
+        handle_decoded_message(timestamp, decoded);
+        break;
+    }
     case MAVLINK_MSG_ID_REMOTE_LOG_DATA_BLOCK: {
         mavlink_remote_log_data_block_t decoded;
         mavlink_msg_remote_log_data_block_decode(&msg, &decoded);

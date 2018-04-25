@@ -29,6 +29,8 @@ public:
         return _send_buf_start != _send_buf_stop;
     }
 
+    void set_address(std::string ip, uint16_t port);
+
 private:
     int fd_telem_forwarder = -1;
 

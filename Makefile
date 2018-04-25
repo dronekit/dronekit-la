@@ -8,7 +8,7 @@ INCS = -I./util -I./ini -I./ini/cpp
 INCS += -Ijsoncpp
 INCS += -I.
 
-WARNFLAGS= -Wall -Werror -Wextra -Wunused -Wredundant-decls -D_FORTIFY_SOURCE=2 -Wfloat-equal -fstack-protector -Wformat -Werror=format-security -Werror=pointer-arith -Wpedantic
+WARNFLAGS= -Wall -Werror -Wextra -Wunused -Wredundant-decls -D_FORTIFY_SOURCE=2 -Wfloat-equal -fstack-protector -Wformat -Werror=format-security -Werror=pointer-arith
 
 ifeq ($(OS),Windows_NT)
 	CXX=x86_64-w64-mingw32-g++.exe
@@ -95,6 +95,8 @@ LOG_ANALYZER = dronekit-la
 
 IMAGETAGGER = imagetagger
 
+LOG_DOWNLOAD = log_download
+
 all: $(LOG_ANALYZER)
 
 mavlink_c_library/protocol.h: modules/mavlink/message_definitions/v1.0/common.xml modules/mavlink/message_definitions/v1.0/ardupilotmega.xml
@@ -112,6 +114,9 @@ $(LOG_ANALYZER): $(OBJS) loganalyzer.cpp
 
 $(IMAGETAGGER): $(OBJS) imagetagger.cpp mh_imagetagger.cpp
 	$(LINK.cpp) -o $(IMAGETAGGER) imagetagger.cpp mh_imagetagger.cpp $(OBJS) $(LIBS) $(DLIBS)
+
+$(LOG_DOWNLOAD): $(OBJS) log_download.cpp log_download_program.cpp log_list.cpp
+	$(LINK.cpp) -o $(LOG_DOWNLOAD) log_download.cpp log_download_program.cpp log_list.cpp $(OBJS) $(LIBS) $(DLIBS)
 
 clean:
 	$(RM) *.o *~ $(DATAFLASH_LOGGER) $(LOG_ANALYZER) $(IMAGETAGGER) analyzer/*.o jsoncpp/jsoncpp.o
