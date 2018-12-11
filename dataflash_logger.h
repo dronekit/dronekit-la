@@ -47,12 +47,19 @@ private:
     uint8_t this_system_id = 57;
     uint8_t this_component_id = 57;
     
+    enum arm_status_t : uint8_t {
+        ARM_STATUS_DISARMED = 0,
+        ARM_STATUS_ARMED = 1,
+        ARM_STATUS_UNKNOWN = 2,
+    };
+
     const uint8_t target_system_id_default = 0;
     const uint8_t target_component_id_default = 0;
     uint8_t target_system_id;     // who to send our request-for-logs to
     uint8_t target_component_id;  // who to send our request-for-logs to
     uint8_t sender_system_id = 0;     // who the logs areactually coming from
     uint8_t sender_component_id = 0;  // who the logs areactually coming from
+    arm_status_t sender_arm_status = ARM_STATUS_UNKNOWN;
 
     void send_start_logging_packet();
     void send_start_or_stop_logging_packet(bool is_start);

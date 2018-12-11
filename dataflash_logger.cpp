@@ -232,6 +232,8 @@ bool DataFlash_Logger::logging_start(mavlink_message_t &m,
 {
     sender_system_id = m.sysid;
     sender_component_id = m.compid;
+    sender_arm_status = ARM_STATUS_UNKNOWN;
+
     la_log_unsuppress();
     la_log(LOG_INFO, "mh-dfl: Starting log, target is (%d/%d), I am (%d/%d)",
 	   sender_system_id, sender_component_id, this_system_id, this_component_id);
@@ -252,9 +254,21 @@ void DataFlash_Logger::handle_decoded_message(uint64_t T,
                                               mavlink_message_t &m,
                                               mavlink_heartbeat_t &msg)
 {
-    if (!logging_started) {
+    arm_status_t new_sender_arm_status = (msg.base_mode & MAV_MODE_FLAG_SAFETY_ARMED) ? ARM_STATUS_ARMED : ARM_STATUS_DISARMED;
+
+    if (logging_started) {
+        if (sender_arm_status == ARM_STATUS_ARMED &&
+            new_sender_arm_status == ARM_STATUS_DISARMED) {
+            // sender has moved from armed to disarmed state; stop
+            // logging and let it restart naturally
+            la_log(LOG_INFO, "mh-dfl: disarm detected, logging_stop");
+            logging_stop();
+        }
+    } else {
         la_log(LOG_INFO, "Heartbeat received from %u/%u", m.sysid, m.compid);
     }
+
+    sender_arm_status = new_sender_arm_status;
 
     MAVLink_Message_Handler::handle_decoded_message(T, m, msg);
 }
