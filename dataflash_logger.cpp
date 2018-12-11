@@ -85,8 +85,11 @@ bool DataFlash_Logger::configure(INIReader *config)
 	return false;
     }
 
-    target_system_id = config->GetInteger("dflogger", "target_system_id", 0);
-    target_component_id = config->GetInteger("dflogger", "target_component_id", 0);
+    this_system_id = config->GetInteger("dflogger", "source_system_id", this_system_id);
+    this_component_id = config->GetInteger("dflogger", "source_component_id", this_component_id);
+
+    target_system_id = config->GetInteger("dflogger", "target_system_id", target_system_id);
+    target_component_id = config->GetInteger("dflogger", "target_component_id", target_component_id);
 
     return true;
 }
