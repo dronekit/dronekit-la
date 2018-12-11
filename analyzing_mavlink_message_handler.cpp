@@ -198,7 +198,7 @@ void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavli
     _analyze->evaluate_all();
 }
 
-void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_heartbeat_t &msg) {
+void Analyzing_MAVLink_Message_Handler::handle_decoded_message(uint64_t T, mavlink_message_t &m UNUSED, mavlink_heartbeat_t &msg) {
     _vehicle->set_T(T);
 
     if (msg.autopilot == 8) {

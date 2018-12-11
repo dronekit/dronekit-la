@@ -36,7 +36,7 @@ private:
     virtual void handle_decoded_message(uint64_t T, mavlink_ekf_status_report_t &msg) override;
     virtual void handle_decoded_message(uint64_t T, mavlink_gps_raw_int_t &msg) override;
     virtual void handle_decoded_message(uint64_t T, mavlink_global_position_int_t &msg) override;
-    virtual void handle_decoded_message(uint64_t T, mavlink_heartbeat_t &msg) override;
+    virtual void handle_decoded_message(uint64_t T, mavlink_message_t &m UNUSED, mavlink_heartbeat_t &msg) override;
     virtual void handle_decoded_message(uint64_t T, mavlink_nav_controller_output_t &msg) override;
     virtual void handle_decoded_message(uint64_t T, mavlink_param_value_t &msg) override;    
     virtual void handle_decoded_message(uint64_t T, mavlink_power_status_t &msg) override;

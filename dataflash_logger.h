@@ -61,8 +61,9 @@ private:
     int out_fd;
     bool logging_started = false;
 
-    
-    void handle_message(uint64_t timestamp, mavlink_message_t &msg);
+    void handle_decoded_message(uint64_t T,
+                                mavlink_message_t &m,
+                                mavlink_heartbeat_t &msg);
     void handle_decoded_message(uint64_t T, mavlink_remote_log_data_block_t &msg);
 
     bool make_new_log_filename(char *buffer, uint8_t bufferlen);

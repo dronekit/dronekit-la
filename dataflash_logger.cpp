@@ -247,15 +247,18 @@ void DataFlash_Logger::logging_stop()
     logging_started = false;
 }
 
-void DataFlash_Logger::handle_message(uint64_t timestamp, mavlink_message_t &msg)
+void DataFlash_Logger::handle_decoded_message(uint64_t T,
+                                              mavlink_message_t &m,
+                                              mavlink_heartbeat_t &msg)
 {
-    if (!logging_started && msg.msgid == MAVLINK_MSG_ID_HEARTBEAT) {
-        la_log(LOG_INFO, "Heartbeat received from %u/%u", msg.sysid, msg.compid);
+    if (!logging_started) {
+        la_log(LOG_INFO, "Heartbeat received from %u/%u", m.sysid, m.compid);
     }
 
-    most_recent_sender_system_id = msg.sysid;
-    most_recent_sender_component_id = msg.compid;
-    MAVLink_Message_Handler::handle_message(timestamp, msg);
+    most_recent_sender_system_id = m.sysid;
+    most_recent_sender_component_id = m.compid;
+
+    MAVLink_Message_Handler::handle_decoded_message(T, m, msg);
 }
 
 void DataFlash_Logger::handle_decoded_message(uint64_t T UNUSED, mavlink_remote_log_data_block_t &msg)

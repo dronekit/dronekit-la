@@ -43,7 +43,7 @@ void MAVLink_Message_Handler::handle_message(uint64_t timestamp, mavlink_message
     case MAVLINK_MSG_ID_HEARTBEAT: {
         mavlink_heartbeat_t decoded;
         mavlink_msg_heartbeat_decode(&msg, &decoded);
-        handle_decoded_message(timestamp, decoded);
+        handle_decoded_message(timestamp, msg, decoded);
         break;
     }
     case MAVLINK_MSG_ID_MOUNT_STATUS: {
