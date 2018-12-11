@@ -45,25 +45,32 @@ void Telem_UDP::handle_select_fds(fd_set &fds_read,
 }
 
 
-void Telem_UDP::create_and_bind()
+void Telem_UDP::create_and_bind(INIReader *config)
 {
-    int _fd;
-    struct sockaddr_in sa;
+    _is_server = is_server(config);
 
-    _fd = socket(AF_INET, SOCK_DGRAM, 0);
+    int _fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (_fd < 0) {
         perror("socket");
         abort();
     }
 
-    memset(&sa, 0, sizeof(sa));
+    struct sockaddr_in sa = {};
     sa.sin_family = AF_INET;
     sa.sin_addr.s_addr = htonl(INADDR_ANY);
-    sa.sin_port = 0; // we don't care what our port is
 
-    if (bind(_fd, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
-        perror("bind");
-        abort();
+    if (_is_server) {
+        sa.sin_port = htons(udp_port(config));
+        int one = 1;
+        setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
+        if (bind(_fd, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
+            perror("bind");
+            abort();
+        }
+        ::fprintf(stderr, "bound port %u\n", sa.sin_port);
+    } else {
+        ::fprintf(stderr, "client connection %u\n", sa.sin_port);
+        sa.sin_port = 0; // we don't care what our port is
     }
 
     fd = _fd;
@@ -80,21 +87,29 @@ uint16_t Telem_UDP::udp_port(INIReader *config) const
     return config->GetInteger("dflogger", "udp_port", 14550);
 }
 
+bool Telem_UDP::is_server(INIReader *config) const
+{
+    return config->GetBoolean("dflogger", "server", false);
+}
+
 void Telem_UDP::pack_sockaddr(INIReader *config)
 {
-    // uint16_t tf_port = config->GetInteger("solo", "telem_forward_port", 14560);
     const uint16_t tf_port = udp_port(config);
     const std::string ip = udp_ip(config);
 
-    la_log(LOG_INFO, "df-udp: connecting to %s:%u", ip.c_str(), tf_port);
-    memset(&sa_tf, 0, sizeof(sa_tf));
-    sa_tf.sin_family = AF_INET;
+    if (is_server(config)) {
+        la_log(LOG_INFO, "df-udp: listening on %s:%u", ip.c_str(), tf_port);
+    } else {
+        la_log(LOG_INFO, "df-udp: sending to %s:%u", ip.c_str(), tf_port);
+        memset(&sa_destination, 0, sizeof(sa_destination));
+        sa_destination.sin_family = AF_INET;
 #ifdef _WIN32
-    sa_tf.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+        sa_destination.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
 #else
-    inet_aton(ip.c_str(), &sa_tf.sin_addr); // useful for debugging
+        inet_aton(ip.c_str(), &sa_destination.sin_addr); // useful for debugging
 #endif
-    sa_tf.sin_port = htons(tf_port);
+        sa_destination.sin_port = htons(tf_port);
+    }
 }
 
 bool Telem_UDP::sane_recv_buf(uint8_t *pkt UNUSED, uint16_t pktlen UNUSED) const
@@ -115,6 +130,11 @@ uint32_t Telem_UDP::handle_recv()
 
     if (!sane_recv_buf(_recv_buf, res)) {
 	return 0;
+    }
+
+    if (_is_server && sa_destination.sin_port == 0) {
+        sa_destination.sin_port = sa.sin_port;
+        sa_destination.sin_addr.s_addr = sa.sin_addr.s_addr;
     }
 
     return res;
@@ -142,12 +162,17 @@ void Telem_UDP::do_writer_sends()
         mavlink_message_t &msg = _send_buf[_send_buf_start];
         uint16_t messageLen = mavlink_msg_to_send_buffer((uint8_t*)buf,&msg);
 
-        int32_t bytes_sent =
-            sendto(fd, buf, messageLen, 0,
-                   (struct sockaddr *)&sa_tf, sizeof(struct sockaddr));
-        if (bytes_sent == -1) {
-            la_log(LOG_INFO, "Failed sendto: %s", strerror(errno));
-            // we drop the message anyway!
+        if (_is_server &&
+            sa_destination.sin_port == 0) {
+            ::fprintf(stderr, "telem_udp: server - nowhere to send\n");
+        } else {
+            const int32_t bytes_sent = sendto(fd, buf, messageLen, 0,
+                                              (struct sockaddr *)&sa_destination,
+                                              sizeof(struct sockaddr));
+            if (bytes_sent == -1) {
+                la_log(LOG_INFO, "Failed sendto: %s", strerror(errno));
+                // we drop the message anyway!
+            }
         }
         _send_buf_start++;
         if (_send_buf_start >= send_buf_size()) {
@@ -161,9 +186,8 @@ void Telem_UDP::do_writer_sends()
 void Telem_UDP::configure(INIReader *config)
 {
     pack_sockaddr(config);
-
+    create_and_bind(config);
 }
 
 void Telem_UDP::init() {
-    create_and_bind();
 }

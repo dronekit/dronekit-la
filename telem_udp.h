@@ -33,10 +33,10 @@ public:
 private:
     int fd = -1;
 
-    struct sockaddr_in sa; // our send-from address
-    struct sockaddr_in sa_tf; /* udp address to connect to */
+    struct sockaddr_in sa = {}; // our send-from address
+    struct sockaddr_in sa_destination = {}; /* udp address to connect to */
 
-    void create_and_bind();
+    void create_and_bind(INIReader *config);
     void pack_sockaddr(INIReader *config);
     bool sane_packet(uint8_t *pkt, uint16_t bpktlen);
     virtual bool sane_recv_buf(uint8_t *pkt, uint16_t pktlen) const;
@@ -49,4 +49,7 @@ private:
 
     std::string udp_ip(INIReader *config) const;
     uint16_t udp_port(INIReader *config) const;
+    bool is_server(INIReader *config) const;
+
+    bool _is_server = false;
 };
