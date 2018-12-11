@@ -227,10 +227,11 @@ void DataFlash_Logger::queue_gap_nacks(uint32_t seqno)
     }
 }
 
-bool DataFlash_Logger::logging_start(mavlink_remote_log_data_block_t &msg UNUSED)
+bool DataFlash_Logger::logging_start(mavlink_message_t &m,
+                                     mavlink_remote_log_data_block_t &msg UNUSED)
 {
-    sender_system_id = most_recent_sender_system_id;
-    sender_component_id = most_recent_sender_component_id;
+    sender_system_id = m.sysid;
+    sender_component_id = m.compid;
     la_log_unsuppress();
     la_log(LOG_INFO, "mh-dfl: Starting log, target is (%d/%d), I am (%d/%d)",
 	   sender_system_id, sender_component_id, this_system_id, this_component_id);
@@ -255,17 +256,16 @@ void DataFlash_Logger::handle_decoded_message(uint64_t T,
         la_log(LOG_INFO, "Heartbeat received from %u/%u", m.sysid, m.compid);
     }
 
-    most_recent_sender_system_id = m.sysid;
-    most_recent_sender_component_id = m.compid;
-
     MAVLink_Message_Handler::handle_decoded_message(T, m, msg);
 }
 
-void DataFlash_Logger::handle_decoded_message(uint64_t T UNUSED, mavlink_remote_log_data_block_t &msg)
+void DataFlash_Logger::handle_decoded_message(uint64_t T UNUSED,
+                                              mavlink_message_t &m,
+                                              mavlink_remote_log_data_block_t &msg)
 {
     if (!logging_started) {
 	if (msg.seqno == 0) {
-	    if (!logging_start(msg)) {
+	    if (!logging_start(m, msg)) {
 		return;
 	    }
 	} else {

@@ -47,7 +47,7 @@ public:
     virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_nav_controller_output_t &msg UNUSED) { }
     virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_param_value_t &msg UNUSED) { }
     virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_power_status_t &msg UNUSED) { }
-    virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_remote_log_data_block_t &msg UNUSED) { }
+    virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_message_t &m UNUSED, mavlink_remote_log_data_block_t &msg UNUSED) { }
     virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_scaled_pressure_t &msg UNUSED) { }
     virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_scaled_pressure2_t &msg UNUSED) { }
     virtual void handle_decoded_message(uint64_t T UNUSED, mavlink_servo_output_raw_t &msg UNUSED) { }

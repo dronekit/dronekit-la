@@ -85,7 +85,7 @@ void MAVLink_Message_Handler::handle_message(uint64_t timestamp, mavlink_message
     case MAVLINK_MSG_ID_REMOTE_LOG_DATA_BLOCK: {
         mavlink_remote_log_data_block_t decoded;
         mavlink_msg_remote_log_data_block_decode(&msg, &decoded);
-        handle_decoded_message(timestamp, decoded);
+        handle_decoded_message(timestamp, msg, decoded);
         break;
     }
     case MAVLINK_MSG_ID_SCALED_PRESSURE: {

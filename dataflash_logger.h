@@ -35,7 +35,8 @@ private:
     void idle_1Hz();
     void idle_10Hz();
     void idle_100Hz();
-    bool logging_start(mavlink_remote_log_data_block_t &msg);
+    bool logging_start(mavlink_message_t &m,
+                       mavlink_remote_log_data_block_t &msg);
     void logging_stop();
     void send_stop_logging_packet();
 
@@ -48,8 +49,6 @@ private:
     
     const uint8_t target_system_id_default = 0;
     const uint8_t target_component_id_default = 0;
-    uint8_t most_recent_sender_system_id;
-    uint8_t most_recent_sender_component_id;
     uint8_t target_system_id;     // who to send our request-for-logs to
     uint8_t target_component_id;  // who to send our request-for-logs to
     uint8_t sender_system_id = 0;     // who the logs areactually coming from
@@ -64,7 +63,9 @@ private:
     void handle_decoded_message(uint64_t T,
                                 mavlink_message_t &m,
                                 mavlink_heartbeat_t &msg);
-    void handle_decoded_message(uint64_t T, mavlink_remote_log_data_block_t &msg);
+    void handle_decoded_message(uint64_t T,
+                                mavlink_message_t &m,
+                                mavlink_remote_log_data_block_t &msg);
 
     bool make_new_log_filename(char *buffer, uint8_t bufferlen);
 
