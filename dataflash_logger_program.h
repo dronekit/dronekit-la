@@ -32,6 +32,7 @@ public:
     
 private:
     void usage();
+    void version();
     void sighup_received_tophalf() override;
     void do_idle_callbacks() override;
     uint32_t select_timeout_us() override;
