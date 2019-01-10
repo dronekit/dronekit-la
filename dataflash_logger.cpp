@@ -20,7 +20,7 @@ void DataFlash_Logger::idle_tenthHz()
 {
     // the following isn't quite right given we seek around...
     if (logging_started) {
-	la_log(LOG_INFO, "mh-dfl: Current log size: %lu", lseek(out_fd, 0, SEEK_CUR));
+	la_log(LOG_DEBUG, "mh-dfl: Current log size: %lu", lseek(out_fd, 0, SEEK_CUR));
     }
 }
 
