@@ -29,8 +29,15 @@ void DataFlash_Logger_Program::usage()
     ::printf(" -d               debug mode\n");
     ::printf(" -s               use serial port\n");
     ::printf(" -u               use UDP port\n");
+    ::printf(" -v               display version information\n");
     ::printf("\n");
     ::printf("Example: %s\n", program_name());
+    exit(0);
+}
+
+void DataFlash_Logger_Program::version()
+{
+    ::printf(GIT_VERSION "\n");
     exit(0);
 }
 
@@ -195,10 +202,13 @@ void DataFlash_Logger_Program::parse_arguments(int argc, char *argv[])
     _argc = argc;
     _argv = argv;
 
-    while ((opt = getopt(argc, argv, "hc:dsu")) != -1) {
+    while ((opt = getopt(argc, argv, "hvc:dsu")) != -1) {
         switch(opt) {
         case 'h':
             usage();
+            break;
+        case 'v':
+            version();
             break;
         case 'c':
             config_filename = optarg;
