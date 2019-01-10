@@ -29,7 +29,7 @@ void Heart::beat()
     uint32_t custom_mode = 0;
     uint8_t system_status = 0;
 
-    la_log(LOG_INFO, "mh-h: sending heartbeat");
+    la_log(LOG_DEBUG, "mh-h: sending heartbeat");
 
     mavlink_msg_heartbeat_pack(system_id, component_id, &msg, type, autopilot, base_mode, custom_mode, system_status);
 
