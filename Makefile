@@ -8,7 +8,7 @@ INCS = -I./util -I./ini -I./ini/cpp
 INCS += -Ijsoncpp
 INCS += -I.
 
-WARNFLAGS= -Wall -Werror -Wextra -Wunused -Wredundant-decls -D_FORTIFY_SOURCE=2 -Wfloat-equal -fstack-protector -Wformat -Werror=format-security -Werror=pointer-arith
+WARNFLAGS= -Wall -Werror -Wextra -Wunused -Wredundant-decls -D_FORTIFY_SOURCE=2 -Wfloat-equal -fstack-protector -Wformat -Werror=format-security -Werror=pointer-arith -Wno-missing-field-initializers
 
 ifeq ($(OS),Windows_NT)
 	CXX=x86_64-w64-mingw32-g++.exe
