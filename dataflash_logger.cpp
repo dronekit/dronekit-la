@@ -254,8 +254,10 @@ void DataFlash_Logger::handle_decoded_message(uint64_t T,
                                               mavlink_message_t &m,
                                               mavlink_heartbeat_t &msg)
 {
+    // Need to match against heartbeats from both the 'target' and 'sender' components, since AP does not send heartbeats for logical endpoints at present.
     if (m.sysid == sender_system_id &&
-        m.compid == sender_component_id) {
+       (m.compid == sender_component_id || m.compid == target_component_id)) {
+
         arm_status_t new_sender_arm_status = (msg.base_mode & MAV_MODE_FLAG_SAFETY_ARMED) ? ARM_STATUS_ARMED : ARM_STATUS_DISARMED;
 
         if (logging_started) {
