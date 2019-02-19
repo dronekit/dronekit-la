@@ -101,7 +101,7 @@ LOG_DOWNLOAD = log_download
 all: $(LOG_ANALYZER)
 
 mavlink_c_library/protocol.h: modules/mavlink/message_definitions/v1.0/common.xml modules/mavlink/message_definitions/v1.0/ardupilotmega.xml
-	cd modules/mavlink && python pymavlink/tools/mavgen.py --lang=C --wire-protocol=1.0 --output=../../mavlink_c_library message_definitions/v1.0/ardupilotmega.xml
+	cd modules/mavlink && python pymavlink/tools/mavgen.py --lang=C --wire-protocol=2.0 --output=../../mavlink_c_library message_definitions/v1.0/ardupilotmega.xml
 
 mavlink-headers: mavlink_c_library/protocol.h
 
