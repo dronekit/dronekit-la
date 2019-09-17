@@ -86,6 +86,10 @@ void DataFlash_TextDump_Reader::handle_line(const uint8_t *line, uint32_t len)
             *((float*)&buf[buf_offset]) = value_float;
             buf_offset += sizeof(float);
             break;
+        case 'd':
+            *((double*)&buf[buf_offset]) = value_float;
+            buf_offset += sizeof(double);
+            break;
         case 'E':
             value_integer *= 100;
             FALLTHROUGH;
