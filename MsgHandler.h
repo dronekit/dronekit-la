@@ -175,7 +175,7 @@ inline void MsgHandler::_field_value_for_type_at_offset(const uint8_t *msg,
 
     if (sizeof(R) < to_copy) {
             // we should never ask to e.g. store a uint16 from a msg into e.g. a uint8
-	::fprintf(stderr, "Internal error: destination too small");
+	::fprintf(stderr, "Internal error: destination too small (want=%u have=%u) type=%u\n", (unsigned)to_copy, (unsigned)sizeof(R), (unsigned)type);
 	abort();
     }
     memcpy(&dest, &msg[offset], to_copy);
