@@ -85,7 +85,7 @@ void MsgHandler::parse_format_fields()
     uint8_t msg_offset = 3; // 3 bytes for the header
 
     while ((next_label = strtok(arg, ",")) != NULL) {
-	if (label_offset > strlen(f.format)) {
+	if (label_offset > strnlen(f.format, sizeof(f.format))) {
 	    free(labels);
 	    printf("too few field times for labels %s (format=%s) (labels=%s)\n",
 		   f.name, f.format, f.labels);
@@ -99,7 +99,7 @@ void MsgHandler::parse_format_fields()
         label_offset++;
     }
 
-    if (label_offset != strlen(f.format)) {
+    if (label_offset != strnlen(f.format, sizeof(f.format))) {
         printf("too few labels for format (format=%s) (labels=%s)\n",
                f.format, f.labels);
     }
