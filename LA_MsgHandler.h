@@ -329,7 +329,7 @@ public:
 
         // SS came in somewhere between Copter 3.2.1 and 3.3rc9
         // FIXME: this will always be present
-        uint16_t ss;
+        uint32_t ss = 0; // this was 16 bits before 2020-ish
         if (field_value(msg, "SS", ss)) {
             _vehicle->nkf_set_flags(ss);
         }
@@ -362,7 +362,7 @@ public:
         _vehicle->xkf_set_variance("terrain_alt", require_field_uint16_t(msg, "SVT") / (double)100.0f);
 
         // FIXME: this will always be present
-        uint16_t ss;
+        uint32_t ss = 0; // this was 16 bits before 2020-ish
         if (field_value(msg, "SS", ss)) {
             _vehicle->xkf_set_flags(ss);
         }
