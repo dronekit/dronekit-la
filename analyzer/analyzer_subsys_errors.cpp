@@ -135,7 +135,7 @@ const std::string Analyzer_Subsys_Errors::ecode_string(uint32_t subsys,
     try {
         std::map<const uint32_t, const std::string> bob = _subsys_errors_strings.at(subsys);
         return bob.at(ecode);
-    } catch (std::out_of_range) {
+    } catch (std::out_of_range&) {
     }
     switch(ecode) {
     case ERROR_CODE_ERROR_RESOLVED:
