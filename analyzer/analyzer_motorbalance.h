@@ -17,7 +17,7 @@ public:
 
     void set_delta(const uint16_t delta) { _delta = delta; }
     uint16_t delta() { return _delta; }
-    void set_axis(const char *axis) { strncpy(_axis,axis, strlen(axis)); }
+    void set_axis(const char *axis) { memcpy(_axis,axis, strlen(axis)); }
     char *axis() { return _axis; }
 
 private:

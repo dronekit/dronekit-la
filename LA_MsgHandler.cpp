@@ -634,7 +634,7 @@ void LA_MsgHandler_UBX3::xprocess(const uint8_t *msg)
 {
     // map from instance number to GPS2 etc:
     char gps_name[5] = {};
-    strncpy(gps_name, "GPS", 3);
+    memcpy(gps_name, "GPS", 3);
     const uint8_t instance = require_field_uint8_t(msg, "Instance");
     switch(instance) {
     case 0:
