@@ -1,6 +1,0 @@
-[dflogger]
-log_dirpath=/tmp
-
-[solo]
-telemDev=/dev/ttyUSB0
-telemFlow=false

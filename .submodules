@@ -1,3 +1,0 @@
-[submodule "test/modules/dronekit-la-testdata"]
-	url = git@github.com:dronekit/dronekit-la-testdata.git
-
