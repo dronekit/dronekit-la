@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	
+		<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+	
+		<link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+	
+		<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+	
+
+	<link rel="stylesheet" href="../_static/css/style.css" />
+	<script src="../_static/js/modernizr.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=PT+Serif:400,700' rel='stylesheet' type='text/css'>
+
+	
+		<title>Message Handler Class Reference</title>
+	
+
+	<script type="text/javascript">
+		var DOCUMENTATION_OPTIONS = {
+			URL_ROOT: '',
+			VERSION: '0.5',
+			COLLAPSE_INDEX: false,
+			FILE_SUFFIX: '.html',
+			HAS_SOURCE: true
+		};
+	</script>
+
+</head>
+<body>
+	<nav id="topnav" class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button class="navbar-toggle collapsed icon-facebook-sign" type="button" data-toggle="collapse" data-target="#collapsable-topnav">
+					<i class="fa fa-bars"></i>
+				</button>
+				<a class="navbar-brand" href="http://dronekit.io/">
+					<img src="../_static/images/new-DK-logo-color.svg" alt="3DR">
+				</a>
+			</div>
+			<div class="navbar-collapse collapse" id="collapsable-topnav">
+				<ul class="nav navbar-nav navbar-right">
+					<li>
+						<a href="https://cloud.dronekit.io/" class="cloud">Cloud</a>
+					</li>
+					<li>
+						<a href="http://python.dronekit.io/" class="air">Python</a>
+					</li>
+					<li>
+						<a href="http://android.dronekit.io/" class="ground">Android</a>
+					</li>
+					<li>
+						<a href="http://dronekit.io/support" class="support">Support</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container-fluid">
+		<div class="row gray-bg">
+			<div class="col-sm-3 col-md-2 col-sidebar">
+
+        
+					
+	<div id="sidebar-search" role="search">
+		<form id="rtd-search-form" class="form-inline" action="../search.html" method="get">
+			<div class="input-group">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+				<input class="form-control" type="text" name="q" placeholder="Search..." />
+			</div>
+			<input type="hidden" name="check_keywords" value="yes" />
+			<input type="hidden" name="area" value="default" />
+		</form>
+	</div>
+        
+				<div id="gray-sidebar" class="container-fluid">
+	        
+	          
+	          
+	              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about/about.html">About</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#key-features">Key features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#how-does-it-work">How does it work?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#comparison-to-loganalyzer-py">Comparison to LogAnalyzer.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#open-source-community">Open source community</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#technical-support">Technical support</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guide/getting_started.html#installing">Installing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/getting_started.html#running-the-tool">Running the tool</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/getting_started.html#specifying-frame-and-model-type">Specifying frame and model type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/getting_started.html#interpreting-the-output">Interpreting the output</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/getting_started.html#json-output">JSON output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/getting_started.html#brief">Brief</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/getting_started.html#plain-text-output">Plain text output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/other_features.html">Other Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guide/other_features.html#taking-input-from-stdin">Taking input from STDIN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/other_features.html#selecting-analyzers">Selecting analyzers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/other_features.html#use-a-config-file">Use a config file</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="analyzers.html">Analyzer List</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="analyzers.html#any-parameters-seen">Any Parameters Seen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyzers.html#altitude-estimate-divergence">Altitude Estimate Divergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyzers.html#arming-checks">Arming Checks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyzers.html#attitude-control">Attitude Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyzers.html#attitude-estimate-divergence">Attitude Estimate Divergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyzers.html#autopilot-health">AutoPilot Health</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyzers.html#battery">Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyzers.html#compass-offsets">Compass Offsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyzers.html#compass-vector-length">Compass Vector Length</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyzers.html#crash-test">Crash Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyzers.html#ever-armed">Ever Armed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyzers.html#ever-flew">Ever Flew</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyzers.html#good-ekf">Good EKF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyzers.html#gps-fix">GPS Fix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyzers.html#gyro-drift">Gyro Drift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyzers.html#position-estimate-divergence">Position Estimate Divergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyzers.html#sensor-health">Sensor Health</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyzers.html#truncated-log">Truncated Log</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyzers.html#vehicle-definition">Vehicle Definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyzers.html#velocity-estimate-divergence">Velocity Estimate Divergence</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="command_line_reference.html">Command Line Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="command_line_reference.html#command-syntax">Command Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command_line_reference.html#options">Options</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../contributing/index.html">Contributing</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../contributing/contribution_tool.html">Contributing to DroneKit-LA</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/contribution_tool.html#submitting-changes">Submitting changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/contribution_tool.html#building-the-tool">Building the Tool</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../contributing/contribution_tool.html#building-using-vagrant">Building using Vagrant</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../contributing/contribution_tool.html#building-on-linux">Building on Linux</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../contributing/contribution_tool.html#building-on-mac-osx">Building on Mac OSX</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../contributing/contribution_tool.html#building-on-windows">Building on Windows</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/contribution_tool.html#testing-changes">Testing changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing/contribution_docs.html">Contributing to the Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/contribution_docs.html#submitting-changes">Submitting changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/contribution_docs.html#building-the-docs">Building the docs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../contributing/contribution_docs.html#the-easy-way-vagrant">The easy way (Vagrant)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../contributing/contribution_docs.html#building-docs-on-native-os">Building docs on native OS</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/contribution_docs.html#tracking-todo-items">Tracking todo items</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/contribution_docs.html#style-guide">Style guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing/developer_setup_vagrant.html">Building DroneKit-LA in Vagrant</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/developer_setup_vagrant.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/developer_setup_vagrant.html#building-the-dronekit-la-tool">Building the DroneKit-LA Tool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/developer_setup_vagrant.html#building-the-documentation-in-vagrant">Building the Documentation in Vagrant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/developer_setup_vagrant.html#closing-and-re-using-the-vm">Closing and re-using the VM</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing/add_analyzer.html">Adding a New Analyzer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/add_analyzer.html#framework-overview">Framework overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/add_analyzer.html#creating-an-analyzer">Creating an Analyzer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing/add_message_handler.html">Extending the Vehicle-Log Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyser_reference.html">Analyzer Class Reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="analyser_reference.html#analyzer">Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="analyser_reference.html#result-classes">Result Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="analyser_reference.html#vehicle-model">Vehicle Model</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Message Handler Class Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about/license.html">License</a></li>
+</ul>
+
+	          
+	        
+				</div>
+			</div>
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+				<div id="api-content">
+					
+  <div class="section" id="message-handler-class-reference">
+<span id="dronekit-la-reference-message-handler"></span><h1>Message Handler Class Reference<a class="headerlink" href="#message-handler-class-reference" title="Permalink to this headline">¶</a></h1>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv413LA_MsgHandler">
+<span id="_CPPv313LA_MsgHandler"></span><span id="_CPPv213LA_MsgHandler"></span><span id="LA_MsgHandler"></span><span class="target" id="classLA__MsgHandler"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">LA_MsgHandler</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">MsgHandler</span></span><a class="headerlink" href="#_CPPv413LA_MsgHandler" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Base class for dataflash message handlers. </p>
+<p>Extend this based on the type of the DataFlash message you wish to take data from </p>
+<p>Subclassed by LA_MsgHandler_ACC, LA_MsgHandler_AHR2, LA_MsgHandler_ATT, LA_MsgHandler_BARO, LA_MsgHandler_EKF1, LA_MsgHandler_EKF4, LA_MsgHandler_ERR, LA_MsgHandler_EV, LA_MsgHandler_GPA, LA_MsgHandler_GPS, LA_MsgHandler_GYR, LA_MsgHandler_IMU, LA_MsgHandler_MAG, LA_MsgHandler_MODE, LA_MsgHandler_MSG, LA_MsgHandler_NKF1, LA_MsgHandler_NKF4, LA_MsgHandler_ORGN, LA_MsgHandler_PARM, LA_MsgHandler_PM, LA_MsgHandler_POS, LA_MsgHandler_POWR, LA_MsgHandler_RATE, LA_MsgHandler_RCOU, LA_MsgHandler_STAT, LA_MsgHandler_UBX3, LA_MsgHandler_VIBE, LA_MsgHandler_XKF1, LA_MsgHandler_XKF4</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N13LA_MsgHandler13LA_MsgHandlerENSt6stringERK10log_FormatP7AnalyzeRPN15AnalyzerVehicle4BaseE">
+<span id="_CPPv3N13LA_MsgHandler13LA_MsgHandlerENSt6stringERK10log_FormatP7AnalyzeRPN15AnalyzerVehicle4BaseE"></span><span id="_CPPv2N13LA_MsgHandler13LA_MsgHandlerENSt6stringERK10log_FormatP7AnalyzeRPN15AnalyzerVehicle4BaseE"></span><span id="LA_MsgHandler::LA_MsgHandler__ss.log_FormatCR.AnalyzeP.AnalyzerVehicle::BasePR"></span><span class="target" id="classLA__MsgHandler_1a7d0c54273af3c473b0bc32b2700da8d7"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">LA_MsgHandler</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">name</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">log_Format</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">f</span></span>, <span class="n"><span class="pre">Analyze</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">analyze</span></span>, <span class="n"><span class="pre">AnalyzerVehicle</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="analyser_reference.html#_CPPv4N15AnalyzerVehicle4BaseE" title="AnalyzerVehicle::Base"><span class="n"><span class="pre">Base</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">vehicle</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13LA_MsgHandler13LA_MsgHandlerENSt6stringERK10log_FormatP7AnalyzeRPN15AnalyzerVehicle4BaseE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>construct a DataFlash Message Handler </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>evaluate_all is called on “analyze” after the vehicle state has been updated </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Name by which this message handler is known; e.g. GPS2 </p></li>
+<li><p><strong>f</strong> – DataFlash log format corresponding to the DataFlash message type </p></li>
+<li><p><strong>analyze</strong> – Object which is responsible for coordinating analysis of vehicle state </p></li>
+<li><p><strong>vehicle</strong> – a vehicle whose state should be updated by the message handler </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N13LA_MsgHandler7processEPK7uint8_t">
+<span id="_CPPv3N13LA_MsgHandler7processEPK7uint8_t"></span><span id="_CPPv2N13LA_MsgHandler7processEPK7uint8_t"></span><span id="LA_MsgHandler::process__uint8_tCP"></span><span class="target" id="classLA__MsgHandler_1addcd14e51dc438dc3484c377bb8436d8"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">process</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">msg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13LA_MsgHandler7processEPK7uint8_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>process a DataFlash message, update state, run analysis on new vehicle state </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>msg</strong> – a DataFlash message </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK13LA_MsgHandler4nameEv">
+<span id="_CPPv3NK13LA_MsgHandler4nameEv"></span><span id="_CPPv2NK13LA_MsgHandler4nameEv"></span><span id="LA_MsgHandler::nameC"></span><span class="target" id="classLA__MsgHandler_1a028cbf7b3bf6a485f3e304f434027aa8"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">name</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK13LA_MsgHandler4nameEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>return the name of this Message Handler (e.g. GPS2) </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-functions">Protected Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N13LA_MsgHandler6find_TEPK7uint8_tR8uint64_t">
+<span id="_CPPv3N13LA_MsgHandler6find_TEPK7uint8_tR8uint64_t"></span><span id="_CPPv2N13LA_MsgHandler6find_TEPK7uint8_tR8uint64_t"></span><span id="LA_MsgHandler::find_T__uint8_tCP.uint64_tR"></span><span class="target" id="classLA__MsgHandler_1aba85426381a8f5d1d87e390d07e92506"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">find_T</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">msg</span></span>, <span class="n"><span class="pre">uint64_t</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">T</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13LA_MsgHandler6find_TEPK7uint8_tR8uint64_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Try to find a timestamp given a message. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>msg</strong> – a dataflash message </p></li>
+<li><p><strong>T</strong> – <strong>[out]</strong> a timestamp value to fill in </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>true if a timestamp was found </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N13LA_MsgHandler13process_set_TEPK7uint8_t">
+<span id="_CPPv3N13LA_MsgHandler13process_set_TEPK7uint8_t"></span><span id="_CPPv2N13LA_MsgHandler13process_set_TEPK7uint8_t"></span><span id="LA_MsgHandler::process_set_T__uint8_tCP"></span><span class="target" id="classLA__MsgHandler_1aaccd3086ce91aa6e658dd0f8ae6288fd"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">process_set_T</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">msg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13LA_MsgHandler13process_set_TEPK7uint8_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Try to set vehicle model timestamp from a given message. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>true if timestamp was set </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK13LA_MsgHandler1TEv">
+<span id="_CPPv3NK13LA_MsgHandler1TEv"></span><span id="_CPPv2NK13LA_MsgHandler1TEv"></span><span id="LA_MsgHandler::TC"></span><span class="target" id="classLA__MsgHandler_1a50fbee477058209c98a2577b915589fc"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">uint64_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK13LA_MsgHandler1TEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>return the current vehicle timestamp </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N13LA_MsgHandler8xprocessEPK7uint8_t">
+<span id="_CPPv3N13LA_MsgHandler8xprocessEPK7uint8_t"></span><span id="_CPPv2N13LA_MsgHandler8xprocessEPK7uint8_t"></span><span id="LA_MsgHandler::xprocess__uint8_tCP"></span><span class="target" id="classLA__MsgHandler_1ae91477f38a25dc11d8fc883494beaf77"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xprocess</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">msg</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N13LA_MsgHandler8xprocessEPK7uint8_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>process a DataFlash message, update vehicle model appropriately </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N13LA_MsgHandler17altitude_estimateEv">
+<span id="_CPPv3N13LA_MsgHandler17altitude_estimateEv"></span><span id="_CPPv2N13LA_MsgHandler17altitude_estimateEv"></span><span id="LA_MsgHandler::altitude_estimate"></span><span class="target" id="classLA__MsgHandler_1a27aae57b5ea9eb874138dad9d53ac827"></span><span class="n"><span class="pre">AnalyzerVehicle</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="analyser_reference.html#_CPPv4N15AnalyzerVehicle16AltitudeEstimateE" title="AnalyzerVehicle::AltitudeEstimate"><span class="n"><span class="pre">AltitudeEstimate</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">altitude_estimate</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13LA_MsgHandler17altitude_estimateEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>convenience function producing an estimate to be used for state </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N13LA_MsgHandler17attitude_estimateEv">
+<span id="_CPPv3N13LA_MsgHandler17attitude_estimateEv"></span><span id="_CPPv2N13LA_MsgHandler17attitude_estimateEv"></span><span id="LA_MsgHandler::attitude_estimate"></span><span class="target" id="classLA__MsgHandler_1a585b67d33f88f764f248bc86d532bc76"></span><span class="n"><span class="pre">AnalyzerVehicle</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="analyser_reference.html#_CPPv4N15AnalyzerVehicle16AttitudeEstimateE" title="AnalyzerVehicle::AttitudeEstimate"><span class="n"><span class="pre">AttitudeEstimate</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">attitude_estimate</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13LA_MsgHandler17attitude_estimateEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>convenience function producing an estimate to be used for state </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N13LA_MsgHandler17position_estimateEv">
+<span id="_CPPv3N13LA_MsgHandler17position_estimateEv"></span><span id="_CPPv2N13LA_MsgHandler17position_estimateEv"></span><span id="LA_MsgHandler::position_estimate"></span><span class="target" id="classLA__MsgHandler_1ad7739daf50645d59b2c47022e612f260"></span><span class="n"><span class="pre">AnalyzerVehicle</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="analyser_reference.html#_CPPv4N15AnalyzerVehicle16PositionEstimateE" title="AnalyzerVehicle::PositionEstimate"><span class="n"><span class="pre">PositionEstimate</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">position_estimate</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13LA_MsgHandler17position_estimateEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>convenience function producing an estimate to be used for state </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N13LA_MsgHandler17velocity_estimateEv">
+<span id="_CPPv3N13LA_MsgHandler17velocity_estimateEv"></span><span id="_CPPv2N13LA_MsgHandler17velocity_estimateEv"></span><span id="LA_MsgHandler::velocity_estimate"></span><span class="target" id="classLA__MsgHandler_1a2b48e3cf36387719082eca40ac7b250d"></span><span class="n"><span class="pre">AnalyzerVehicle</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">VelocityEstimate</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">velocity_estimate</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13LA_MsgHandler17velocity_estimateEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>convenience function producing an estimate to be used for state </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N13LA_MsgHandler7gpsinfoEv">
+<span id="_CPPv3N13LA_MsgHandler7gpsinfoEv"></span><span id="_CPPv2N13LA_MsgHandler7gpsinfoEv"></span><span id="LA_MsgHandler::gpsinfo"></span><span class="target" id="classLA__MsgHandler_1aaf45365fefdfbceba80dbfa1713adaf4"></span><span class="n"><span class="pre">AnalyzerVehicle</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="analyser_reference.html#_CPPv4N15AnalyzerVehicle7GPSInfoE" title="AnalyzerVehicle::GPSInfo"><span class="n"><span class="pre">GPSInfo</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">gpsinfo</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13LA_MsgHandler7gpsinfoEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>convenience function producing an estimate to be used for state </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N13LA_MsgHandler3imuEv">
+<span id="_CPPv3N13LA_MsgHandler3imuEv"></span><span id="_CPPv2N13LA_MsgHandler3imuEv"></span><span id="LA_MsgHandler::imu"></span><span class="target" id="classLA__MsgHandler_1a7fb575cec5927405ea5e60b0a412e6a9"></span><span class="n"><span class="pre">AnalyzerVehicle</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="analyser_reference.html#_CPPv4N15AnalyzerVehicle3IMUE" title="AnalyzerVehicle::IMU"><span class="n"><span class="pre">IMU</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">imu</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13LA_MsgHandler3imuEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>convenience function producing IMU to be used for state </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-attributes">Protected Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13LA_MsgHandler5_nameE">
+<span id="_CPPv3N13LA_MsgHandler5_nameE"></span><span id="_CPPv2N13LA_MsgHandler5_nameE"></span><span id="LA_MsgHandler::_name__ss"></span><span class="target" id="classLA__MsgHandler_1a07e69aab355043af11578f972894acac"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_name</span></span></span><a class="headerlink" href="#_CPPv4N13LA_MsgHandler5_nameE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13LA_MsgHandler8_analyzeE">
+<span id="_CPPv3N13LA_MsgHandler8_analyzeE"></span><span id="_CPPv2N13LA_MsgHandler8_analyzeE"></span><span id="LA_MsgHandler::_analyze__AnalyzeP"></span><span class="target" id="classLA__MsgHandler_1ac0928d7c819812928be74bc1083dce90"></span><span class="n"><span class="pre">Analyze</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">_analyze</span></span></span><a class="headerlink" href="#_CPPv4N13LA_MsgHandler8_analyzeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13LA_MsgHandler8_vehicleE">
+<span id="_CPPv3N13LA_MsgHandler8_vehicleE"></span><span id="_CPPv2N13LA_MsgHandler8_vehicleE"></span><span id="LA_MsgHandler::_vehicle__AnalyzerVehicle::BasePR"></span><span class="target" id="classLA__MsgHandler_1a2aec9e7b7032e7d4c30bc6b196bc8c36"></span><span class="n"><span class="pre">AnalyzerVehicle</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="analyser_reference.html#_CPPv4N15AnalyzerVehicle4BaseE" title="AnalyzerVehicle::Base"><span class="n"><span class="pre">Base</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">_vehicle</span></span></span><a class="headerlink" href="#_CPPv4N13LA_MsgHandler8_vehicleE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv433Analyzing_MAVLink_Message_Handler">
+<span id="_CPPv333Analyzing_MAVLink_Message_Handler"></span><span id="_CPPv233Analyzing_MAVLink_Message_Handler"></span><span id="Analyzing_MAVLink_Message_Handler"></span><span class="target" id="classAnalyzing__MAVLink__Message__Handler"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Analyzing_MAVLink_Message_Handler</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">MAVLink_Message_Handler</span></span><a class="headerlink" href="#_CPPv433Analyzing_MAVLink_Message_Handler" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Class to take data from decoded MAVLink messages, update the vehicle model and call the analyzers. </p>
+<p>Add methods to this class to handle more MAVLink message types </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N33Analyzing_MAVLink_Message_Handler33Analyzing_MAVLink_Message_HandlerEP7AnalyzeRPN15AnalyzerVehicle4BaseE">
+<span id="_CPPv3N33Analyzing_MAVLink_Message_Handler33Analyzing_MAVLink_Message_HandlerEP7AnalyzeRPN15AnalyzerVehicle4BaseE"></span><span id="_CPPv2N33Analyzing_MAVLink_Message_Handler33Analyzing_MAVLink_Message_HandlerEP7AnalyzeRPN15AnalyzerVehicle4BaseE"></span><span id="Analyzing_MAVLink_Message_Handler::Analyzing_MAVLink_Message_Handler__AnalyzeP.AnalyzerVehicle::BasePR"></span><span class="target" id="classAnalyzing__MAVLink__Message__Handler_1aa2134059b97420bd43cee2055b92f19a"></span><span class="sig-name descname"><span class="n"><span class="pre">Analyzing_MAVLink_Message_Handler</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">Analyze</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">analyze</span></span>, <span class="n"><span class="pre">AnalyzerVehicle</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="analyser_reference.html#_CPPv4N15AnalyzerVehicle4BaseE" title="AnalyzerVehicle::Base"><span class="n"><span class="pre">Base</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">vehicle</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N33Analyzing_MAVLink_Message_Handler33Analyzing_MAVLink_Message_HandlerEP7AnalyzeRPN15AnalyzerVehicle4BaseE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>construct an object to take MAVLink messages, update the vehicle model and call analyzers on the vehicle model </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analyze</strong> – object responsible for vehicle analysys </p></li>
+<li><p><strong>vehicle</strong> – vehicle to analyze </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+
+
+					<footer id="footer">
+						
+	<div class="footer-buttons" role="navigation" aria-label="footer navigation">
+		
+			<a href="../about/license.html" class="btn btn-default pull-right" title="Open Source Licence">
+				Next <span class="fa fa-arrow-circle-right"></span>
+			</a>
+		
+		
+			<a href="analyser_reference.html" class="btn btn-default" title="Analyzer Class Reference">
+				<span class="fa fa-arrow-circle-left"></span> Previous
+			</a>
+		
+	</div>
+
+
+<hr/>
+
+<div role="contentinfo">
+	<p>
+				&copy; Copyright 2015-2016, 3D Robotics.
+	</p>
+</div>
+Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/3drobotics/sphinx_3dr_theme">theme</a> provided by <a href="https://3drobotics.com">3D Robotics</a> for <a href="http://dronekit.io">DroneKit</a>.
+					</footer>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	
+		<script type="text/javascript" src="../_static/js/jquery.js"></script>
+		<script type="text/javascript" src="../_static/js/scroll.js"></script>
+		<script type="text/javascript" src="../_static/underscore.js"></script>
+		<script type="text/javascript" src="../_static/doctools.js"></script>
+		<script type="text/javascript" src="../_static/js/bootstrap.js"></script>
+		<script type="text/javascript" src="../_static/js/cool-select.js"></script>
+		<script type="text/javascript" src="../_static/searchtools.js"></script>
+	
+	<script type="text/javascript">
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-39974306-3', 'auto');
+		ga('send', 'pageview');
+	</script>
+</body>
+</html>

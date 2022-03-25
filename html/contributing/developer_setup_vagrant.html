@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	
+		<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+	
+		<link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+	
+		<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+	
+
+	<link rel="stylesheet" href="../_static/css/style.css" />
+	<script src="../_static/js/modernizr.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=PT+Serif:400,700' rel='stylesheet' type='text/css'>
+
+	
+		<title>Building DroneKit-LA in Vagrant</title>
+	
+
+	<script type="text/javascript">
+		var DOCUMENTATION_OPTIONS = {
+			URL_ROOT: '',
+			VERSION: '0.5',
+			COLLAPSE_INDEX: false,
+			FILE_SUFFIX: '.html',
+			HAS_SOURCE: true
+		};
+	</script>
+
+</head>
+<body>
+	<nav id="topnav" class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button class="navbar-toggle collapsed icon-facebook-sign" type="button" data-toggle="collapse" data-target="#collapsable-topnav">
+					<i class="fa fa-bars"></i>
+				</button>
+				<a class="navbar-brand" href="http://dronekit.io/">
+					<img src="../_static/images/new-DK-logo-color.svg" alt="3DR">
+				</a>
+			</div>
+			<div class="navbar-collapse collapse" id="collapsable-topnav">
+				<ul class="nav navbar-nav navbar-right">
+					<li>
+						<a href="https://cloud.dronekit.io/" class="cloud">Cloud</a>
+					</li>
+					<li>
+						<a href="http://python.dronekit.io/" class="air">Python</a>
+					</li>
+					<li>
+						<a href="http://android.dronekit.io/" class="ground">Android</a>
+					</li>
+					<li>
+						<a href="http://dronekit.io/support" class="support">Support</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container-fluid">
+		<div class="row gray-bg">
+			<div class="col-sm-3 col-md-2 col-sidebar">
+
+        
+					
+	<div id="sidebar-search" role="search">
+		<form id="rtd-search-form" class="form-inline" action="../search.html" method="get">
+			<div class="input-group">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+				<input class="form-control" type="text" name="q" placeholder="Search..." />
+			</div>
+			<input type="hidden" name="check_keywords" value="yes" />
+			<input type="hidden" name="area" value="default" />
+		</form>
+	</div>
+        
+				<div id="gray-sidebar" class="container-fluid">
+	        
+	          
+	          
+	              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about/about.html">About</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#key-features">Key features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#how-does-it-work">How does it work?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#comparison-to-loganalyzer-py">Comparison to LogAnalyzer.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#open-source-community">Open source community</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#technical-support">Technical support</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guide/getting_started.html#installing">Installing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/getting_started.html#running-the-tool">Running the tool</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/getting_started.html#specifying-frame-and-model-type">Specifying frame and model type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/getting_started.html#interpreting-the-output">Interpreting the output</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/getting_started.html#json-output">JSON output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/getting_started.html#brief">Brief</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/getting_started.html#plain-text-output">Plain text output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/other_features.html">Other Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guide/other_features.html#taking-input-from-stdin">Taking input from STDIN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/other_features.html#selecting-analyzers">Selecting analyzers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/other_features.html#use-a-config-file">Use a config file</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/analyzers.html">Analyzer List</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#any-parameters-seen">Any Parameters Seen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#altitude-estimate-divergence">Altitude Estimate Divergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#arming-checks">Arming Checks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#attitude-control">Attitude Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#attitude-estimate-divergence">Attitude Estimate Divergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#autopilot-health">AutoPilot Health</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#battery">Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#compass-offsets">Compass Offsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#compass-vector-length">Compass Vector Length</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#crash-test">Crash Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#ever-armed">Ever Armed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#ever-flew">Ever Flew</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#good-ekf">Good EKF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#gps-fix">GPS Fix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#gyro-drift">Gyro Drift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#position-estimate-divergence">Position Estimate Divergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#sensor-health">Sensor Health</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#truncated-log">Truncated Log</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#vehicle-definition">Vehicle Definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#velocity-estimate-divergence">Velocity Estimate Divergence</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/command_line_reference.html">Command Line Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/command_line_reference.html#command-syntax">Command Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/command_line_reference.html#options">Options</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Contributing</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="contribution_tool.html">Contributing to DroneKit-LA</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contribution_tool.html#submitting-changes">Submitting changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contribution_tool.html#building-the-tool">Building the Tool</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="contribution_tool.html#building-using-vagrant">Building using Vagrant</a></li>
+<li class="toctree-l4"><a class="reference internal" href="contribution_tool.html#building-on-linux">Building on Linux</a></li>
+<li class="toctree-l4"><a class="reference internal" href="contribution_tool.html#building-on-mac-osx">Building on Mac OSX</a></li>
+<li class="toctree-l4"><a class="reference internal" href="contribution_tool.html#building-on-windows">Building on Windows</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="contribution_tool.html#testing-changes">Testing changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contribution_docs.html">Contributing to the Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contribution_docs.html#submitting-changes">Submitting changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contribution_docs.html#building-the-docs">Building the docs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="contribution_docs.html#the-easy-way-vagrant">The easy way (Vagrant)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="contribution_docs.html#building-docs-on-native-os">Building docs on native OS</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="contribution_docs.html#tracking-todo-items">Tracking todo items</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contribution_docs.html#style-guide">Style guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Building DroneKit-LA in Vagrant</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#building-the-dronekit-la-tool">Building the DroneKit-LA Tool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#building-the-documentation-in-vagrant">Building the Documentation in Vagrant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#closing-and-re-using-the-vm">Closing and re-using the VM</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="add_analyzer.html">Adding a New Analyzer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="add_analyzer.html#framework-overview">Framework overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="add_analyzer.html#creating-an-analyzer">Creating an Analyzer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="add_message_handler.html">Extending the Vehicle-Log Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyser_reference.html">Analyzer Class Reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/analyser_reference.html#analyzer">Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/analyser_reference.html#result-classes">Result Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/analyser_reference.html#vehicle-model">Vehicle Model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/message_handlers_reference.html">Message Handler Class Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about/license.html">License</a></li>
+</ul>
+
+	          
+	        
+				</div>
+			</div>
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+				<div id="api-content">
+					
+  <div class="section" id="building-dronekit-la-in-vagrant">
+<span id="dronekit-la-setup-vagrant"></span><h1>Building DroneKit-LA in Vagrant<a class="headerlink" href="#building-dronekit-la-in-vagrant" title="Permalink to this headline">¶</a></h1>
+<p>This section shows how to bring up a development environment using a <a class="reference external" href="https://www.vagrantup.com/">Vagrant</a>
+virtual machine. This approach provides a reliable and reproducible build environment on any host that supports <em>Vagrant</em>
+(including Windows, OS-X and Linux).</p>
+<p>The environment can be used to build both the dronekit-la tool and the documentation.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>At time of writing, we only have native build support on Linux.</p>
+<p>One of the significant benefits of using <em>Vagrant</em> is that source files are shared between the host and vagrant environment.
+This allows developers to work with source files using their familiar tools and editors, and then switch to Vagrant
+just for the final build.</p>
+</div>
+<div class="section" id="prerequisites">
+<span id="dronekit-la-setup-vagrant-prerequisites"></span><h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<p>First download and set up the development environment:</p>
+<ol class="arabic">
+<li><p>Download and install <a class="reference external" href="https://www.virtualbox.org/wiki/Downloads">VirtualBox</a> and
+<a class="reference external" href="https://www.vagrantup.com/downloads.html">Vagrant</a> for your host computer.</p></li>
+<li><p>Install Git</p>
+<ul class="simple">
+<li><p><strong>Windows:</strong> Install <a class="reference external" href="https://git-scm.com/download/win">Git for Windows</a>.</p></li>
+<li><p><strong>Linux:</strong> Install git from the terminal using: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">git</span></code></p></li>
+</ul>
+</li>
+<li><p>On Windows only, install SSH (this is present by default on Linux/Mac OSX).</p>
+<ul class="simple">
+<li><p>Assuming you installed <em>Git for Windows</em> in the previous step, locate SSH using the command <code class="docutils literal notranslate"><span class="pre">C:\where</span> <span class="pre">ssh</span></code>
+(normally it is installed to <strong>C:Program Files (x86)Gitbinssh.exe</strong>).</p></li>
+<li><p>Add the <strong>ssh.exe</strong> location to the <em>Path</em> (<strong>System Properties | Advanced tab | Environment Variables | Path</strong>)</p></li>
+</ul>
+</li>
+<li><p>Fork the DroneKit-LA repository. Open a command prompt and clone the repository on your host system:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/YOUR_REPO/dronekit-la.git
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="building-the-dronekit-la-tool">
+<h2>Building the DroneKit-LA Tool<a class="headerlink" href="#building-the-dronekit-la-tool" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p>Navigate to the <strong>dronekit-la</strong> directory (or any subdirectory) and start Vagrant in your command prompt:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vagrant up
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This may take a long time to complete the first time it is run as Vagrant needs to
+download the virtual machine and then set up the development environment and Sphinx.</p>
+</div>
+</li>
+<li><p>SSH into the vagrant instance and build the tool:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vagrant ssh
+<span class="nb">cd</span> /vagrant
+make
+</pre></div>
+</div>
+<p>The <strong>/vagrant</strong> directory maps to the location of the <em>Vagrantfile</em> in the host OS
+(in this case <strong>/dronekit-la</strong> directory on your host computer). This is the same location
+where the <strong>dronekit-la</strong> executable will be created.</p>
+</li>
+<li><p>Run dronekit-la from within Vagrant using the normal syntax:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./dronekit-la -h
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="building-the-documentation-in-vagrant">
+<span id="dronekit-la-setup-vagrant-docs"></span><h2>Building the Documentation in Vagrant<a class="headerlink" href="#building-the-documentation-in-vagrant" title="Permalink to this headline">¶</a></h2>
+<p>Vagrant also sets up <strong class="program">Sphinx</strong>, which is used to build the <a class="reference internal" href="contribution_docs.html"><span class="doc">documentation</span></a>.
+The documentation source files are located in <strong>/dronekit-la/docs</strong> on the host computer, which maps to <strong>/vagrant/docs</strong>
+within the Vagrant VM.</p>
+<p>After you have installed the <a class="reference internal" href="#dronekit-la-setup-vagrant-prerequisites"><span class="std std-ref">Prerequisites</span></a>:</p>
+<ol class="arabic">
+<li><p>Start Vagrant, SSH into the VM, and navigate to <strong>/vagrant/docs</strong> within the VM as shown:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vagrant up
+vagrant ssh
+<span class="nb">cd</span> /vagrant/docs/
+</pre></div>
+</div>
+</li>
+<li><p>Build <em>all</em> the documentation as shown:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make clean
+make html
+</pre></div>
+</div>
+<p>To just build files that have changed just do:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make html
+</pre></div>
+</div>
+<p>The files will be built by <strong class="program">Sphinx</strong>, and will appear on the host system in
+<code class="file docutils literal notranslate"><span class="pre">&lt;clone-path&gt;/dronekit-la/docs/_build/html/</span></code>. To preview, simply open them in a Web browser.</p>
+</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<blockquote>
+<div><p>The API Reference is built from strings in the header files which are extracted using Doxygen and then
+imported using the Sphinx “Breathe” extension. If you change the strings you will need to re-run Doxgen
+and Sphinx:</p>
+</div></blockquote>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vagrant ssh
+<span class="nb">cd</span> /vagrant
+doxygen doxygen/doxygen.conf
+<span class="nb">cd</span> /docs
+make clean
+make html
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="closing-and-re-using-the-vm">
+<h2>Closing and re-using the VM<a class="headerlink" href="#closing-and-re-using-the-vm" title="Permalink to this headline">¶</a></h2>
+<p>When you are finished you can exit and suspend the VM.
+Next time you need to build more HTML simply restart it (this is a fast operation):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">exit</span>              <span class="c1"># Leave Vagrant/SSH prompt</span>
+vagrant <span class="nb">suspend</span>   <span class="c1">#Suspend the VM</span>
+vagrant resume    <span class="c1">#Restart the VM</span>
+vagrant ssh       <span class="c1">#Log back into the VM</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+					<footer id="footer">
+						
+	<div class="footer-buttons" role="navigation" aria-label="footer navigation">
+		
+			<a href="add_analyzer.html" class="btn btn-default pull-right" title="Adding a New Analyzer">
+				Next <span class="fa fa-arrow-circle-right"></span>
+			</a>
+		
+		
+			<a href="contribution_docs.html" class="btn btn-default" title="Contributing to the Documentation">
+				<span class="fa fa-arrow-circle-left"></span> Previous
+			</a>
+		
+	</div>
+
+
+<hr/>
+
+<div role="contentinfo">
+	<p>
+				&copy; Copyright 2015-2016, 3D Robotics.
+	</p>
+</div>
+Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/3drobotics/sphinx_3dr_theme">theme</a> provided by <a href="https://3drobotics.com">3D Robotics</a> for <a href="http://dronekit.io">DroneKit</a>.
+					</footer>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	
+		<script type="text/javascript" src="../_static/js/jquery.js"></script>
+		<script type="text/javascript" src="../_static/js/scroll.js"></script>
+		<script type="text/javascript" src="../_static/underscore.js"></script>
+		<script type="text/javascript" src="../_static/doctools.js"></script>
+		<script type="text/javascript" src="../_static/js/bootstrap.js"></script>
+		<script type="text/javascript" src="../_static/js/cool-select.js"></script>
+		<script type="text/javascript" src="../_static/searchtools.js"></script>
+	
+	<script type="text/javascript">
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-39974306-3', 'auto');
+		ga('send', 'pageview');
+	</script>
+</body>
+</html>

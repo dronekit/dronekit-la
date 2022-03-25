@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	
+		<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+	
+		<link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+	
+		<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+	
+
+	<link rel="stylesheet" href="../_static/css/style.css" />
+	<script src="../_static/js/modernizr.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=PT+Serif:400,700' rel='stylesheet' type='text/css'>
+
+	
+		<title>Getting Started</title>
+	
+
+	<script type="text/javascript">
+		var DOCUMENTATION_OPTIONS = {
+			URL_ROOT: '',
+			VERSION: '0.5',
+			COLLAPSE_INDEX: false,
+			FILE_SUFFIX: '.html',
+			HAS_SOURCE: true
+		};
+	</script>
+
+</head>
+<body>
+	<nav id="topnav" class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button class="navbar-toggle collapsed icon-facebook-sign" type="button" data-toggle="collapse" data-target="#collapsable-topnav">
+					<i class="fa fa-bars"></i>
+				</button>
+				<a class="navbar-brand" href="http://dronekit.io/">
+					<img src="../_static/images/new-DK-logo-color.svg" alt="3DR">
+				</a>
+			</div>
+			<div class="navbar-collapse collapse" id="collapsable-topnav">
+				<ul class="nav navbar-nav navbar-right">
+					<li>
+						<a href="https://cloud.dronekit.io/" class="cloud">Cloud</a>
+					</li>
+					<li>
+						<a href="http://python.dronekit.io/" class="air">Python</a>
+					</li>
+					<li>
+						<a href="http://android.dronekit.io/" class="ground">Android</a>
+					</li>
+					<li>
+						<a href="http://dronekit.io/support" class="support">Support</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container-fluid">
+		<div class="row gray-bg">
+			<div class="col-sm-3 col-md-2 col-sidebar">
+
+        
+					
+	<div id="sidebar-search" role="search">
+		<form id="rtd-search-form" class="form-inline" action="../search.html" method="get">
+			<div class="input-group">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+				<input class="form-control" type="text" name="q" placeholder="Search..." />
+			</div>
+			<input type="hidden" name="check_keywords" value="yes" />
+			<input type="hidden" name="area" value="default" />
+		</form>
+	</div>
+        
+				<div id="gray-sidebar" class="container-fluid">
+	        
+	          
+	          
+	              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about/about.html">About</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#key-features">Key features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#how-does-it-work">How does it work?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#comparison-to-loganalyzer-py">Comparison to LogAnalyzer.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#open-source-community">Open source community</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#technical-support">Technical support</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installing">Installing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-tool">Running the tool</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#specifying-frame-and-model-type">Specifying frame and model type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#interpreting-the-output">Interpreting the output</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#json-output">JSON output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#brief">Brief</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#plain-text-output">Plain text output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="other_features.html">Other Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="other_features.html#taking-input-from-stdin">Taking input from STDIN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="other_features.html#selecting-analyzers">Selecting analyzers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="other_features.html#use-a-config-file">Use a config file</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/analyzers.html">Analyzer List</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#any-parameters-seen">Any Parameters Seen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#altitude-estimate-divergence">Altitude Estimate Divergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#arming-checks">Arming Checks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#attitude-control">Attitude Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#attitude-estimate-divergence">Attitude Estimate Divergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#autopilot-health">AutoPilot Health</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#battery">Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#compass-offsets">Compass Offsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#compass-vector-length">Compass Vector Length</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#crash-test">Crash Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#ever-armed">Ever Armed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#ever-flew">Ever Flew</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#good-ekf">Good EKF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#gps-fix">GPS Fix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#gyro-drift">Gyro Drift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#position-estimate-divergence">Position Estimate Divergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#sensor-health">Sensor Health</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#truncated-log">Truncated Log</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#vehicle-definition">Vehicle Definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#velocity-estimate-divergence">Velocity Estimate Divergence</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/command_line_reference.html">Command Line Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/command_line_reference.html#command-syntax">Command Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/command_line_reference.html#options">Options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contributing/contribution_tool.html">Contributing to DroneKit-LA</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/contribution_tool.html#submitting-changes">Submitting changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/contribution_tool.html#building-the-tool">Building the Tool</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../contributing/contribution_tool.html#building-using-vagrant">Building using Vagrant</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../contributing/contribution_tool.html#building-on-linux">Building on Linux</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../contributing/contribution_tool.html#building-on-mac-osx">Building on Mac OSX</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../contributing/contribution_tool.html#building-on-windows">Building on Windows</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/contribution_tool.html#testing-changes">Testing changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing/contribution_docs.html">Contributing to the Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/contribution_docs.html#submitting-changes">Submitting changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/contribution_docs.html#building-the-docs">Building the docs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../contributing/contribution_docs.html#the-easy-way-vagrant">The easy way (Vagrant)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../contributing/contribution_docs.html#building-docs-on-native-os">Building docs on native OS</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/contribution_docs.html#tracking-todo-items">Tracking todo items</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/contribution_docs.html#style-guide">Style guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing/developer_setup_vagrant.html">Building DroneKit-LA in Vagrant</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/developer_setup_vagrant.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/developer_setup_vagrant.html#building-the-dronekit-la-tool">Building the DroneKit-LA Tool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/developer_setup_vagrant.html#building-the-documentation-in-vagrant">Building the Documentation in Vagrant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/developer_setup_vagrant.html#closing-and-re-using-the-vm">Closing and re-using the VM</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing/add_analyzer.html">Adding a New Analyzer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/add_analyzer.html#framework-overview">Framework overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/add_analyzer.html#creating-an-analyzer">Creating an Analyzer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing/add_message_handler.html">Extending the Vehicle-Log Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyser_reference.html">Analyzer Class Reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/analyser_reference.html#analyzer">Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/analyser_reference.html#result-classes">Result Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/analyser_reference.html#vehicle-model">Vehicle Model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/message_handlers_reference.html">Message Handler Class Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about/license.html">License</a></li>
+</ul>
+
+	          
+	        
+				</div>
+			</div>
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+				<div id="api-content">
+					
+  <div class="section" id="getting-started">
+<span id="getting-started-top"></span><h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<p>This topic explains how to download and install DroneKit-LA and how to perform some basic analysis operations.</p>
+<div class="section" id="installing">
+<h2>Installing<a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h2>
+<p>To install DroneKit-LA on your computer:</p>
+<ol class="arabic simple">
+<li><p>Download the installation file for your OS from the <a class="reference external" href="https://github.com/dronekit/dronekit-la/releases/latest">Github release page</a>.</p></li>
+<li><p>Install the tool by running the installer/extracting the files.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The installer files (e.g. <strong>.deb</strong>) set up paths on your computer so that you can run <em>dronekit-la</em>
+from anywhere. If using the tarball/zip archives, run the <em>dronekit-la</em> from the folder
+where you extracted the executable.</p>
+</div>
+</div>
+<div class="section" id="running-the-tool">
+<h2>Running the tool<a class="headerlink" href="#running-the-tool" title="Permalink to this headline">¶</a></h2>
+<p>To analyze a log file simply specify it after the command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>dronekit-la log_file.log
+</pre></div>
+</div>
+<p>DroneKit-LA will identify the log’s type from its file extension
+(telemetry logs - <strong>.tlog</strong>, dataflash binary logs <strong>.BIN</strong>, and dataflash text dumps - <strong>.log</strong>),
+run <em>all</em> tests, and output the analysis in JSON format. If you wish to store the result you can just
+redirect it to a log file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>dronekit-la log_file.log &gt;result.txt
+</pre></div>
+</div>
+<p>The tool also allows you to specify multiple files, specific analyzers to use, the output format, the model/frame
+and several other features. To get help while you’re using the tool, just enter <code class="docutils literal notranslate"><span class="pre">dronekit-la</span> <span class="pre">-h</span></code>!</p>
+<div class="section" id="specifying-frame-and-model-type">
+<span id="guide-model-and-frame-type"></span><h3>Specifying frame and model type<a class="headerlink" href="#specifying-frame-and-model-type" title="Permalink to this headline">¶</a></h3>
+<p>DroneKit-LA will report a <a class="reference internal" href="../reference/analyzers.html#analyzer-listing-vehicle-definition"><span class="std std-ref">Vehicle Definition</span></a>
+test fail if information about the vehicle frame and model is missing from the log
+(without this information log analysis is much less effective).</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The quickest way to determine if the information is missing is to display the summary output
+and look for <code class="docutils literal notranslate"><span class="pre">NoVehicle</span></code> error.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt; dronekit-la test.tlog -s brief
+test.tlog: <span class="nv">Score</span><span class="o">=</span><span class="m">70</span> NoVehicle
+</pre></div>
+</div>
+</div>
+<p>If the information is missing you should run the analysis again with the frame type (<code class="docutils literal notranslate"><span class="pre">-f</span></code> - QUAD | Y6) and
+model (<code class="docutils literal notranslate"><span class="pre">-m</span></code> - copter | rover | plane) arguments:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>dronekit-la a_log_file.log -f copter -m QUAD
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p><a class="reference external" href="https://3drobotics.com/solo-drone/">Solo</a> tlogs do not include the frame and model information,
+so always specify the frame and model when analysing Solo tlogs.</p>
+</div>
+</div>
+</div>
+<div class="section" id="interpreting-the-output">
+<span id="guide-output-formats"></span><h2>Interpreting the output<a class="headerlink" href="#interpreting-the-output" title="Permalink to this headline">¶</a></h2>
+<p>DroneKit-LA can output three formats: <em>json</em> (the default), <em>plain-text</em>, and <em>brief</em> (a summary format).</p>
+<div class="section" id="json-output">
+<h3>JSON output<a class="headerlink" href="#json-output" title="Permalink to this headline">¶</a></h3>
+<p>JSON output is the default format, and includes all information from the log analysis.</p>
+<p>The output is alphabetically sorted. Most of the top level information is metadata about the file itself, the flight and the quality of the telemetry link.
+The most important top level field for analysis is the <em>severity-score</em>: this is the cumulative severity of all issues discovered
+in the analysis. A score of 20 (as shown below) would be pretty low!</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">{</span>
+   <span class="s2">&quot;bytes-dropped&quot;</span> : <span class="m">0</span>,
+   <span class="s2">&quot;duration&quot;</span> : <span class="m">806105</span>,
+   <span class="s2">&quot;evilness&quot;</span> : <span class="m">723</span>,
+   <span class="s2">&quot;evilness-is-deprecated&quot;</span> : <span class="m">1</span>,
+   <span class="s2">&quot;format-version&quot;</span> : <span class="s2">&quot;0.1&quot;</span>,
+   <span class="s2">&quot;git_version&quot;</span> : <span class="s2">&quot;v0.1-122-g6f81&quot;</span>,
+   <span class="s2">&quot;maximum-altitude-absolute&quot;</span> : <span class="m">230</span>.1900024414062,
+   <span class="s2">&quot;maximum-altitude-absolute-units&quot;</span> : <span class="s2">&quot;metres&quot;</span>,
+   <span class="s2">&quot;maximum-altitude-relative&quot;</span> : <span class="m">32</span>.97999572753906,
+   <span class="s2">&quot;maximum-altitude-relative-units&quot;</span> : <span class="s2">&quot;metres&quot;</span>,
+   <span class="s2">&quot;maximum-distance-from-origin&quot;</span> : <span class="m">71</span>.59389640850262,
+   <span class="s2">&quot;maximum-distance-from-origin-units&quot;</span> : <span class="s2">&quot;metres&quot;</span>,
+   <span class="s2">&quot;maximum-velocity&quot;</span> : <span class="m">5</span>.319671099254919,
+   <span class="s2">&quot;maximum-velocity-units&quot;</span> : <span class="s2">&quot;metres/second&quot;</span>,
+   <span class="s2">&quot;packet-count&quot;</span> : <span class="m">54560</span>,
+<span class="hll">   <span class="s2">&quot;packet_count&quot;</span> : <span class="m">54560</span>,
+</span>   <span class="s2">&quot;severity-score&quot;</span> : <span class="m">723</span>,
+   <span class="s2">&quot;tests&quot;</span> : <span class="o">{</span>
+    ...
+   <span class="o">}</span>,
+   <span class="s2">&quot;timestamp&quot;</span> : <span class="m">1449206800331951</span>,
+   <span class="s2">&quot;total-distance-travelled-units&quot;</span> : <span class="s2">&quot;metres&quot;</span>,
+   <span class="s2">&quot;total-distance-travellled&quot;</span> : <span class="m">735</span>.6248609083336,
+   <span class="s2">&quot;total-flight-time&quot;</span> : <span class="m">556</span>.1003417968750,
+   <span class="s2">&quot;total-flight-time-units&quot;</span> : <span class="s2">&quot;seconds&quot;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The default output contains some deprecated fields, which can be recognized by the accompanying field <code class="docutils literal notranslate"><span class="pre">**fieldname**_is_deprecated</span></code>.
+For example <code class="docutils literal notranslate"><span class="pre">evilness</span></code> (replaced by <code class="docutils literal notranslate"><span class="pre">severity-score</span></code>) has the accompanying field <code class="docutils literal notranslate"><span class="pre">evilness-is-deprecated</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;evilness&quot;</span> : <span class="m">723</span>,
+<span class="s2">&quot;evilness-is-deprecated&quot;</span> : <span class="m">1</span>,
+</pre></div>
+</div>
+<p>Deprecated fields may be omitted in a following release, so it is important that any tools which use
+DroneKit-LA remove dependencies on these fields before upgrading to another release. You can test whether you
+are ready to upgrade by using the <a class="reference internal" href="../reference/command_line_reference.html#cmdoption-p"><code class="xref std std-option docutils literal notranslate"><span class="pre">-p</span></code></a> option to create output without deprecated fields.</p>
+</div>
+<p>All of the tests that were run are listed under the <em>tests</em> value. The tests have a <em>description</em>, <em>status</em>, <em>name</em>, <em>results</em>,
+and a <em>severity-score</em> for this current test. The example below shows a passing test -
+the <em>severity-score” is set to 0 and there are no *results</em>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>  <span class="s2">&quot;GPS Fix&quot;</span> : <span class="o">{</span>
+     <span class="s2">&quot;description&quot;</span> : <span class="s2">&quot;This test will FAIL if the quality of the GPS information is poor&quot;</span>,
+     <span class="s2">&quot;evilness&quot;</span> : <span class="m">0</span>,
+     <span class="s2">&quot;evilness-is-deprecated&quot;</span> : <span class="m">1</span>,
+<span class="hll">     <span class="s2">&quot;name&quot;</span> : <span class="s2">&quot;GPS Fix&quot;</span>,
+</span><span class="hll">     <span class="s2">&quot;results&quot;</span> : <span class="o">[]</span>,
+</span>     <span class="s2">&quot;severity-score&quot;</span> : <span class="m">0</span>,
+     <span class="s2">&quot;status&quot;</span> : <span class="s2">&quot;PASS&quot;</span>
+  <span class="o">}</span>,
+</pre></div>
+</div>
+<p>A failing test is similar except it will have a <em>status</em> of FAIL or WARN and a non-zero severity-score (the cumulative score for
+fais/warnings in the results). Within the <em>results</em> we get specific information about sub-tests that failed, including the
+<em>status</em>, <em>reason</em>, <em>series</em> (problem area). The <em>evidence</em> field explains exactly what information resulted in the fail/warning and
+can be used along with the series information for further analysis of the logs (the type of “evidence” is test-dependent).</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>  <span class="s2">&quot;Good EKF&quot;</span> : <span class="o">{</span>
+     <span class="s2">&quot;description&quot;</span> : <span class="s2">&quot;This test will FAIL if EKF variances exceed thresholds, or if the EKF status flags indicate errors&quot;</span>,
+     <span class="s2">&quot;evilness&quot;</span> : <span class="m">20</span>,
+     <span class="s2">&quot;name&quot;</span> : <span class="s2">&quot;Good EKF&quot;</span>,
+<span class="hll">     <span class="s2">&quot;results&quot;</span> : <span class="o">[</span>
+</span><span class="hll">        <span class="o">{</span>
+</span>           <span class="s2">&quot;duration&quot;</span> : <span class="m">32</span>.11100006103516,
+           <span class="s2">&quot;duration-units&quot;</span> : <span class="s2">&quot;seconds&quot;</span>,
+           <span class="s2">&quot;evidence&quot;</span> : <span class="o">[</span>
+              <span class="s2">&quot;flags=0&quot;</span>,
+              <span class="s2">&quot;attitude estimate bad&quot;</span>,
+              <span class="s2">&quot;horizontal velocity estimate bad&quot;</span>,
+              <span class="s2">&quot;vertical velocity estimate bad&quot;</span>,
+              <span class="s2">&quot;horizontal position (relative) estimate bad&quot;</span>,
+              <span class="s2">&quot;horizontal position (absolute) estimate bad&quot;</span>,
+              <span class="s2">&quot;vertical position (absolute) estimate bad&quot;</span>,
+              <span class="s2">&quot;vertical position (above ground) estimate bad&quot;</span>,
+              <span class="s2">&quot;In constant position mode (no abs or rel position)&quot;</span>,
+              <span class="s2">&quot;Predicted horizontal position (relative) bad&quot;</span>,
+              <span class="s2">&quot;Predicted horizontal position (absolute) bad&quot;</span>
+           <span class="o">]</span>,
+           <span class="s2">&quot;evilness&quot;</span> : <span class="m">20</span>,
+           <span class="s2">&quot;evilness-is-deprecated&quot;</span> : <span class="m">1</span>,
+           <span class="s2">&quot;reason&quot;</span> : <span class="s2">&quot;The EKF status report indicates a problem with the EKF&quot;</span>,
+           <span class="s2">&quot;series&quot;</span> : <span class="o">[</span> <span class="s2">&quot;EKF_STATUS_REPORT.flags&quot;</span> <span class="o">]</span>,
+           <span class="s2">&quot;severity-score&quot;</span> : <span class="m">20</span>,
+           <span class="s2">&quot;status&quot;</span> : <span class="s2">&quot;FAIL&quot;</span>,
+           <span class="s2">&quot;timestamp_start&quot;</span> : <span class="m">1448685117411000</span>,
+           <span class="s2">&quot;timestamp_stop&quot;</span> : <span class="m">1448685149522000</span>
+        <span class="o">}</span>,
+        <span class="o">{</span>
+           <span class="s2">&quot;evilness&quot;</span> : <span class="m">0</span>,
+           <span class="s2">&quot;reason&quot;</span> : <span class="s2">&quot;EKF flags were never updated&quot;</span>,
+           <span class="s2">&quot;series&quot;</span> : <span class="o">[</span> <span class="s2">&quot;EKF_STATUS_REPORT.flags&quot;</span> <span class="o">]</span>,
+           <span class="s2">&quot;severity-score&quot;</span> : <span class="m">0</span>,
+           <span class="s2">&quot;status&quot;</span> : <span class="s2">&quot;WARN&quot;</span>
+        <span class="o">}</span>
+     <span class="o">]</span>,
+     <span class="s2">&quot;severity-score&quot;</span> : <span class="m">20</span>,
+     <span class="s2">&quot;status&quot;</span> : <span class="s2">&quot;FAIL&quot;</span>
+  <span class="o">}</span>,
+</pre></div>
+</div>
+</div>
+<div class="section" id="brief">
+<h3>Brief<a class="headerlink" href="#brief" title="Permalink to this headline">¶</a></h3>
+<p>The “brief” output format provides the cumulative severity of log issues issues and a brief “fact” about
+the flight (for example, Flew, Crash!, NoVehicle).</p>
+<p>A common use of this log format is to quickly check for the <code class="docutils literal notranslate"><span class="pre">NoVehicle</span></code> string. If this is reported
+the log is missing vehicle model and frame information. The code fragment below demonstrates how this might look,
+and shows how you can re-run the same test with the needed information:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt; dronekit-la -s brief test.tlog
+
+test.tlog: <span class="nv">Score</span><span class="o">=</span><span class="m">70</span> NoVehicle
+
+&gt; dronekit-la -s brief -m copter -f QUAD test.tlog
+test.tlog: <span class="nv">Score</span><span class="o">=</span><span class="m">20</span>
+</pre></div>
+</div>
+<p>The brief format is particularly useful when you’re examining a large number of logs and want to start by
+examining the most serious first. In the test below we specify a number of files (using a wildcard - but
+you can also list the files of interest individually) and immediately see which logs crashed, and how
+severe the reported issues are:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt; ubuntu@ubuntu:~/test/LALogs$ dronekit-la s* -s brief -m copter -f QUAD
+
+solo10.tlog: <span class="nv">Score</span><span class="o">=</span><span class="m">828</span> Crash! Flew
+solo1.tlog: <span class="nv">Score</span><span class="o">=</span><span class="m">703</span> Crash! Flew
+solo2.tlog: <span class="nv">Score</span><span class="o">=</span><span class="m">754</span> Crash! Flew
+solo3.tlog: <span class="nv">Score</span><span class="o">=</span><span class="m">3787</span> Crash! Flew
+solo4.tlog: <span class="nv">Score</span><span class="o">=</span><span class="m">388</span> Crash! Flew
+solo5.tlog: <span class="nv">Score</span><span class="o">=</span><span class="m">940</span> Crash! Flew
+solo6.tlog: <span class="nv">Score</span><span class="o">=</span><span class="m">1126</span> Flew
+solo7.tlog: <span class="nv">Score</span><span class="o">=</span><span class="m">1216</span> Crash! Flew
+solo8.tlog: <span class="nv">Score</span><span class="o">=</span><span class="m">434</span> Crash! Flew
+solo9.tlog: <span class="nv">Score</span><span class="o">=</span><span class="m">3063</span> Crash! Flew
+</pre></div>
+</div>
+</div>
+<div class="section" id="plain-text-output">
+<h3>Plain text output<a class="headerlink" href="#plain-text-output" title="Permalink to this headline">¶</a></h3>
+<p>The plain text output has the same indentation as the JSON output but omits the braces and other “type” markup.</p>
+<p>This is generated using the argument <code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">plain-text</span></code>.</p>
+</div>
+</div>
+</div>
+
+
+					<footer id="footer">
+						
+	<div class="footer-buttons" role="navigation" aria-label="footer navigation">
+		
+			<a href="other_features.html" class="btn btn-default pull-right" title="Other Features">
+				Next <span class="fa fa-arrow-circle-right"></span>
+			</a>
+		
+		
+			<a href="../about/about.html" class="btn btn-default" title="About DroneKit-LA">
+				<span class="fa fa-arrow-circle-left"></span> Previous
+			</a>
+		
+	</div>
+
+
+<hr/>
+
+<div role="contentinfo">
+	<p>
+				&copy; Copyright 2015-2016, 3D Robotics.
+	</p>
+</div>
+Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/3drobotics/sphinx_3dr_theme">theme</a> provided by <a href="https://3drobotics.com">3D Robotics</a> for <a href="http://dronekit.io">DroneKit</a>.
+					</footer>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	
+		<script type="text/javascript" src="../_static/js/jquery.js"></script>
+		<script type="text/javascript" src="../_static/js/scroll.js"></script>
+		<script type="text/javascript" src="../_static/underscore.js"></script>
+		<script type="text/javascript" src="../_static/doctools.js"></script>
+		<script type="text/javascript" src="../_static/js/bootstrap.js"></script>
+		<script type="text/javascript" src="../_static/js/cool-select.js"></script>
+		<script type="text/javascript" src="../_static/searchtools.js"></script>
+	
+	<script type="text/javascript">
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-39974306-3', 'auto');
+		ga('send', 'pageview');
+	</script>
+</body>
+</html>

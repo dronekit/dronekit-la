@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	
+		<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+	
+		<link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+	
+		<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+	
+
+	<link rel="stylesheet" href="../_static/css/style.css" />
+	<script src="../_static/js/modernizr.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=PT+Serif:400,700' rel='stylesheet' type='text/css'>
+
+	
+		<title>Analyzer List</title>
+	
+
+	<script type="text/javascript">
+		var DOCUMENTATION_OPTIONS = {
+			URL_ROOT: '',
+			VERSION: '0.5',
+			COLLAPSE_INDEX: false,
+			FILE_SUFFIX: '.html',
+			HAS_SOURCE: true
+		};
+	</script>
+
+</head>
+<body>
+	<nav id="topnav" class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button class="navbar-toggle collapsed icon-facebook-sign" type="button" data-toggle="collapse" data-target="#collapsable-topnav">
+					<i class="fa fa-bars"></i>
+				</button>
+				<a class="navbar-brand" href="http://dronekit.io/">
+					<img src="../_static/images/new-DK-logo-color.svg" alt="3DR">
+				</a>
+			</div>
+			<div class="navbar-collapse collapse" id="collapsable-topnav">
+				<ul class="nav navbar-nav navbar-right">
+					<li>
+						<a href="https://cloud.dronekit.io/" class="cloud">Cloud</a>
+					</li>
+					<li>
+						<a href="http://python.dronekit.io/" class="air">Python</a>
+					</li>
+					<li>
+						<a href="http://android.dronekit.io/" class="ground">Android</a>
+					</li>
+					<li>
+						<a href="http://dronekit.io/support" class="support">Support</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container-fluid">
+		<div class="row gray-bg">
+			<div class="col-sm-3 col-md-2 col-sidebar">
+
+        
+					
+	<div id="sidebar-search" role="search">
+		<form id="rtd-search-form" class="form-inline" action="../search.html" method="get">
+			<div class="input-group">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+				<input class="form-control" type="text" name="q" placeholder="Search..." />
+			</div>
+			<input type="hidden" name="check_keywords" value="yes" />
+			<input type="hidden" name="area" value="default" />
+		</form>
+	</div>
+        
+				<div id="gray-sidebar" class="container-fluid">
+	        
+	          
+	          
+	              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about/about.html">About</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#key-features">Key features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#how-does-it-work">How does it work?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#comparison-to-loganalyzer-py">Comparison to LogAnalyzer.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#open-source-community">Open source community</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#technical-support">Technical support</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guide/getting_started.html#installing">Installing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/getting_started.html#running-the-tool">Running the tool</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/getting_started.html#specifying-frame-and-model-type">Specifying frame and model type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/getting_started.html#interpreting-the-output">Interpreting the output</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/getting_started.html#json-output">JSON output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/getting_started.html#brief">Brief</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/getting_started.html#plain-text-output">Plain text output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/other_features.html">Other Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guide/other_features.html#taking-input-from-stdin">Taking input from STDIN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/other_features.html#selecting-analyzers">Selecting analyzers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/other_features.html#use-a-config-file">Use a config file</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Analyzer List</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#any-parameters-seen">Any Parameters Seen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#altitude-estimate-divergence">Altitude Estimate Divergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#arming-checks">Arming Checks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#attitude-control">Attitude Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#attitude-estimate-divergence">Attitude Estimate Divergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#autopilot-health">AutoPilot Health</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#battery">Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compass-offsets">Compass Offsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compass-vector-length">Compass Vector Length</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#crash-test">Crash Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ever-armed">Ever Armed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ever-flew">Ever Flew</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#good-ekf">Good EKF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gps-fix">GPS Fix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gyro-drift">Gyro Drift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#position-estimate-divergence">Position Estimate Divergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sensor-health">Sensor Health</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#truncated-log">Truncated Log</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vehicle-definition">Vehicle Definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#velocity-estimate-divergence">Velocity Estimate Divergence</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="command_line_reference.html">Command Line Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="command_line_reference.html#command-syntax">Command Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command_line_reference.html#options">Options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contributing/contribution_tool.html">Contributing to DroneKit-LA</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/contribution_tool.html#submitting-changes">Submitting changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/contribution_tool.html#building-the-tool">Building the Tool</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../contributing/contribution_tool.html#building-using-vagrant">Building using Vagrant</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../contributing/contribution_tool.html#building-on-linux">Building on Linux</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../contributing/contribution_tool.html#building-on-mac-osx">Building on Mac OSX</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../contributing/contribution_tool.html#building-on-windows">Building on Windows</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/contribution_tool.html#testing-changes">Testing changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing/contribution_docs.html">Contributing to the Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/contribution_docs.html#submitting-changes">Submitting changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/contribution_docs.html#building-the-docs">Building the docs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../contributing/contribution_docs.html#the-easy-way-vagrant">The easy way (Vagrant)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../contributing/contribution_docs.html#building-docs-on-native-os">Building docs on native OS</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/contribution_docs.html#tracking-todo-items">Tracking todo items</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/contribution_docs.html#style-guide">Style guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing/developer_setup_vagrant.html">Building DroneKit-LA in Vagrant</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/developer_setup_vagrant.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/developer_setup_vagrant.html#building-the-dronekit-la-tool">Building the DroneKit-LA Tool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/developer_setup_vagrant.html#building-the-documentation-in-vagrant">Building the Documentation in Vagrant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/developer_setup_vagrant.html#closing-and-re-using-the-vm">Closing and re-using the VM</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing/add_analyzer.html">Adding a New Analyzer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/add_analyzer.html#framework-overview">Framework overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing/add_analyzer.html#creating-an-analyzer">Creating an Analyzer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing/add_message_handler.html">Extending the Vehicle-Log Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyser_reference.html">Analyzer Class Reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="analyser_reference.html#analyzer">Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="analyser_reference.html#result-classes">Result Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="analyser_reference.html#vehicle-model">Vehicle Model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="message_handlers_reference.html">Message Handler Class Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about/license.html">License</a></li>
+</ul>
+
+	          
+	        
+				</div>
+			</div>
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+				<div id="api-content">
+					
+  <div class="section" id="analyzer-list">
+<span id="analyzer-listing"></span><h1>Analyzer List<a class="headerlink" href="#analyzer-list" title="Permalink to this headline">¶</a></h1>
+<p>This topic provides an overview of the available analyzers. These are all run by default
+but you can specify to only run a subset using the <code class="docutils literal notranslate"><span class="pre">-a</span></code> argument (see
+<a class="reference internal" href="../guide/other_features.html#guide-selecting-analyzers"><span class="std std-ref">Selecting analyzers</span></a>).</p>
+<p>Each section lists a description of the analyzer, along with possible fails/warnings.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This section is provided for reference only. The log itself will include all this information
+along with the “severity” of the issue, “series” (where the error occurred) and “evidence”
+(what caused a fail/warning to be raised).</p>
+</div>
+<div class="section" id="any-parameters-seen">
+<h2>Any Parameters Seen<a class="headerlink" href="#any-parameters-seen" title="Permalink to this headline">¶</a></h2>
+<p>Autopilots store configuration settings known as ‘parameters’. For proper analysis, logs must contain this parameter information.
+This test will FAIL if the input does not contain parameter information.</p>
+<ul class="simple">
+<li><p>Fail: No parameters present</p></li>
+<li><p>Pass: Parameters present</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>No user action can be taken in response to this error.</p>
+</div>
+</div>
+<div class="section" id="altitude-estimate-divergence">
+<h2>Altitude Estimate Divergence<a class="headerlink" href="#altitude-estimate-divergence" title="Permalink to this headline">¶</a></h2>
+<p>A UAV often has several estimates of its altitude.
+This test will FAIL or WARN if the various vehicle’s altitude estimates diverge.</p>
+<ul class="simple">
+<li><p>Fail: This altitude estimate differs from the canonical craft altitude</p></li>
+<li><p>Warn: This altitude estimate differs from the canonical craft altitude</p></li>
+</ul>
+</div>
+<div class="section" id="arming-checks">
+<h2>Arming Checks<a class="headerlink" href="#arming-checks" title="Permalink to this headline">¶</a></h2>
+<p>An autopilot checks many aspects of the aircraft’s state before allowing it to be armed - for example,
+that it has a good GPS fix.  This test will FAIL if the craft ever arms when some arming checks are disabled.</p>
+<ul class="simple">
+<li><p>Fail: Some of the arming checks were disabled when the craft was armed</p></li>
+</ul>
+</div>
+<div class="section" id="attitude-control">
+<h2>Attitude Control<a class="headerlink" href="#attitude-control" title="Permalink to this headline">¶</a></h2>
+<p>The autopilot reports both the craft’s attitude and the attitude the craft believes it should be at.
+This test will FAIL or WARN if the vehicle’s desired attitudes and achieved attitudes are
+not within threshold delta values for more than a threshold time.</p>
+<ul class="simple">
+<li><p>Fail: Desired attitude not achieved</p></li>
+<li><p>Warn: Desired attitude not achieved</p></li>
+<li><p>Warn: Vehicle attitude never set</p></li>
+</ul>
+</div>
+<div class="section" id="attitude-estimate-divergence">
+<h2>Attitude Estimate Divergence<a class="headerlink" href="#attitude-estimate-divergence" title="Permalink to this headline">¶</a></h2>
+<p>A UAV often has several estimates of its attitude.
+This test will FAIL or WARN if the various vehicle’s attitude estimates diverge.</p>
+<ul class="simple">
+<li><p>Fail: This attitude estimate differs from the canonical craft attitude.</p></li>
+<li><p>Warn: This attitude estimate differs from the canonical craft attitude.</p></li>
+</ul>
+</div>
+<div class="section" id="autopilot-health">
+<span id="analyzer-autopilot"></span><h2>AutoPilot Health<a class="headerlink" href="#autopilot-health" title="Permalink to this headline">¶</a></h2>
+<p>Many autopilots are capable of monitoring their own performance.  This test will FAIL if problems are detected with the autopilot.</p>
+<ul class="simple">
+<li><p>Fail: Severe scheduler overruns</p></li>
+</ul>
+</div>
+<div class="section" id="battery">
+<h2>Battery<a class="headerlink" href="#battery" title="Permalink to this headline">¶</a></h2>
+<p>Many autopilots are capable of monitoring their flight batteries.</p>
+<p>This test will FAIL if the battery level falls below the
+<a class="reference external" href="http://copter.ardupilot.com/wiki/failsafe-battery/">battery failsafe</a>
+threshold level, or if a battery failsafe event is received.</p>
+<ul class="simple">
+<li><p>Fail: Battery fell below failsafe threshold</p></li>
+<li><p>Fail: Battery failsafe event received</p></li>
+<li><p>Pass: Battery never below failsafe</p></li>
+</ul>
+</div>
+<div class="section" id="compass-offsets">
+<h2>Compass Offsets<a class="headerlink" href="#compass-offsets" title="Permalink to this headline">¶</a></h2>
+<p>Compass calibration produces a set of parameters that specify expected compass discrepancies.
+This test will WARN or FAIL depending on the degree that these compass offset parameters exceed specified thresholds.</p>
+<ul class="simple">
+<li><p>Fail: Compass offsets in parameters are out of bounds</p></li>
+<li><p>Fail: Compass offset parameter set seen/set</p></li>
+<li><p>Warn: Compass offsets in parameters are out of bounds</p></li>
+<li><p>Warn: Compass offsets in parameters are zero</p></li>
+<li><p>Pass: Compass offsets in parameters look reasonable</p></li>
+</ul>
+</div>
+<div class="section" id="compass-vector-length">
+<h2>Compass Vector Length<a class="headerlink" href="#compass-vector-length" title="Permalink to this headline">¶</a></h2>
+<p>The strength and direction of the Earth’s magnetic field should be relatively constant and lie within certain thresholds.
+This test will FAIL or WARN if the compass vector length exceeds the respective threshold.  Possible causes include flying near large metal objects.</p>
+<ul class="simple">
+<li><p>Fail: Compass Vector Length above threshold</p></li>
+<li><p>Fail: Compass Vector Length below threshold</p></li>
+<li><p>Fail: Compass Vector Length delta exceeds threshold</p></li>
+<li><p>Warn: Compass Vector Length below threshold</p></li>
+<li><p>Warn: Compass Vector Length above threshold</p></li>
+</ul>
+</div>
+<div class="section" id="crash-test">
+<h2>Crash Test<a class="headerlink" href="#crash-test" title="Permalink to this headline">¶</a></h2>
+<p>Crashes are detected both heuristically and by explicit log messages.  This test will FAIL if the vehicle appears to crash</p>
+<ul class="simple">
+<li><p>Fail: Vehicle evaluated itself as crashed</p></li>
+<li><p>Fail: Vehicle is past maximum allowed angle and running its motors</p></li>
+<li><p>Warn: Vehicle’s attitude never updated</p></li>
+<li><p>Pass: Never crashed</p></li>
+</ul>
+</div>
+<div class="section" id="ever-armed">
+<h2>Ever Armed<a class="headerlink" href="#ever-armed" title="Permalink to this headline">¶</a></h2>
+<p>Vehicles typically need to progress through a sequence of arming steps before they can move.
+This test will FAIL if the craft did not arm.</p>
+<ul class="simple">
+<li><p>Fail: The vehicle never armed</p></li>
+<li><p>Pass: The vehicle armed</p></li>
+</ul>
+</div>
+<div class="section" id="ever-flew">
+<h2>Ever Flew<a class="headerlink" href="#ever-flew" title="Permalink to this headline">¶</a></h2>
+<p>Determining whether a vehicle has ever flown in a log is done heuristically based on things like motor speeds.
+This test will FAIL if the craft did not ever seem to fly.</p>
+<p>As evidence the test provides information about the whether the vehicle armed
+and whether it reaches the servo threshold required to take off.</p>
+<ul class="simple">
+<li><p>Fail: The vehicle never seemed to take off</p></li>
+<li><p>Pass: The vehicle appeared to fly</p></li>
+</ul>
+</div>
+<div class="section" id="good-ekf">
+<h2>Good EKF<a class="headerlink" href="#good-ekf" title="Permalink to this headline">¶</a></h2>
+<p>The Extended Kalman Filter (EKF) has many built-in checks to ensure that it is functioning correctly.
+This test will FAIL or WARN if EKF variances exceed the respective thresholds, or FAIL if the EKF status flags indicate errors.</p>
+<p>For EKF status flag fails, the evidence field provides information about the specific estimates that are incorrect.</p>
+<ul class="simple">
+<li><p>Fail: The EKF status report indicates a problem with the EKF</p></li>
+<li><p>Fail: [variance] exceeds fail threshold</p></li>
+<li><p>Warn: [variance] exceeds warn threshold</p></li>
+<li><p>Warn: [variance] was never updated</p></li>
+<li><p>Warn: EKF flags were never updated</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the list above [variance] is one of:  velocity, pos_horiz_variance,
+pos_vert_variance, compass_variance, terrain_alt_variance.</p>
+</div>
+</div>
+<div class="section" id="gps-fix">
+<h2>GPS Fix<a class="headerlink" href="#gps-fix" title="Permalink to this headline">¶</a></h2>
+<p>The accuracy and precision of GPS messages can vary depending on many factors including weather,
+ionospheric disturbances and number of satellites visible.  This test will FAIL if the quality of the GPS information is poor.</p>
+<p>The test compares the recorded number of satellites and HDOP (horizontal degree of precision)
+to threshold values and reports both values as “evidence”.</p>
+<ul class="simple">
+<li><p>Fail: No 3D fix was ever acquired</p></li>
+<li><p>Pass: First 3D GPS Fix Acquired</p></li>
+</ul>
+</div>
+<div class="section" id="gyro-drift">
+<h2>Gyro Drift<a class="headerlink" href="#gyro-drift" title="Permalink to this headline">¶</a></h2>
+<p>Gyroscopes sometimes start to register movement where there is none.
+This test will FAIL or WARN if the any gyroscope’s average acceleration on any axis begins to drift.</p>
+<ul class="simple">
+<li><p>Fail: Gyroscope readings differ from first gyroscope</p></li>
+<li><p>Warn: Gyroscope readings differ from first gyroscope</p></li>
+</ul>
+</div>
+<div class="section" id="position-estimate-divergence">
+<h2>Position Estimate Divergence<a class="headerlink" href="#position-estimate-divergence" title="Permalink to this headline">¶</a></h2>
+<p>A UAV often has several estimates of its position.  This test will FAIL or WARN if the various vehicle’s position estimates diverge.</p>
+<ul class="simple">
+<li><p>Fail: This position estimate differs from the canonical craft position</p></li>
+<li><p>Warn: This position estimate differs from the canonical craft position</p></li>
+</ul>
+</div>
+<div class="section" id="sensor-health">
+<h2>Sensor Health<a class="headerlink" href="#sensor-health" title="Permalink to this headline">¶</a></h2>
+<p>A UAV can self-assess its sensors’ health.  This test will FAIL if any sensor is detected as failed.</p>
+<ul class="simple">
+<li><p>Fail: The craft’s assessment of its sensors indicate a problem</p></li>
+</ul>
+</div>
+<div class="section" id="truncated-log">
+<h2>Truncated Log<a class="headerlink" href="#truncated-log" title="Permalink to this headline">¶</a></h2>
+<p>A log should not end while the vehicle appears to be moving under its own power.
+This test will FAIL if the vehicle still appears to be moving when the log ends.</p>
+<ul class="simple">
+<li><p>Fail: Log ended while craft still flying</p></li>
+<li><p>Pass: Log truncation not detected</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There are several possible causes for a truncated log (including power failure due to brownout,
+running out of memory for the log file, or failure of the logging sub-system).</p>
+</div>
+</div>
+<div class="section" id="vehicle-definition">
+<span id="analyzer-listing-vehicle-definition"></span><h2>Vehicle Definition<a class="headerlink" href="#vehicle-definition" title="Permalink to this headline">¶</a></h2>
+<p>The vehicle type is normally automatically detected by dronekit-la from the log.
+Sometimes the log does not contain sufficient information to make this determination.
+This test will FAIL if the craft type is never defined.</p>
+<ul class="simple">
+<li><p>Fail: No information provided defined what type of vehicle was being analysed</p></li>
+<li><p>Pass: Vehicle was appropriately defined</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Information about the vehicle type/frame allows a much deeper log analysis. This information
+is typically present in logs, but may be omitted.</p>
+<p>If you get this error you should provide the information to the tool using the <code class="docutils literal notranslate"><span class="pre">-m</span></code> and <code class="docutils literal notranslate"><span class="pre">-f</span></code> flags as
+shown:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./dronekit-la &lt;files&gt; -m copter -f quad
+</pre></div>
+</div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p><a class="reference external" href="https://3drobotics.com/solo-drone/">Solo</a> tlogs do not include the frame and model information!</p>
+</div>
+</div>
+<div class="section" id="velocity-estimate-divergence">
+<span id="analyzer-velocity-estimate-divergence"></span><h2>Velocity Estimate Divergence<a class="headerlink" href="#velocity-estimate-divergence" title="Permalink to this headline">¶</a></h2>
+<p>Description: A UAV often has several estimates of its velocity.
+This test will FAIL or WARN if the various vehicle’s velocity estimates diverge.</p>
+<ul class="simple">
+<li><p>Fail: This velocity estimate differs from the canonical craft velocity</p></li>
+<li><p>Warn: This velocity estimate differs from the canonical craft velocity</p></li>
+</ul>
+</div>
+</div>
+
+
+					<footer id="footer">
+						
+	<div class="footer-buttons" role="navigation" aria-label="footer navigation">
+		
+			<a href="command_line_reference.html" class="btn btn-default pull-right" title="Command Line Reference">
+				Next <span class="fa fa-arrow-circle-right"></span>
+			</a>
+		
+		
+			<a href="../guide/other_features.html" class="btn btn-default" title="Other Features">
+				<span class="fa fa-arrow-circle-left"></span> Previous
+			</a>
+		
+	</div>
+
+
+<hr/>
+
+<div role="contentinfo">
+	<p>
+				&copy; Copyright 2015-2016, 3D Robotics.
+	</p>
+</div>
+Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/3drobotics/sphinx_3dr_theme">theme</a> provided by <a href="https://3drobotics.com">3D Robotics</a> for <a href="http://dronekit.io">DroneKit</a>.
+					</footer>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	
+		<script type="text/javascript" src="../_static/js/jquery.js"></script>
+		<script type="text/javascript" src="../_static/js/scroll.js"></script>
+		<script type="text/javascript" src="../_static/underscore.js"></script>
+		<script type="text/javascript" src="../_static/doctools.js"></script>
+		<script type="text/javascript" src="../_static/js/bootstrap.js"></script>
+		<script type="text/javascript" src="../_static/js/cool-select.js"></script>
+		<script type="text/javascript" src="../_static/searchtools.js"></script>
+	
+	<script type="text/javascript">
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-39974306-3', 'auto');
+		ga('send', 'pageview');
+	</script>
+</body>
+</html>

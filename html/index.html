@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	
+		<link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+	
+		<link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+	
+		<link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+	
+
+	<link rel="stylesheet" href="_static/css/style.css" />
+	<script src="_static/js/modernizr.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=PT+Serif:400,700' rel='stylesheet' type='text/css'>
+
+	
+		<title>DroneKit Log Analyzer documentation!</title>
+	
+
+	<script type="text/javascript">
+		var DOCUMENTATION_OPTIONS = {
+			URL_ROOT: '',
+			VERSION: '0.5',
+			COLLAPSE_INDEX: false,
+			FILE_SUFFIX: '.html',
+			HAS_SOURCE: true
+		};
+	</script>
+
+</head>
+<body>
+	<nav id="topnav" class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button class="navbar-toggle collapsed icon-facebook-sign" type="button" data-toggle="collapse" data-target="#collapsable-topnav">
+					<i class="fa fa-bars"></i>
+				</button>
+				<a class="navbar-brand" href="http://dronekit.io/">
+					<img src="_static/images/new-DK-logo-color.svg" alt="3DR">
+				</a>
+			</div>
+			<div class="navbar-collapse collapse" id="collapsable-topnav">
+				<ul class="nav navbar-nav navbar-right">
+					<li>
+						<a href="https://cloud.dronekit.io/" class="cloud">Cloud</a>
+					</li>
+					<li>
+						<a href="http://python.dronekit.io/" class="air">Python</a>
+					</li>
+					<li>
+						<a href="http://android.dronekit.io/" class="ground">Android</a>
+					</li>
+					<li>
+						<a href="http://dronekit.io/support" class="support">Support</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container-fluid">
+		<div class="row gray-bg">
+			<div class="col-sm-3 col-md-2 col-sidebar">
+
+        
+					
+	<div id="sidebar-search" role="search">
+		<form id="rtd-search-form" class="form-inline" action="search.html" method="get">
+			<div class="input-group">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+				<input class="form-control" type="text" name="q" placeholder="Search..." />
+			</div>
+			<input type="hidden" name="check_keywords" value="yes" />
+			<input type="hidden" name="area" value="default" />
+		</form>
+	</div>
+        
+				<div id="gray-sidebar" class="container-fluid">
+	        
+	          
+	          
+	              <ul>
+<li class="toctree-l1"><a class="reference internal" href="about/about.html">About</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="about/about.html#key-features">Key features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="about/about.html#how-does-it-work">How does it work?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="about/about.html#comparison-to-loganalyzer-py">Comparison to LogAnalyzer.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="about/about.html#open-source-community">Open source community</a></li>
+<li class="toctree-l2"><a class="reference internal" href="about/about.html#technical-support">Technical support</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guide/getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guide/getting_started.html#installing">Installing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/getting_started.html#running-the-tool">Running the tool</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="guide/getting_started.html#specifying-frame-and-model-type">Specifying frame and model type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="guide/getting_started.html#interpreting-the-output">Interpreting the output</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="guide/getting_started.html#json-output">JSON output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide/getting_started.html#brief">Brief</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide/getting_started.html#plain-text-output">Plain text output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guide/other_features.html">Other Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guide/other_features.html#taking-input-from-stdin">Taking input from STDIN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/other_features.html#selecting-analyzers">Selecting analyzers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/other_features.html#use-a-config-file">Use a config file</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference/analyzers.html">Analyzer List</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/analyzers.html#any-parameters-seen">Any Parameters Seen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/analyzers.html#altitude-estimate-divergence">Altitude Estimate Divergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/analyzers.html#arming-checks">Arming Checks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/analyzers.html#attitude-control">Attitude Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/analyzers.html#attitude-estimate-divergence">Attitude Estimate Divergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/analyzers.html#autopilot-health">AutoPilot Health</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/analyzers.html#battery">Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/analyzers.html#compass-offsets">Compass Offsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/analyzers.html#compass-vector-length">Compass Vector Length</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/analyzers.html#crash-test">Crash Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/analyzers.html#ever-armed">Ever Armed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/analyzers.html#ever-flew">Ever Flew</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/analyzers.html#good-ekf">Good EKF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/analyzers.html#gps-fix">GPS Fix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/analyzers.html#gyro-drift">Gyro Drift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/analyzers.html#position-estimate-divergence">Position Estimate Divergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/analyzers.html#sensor-health">Sensor Health</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/analyzers.html#truncated-log">Truncated Log</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/analyzers.html#vehicle-definition">Vehicle Definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/analyzers.html#velocity-estimate-divergence">Velocity Estimate Divergence</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference/command_line_reference.html">Command Line Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/command_line_reference.html#command-syntax">Command Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/command_line_reference.html#options">Options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing/index.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing/contribution_tool.html">Contributing to DroneKit-LA</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing/contribution_tool.html#submitting-changes">Submitting changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing/contribution_tool.html#building-the-tool">Building the Tool</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="contributing/contribution_tool.html#building-using-vagrant">Building using Vagrant</a></li>
+<li class="toctree-l4"><a class="reference internal" href="contributing/contribution_tool.html#building-on-linux">Building on Linux</a></li>
+<li class="toctree-l4"><a class="reference internal" href="contributing/contribution_tool.html#building-on-mac-osx">Building on Mac OSX</a></li>
+<li class="toctree-l4"><a class="reference internal" href="contributing/contribution_tool.html#building-on-windows">Building on Windows</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="contributing/contribution_tool.html#testing-changes">Testing changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing/contribution_docs.html">Contributing to the Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing/contribution_docs.html#submitting-changes">Submitting changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing/contribution_docs.html#building-the-docs">Building the docs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="contributing/contribution_docs.html#the-easy-way-vagrant">The easy way (Vagrant)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="contributing/contribution_docs.html#building-docs-on-native-os">Building docs on native OS</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="contributing/contribution_docs.html#tracking-todo-items">Tracking todo items</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing/contribution_docs.html#style-guide">Style guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing/developer_setup_vagrant.html">Building DroneKit-LA in Vagrant</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing/developer_setup_vagrant.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing/developer_setup_vagrant.html#building-the-dronekit-la-tool">Building the DroneKit-LA Tool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing/developer_setup_vagrant.html#building-the-documentation-in-vagrant">Building the Documentation in Vagrant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing/developer_setup_vagrant.html#closing-and-re-using-the-vm">Closing and re-using the VM</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing/add_analyzer.html">Adding a New Analyzer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing/add_analyzer.html#framework-overview">Framework overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing/add_analyzer.html#creating-an-analyzer">Creating an Analyzer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing/add_message_handler.html">Extending the Vehicle-Log Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/analyser_reference.html">Analyzer Class Reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference/analyser_reference.html#analyzer">Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/analyser_reference.html#result-classes">Result Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/analyser_reference.html#vehicle-model">Vehicle Model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference/message_handlers_reference.html">Message Handler Class Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="about/license.html">License</a></li>
+</ul>
+
+	          
+	        
+				</div>
+			</div>
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+				<div id="api-content">
+					
+  <div class="section" id="dronekit-log-analyzer-documentation">
+<h1>DroneKit Log Analyzer documentation!<a class="headerlink" href="#dronekit-log-analyzer-documentation" title="Permalink to this headline">¶</a></h1>
+<p>DroneKit Log Analyzer (DroneKit-LA) is a powerful open source <em>static analyzer</em> for ArduPilot logs.</p>
+<p>The tool can read and analyze several log formats, including telemetry logs (tlogs), dataflash binary logs (.BIN)
+and dataflash text dumps (.log), and output detailed error and warning information in several formats (json, text, summary).
+The output includes detailed information about the tests, including what tests were run, the results (pass, fail, warn), severity,
+and supporting evidence.</p>
+<p>DroneKit-LA is also fast, memory efficient and extensible. It supports numerous analyzers
+and has already proved itself capable of quickly analyzing very large logs.</p>
+<p>This documentation contains a lot of useful information including an
+<a class="reference internal" href="about/about.html"><span class="doc">introduction</span></a> to the tool, an overview of each of
+the <a class="reference internal" href="reference/analyzers.html"><span class="doc">analyzers</span></a>, examples and guidance on how you can contribute.</p>
+<p>If you just want to install the tool and start working, jump to the <a class="reference internal" href="guide/getting_started.html"><span class="doc">Getting Started</span></a>.</p>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+
+
+					<footer id="footer">
+						
+	<div class="footer-buttons" role="navigation" aria-label="footer navigation">
+		
+			<a href="about/about.html" class="btn btn-default pull-right" title="About DroneKit-LA">
+				Next <span class="fa fa-arrow-circle-right"></span>
+			</a>
+		
+		
+	</div>
+
+
+<hr/>
+
+<div role="contentinfo">
+	<p>
+				&copy; Copyright 2015-2016, 3D Robotics.
+	</p>
+</div>
+Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/3drobotics/sphinx_3dr_theme">theme</a> provided by <a href="https://3drobotics.com">3D Robotics</a> for <a href="http://dronekit.io">DroneKit</a>.
+					</footer>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	
+		<script type="text/javascript" src="_static/js/jquery.js"></script>
+		<script type="text/javascript" src="_static/js/scroll.js"></script>
+		<script type="text/javascript" src="_static/underscore.js"></script>
+		<script type="text/javascript" src="_static/doctools.js"></script>
+		<script type="text/javascript" src="_static/js/bootstrap.js"></script>
+		<script type="text/javascript" src="_static/js/cool-select.js"></script>
+		<script type="text/javascript" src="_static/searchtools.js"></script>
+	
+	<script type="text/javascript">
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-39974306-3', 'auto');
+		ga('send', 'pageview');
+	</script>
+</body>
+</html>

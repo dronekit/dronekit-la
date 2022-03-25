@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	
+		<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+	
+		<link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+	
+		<link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+	
+
+	<link rel="stylesheet" href="../_static/css/style.css" />
+	<script src="../_static/js/modernizr.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=PT+Serif:400,700' rel='stylesheet' type='text/css'>
+
+	
+		<title>Adding a New Analyzer</title>
+	
+
+	<script type="text/javascript">
+		var DOCUMENTATION_OPTIONS = {
+			URL_ROOT: '',
+			VERSION: '0.5',
+			COLLAPSE_INDEX: false,
+			FILE_SUFFIX: '.html',
+			HAS_SOURCE: true
+		};
+	</script>
+
+</head>
+<body>
+	<nav id="topnav" class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button class="navbar-toggle collapsed icon-facebook-sign" type="button" data-toggle="collapse" data-target="#collapsable-topnav">
+					<i class="fa fa-bars"></i>
+				</button>
+				<a class="navbar-brand" href="http://dronekit.io/">
+					<img src="../_static/images/new-DK-logo-color.svg" alt="3DR">
+				</a>
+			</div>
+			<div class="navbar-collapse collapse" id="collapsable-topnav">
+				<ul class="nav navbar-nav navbar-right">
+					<li>
+						<a href="https://cloud.dronekit.io/" class="cloud">Cloud</a>
+					</li>
+					<li>
+						<a href="http://python.dronekit.io/" class="air">Python</a>
+					</li>
+					<li>
+						<a href="http://android.dronekit.io/" class="ground">Android</a>
+					</li>
+					<li>
+						<a href="http://dronekit.io/support" class="support">Support</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container-fluid">
+		<div class="row gray-bg">
+			<div class="col-sm-3 col-md-2 col-sidebar">
+
+        
+					
+	<div id="sidebar-search" role="search">
+		<form id="rtd-search-form" class="form-inline" action="../search.html" method="get">
+			<div class="input-group">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+				<input class="form-control" type="text" name="q" placeholder="Search..." />
+			</div>
+			<input type="hidden" name="check_keywords" value="yes" />
+			<input type="hidden" name="area" value="default" />
+		</form>
+	</div>
+        
+				<div id="gray-sidebar" class="container-fluid">
+	        
+	          
+	          
+	              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about/about.html">About</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#key-features">Key features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#how-does-it-work">How does it work?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#comparison-to-loganalyzer-py">Comparison to LogAnalyzer.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#open-source-community">Open source community</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about/about.html#technical-support">Technical support</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guide/getting_started.html#installing">Installing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/getting_started.html#running-the-tool">Running the tool</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/getting_started.html#specifying-frame-and-model-type">Specifying frame and model type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/getting_started.html#interpreting-the-output">Interpreting the output</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/getting_started.html#json-output">JSON output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/getting_started.html#brief">Brief</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/getting_started.html#plain-text-output">Plain text output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/other_features.html">Other Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guide/other_features.html#taking-input-from-stdin">Taking input from STDIN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/other_features.html#selecting-analyzers">Selecting analyzers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/other_features.html#use-a-config-file">Use a config file</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/analyzers.html">Analyzer List</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#any-parameters-seen">Any Parameters Seen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#altitude-estimate-divergence">Altitude Estimate Divergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#arming-checks">Arming Checks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#attitude-control">Attitude Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#attitude-estimate-divergence">Attitude Estimate Divergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#autopilot-health">AutoPilot Health</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#battery">Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#compass-offsets">Compass Offsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#compass-vector-length">Compass Vector Length</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#crash-test">Crash Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#ever-armed">Ever Armed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#ever-flew">Ever Flew</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#good-ekf">Good EKF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#gps-fix">GPS Fix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#gyro-drift">Gyro Drift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#position-estimate-divergence">Position Estimate Divergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#sensor-health">Sensor Health</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#truncated-log">Truncated Log</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#vehicle-definition">Vehicle Definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyzers.html#velocity-estimate-divergence">Velocity Estimate Divergence</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/command_line_reference.html">Command Line Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/command_line_reference.html#command-syntax">Command Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/command_line_reference.html#options">Options</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Contributing</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="contribution_tool.html">Contributing to DroneKit-LA</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contribution_tool.html#submitting-changes">Submitting changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contribution_tool.html#building-the-tool">Building the Tool</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="contribution_tool.html#building-using-vagrant">Building using Vagrant</a></li>
+<li class="toctree-l4"><a class="reference internal" href="contribution_tool.html#building-on-linux">Building on Linux</a></li>
+<li class="toctree-l4"><a class="reference internal" href="contribution_tool.html#building-on-mac-osx">Building on Mac OSX</a></li>
+<li class="toctree-l4"><a class="reference internal" href="contribution_tool.html#building-on-windows">Building on Windows</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="contribution_tool.html#testing-changes">Testing changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contribution_docs.html">Contributing to the Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contribution_docs.html#submitting-changes">Submitting changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contribution_docs.html#building-the-docs">Building the docs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="contribution_docs.html#the-easy-way-vagrant">The easy way (Vagrant)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="contribution_docs.html#building-docs-on-native-os">Building docs on native OS</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="contribution_docs.html#tracking-todo-items">Tracking todo items</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contribution_docs.html#style-guide">Style guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="developer_setup_vagrant.html">Building DroneKit-LA in Vagrant</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="developer_setup_vagrant.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer_setup_vagrant.html#building-the-dronekit-la-tool">Building the DroneKit-LA Tool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer_setup_vagrant.html#building-the-documentation-in-vagrant">Building the Documentation in Vagrant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer_setup_vagrant.html#closing-and-re-using-the-vm">Closing and re-using the VM</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Adding a New Analyzer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#framework-overview">Framework overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-an-analyzer">Creating an Analyzer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="add_message_handler.html">Extending the Vehicle-Log Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analyser_reference.html">Analyzer Class Reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/analyser_reference.html#analyzer">Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/analyser_reference.html#result-classes">Result Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/analyser_reference.html#vehicle-model">Vehicle Model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/message_handlers_reference.html">Message Handler Class Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about/license.html">License</a></li>
+</ul>
+
+	          
+	        
+				</div>
+			</div>
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+				<div id="api-content">
+					
+  <div class="section" id="adding-a-new-analyzer">
+<span id="add-analyzer-top"></span><h1>Adding a New Analyzer<a class="headerlink" href="#adding-a-new-analyzer" title="Permalink to this headline">¶</a></h1>
+<p>DroneKit-LA has been designed from the ground-up to provide an extensible framework for supporting different
+log input and output formats, and for creating tests (analyzers) which are independent of those formats and
+of each other.</p>
+<p>This article provides a brief overview of the main framework classes and some suggestions on the
+how to write a new analyzer. There is additional information in the <a class="reference internal" href="../reference/analyser_reference.html"><span class="doc">Analyzer Class Reference</span></a>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>We highly recommend that you check out the
+<a class="reference external" href="https://github.com/dronekit/dronekit-la/tree/master/analyzer">existing analyzers</a>
+for ideas/examples.</p>
+</div>
+<div class="section" id="framework-overview">
+<h2>Framework overview<a class="headerlink" href="#framework-overview" title="Permalink to this headline">¶</a></h2>
+<p>The main framework classes are the analyzer base class
+(<a class="reference internal" href="../reference/analyser_reference.html#_CPPv48Analyzer" title="Analyzer"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">Analyzer</span></code></a>), the results base classes
+(<a class="reference internal" href="../reference/analyser_reference.html#_CPPv415Analyzer_Result" title="Analyzer_Result"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">Analyzer_Result</span></code></a>, <a class="reference internal" href="../reference/analyser_reference.html#_CPPv422Analyzer_Result_Period" title="Analyzer_Result_Period"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">Analyzer_Result_Period</span></code></a>, <a class="reference internal" href="../reference/analyser_reference.html#_CPPv421Analyzer_Result_Event" title="Analyzer_Result_Event"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">Analyzer_Result_Event</span></code></a>,
+<a class="reference internal" href="../reference/analyser_reference.html#_CPPv423Analyzer_Result_Summary" title="Analyzer_Result_Summary"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">Analyzer_Result_Summary</span></code></a>) and the vehicle/log class which is used to expose log information
+to the analyzer (<a class="reference internal" href="../reference/analyser_reference.html#_CPPv4N15AnalyzerVehicle4BaseE" title="AnalyzerVehicle::Base"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">AnalyzerVehicle::Base</span></code></a>).</p>
+<p>Analyzers must be derived from <a class="reference internal" href="../reference/analyser_reference.html#_CPPv48Analyzer" title="Analyzer"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">Analyzer</span></code></a> and override its virtual methods.
+The first two methods set the name and description reported by the analyzer in the output log:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Analyzer name. This string is displayed in the test output&#39;s</span>
+<span class="cm">``name`` field for the test. */</span>
+<span class="k">virtual</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="cm">/* Analyzer description. This string is displayed in the test</span>
+<span class="cm">output&#39;s ``description`` field. */</span>
+<span class="k">virtual</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">description</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../reference/analyser_reference.html#_CPPv4N8Analyzer8evaluateEv" title="Analyzer::evaluate"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Analyzer::evaluate()</span></code></a> and <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Analyzer::end_of_log()</span></code> methods are called
+by the framework for every logged message, to gather relevant information and report the results
+(respectively). Some analyzers may choose to report the results only at the end of the
+available log data.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Evaluate message. This method is called by the analyzer framework for every message in the log.</span>
+<span class="cm">Implementations should evaluate available data and store anything needed for generating a result. */</span>
+<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">evaluate</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
+
+<span class="cm">/* Generate results. This method is called by the analyzer framework for every message in the log.</span>
+<span class="cm">Implementations should store results based on the evaluation information generated by the `evaluate()` method */</span>
+<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">end_of_log</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">packet_count</span> <span class="n">UNUSED</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../reference/analyser_reference.html#_CPPv4N8Analyzer8evaluateEv" title="Analyzer::evaluate"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">evaluate()</span></code></a> method gets data about the vehicle (log) to analyze
+using the base-classes protected <a class="reference internal" href="../reference/analyser_reference.html#_CPPv4N8Analyzer8_vehicleE" title="Analyzer::_vehicle"><code class="xref cpp cpp-member docutils literal notranslate"><span class="pre">_vehicle</span></code></a> member
+(an <a class="reference internal" href="../reference/analyser_reference.html#_CPPv4N15AnalyzerVehicle4BaseE" title="AnalyzerVehicle::Base"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">AnalyzerVehicle::Base</span></code></a>, cast to the the actual vehicle type).
+The key information from the evaluation is typically saved as part of the new analyzer’s private data.</p>
+<p>The new analyzer should also define a results class (an instance of which is usually owned by your Analyzer-derived class).
+The results class must be derived from one of the base classes listed below:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../reference/analyser_reference.html#_CPPv415Analyzer_Result" title="Analyzer_Result"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">Analyzer_Result</span></code></a> - Base class for analyzer results.</p></li>
+<li><p><a class="reference internal" href="../reference/analyser_reference.html#_CPPv422Analyzer_Result_Period" title="Analyzer_Result_Period"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">Analyzer_Result_Period</span></code></a> - Base class for an Analyzer Result which does not span any time.</p></li>
+<li><p><a class="reference internal" href="../reference/analyser_reference.html#_CPPv421Analyzer_Result_Event" title="Analyzer_Result_Event"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">Analyzer_Result_Event</span></code></a> - Base class for an Analyzer Result which spans a period.</p></li>
+<li><p><a class="reference internal" href="../reference/analyser_reference.html#_CPPv423Analyzer_Result_Summary" title="Analyzer_Result_Summary"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">Analyzer_Result_Summary</span></code></a>-  Base class for an Analyzer Result which provides information derived over the entire period of data input.</p></li>
+</ul>
+<p>In your <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">end_of_log()</span></code> implementation you can populate this results object
+using the <a class="reference internal" href="../reference/analyser_reference.html#_CPPv4N15Analyzer_Result10set_statusE15analyzer_status" title="Analyzer_Result::set_status"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Analyzer_Result::set_status()</span></code></a>, <a class="reference internal" href="../reference/analyser_reference.html#_CPPv4N15Analyzer_Result10set_reasonEKNSt6stringE" title="Analyzer_Result::set_reason"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">set_reason()</span></code></a>,
+<a class="reference internal" href="../reference/analyser_reference.html#_CPPv4N15Analyzer_Result12add_evidenceEKNSt6stringE" title="Analyzer_Result::add_evidence"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">add_evidence()</span></code></a>, <a class="reference internal" href="../reference/analyser_reference.html#_CPPv4N15Analyzer_Result10add_sourceEPK11Data_Source" title="Analyzer_Result::add_source"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">add_source()</span></code></a> and
+<a class="reference internal" href="../reference/analyser_reference.html#_CPPv4N15Analyzer_Result18set_severity_scoreE8uint32_t" title="Analyzer_Result::set_severity_score"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">set_severity_score()</span></code></a> or
+<a class="reference internal" href="../reference/analyser_reference.html#_CPPv4N15Analyzer_Result23increase_severity_scoreE8uint32_t" title="Analyzer_Result::increase_severity_score"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">increase_severity_score()</span></code></a> (severity-score) methods
+and then save it to the analyzer using <a class="reference internal" href="../reference/analyser_reference.html#_CPPv4N8Analyzer10add_resultEP15Analyzer_Result" title="Analyzer::add_result"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">Analyzer::add_result()</span></code></a>.
+An example from the <em>Arming Check</em> analyzer is shown below:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">-&gt;</span><span class="n">set_status</span><span class="p">(</span><span class="n">analyzer_status_fail</span><span class="p">);</span>
+<span class="n">result</span><span class="o">-&gt;</span><span class="n">set_reason</span><span class="p">(</span><span class="s">&quot;Some of the arming checks were disabled when the craft was  armed&quot;</span><span class="p">);</span>
+<span class="n">result</span><span class="o">-&gt;</span><span class="n">add_evidence</span><span class="p">(</span><span class="n">string_format</span><span class="p">(</span><span class="s">&quot;Arming flags: %u&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">-&gt;</span><span class="n">arming_check</span><span class="p">()));</span>
+<span class="n">result</span><span class="o">-&gt;</span><span class="n">add_source</span><span class="p">(</span><span class="n">_data_sources</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;PARAM&quot;</span><span class="p">));</span>
+<span class="n">result</span><span class="o">-&gt;</span><span class="n">add_source</span><span class="p">(</span><span class="n">_data_sources</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;ARMING&quot;</span><span class="p">));</span>
+<span class="p">...</span>
+<span class="c1">//Add the result to the Analyzer</span>
+<span class="n">add_result</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>If the analyzer detects multiple issues it can repopulate its <code class="docutils literal notranslate"><span class="pre">result</span></code> object and call <a class="reference internal" href="../reference/analyser_reference.html#_CPPv4N8Analyzer10add_resultEP15Analyzer_Result" title="Analyzer::add_result"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">add_result()</span></code></a> for each issue.</p>
+<p><a class="reference internal" href="../reference/analyser_reference.html#_CPPv48Analyzer" title="Analyzer"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">Analyzer</span></code></a> provides a number of other methods that you can optionally use/over ride in your classes.
+One example is <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">configure()</span></code>, which can be overridden to support
+setting failure levels using a configuration file.</p>
+</div>
+<div class="section" id="creating-an-analyzer">
+<h2>Creating an Analyzer<a class="headerlink" href="#creating-an-analyzer" title="Permalink to this headline">¶</a></h2>
+<p>The easiest way to start creating a new analyzer is to duplicate an
+<a class="reference external" href="https://github.com/dronekit/dronekit-la/tree/master/analyzer">existing analyzer</a> and modify
+the virtual methods described in the previous section.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>A good one to copy might be the Battery Analyzer
+(<a class="reference external" href="https://github.com/dronekit/dronekit-la/blob/master/analyzer/analyzer_battery.h">header</a>,
+<a class="reference external" href="https://github.com/dronekit/dronekit-la/blob/master/analyzer/analyzer_battery.cpp">source</a>)
+because it is relatively small and straightforward.</p>
+</div>
+<p>All of the existing analyzers have been implemented in just two files (the header and source).
+They are placed in the <strong>/analyzer/</strong> folder and prefixed with the string <strong>analyzer_</strong>.</p>
+<p>You’ll need to add the source files into the project
+<a class="reference external" href="https://github.com/dronekit/dronekit-la/blob/master/Makefile">Makefile</a>:</p>
+<div class="highlight-make notranslate"><div class="highlight"><pre><span></span><span class="nv">SRCS_CPP</span> <span class="o">+=</span> analyzer/analyzer_your_problem.cpp
+</pre></div>
+</div>
+<p>You’ll also need to setup the code to instantiate the new analyzer in
+<a class="reference external" href="https://github.com/dronekit/dronekit-la/blob/master/analyze.cpp">analyze.cpp</a>.
+This code usually also sets up any trigger values from the configuration file, as shown:</p>
+<div class="highlight-make notranslate"><div class="highlight"><pre><span></span>#include &quot;analyzer/analyzer_your_problem.h&quot;
+
+...
+
+Analyzer_Your_Problem* analyzer_your_problem = new Analyzer_Your_Problem(vehicle,_data_sources);
+if (analyzer_your_problem != NULL) {
+    configure_analyzer(config, analyzer_your_problem);
+} else {
+    syslog(LOG_INFO, &quot;Failed to create analyzer_your_problem&quot;);
+}
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Not all information your analyzer might need will necessary be available
+in the <a class="reference internal" href="../reference/analyser_reference.html#_CPPv4N15AnalyzerVehicle4BaseE" title="AnalyzerVehicle::Base"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">AnalyzerVehicle::Base</span></code></a> class (accessed through analyzer’s <a class="reference internal" href="../reference/analyser_reference.html#_CPPv4N8Analyzer8_vehicleE" title="Analyzer::_vehicle"><code class="xref cpp cpp-member docutils literal notranslate"><span class="pre">_vehicle</span></code></a> member). If required
+information is present in the original log but not the analyzer’s vehicle model then you can add it using
+the process described in <a class="reference internal" href="add_message_handler.html"><span class="doc">Extending the Vehicle-Log Model</span></a>.</p>
+</div>
+</div>
+</div>
+
+
+					<footer id="footer">
+						
+	<div class="footer-buttons" role="navigation" aria-label="footer navigation">
+		
+			<a href="add_message_handler.html" class="btn btn-default pull-right" title="Extending the Vehicle-Log Model">
+				Next <span class="fa fa-arrow-circle-right"></span>
+			</a>
+		
+		
+			<a href="developer_setup_vagrant.html" class="btn btn-default" title="Building DroneKit-LA in Vagrant">
+				<span class="fa fa-arrow-circle-left"></span> Previous
+			</a>
+		
+	</div>
+
+
+<hr/>
+
+<div role="contentinfo">
+	<p>
+				&copy; Copyright 2015-2016, 3D Robotics.
+	</p>
+</div>
+Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/3drobotics/sphinx_3dr_theme">theme</a> provided by <a href="https://3drobotics.com">3D Robotics</a> for <a href="http://dronekit.io">DroneKit</a>.
+					</footer>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	
+		<script type="text/javascript" src="../_static/js/jquery.js"></script>
+		<script type="text/javascript" src="../_static/js/scroll.js"></script>
+		<script type="text/javascript" src="../_static/underscore.js"></script>
+		<script type="text/javascript" src="../_static/doctools.js"></script>
+		<script type="text/javascript" src="../_static/js/bootstrap.js"></script>
+		<script type="text/javascript" src="../_static/js/cool-select.js"></script>
+		<script type="text/javascript" src="../_static/searchtools.js"></script>
+	
+	<script type="text/javascript">
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-39974306-3', 'auto');
+		ga('send', 'pageview');
+	</script>
+</body>
+</html>
